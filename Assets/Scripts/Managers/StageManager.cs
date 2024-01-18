@@ -1,9 +1,8 @@
-using System;
+ using System;
 using System.Collections;
 using Controller.UI;
 using ScriptableObjects.Scripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Enum = Data.Enum;
 
 namespace Managers
@@ -77,7 +76,7 @@ namespace Managers
 
             SetCurrentMainStageInfo();
         }
-        
+
         private void SetCurrentMainStageInfo()
         {
             currentMainStageName = stageSo.MainStageInfos[currentMainStage - 1].MainStageName;
@@ -95,7 +94,7 @@ namespace Managers
             if (currentRemainedMonsterCount == 0)
             {
                 StopCoroutine(waveTimer);
-                
+
                 waveClear = true;
 
                 currentWave++;
@@ -106,28 +105,29 @@ namespace Managers
                     {
                         currentWave -= waveCountsPerSubStage;
                         currentSubStage++;
-                        
+
                         if (currentSubStage > subStageCountsPerMainStage)
                         {
                             GoToNextSubStage = true;
                             currentSubStage -= subStageCountsPerMainStage;
                             currentMainStage++;
-                    
+
                             if (currentMainStage > maxMainStageCounts)
                             {
                                 currentMainStage = maxMainStageCounts;
                                 currentSubStage = subStageCountsPerMainStage;
                             }
-                    
+
                             SetCurrentMainStageInfo();
                         }
                     }
                     else
                     {
+                        GoToNextSubStage = true;
                         currentWave = 1;
                     }
                 }
-                
+
                 SetCurrentMainStageInfo();
                 StartCoroutine(StageRunner());
             }
@@ -136,11 +136,8 @@ namespace Managers
         private void CalculateRemainedSquad()
         {
             currentSquadCount--;
-            
-            if (currentSquadCount == 0)
-            {
-                squadAnnihilation = true;
-            }
+
+            if (currentSquadCount == 0) squadAnnihilation = true;
         }
 
         private void SetStageProgressType(bool challenge)
@@ -152,8 +149,8 @@ namespace Managers
         {
             IniStageRunner();
             SetUI();
-            
-            
+
+
             yield return new WaitForSeconds(1.0f);
 
             if (GoToNextSubStage)
@@ -163,18 +160,18 @@ namespace Managers
 
                 yield return new WaitForSeconds(1.0f);
             }
-            
+
             SpawnMonster();
             StartCoroutine(waveTimer);
         }
-        
+
         private void IniStageRunner()
         {
             squadAnnihilation = false;
             waveClear = false;
             timeOver = false;
         }
-        
+
         private void SetUI()
         {
             stageUIController.SetUIText(Enum.UITextType.CurrentStageName, $"{currentMainStageName}{currentSubStage}");
@@ -182,7 +179,7 @@ namespace Managers
             stageUIController.SetUISlider(Enum.UISliderType.CurrentWaveSlider,
                 1.0f * currentWave / waveCountsPerSubStage);
         }
-        
+
         private void SpawnSquad()
         {
             currentSquadCount = maxSquadCount;
@@ -192,7 +189,8 @@ namespace Managers
         private void SpawnMonster()
         {
             currentRemainedMonsterCount = monsterSpawnCountsPerSubStage;
-            MonsterManager.Instance.GenerateMonsters(stageSo.MainStageInfos[currentMainStage - 1].MainStageMonsterTypes, monsterSpawnCountsPerSubStage);
+            MonsterManager.Instance.GenerateMonsters(stageSo.MainStageInfos[currentMainStage - 1].MainStageMonsterTypes,
+                monsterSpawnCountsPerSubStage);
         }
 
         private IEnumerator WaveTimer()
@@ -210,10 +208,10 @@ namespace Managers
                 if (waveTime <= 0) timeOver = true;
                 yield return null;
             }
-            
+
             isWaveTimerRunning = false;
         }
-        
+
         private void SetTimerUI(int currentTime)
         {
             stageUIController.SetUIText(Enum.UITextType.Timer, $"{currentTime}");
