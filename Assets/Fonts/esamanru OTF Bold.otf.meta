@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 51cd765ace2dc4038a14c52f0297e725
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - esamanru OTF
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 9019d34b8853a4ced8fc0960bb7453cd, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
