@@ -128,12 +128,7 @@ namespace Managers
         // 이벤트 설정하는 메서드
         private void SetEventListeners()
         {
-            SquadStatManager.UpgradeTotalSquadAttackAction += squadStat.IncreaseBaseStat;
-            SquadStatManager.UpgradeTotalSquadHealthAction += squadStat.IncreaseBaseStat;
-            SquadStatManager.UpgradeTotalSquadDefenceAction += squadStat.IncreaseBaseStat;
-            SquadStatManager.UpgradeTotalSquadPenetrationAction += squadStat.IncreaseBaseStat;
-            SquadStatManager.UpgradeTotalSquadAccuracyAction += squadStat.IncreaseBaseStat;
-            SquadStatManager.UpgradeTotalSquadCriticalDamageAction += squadStat.IncreaseBaseStat;
+            SquadStatManager.Instance.UpgradeTotalSquadStatAction += squadStat.IncreaseBaseStatBySquadStatPanel;
 
             EquipAction += Equip;
             UnEquipAction += UnEquip;
@@ -149,17 +144,17 @@ namespace Managers
                     return totalArcherAttack;
                 case Enum.SquadStatType.WizardAtk:
                     return totalWizardAttack;
-                case Enum.SquadStatType.Hp:
+                case Enum.SquadStatType.Health:
                     return totalMaxHealth;
-                case Enum.SquadStatType.Def:
+                case Enum.SquadStatType.Defence:
                     return totalDefence;
                 case Enum.SquadStatType.Penetration:
                     return totalPenetration;
                 case Enum.SquadStatType.Accuracy:
                     return totalAccuracy;
-                case Enum.SquadStatType.Crt:
+                case Enum.SquadStatType.CriticalRate:
                     return totalCriticalRate;
-                case Enum.SquadStatType.CrtDmg:
+                case Enum.SquadStatType.CriticalDamage:
                     return totalCriticalDamage;
                 default:
                     Debug.Log("에러에러!!");
@@ -196,7 +191,7 @@ namespace Managers
             switch (squadStatType)
             {
                 //TODO : 워리어, 아처, 마법사 공격력을 따로 계산하는 산식 작성 요망
-                case Enum.SquadStatType.Atk:
+                case Enum.SquadStatType.Attack:
                     totalWarriorAttack = statValue;
                     totalArcherAttack = statValue;
                     totalWizardAttack = statValue;
@@ -205,11 +200,11 @@ namespace Managers
 
                     break;
 
-                case Enum.SquadStatType.Hp:
+                case Enum.SquadStatType.Health:
                     totalMaxHealth = statValue;
                     break;
 
-                case Enum.SquadStatType.Def:
+                case Enum.SquadStatType.Defence:
                     totalDefence = statValue;
                     break;
             }
@@ -225,10 +220,10 @@ namespace Managers
                 case Enum.SquadStatType.Accuracy:
                     totalAccuracy = statValue;
                     break;
-                case Enum.SquadStatType.Crt:
+                case Enum.SquadStatType.CriticalRate:
                     totalCriticalRate = statValue;
                     break;
-                case Enum.SquadStatType.CrtDmg:
+                case Enum.SquadStatType.CriticalDamage:
                     totalCriticalDamage = statValue;
                     break;
             }
@@ -252,7 +247,7 @@ namespace Managers
             equippedEquipment = equipment.GetComponent<Equipment>();
             equippedEquipment.isEquipped = true;
 
-            squadStat.IncreasePercentStat(Enum.SquadStatType.Atk, equippedEquipment.equippedEffect);
+            squadStat.IncreasePercentStat(Enum.SquadStatType.Attack, equippedEquipment.equippedEffect);
 
             EquipmentUI.UpdateEquipmentUIAction?.Invoke(equippedEquipment.isEquipped);
             equippedEquipment.SaveEquipmentAllInfo();
@@ -263,7 +258,7 @@ namespace Managers
         {
             equipment.isEquipped = false;
             EquipmentUI.UpdateEquipmentUIAction?.Invoke(equipment.isEquipped);
-            squadStat.DecreasePercentStat(Enum.SquadStatType.Atk, equipment.equippedEffect);
+            squadStat.DecreasePercentStat(Enum.SquadStatType.Attack, equipment.equippedEffect);
             equipment.SaveEquipmentAllInfo();
             Debug.Log("장비 장착 해제" + equipment.id);
             equipment = null;

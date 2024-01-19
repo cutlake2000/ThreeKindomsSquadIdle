@@ -9,11 +9,11 @@ using Enum = Data.Enum;
 namespace Creature.Data
 {
     [Serializable]
-    public class UpgradeSquadStat
+    public class SquadStatPanelStat
     {
-        public Action<Enum.SquadStatType, int> UpgradeStatAction;
+        public Action<Enum.SquadStatPanelStatType, int> UpgradeStatAction;
         
-        [FormerlySerializedAs("allSquadStatType")] [Tooltip("스탯 타입")] public Enum.SquadStatType squadStatType;
+        [Tooltip("스탯 타입")] public Enum.SquadStatPanelStatType squadStatPanelStatType;
         [Tooltip("현재 스탯 레벨")] public int currentUpgradeLevel;
         [Tooltip("현재 스탯 강화 비용")] public int currentUpgradeCost;
         [Tooltip("현재 스탯 증가량")] public int currentIncreasedStat;
@@ -43,8 +43,8 @@ namespace Creature.Data
             currentUpgradeLevel++;
             currentIncreasedStat += increasedStatValue;
             
-            ES3.Save($"{nameof(SquadStat)}/{squadStatType}/{nameof(currentUpgradeLevel)} : ", currentUpgradeLevel);
-            UpgradeStatAction?.Invoke(squadStatType, increasedStatValue);
+            ES3.Save($"{nameof(SquadStat)}/{squadStatPanelStatType}/{nameof(currentUpgradeLevel)} : ", currentUpgradeLevel);
+            UpgradeStatAction?.Invoke(squadStatPanelStatType, increasedStatValue);
         }
 
         // 스텟 로드할 때 부르는 메서드
@@ -54,26 +54,26 @@ namespace Creature.Data
             {
                 currentIncreasedStat += increasedStatValue;
 
-                UpgradeStatAction?.Invoke(squadStatType, increasedStatValue);
+                UpgradeStatAction?.Invoke(squadStatPanelStatType, increasedStatValue);
             }
         }
 
-        public UpgradeSquadStat(
+        public SquadStatPanelStat(
             TMP_Text currentUpgradeLevelText,
             TMP_Text currentIncreasedStatText,
             Button upgradeButton,
-            Enum.SquadStatType squadStatType,
+            Enum.SquadStatPanelStatType squadStatPanelStatType,
             int currentUpgradeLevel,
             int currentUpgradeCost,
             int increasedStatValue,
             int currentIncreasedStat,
-            Action<Enum.SquadStatType, int> upgradeStatAction = null)
+            Action<Enum.SquadStatPanelStatType, int> upgradeStatAction)
         {
             this.currentUpgradeLevelText = currentUpgradeLevelText;
             this.currentIncreasedStatText = currentIncreasedStatText;
             this.upgradeButton = upgradeButton;
             
-            this.squadStatType = squadStatType;
+            this.squadStatPanelStatType = squadStatPanelStatType;
             this.currentUpgradeLevel = currentUpgradeLevel;
             this.currentUpgradeCost = currentUpgradeCost;
             this.increasedStatValue = increasedStatValue;

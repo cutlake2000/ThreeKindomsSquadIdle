@@ -128,36 +128,39 @@ namespace Data
 
         public enum SquadStatPanelStatType
         {
-            Atk, // 공격력
-            Hp, // 체력
-            Penetration, // 관통
-            Evasion, // 명중
-            AcquisitionGold, // 골드 획득량
-            AcquisitionExp, // 경험치 증가량
-            CrtDmg, // 치명타 피해량
-            AmplificationSkillEffects, // 스킬 효과 증폭
-            CurrentAtk, // 최종 공격력
+            Atk,                        // 공격력
+            Hp,                         // 체력
+            Penetration,                // 관통
+            Accuracy,                    // 명중
+            AcquisitionGold,            // 골드 획득량
+            AcquisitionExp,             // 경험치 증가량
+            CrtDmg,                     // 치명타 피해량
+            AmplificationSkillEffects,  // 스킬 효과 증폭
+            CurrentAtk,                 // 최종 공격력
         }
 
         public enum SquadStatType
         {
-            WarriorAtk, // 전사 공격력
-            WizardAtk, // 마법사 공격력
-            ArcherAtk, // 궁수 공격력
-            Hp, // 체력 (Health Points)
-            Atk, // 공격력 (Attack)
-            Def, // 방어력 (Defense)
-            Crt, // 치명타 확률 (Critical Hit Rate)
-            CrtDmg, // 치명타 피해량 (Critical Hit Damage)
-            As, // 공격 속도 (Attack Speed)
-            Accuracy, // 명중률 (Accuracy)
-            Penetration, // 관통 (Penetration)
-            Evasion, // 회피율 (Evasion
-            MagicPower, // 마법력 (Magic Power)
-            Resistance, // 저항력 (Resistance)
-            MoveSpeed, // 이동 속도 (Movement Speed)
-            AcquisitionGold, // 골드 획득량
-            AcquisitionExp, // 경험치 획득량
+            WarriorAtk,                 // 전사 공격력
+            WizardAtk,                  // 마법사 공격력
+            ArcherAtk,                  // 궁수 공격력
+            Health,                         // 체력 (Health Points)
+            Attack,                        // 공격력 (Attack)
+            Defence,                        // 방어력 (Defense)
+            CriticalRate,                        // 치명타 확률 (Critical Hit Rate)
+            CriticalDamage,                     // 치명타 피해량 (Critical Hit Damage)
+            As,                         // 공격 속도 (Attack Speed)
+            Accuracy,                   // 명중률 (Accuracy)
+            Penetration,                // 관통 (Penetration)
+            Evasion,                    // 회피율 (Evasion
+            MagicPower,                 // 마법력 (Magic Power)
+            Resistance,                 // 저항력 (Resistance)
+            MoveSpeed,                  // 이동 속도 (Movement Speed)
+            AcquisitionGold,            // 골드 획득량
+            AcquisitionExp,             // 경험치 획득량
+            AmplificationSkillEffects,  // 스킬 효과 증폭
+            CurrentAtk,
+            
             WarriorAttackRange,
             ArcherAttackRange,
             WizardAttackRange,

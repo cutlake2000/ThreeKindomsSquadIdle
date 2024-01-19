@@ -79,8 +79,8 @@ namespace Creature.CreatureClass.SquadClass
 
         protected override void SetCreatureStats()
         {
-            maxHealth = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Hp);
-            defence = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Def);
+            maxHealth = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Health);
+            defence = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Defence);
             moveSpeed = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.MoveSpeed);
             followRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.FollowRange);
             

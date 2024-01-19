@@ -46,11 +46,11 @@ namespace Controller.UI
         {
             currentLevelText.text = $"레벨 : {Managers.SquadManager.Instance.SquadLevel.CurrentLevel}";
             currentExpText.text = $"경험치 : {Managers.SquadManager.Instance.SquadLevel.CurrentExp} / {Managers.SquadManager.Instance.SquadLevel.MaxExp}";
-            currentAttack.text = $"공격력 : {Managers.SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Atk)}";
-            currentHealth.text = $"체력 : {Managers.SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Hp)}";
-            currentDefence.text = $"방어력 : {Managers.SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Def)}";
-            currentCriticalRate.text = $"치명타 확률 : {Managers.SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Crt)}";
-            currentCriticalDamage.text = $"치명타 데미지 : {Managers.SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.CrtDmg)}";
+            currentAttack.text = $"공격력 : {Managers.SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Attack)}";
+            currentHealth.text = $"체력 : {Managers.SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Health)}";
+            currentDefence.text = $"방어력 : {Managers.SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Defence)}";
+            currentCriticalRate.text = $"치명타 확률 : {Managers.SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.CriticalRate)}";
+            currentCriticalDamage.text = $"치명타 데미지 : {Managers.SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.CriticalDamage)}";
         }
     }
 }

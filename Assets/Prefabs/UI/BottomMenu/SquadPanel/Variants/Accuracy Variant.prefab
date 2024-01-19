@@ -16,6 +16,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 2b497a3b3788248d78650526061e07a1, type: 3}
+    - target: {fileID: 4697223422438613038, guid: 782fd2705997d4cfdb50d5140e74a65b, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 15899c92d954543258bfbf128931ea4f, type: 2}
+    - target: {fileID: 4697223422438613038, guid: 782fd2705997d4cfdb50d5140e74a65b, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -6383768301819024731, guid: 15899c92d954543258bfbf128931ea4f, type: 2}
     - target: {fileID: 5342390284750832204, guid: 782fd2705997d4cfdb50d5140e74a65b, type: 3}
       propertyPath: m_Name
       value: Accuracy Variant
