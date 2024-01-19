@@ -11,6 +11,7 @@ namespace Managers
         public static MonsterManager Instance;
 
         public GameObject[] monsterNewTypePrefabs;
+        public BoxCollider2D[] spawnPosition;
         public Transform[] startPoint;
         public Transform[] controlPoint;
         public Transform[] endPoint;
@@ -115,18 +116,41 @@ namespace Managers
 
         private void PositionMonster(Component monsterNew, int count, int numberOfMonster)
         {
-            var t = count / (float)numberOfMonster;
-            var position = CalculateBezierPoint(t, startPoint[spawnCount].position, controlPoint[spawnCount].position,
-                endPoint[spawnCount].position);
+            // var t = count / (float)numberOfMonster;
+            // var position = CalculateBezierPoint(t, startPoint[spawnCount].position, controlPoint[spawnCount].position,
+            //     endPoint[spawnCount].position);
+
+            var position = CalculateRandomPosition(spawnCount);
 
             monsterNew.transform.position = position;
             monsterNew.gameObject.SetActive(true);
         }
 
+        /// <summary>
+        /// 베지어 곡선 공식으로 사용한 곡선 스포닝
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="p0"></param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
         private static Vector3 CalculateBezierPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2)
         {
             // 베지어 곡선 공식
             return (1 - t) * (1 - t) * p0 + 2 * (1 - t) * t * p1 + t * t * p2;
+        }
+
+        private Vector3 CalculateRandomPosition(int spawnCount)
+        {
+            var rangeX = spawnPosition[spawnCount].bounds.size.x;
+            var rangeY = spawnPosition[spawnCount].bounds.size.y;
+            var rangeZ = spawnPosition[spawnCount].bounds.size.z;
+            
+            rangeX = spawnPosition[spawnCount].transform.position.x + Random.Range(-rangeX / 2f, rangeX / 2f);
+            rangeY = spawnPosition[spawnCount].transform.position.y + Random.Range(-rangeY / 2f, rangeY / 2f);
+            rangeZ = spawnPosition[spawnCount].transform.position.z + Random.Range(-rangeZ / 2f, rangeZ / 2f);
+
+            return spawnPosition[spawnCount].transform.position + new Vector3(rangeX, rangeY, rangeZ);
         }
     }
 }

@@ -32,6 +32,8 @@ namespace Creature.MonsterScripts.MonsterClass
 
         public ParticleSystem effectHit;
         private readonly WaitForSeconds hitEffectDelay = new(0.2f);
+        private float currentExplorationTime = 0.0f; // 위치 업데이트 간격
+        private float maxExplorationTime = 2.0f; // 위치 업데이트 간격
 
         protected override void OnEnable()
         {
@@ -55,6 +57,13 @@ namespace Creature.MonsterScripts.MonsterClass
 
             if (currentTarget != null && currentTarget.GetComponent<Squad>().isDead == false) return;
             FindNearbyEnemy();
+            
+            // currentExplorationTime += Time.deltaTime;
+            // if (currentExplorationTime >= maxExplorationTime)
+            // {
+            //     currentExplorationTime = 0.0f;
+            //     FindNearbyEnemy();
+            // }
         }
 
         private void FixedUpdate()
