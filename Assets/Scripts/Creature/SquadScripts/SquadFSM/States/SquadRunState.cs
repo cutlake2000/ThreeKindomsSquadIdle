@@ -1,8 +1,9 @@
+using System;
 using System.Linq;
 using Creature.MonsterScripts.MonsterClass;
-using Data;
 using Managers;
 using UnityEngine;
+using Enum = Data.Enum;
 
 namespace Creature.SquadScripts.SquadFSM.States
 {
@@ -30,21 +31,40 @@ namespace Creature.SquadScripts.SquadFSM.States
 
             if (CheckAttackRange())
             {
-                //TODO: 내일 로직 수정
-                if (Squad.squadClassType == Enum.SquadClassType.Warrior)
+                switch (Squad.squadClassType)
                 {
-                    if (SquadManager.Instance.warriorSkillCoolTimer.Any(timer => timer.isSkillReady))
-                    {
-                        SquadStateMachine.ChangeState(SquadStateMachine.SquadSkillAttackState);
-                    }
-                    else
-                    {
-                        SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
-                    }
-                }
-                else
-                {
-                    SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);   
+                    case Enum.SquadClassType.Warrior:
+                        if (SquadManager.Instance.warriorSkillCoolTimer.Any(timer => timer.isSkillReady))
+                        {
+                            SquadStateMachine.ChangeState(SquadStateMachine.SquadSkillAttackState);
+                        }
+                        else
+                        {
+                            SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
+                        }
+                        break;
+                    case Enum.SquadClassType.Archer:
+                        if (SquadManager.Instance.warriorSkillCoolTimer.Any(timer => timer.isSkillReady))
+                        {
+                            SquadStateMachine.ChangeState(SquadStateMachine.SquadSkillAttackState);
+                        }
+                        else
+                        {
+                            SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
+                        }
+                        break;
+                    case Enum.SquadClassType.Wizard:
+                        if (SquadManager.Instance.warriorSkillCoolTimer.Any(timer => timer.isSkillReady))
+                        {
+                            SquadStateMachine.ChangeState(SquadStateMachine.SquadSkillAttackState);
+                        }
+                        else
+                        {
+                            SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             else if (Squad.currentTarget == null)

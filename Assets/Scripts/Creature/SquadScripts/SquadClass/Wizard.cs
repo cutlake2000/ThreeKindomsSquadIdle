@@ -21,5 +21,18 @@ namespace Creature.SquadScripts.SquadClass
             
             ProjectileManager.Instance.InstantiateBaseAttack(attack, ProjectileSpawnPosition, Direction, Enum.PoolType.ProjectileBaseAttackWizard);
         }
+        
+        protected override void OnSkillAttack1()
+        {
+            base.OnSkillAttack1();
+            
+            for (var i = 0; i < SquadManager.Instance.wizardSkillCoolTimer.Length; i++)
+            {
+                if (!SquadManager.Instance.wizardSkillCoolTimer[i].isSkillReady) continue;
+                SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Wizard, i);
+                ProjectileManager.Instance.InstantiateSkillAttack(attack, ProjectileSpawnPosition, Direction,
+                    Enum.PoolType.ProjectileSkillAttackWizard, i);
+            }
+        }
     }
 }

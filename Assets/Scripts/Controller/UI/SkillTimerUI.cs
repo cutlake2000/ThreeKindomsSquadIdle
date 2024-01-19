@@ -42,6 +42,12 @@ namespace Controller.UI
                 case Enum.SquadClassType.Warrior:
                     warriorSkillSlots[index].skillCoolTimer.SetActive(!isReady);
                     break;
+                case Enum.SquadClassType.Archer:
+                    archerSkillSlots[index].skillCoolTimer.SetActive(!isReady);
+                    break;
+                case Enum.SquadClassType.Wizard:
+                    wizardSkillSlots[index].skillCoolTimer.SetActive(!isReady);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -54,6 +60,14 @@ namespace Controller.UI
                 case Enum.SquadClassType.Warrior:
                     warriorSkillSlots[index].skillCoolTimeSlider.fillAmount = (maxTime - remainedTime) / maxTime;
                     warriorSkillSlots[index].skillCoolTimeText.text = remainedTime.ToString("N1");
+                    break;
+                case Enum.SquadClassType.Archer:
+                    archerSkillSlots[index].skillCoolTimeSlider.fillAmount = (maxTime - remainedTime) / maxTime;
+                    archerSkillSlots[index].skillCoolTimeText.text = remainedTime.ToString("N1");
+                    break;
+                case Enum.SquadClassType.Wizard:
+                    wizardSkillSlots[index].skillCoolTimeSlider.fillAmount = (maxTime - remainedTime) / maxTime;
+                    wizardSkillSlots[index].skillCoolTimeText.text = remainedTime.ToString("N1");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
