@@ -62,12 +62,16 @@ namespace Managers
                     var warriorSkillAttackController = obj.GetComponent<ProjectileSkillAttackController>();
                     warriorSkillAttackController.InitializeBaseAttack(damage, direction);
                     break;
-                // case Enum.PoolType.ProjectileSkillAttackArcher:
-                //     obj = ArcherSkillProjectiles[skillIndex];
-                //     break;
-                // case Enum.PoolType.ProjectileSkillAttackWizard:
-                //     obj = WizardSkillProjectiles[skillIndex];
-                //     break;
+                case Enum.PoolType.ProjectileSkillAttackArcher:
+                    obj = ArcherSkillProjectiles[skillIndex];
+                    var archerSkillAttackController = obj.GetComponent<ProjectileSkillAttackController>();
+                    archerSkillAttackController.InitializeBaseAttack(damage, direction);
+                    break;
+                case Enum.PoolType.ProjectileSkillAttackWizard:
+                    obj = WizardSkillProjectiles[skillIndex];
+                    var wizardSkillAttackController = obj.GetComponent<ProjectileSkillAttackController>();
+                    wizardSkillAttackController.InitializeBaseAttack(damage, direction);
+                    break;
             }
 
             if (obj == null) return;

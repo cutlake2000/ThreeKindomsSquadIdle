@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using Controller.UI;
+using Creature.CreatureClass.SquadClass;
 using Creature.Data;
-using Creature.SquadScripts.SquadClass;
 using Function;
 using UnityEngine;
 using Enum = Data.Enum;

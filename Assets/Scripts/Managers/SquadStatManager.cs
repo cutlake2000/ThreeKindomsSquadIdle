@@ -13,28 +13,37 @@ namespace Managers
     [Serializable]
     public struct SquadStatUI
     {
-        [SerializeField] private TMP_Text currentUpgradeLevel;
-        [SerializeField] private TMP_Text currentIncreasedStat;
-        [SerializeField] private TMP_Text currentUpgradeCost;
-        [SerializeField] private Button upgradeButton;
+        public TMP_Text currentUpgradeLevel;
+        public TMP_Text currentIncreasedStat;
+        public Button upgradeButton;
     }
     public class SquadStatManager : MonoBehaviour
     {
-        public static event Action<Enum.SquadStatType, int> UpgradeTotalSquadAttackAction;
-        public static event Action<Enum.SquadStatType, int> UpgradeTotalSquadHealthAction;
-        public static event Action<Enum.SquadStatType, int> UpgradeTotalSquadDefenceAction;
-        public static event Action<Enum.SquadStatType, int> UpgradeTotalSquadPenetrationAction;
-        public static event Action<Enum.SquadStatType, int> UpgradeTotalSquadAccuracyAction;
-        public static event Action<Enum.SquadStatType, int> UpgradeTotalSquadCriticalDamageAction;
+        public static event Action<Enum.SquadStatPanelStatType, int>[] UpgradeTotalSquadStatAction;
+        public static event Action<Enum.SquadStatPanelStatType, int> UpgradeTotalSquadHealthAction;
+        public static event Action<Enum.SquadStatPanelStatType, int> UpgradeTotalSquadPenetrationAction;
+        public static event Action<Enum.SquadStatPanelStatType, int> UpgradeTotalSquadAccuracyAction;
+        public static event Action<Enum.SquadStatPanelStatType, int> UpgradeTotalSquadAcquisitionGoldAction;
+        public static event Action<Enum.SquadStatPanelStatType, int> UpgradeTotalSquadAcquisitionExpAAction;
+        public static event Action<Enum.SquadStatPanelStatType, int> UpgradeTotalSquadCritialDamageAAction;
 
         public static SquadStatManager Instance;
 
         [SerializeField] private UpgradeSquadStat upgradeSquadAttackStat;
         [SerializeField] private UpgradeSquadStat upgradeSquadHealthStat;
-        [SerializeField] private UpgradeSquadStat upgradeSquadDefenceStat;
         [SerializeField] private UpgradeSquadStat upgradeSquadPenetrationStat;
         [SerializeField] private UpgradeSquadStat upgradeSquadAccuracyStat;
+        [SerializeField] private UpgradeSquadStat upgradeSquadAcquisitionGoldStat;
+        [SerializeField] private UpgradeSquadStat upgradeSquadAcquisitionExpStat;
         [SerializeField] private UpgradeSquadStat upgradeSquadCriticalDamageStat;
+        
+        [SerializeField] private SquadStatUI squadAttackStatUI;
+        [SerializeField] private SquadStatUI squadHealthStatUI;
+        [SerializeField] private SquadStatUI squadPenetrationStatUI;
+        [SerializeField] private SquadStatUI squadAccuracyStatUI;
+        [SerializeField] private SquadStatUI squadAcquisitionGoldStatUI;
+        [SerializeField] private SquadStatUI squadAcquisitionExpStatUI;
+        [SerializeField] private SquadStatUI squadCriticalDamageStatUI;
 
         [Header("능력치 조정")]
         [Header("깡옵 세팅")]
@@ -45,37 +54,6 @@ namespace Managers
         [SerializeField] private int upgradePercentStatIncreaseValue;
         [SerializeField] private float upgradePercentStatCurrentIncreaseValue;
         [SerializeField] private int upgradePercentStatUpgradeCost;
-        
-        [Header("업그레이드 UI")]
-        [Header("[공격력]")]
-        [SerializeField] private TMP_Text currentAttackUpgradeLevelText;
-        [SerializeField] private TMP_Text currentAttackIncreaseStatText;
-        [SerializeField] private Button attackUpgradeButton;
-        
-        [Header("[체력]")]
-        [SerializeField] private TMP_Text currentHealthUpgradeLevelText;
-        [SerializeField] private TMP_Text currentHealthIncreaseStatText;
-        [SerializeField] private Button healthUpgradeButton;
-
-        [Header("[방어력]")]
-        [SerializeField] private TMP_Text currentDefenceUpgradeLevelText;
-        [SerializeField] private TMP_Text currentDefenceIncreaseStatText;
-        [SerializeField] private Button defenceUpgradeButton;
-        
-        [Header("[치명타 데미지]")]
-        [SerializeField] private TMP_Text currentCriticalDamageUpgradeLevelText;
-        [SerializeField] private TMP_Text currentCriticalDamageIncreaseStatText;
-        [SerializeField] private Button criticalDamageUpgradeButton;
-        
-        [Header("[관통]")]
-        [SerializeField] private TMP_Text currentPenetrationUpgradeLevelText;
-        [SerializeField] private TMP_Text currentPenetrationIncreaseStatText;
-        [SerializeField] private Button penetrationUpgradeButton;
-        
-        [Header("[명중]")]
-        [SerializeField] private TMP_Text currentAccuracyUpgradeLevelText;
-        [SerializeField] private TMP_Text currentAccuracyIncreaseStatText;
-        [SerializeField] private Button accuracyUpgradeButton;
 
         private void Awake()
         {
@@ -93,10 +71,13 @@ namespace Managers
         // 버튼 초기화 메서드
         private void SetButtonListeners()
         {
-            attackUpgradeButton.onClick.AddListener(UpgradeAttack);
-            healthUpgradeButton.onClick.AddListener(UpgradeHealth);
-            defenceUpgradeButton.onClick.AddListener(UpgradeDefense);
-            criticalDamageUpgradeButton.onClick.AddListener(UpgradeCriticalDamage);
+            squadAttackStatUI.upgradeButton.onClick.AddListener(UpgradeAttack);
+            squadHealthStatUI.upgradeButton.onClick.AddListener(UpgradeHealth);
+            squadPenetrationStatUI.upgradeButton.onClick.AddListener(upgrpene);
+            squadAccuracyStatUI.upgradeButton.onClick.AddListener(UpgradeHealth);
+            squadAcquisitionGoldStatUI.upgradeButton.onClick.AddListener(UpgradeHealth);
+            squadAcquisitionExpStatUI.upgradeButton.onClick.AddListener(UpgradeHealth);
+            squadCriticalDamageStatUI.upgradeButton.onClick.AddListener(UpgradeCriticalDamage);
         
             attackUpgradeButton.GetComponent<HoldButton>().onHold.AddListener(UpgradeAttack);
             healthUpgradeButton.GetComponent<HoldButton>().onHold.AddListener(UpgradeHealth);
@@ -111,8 +92,8 @@ namespace Managers
                 currentUpgradeLevelText: currentAttackUpgradeLevelText,
                 currentIncreasedStatText: currentAttackIncreaseStatText,
                 upgradeButton: attackUpgradeButton,
-                Enum.SquadStatType.Atk,
-                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatType.Atk}/{nameof(upgradeSquadAttackStat.currentUpgradeLevel)} : ", 0),
+                Enum.SquadStatPanelStatType.Atk,
+                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatPanelStatType.Atk}/{nameof(upgradeSquadAttackStat.currentUpgradeLevel)} : ", 0),
                 upgradeBaseStatUpgradeCost,
                 upgradeBaseStatIncreaseValue,
                 upgradeBaseStatCurrentIncreaseValue,
@@ -122,30 +103,41 @@ namespace Managers
                 currentUpgradeLevelText: currentHealthUpgradeLevelText,
                 currentIncreasedStatText: currentHealthIncreaseStatText,
                 upgradeButton: healthUpgradeButton,
-                Enum.SquadStatType.Hp,
-                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatType.Hp}/{nameof(upgradeSquadHealthStat.currentUpgradeLevel)} : ", 0),
+                Enum.SquadStatPanelStatType.Hp,
+                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatPanelStatType.Hp}/{nameof(upgradeSquadHealthStat.currentUpgradeLevel)} : ", 0),
                 upgradeBaseStatUpgradeCost,
                 upgradeBaseStatIncreaseValue,
                 upgradeBaseStatCurrentIncreaseValue,
                 upgradeStatAction: UpgradeTotalSquadHealthAction
                 );
-            upgradeSquadDefenceStat = new UpgradeSquadStat(
-                currentUpgradeLevelText: currentDefenceUpgradeLevelText,
-                currentIncreasedStatText: currentDefenceIncreaseStatText,
+            upgradeSquadPenetrationStat = new UpgradeSquadStat(
+                currentUpgradeLevelText: currentPenetrationUpgradeLevelText,
+                currentIncreasedStatText: currentPenetrationIncreaseStatText,
                 upgradeButton: defenceUpgradeButton,
-                Enum.SquadStatType.Def,
-                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatType.Def}/{nameof(upgradeSquadDefenceStat.currentUpgradeLevel)} : ", 0),
+                Enum.SquadStatPanelStatType.Def,
+                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatPanelStatType.Def}/{nameof(upgradeSquadPenetrationStat.currentUpgradeLevel)} : ", 0),
                 upgradeBaseStatUpgradeCost,
                 upgradeBaseStatIncreaseValue,
                 upgradeBaseStatCurrentIncreaseValue,
-                upgradeStatAction: UpgradeTotalSquadDefenceAction
+                upgradeStatAction: UpgradeTotalSquadPenetrationAction
                 );
-            upgradeSquadCriticalDamageStat = new UpgradeSquadStat(
+            upgradeSquadAccuracyStat = new UpgradeSquadStat(
+                currentUpgradeLevelText: currentAccuracyUpgradeLevelText,
+                currentIncreasedStatText: currentAccuracyIncreaseStatText,
+                upgradeButton: accuracyUpgradeButton,
+                Enum.SquadStatPanelStatType.Accuracy,
+                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatPanelStatType.Accuracy}/{nameof(upgradeSquadAccuracyStat.currentUpgradeLevel)} : ", 0),
+                upgradeBaseStatUpgradeCost,
+                upgradeBaseStatIncreaseValue,
+                upgradeBaseStatCurrentIncreaseValue,
+                upgradeStatAction: UpgradeTotalSquadAccuracyAction
+            );
+            upgradeSquadAcquisitionGoldStat = new UpgradeSquadStat(
                 currentUpgradeLevelText: currentCriticalDamageUpgradeLevelText,
                 currentIncreasedStatText: currentCriticalDamageIncreaseStatText,
                 upgradeButton: criticalDamageUpgradeButton,
-                Enum.SquadStatType.CrtDmg,
-                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatType.CrtDmg}/{nameof(upgradeSquadCriticalDamageStat.currentUpgradeLevel)} : ", 0),
+                Enum.SquadStatPanelStatType.CrtDmg,
+                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatPanelStatType.CrtDmg}/{nameof(upgradeSquadCriticalDamageStat.currentUpgradeLevel)} : ", 0),
                 upgradeBaseStatUpgradeCost,
                 upgradeBaseStatIncreaseValue,
                 upgradeBaseStatCurrentIncreaseValue,
@@ -155,49 +147,37 @@ namespace Managers
                 currentUpgradeLevelText: currentPenetrationUpgradeLevelText,
                 currentIncreasedStatText: currentPenetrationIncreaseStatText,
                 upgradeButton: penetrationUpgradeButton,
-                Enum.SquadStatType.Penetration,
-                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatType.Penetration}/{nameof(upgradeSquadPenetrationStat.currentUpgradeLevel)} : ", 0),
+                Enum.SquadStatPanelStatType.Penetration,
+                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatPanelStatType.Penetration}/{nameof(upgradeSquadPenetrationStat.currentUpgradeLevel)} : ", 0),
                 upgradeBaseStatUpgradeCost,
                 upgradeBaseStatIncreaseValue,
                 upgradeBaseStatCurrentIncreaseValue,
                 upgradeStatAction: UpgradeTotalSquadPenetrationAction
             );
-            upgradeSquadAccuracyStat = new UpgradeSquadStat(
-                currentUpgradeLevelText: currentAccuracyUpgradeLevelText,
-                currentIncreasedStatText: currentAccuracyIncreaseStatText,
-                upgradeButton: accuracyUpgradeButton,
-                Enum.SquadStatType.Accuracy,
-                ES3.Load($"{nameof(SquadStat)}/{Enum.SquadStatType.Accuracy}/{nameof(upgradeSquadAccuracyStat.currentUpgradeLevel)} : ", 0),
-                upgradeBaseStatUpgradeCost,
-                upgradeBaseStatIncreaseValue,
-                upgradeBaseStatCurrentIncreaseValue,
-                upgradeStatAction: UpgradeTotalSquadAccuracyAction
-            );
+  
         }
         
         // 스텟 UI 업데이트
         private static void SetUpgradeUI(UpgradeSquadStat upgradeSquadStat) => upgradeSquadStat.UpdateSquadStatUI();
 
-        private void SetUpgradeUI(Enum.SquadStatType type)
+        private void SetUpgradeUI(Enum.SquadStatPanelStatType type)
         {
             switch (type)
             {
-                case Enum.SquadStatType.Atk:
+                case Enum.SquadStatPanelStatType.Atk:
                     upgradeSquadAttackStat.UpdateSquadStatUI();
                     break;
-                case Enum.SquadStatType.Hp:
+                case Enum.SquadStatPanelStatType.Hp:
                     upgradeSquadHealthStat.UpdateSquadStatUI();
                     break;
-                case Enum.SquadStatType.Def:
-                    upgradeSquadDefenceStat.UpdateSquadStatUI();
                     break;
-                case Enum.SquadStatType.CrtDmg:
+                case Enum.SquadStatPanelStatType.CrtDmg:
                     upgradeSquadCriticalDamageStat.UpdateSquadStatUI();
                     break;
-                case Enum.SquadStatType.Penetration:
+                case Enum.SquadStatPanelStatType.Penetration:
                     upgradeSquadPenetrationStat.UpdateSquadStatUI();
                     break;
-                case Enum.SquadStatType.Accuracy:
+                case Enum.SquadStatPanelStatType.Accuracy:
                     upgradeSquadAccuracyStat.UpdateSquadStatUI();
                     break;
             }
@@ -208,7 +188,6 @@ namespace Managers
         {
             upgradeSquadAttackStat.UpdateSquadStatUI();
             upgradeSquadHealthStat.UpdateSquadStatUI();
-            upgradeSquadDefenceStat.UpdateSquadStatUI();
             upgradeSquadCriticalDamageStat.UpdateSquadStatUI();
             upgradeSquadPenetrationStat.UpdateSquadStatUI();
             upgradeSquadAccuracyStat.UpdateSquadStatUI();
@@ -218,7 +197,7 @@ namespace Managers
         public void UpgradeAttack()
         {
             if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, upgradeSquadAttackStat.currentUpgradeCost)) return;
-            if (attackUpgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
+            if (squadAttackStatUI.upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
 
             upgradeSquadAttackStat.UpdateSquadStat();
             SetUpgradeUI(upgradeSquadAttackStat);
@@ -229,7 +208,7 @@ namespace Managers
         public void UpgradeHealth()
         {
             if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, upgradeSquadHealthStat.currentUpgradeCost)) return;
-            if (attackUpgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
+            if (squadHealthStatUI.upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
             
             upgradeSquadHealthStat.UpdateSquadStat();
             SetUpgradeUI(upgradeSquadHealthStat);
@@ -237,13 +216,13 @@ namespace Managers
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }
 
-        public void UpgradeDefense()
+        public void UpgradePenetration()
         {
-            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, upgradeSquadDefenceStat.currentUpgradeCost)) return;
-            if (attackUpgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
+            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, upgradeSquadPenetrationStat.currentUpgradeCost)) return;
+            if (squadPenetrationStatUI.upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
             
-            upgradeSquadDefenceStat.UpdateSquadStat();
-            SetUpgradeUI(upgradeSquadDefenceStat);
+            upgradeSquadPenetrationStat.UpdateSquadStat();
+            SetUpgradeUI(upgradeSquadPenetrationStat);
             
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }
@@ -251,7 +230,7 @@ namespace Managers
         public void UpgradeCriticalDamage()
         {
             if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, upgradeSquadCriticalDamageStat.currentUpgradeCost)) return;
-            if (attackUpgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
+            if (squadCriticalDamageStatUI.upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
             
             upgradeSquadCriticalDamageStat.UpdateSquadStat();
             SetUpgradeUI(upgradeSquadCriticalDamageStat);

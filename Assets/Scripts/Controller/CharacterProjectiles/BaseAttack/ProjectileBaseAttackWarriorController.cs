@@ -1,4 +1,5 @@
-using Creature.MonsterScripts.MonsterClass;
+using Creature.CreatureClass;
+using Creature.CreatureClass.MonsterClass;
 using Function;
 using Managers;
 using UnityEngine;

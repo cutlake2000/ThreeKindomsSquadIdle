@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Creature.MonsterScripts.MonsterClass;
+using Creature.CreatureClass.MonsterClass;
 using UnityEngine;
 using Enum = Data.Enum;
 using Random = UnityEngine.Random;
@@ -12,9 +12,6 @@ namespace Managers
 
         public GameObject[] monsterNewTypePrefabs;
         public BoxCollider2D[] spawnPosition;
-        public Transform[] startPoint;
-        public Transform[] controlPoint;
-        public Transform[] endPoint;
         [SerializeField] private List<MonsterNew> activeMonsters = new();
 
         private readonly Dictionary<string, float> animationLengths = new();
@@ -27,9 +24,10 @@ namespace Managers
         private void Awake()
         {
             Instance = this;
-            
+
             InitializeMonsterPools();
         }
+
         private void InitializeMonsterPools()
         {
             monsterNewPools = new Dictionary<Enum.MonsterClassType, Queue<MonsterNew>>();
@@ -86,7 +84,7 @@ namespace Managers
             for (var i = 0; i < count; i++)
             {
                 var monsterNew = GetMonster(monsterNewClassType);
-                PositionMonster(monsterNew, i, count);
+                PositionMonster(monsterNew);
             }
         }
 
@@ -114,20 +112,20 @@ namespace Managers
             activeMonsters.Remove(monsterNew);
         }
 
-        private void PositionMonster(Component monsterNew, int count, int numberOfMonster)
+        private void PositionMonster(Component monsterNew)
         {
             // var t = count / (float)numberOfMonster;
             // var position = CalculateBezierPoint(t, startPoint[spawnCount].position, controlPoint[spawnCount].position,
             //     endPoint[spawnCount].position);
 
-            var position = CalculateRandomPosition(spawnCount);
+            var position = CalculateRandomPosition();
 
             monsterNew.transform.position = position;
             monsterNew.gameObject.SetActive(true);
         }
 
         /// <summary>
-        /// 베지어 곡선 공식으로 사용한 곡선 스포닝
+        ///     베지어 곡선 공식으로 사용한 곡선 스포닝
         /// </summary>
         /// <param name="t"></param>
         /// <param name="p0"></param>
@@ -140,17 +138,15 @@ namespace Managers
             return (1 - t) * (1 - t) * p0 + 2 * (1 - t) * t * p1 + t * t * p2;
         }
 
-        private Vector3 CalculateRandomPosition(int spawnCount)
+        private Vector3 CalculateRandomPosition()
         {
             var rangeX = spawnPosition[spawnCount].bounds.size.x;
             var rangeY = spawnPosition[spawnCount].bounds.size.y;
             var rangeZ = spawnPosition[spawnCount].bounds.size.z;
-            
+
             rangeX = spawnPosition[spawnCount].transform.position.x + Random.Range(-rangeX / 2f, rangeX / 2f);
             rangeY = spawnPosition[spawnCount].transform.position.y + Random.Range(-rangeY / 2f, rangeY / 2f);
             rangeZ = spawnPosition[spawnCount].transform.position.z + Random.Range(-rangeZ / 2f, rangeZ / 2f);
-            
-            Debug.Log($"{spawnPosition[spawnCount].transform.position + new Vector3(rangeX, rangeY, rangeZ)}");
 
             return spawnPosition[spawnCount].transform.position + new Vector3(rangeX, rangeY, rangeZ);
         }

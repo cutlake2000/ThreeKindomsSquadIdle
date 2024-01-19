@@ -1,5 +1,4 @@
 using System;
-using Creature.SquadScripts.SquadClass;
 using UnityEngine;
 using Managers;
 

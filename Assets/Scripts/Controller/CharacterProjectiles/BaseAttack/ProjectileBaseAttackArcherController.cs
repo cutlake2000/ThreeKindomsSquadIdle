@@ -1,4 +1,5 @@
-using Creature.MonsterScripts.MonsterClass;
+using Creature.CreatureClass;
+using Creature.CreatureClass.MonsterClass;
 using Data;
 using Function;
 using Managers;

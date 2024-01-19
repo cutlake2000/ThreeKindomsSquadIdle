@@ -13,7 +13,7 @@ namespace Creature.Data
     {
         public Action<Enum.SquadStatType, int> UpgradeStatAction;
         
-        [Tooltip("스탯 타입")] public Enum.SquadStatType squadStatType;
+        [FormerlySerializedAs("allSquadStatType")] [Tooltip("스탯 타입")] public Enum.SquadStatType squadStatType;
         [Tooltip("현재 스탯 레벨")] public int currentUpgradeLevel;
         [Tooltip("현재 스탯 강화 비용")] public int currentUpgradeCost;
         [Tooltip("현재 스탯 증가량")] public int currentIncreasedStat;

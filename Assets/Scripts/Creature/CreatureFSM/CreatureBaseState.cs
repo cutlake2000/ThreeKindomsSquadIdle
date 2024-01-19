@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Creature.CreatureFSM
 {
-    public class CreatureBaseState : MonoBehaviour, IState
+    public class CreatureBaseState : IState
     {
         protected Animator Animator;
         protected AnimationEventReceiver AnimationEventReceiver;
@@ -12,6 +12,8 @@ namespace Creature.CreatureFSM
         protected AnimationData AnimationData;
         
         protected float MoveSpeed;
+
+        protected bool OnAttack;
 
         public virtual void Enter() { }
 

@@ -126,6 +126,19 @@ namespace Data
             Wizard
         }
 
+        public enum SquadStatPanelStatType
+        {
+            Atk, // 공격력
+            Hp, // 체력
+            Penetration, // 관통
+            Evasion, // 명중
+            AcquisitionGold, // 골드 획득량
+            AcquisitionExp, // 경험치 증가량
+            CrtDmg, // 치명타 피해량
+            AmplificationSkillEffects, // 스킬 효과 증폭
+            CurrentAtk, // 최종 공격력
+        }
+
         public enum SquadStatType
         {
             WarriorAtk, // 전사 공격력
@@ -143,6 +156,8 @@ namespace Data
             MagicPower, // 마법력 (Magic Power)
             Resistance, // 저항력 (Resistance)
             MoveSpeed, // 이동 속도 (Movement Speed)
+            AcquisitionGold, // 골드 획득량
+            AcquisitionExp, // 경험치 획득량
             WarriorAttackRange,
             ArcherAttackRange,
             WizardAttackRange,
