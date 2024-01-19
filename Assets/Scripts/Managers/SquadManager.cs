@@ -322,6 +322,49 @@ namespace Managers
                     warriorSkillCoolTimer[index].isSkillReady = true;
                     SkillTimerUI.Instance.ActivateSkillTimer(type, index, warriorSkillCoolTimer[index].isSkillReady);
                     yield break;
+                
+                case Enum.SquadClassType.Archer:
+                    archerSkillCoolTimer[index].remainedSkillCoolTime = archerSkillCoolTimer[index].maxSkillCoolTime; 
+                    archerSkillCoolTimer[index].isSkillReady = false;
+                    SkillTimerUI.Instance.ActivateSkillTimer(type, index, archerSkillCoolTimer[index].isSkillReady);
+                    
+                    while (true)
+                    {
+                        archerSkillCoolTimer[index].remainedSkillCoolTime -= Time.deltaTime;
+
+                        if (archerSkillCoolTimer[index].remainedSkillCoolTime <= 0) break;
+                        SkillTimerUI.Instance.SetSkillTimerText(type, index, archerSkillCoolTimer[index].remainedSkillCoolTime, archerSkillCoolTimer[index].maxSkillCoolTime);
+                        
+                        yield return null;
+                    }
+
+                    archerSkillCoolTimer[index].remainedSkillCoolTime = 0.0f;
+                    SkillTimerUI.Instance.SetSkillTimerText(type, index, archerSkillCoolTimer[index].remainedSkillCoolTime, archerSkillCoolTimer[index].maxSkillCoolTime);
+                    
+                    archerSkillCoolTimer[index].isSkillReady = true;
+                    SkillTimerUI.Instance.ActivateSkillTimer(type, index, archerSkillCoolTimer[index].isSkillReady);
+                    yield break;
+                case Enum.SquadClassType.Wizard:
+                    wizardSkillCoolTimer[index].remainedSkillCoolTime = wizardSkillCoolTimer[index].maxSkillCoolTime; 
+                    wizardSkillCoolTimer[index].isSkillReady = false;
+                    SkillTimerUI.Instance.ActivateSkillTimer(type, index, wizardSkillCoolTimer[index].isSkillReady);
+                    
+                    while (true)
+                    {
+                        wizardSkillCoolTimer[index].remainedSkillCoolTime -= Time.deltaTime;
+
+                        if (wizardSkillCoolTimer[index].remainedSkillCoolTime <= 0) break;
+                        SkillTimerUI.Instance.SetSkillTimerText(type, index, wizardSkillCoolTimer[index].remainedSkillCoolTime, wizardSkillCoolTimer[index].maxSkillCoolTime);
+                        
+                        yield return null;
+                    }
+
+                    wizardSkillCoolTimer[index].remainedSkillCoolTime = 0.0f;
+                    SkillTimerUI.Instance.SetSkillTimerText(type, index, wizardSkillCoolTimer[index].remainedSkillCoolTime, wizardSkillCoolTimer[index].maxSkillCoolTime);
+                    
+                    wizardSkillCoolTimer[index].isSkillReady = true;
+                    SkillTimerUI.Instance.ActivateSkillTimer(type, index, wizardSkillCoolTimer[index].isSkillReady);
+                    yield break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

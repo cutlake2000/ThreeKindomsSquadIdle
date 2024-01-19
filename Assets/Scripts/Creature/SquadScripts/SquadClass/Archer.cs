@@ -26,5 +26,18 @@ namespace Creature.SquadScripts.SquadClass
         {
             EffectManager.Instance.CreateParticlesAtPosition(projectileSpawn.position, Enum.SquadClassType.Archer, false);
         }
+        
+        protected override void OnSkillAttack1()
+        {
+            base.OnSkillAttack1();
+            
+            for (var i = 0; i < SquadManager.Instance.archerSkillCoolTimer.Length; i++)
+            {
+                if (!SquadManager.Instance.archerSkillCoolTimer[i].isSkillReady) continue;
+                SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Archer, i);
+                ProjectileManager.Instance.InstantiateSkillAttack(attack, ProjectileSpawnPosition, Direction,
+                    Enum.PoolType.ProjectileSkillAttackArcher, i);
+            }
+        }
     }
 }

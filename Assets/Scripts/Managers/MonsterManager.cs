@@ -149,6 +149,8 @@ namespace Managers
             rangeX = spawnPosition[spawnCount].transform.position.x + Random.Range(-rangeX / 2f, rangeX / 2f);
             rangeY = spawnPosition[spawnCount].transform.position.y + Random.Range(-rangeY / 2f, rangeY / 2f);
             rangeZ = spawnPosition[spawnCount].transform.position.z + Random.Range(-rangeZ / 2f, rangeZ / 2f);
+            
+            Debug.Log($"{spawnPosition[spawnCount].transform.position + new Vector3(rangeX, rangeY, rangeZ)}");
 
             return spawnPosition[spawnCount].transform.position + new Vector3(rangeX, rangeY, rangeZ);
         }
