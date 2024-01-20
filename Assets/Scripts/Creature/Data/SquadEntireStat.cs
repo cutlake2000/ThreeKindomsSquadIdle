@@ -44,7 +44,7 @@ namespace Creature.Data
         [SerializeField] private int currentPercentAcquisitionGold;
         [SerializeField] private int currentPercentAcquisitionExp;
 
-        // 스텟 증가 메서드
+         // 스텟 증가 메서드
         public void IncreaseBaseStat(Enum.SquadStatType squadStatType, int increaseValue)
         {
             switch (squadStatType)
@@ -73,38 +73,40 @@ namespace Creature.Data
             }
         }
         
-        public void IncreaseBaseStatBySquadStatPanel(Enum.SquadStatTypeBySquadPanel type, int increaseValue)
+        public void IncreaseBaseStatBySquadStatPanel(Enum.SquadStatTypeBySquadPanel type, float increaseValue)
         {
             switch (type)
             {
                 case Enum.SquadStatTypeBySquadPanel.Atk:
-                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Attack, IncreaseBaseStat(ref BaseAttack, increaseValue, ref currentBaseAttack, currentPercentAttack));
+                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Attack, IncreaseBaseStat(ref BaseAttack, (int)increaseValue, ref currentBaseAttack, currentPercentAttack));
                     break;
                 case Enum.SquadStatTypeBySquadPanel.Hp:
-                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Health, IncreaseBaseStat(ref BaseHealth, increaseValue, ref currentBaseHealth, currentPercentHealth));
+                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Health, IncreaseBaseStat(ref BaseHealth, (int)increaseValue, ref currentBaseHealth, currentPercentHealth));
                     break;
                 case Enum.SquadStatTypeBySquadPanel.Penetration:
-                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Penetration, IncreaseBaseStat(ref BasePenetration, increaseValue, ref currentBasePenetration, currentBasePenetration));
+                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Penetration, IncreaseBaseStat(ref BasePenetration, (int)increaseValue, ref currentBasePenetration, currentBasePenetration));
                     break;
                 case Enum.SquadStatTypeBySquadPanel.Accuracy:
-                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Evasion, IncreaseBaseStat(ref BaseAccuracy, increaseValue, ref currentBaseAccuracy, currentPercentAccuracy));
+                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Evasion, IncreaseBaseStat(ref BaseAccuracy, (int)increaseValue, ref currentBaseAccuracy, currentPercentAccuracy));
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+        
+            public void IncreasePercentStatBySquadStatPanel(Enum.SquadStatTypeBySquadPanel type, float increaseValue)
+        {
+            switch (type)
+            {
                 case Enum.SquadStatTypeBySquadPanel.AcquisitionGold:
-                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.AcquisitionGold, IncreaseBaseStat(ref BaseAcquisitionGold, increaseValue, ref currentBaseAcquisitionGold, currentPercentAcquisitionGold));
+                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.AcquisitionGold, IncreasePercentStat(ref BaseAcquisitionGold, (int) increaseValue * 100, ref currentBaseAcquisitionGold, currentPercentAcquisitionGold));
                     break;
                 case Enum.SquadStatTypeBySquadPanel.AcquisitionExp:
-                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.AcquisitionExp, IncreaseBaseStat(ref BaseAcquisitionExp, increaseValue, ref currentBaseAcquisitionExp, currentPercentAcquisitionExp));
+                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.AcquisitionExp, IncreasePercentStat(ref BaseAcquisitionExp, (int) increaseValue * 100, ref currentBaseAcquisitionExp, currentPercentAcquisitionExp));
                     break;
                 case Enum.SquadStatTypeBySquadPanel.CrtDmg:
-                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.CriticalDamage, IncreaseBaseStat(ref BaseCriticalDamage, increaseValue, ref currentBaseCriticalDamage, currentPercentCriticalDamage));
+                    SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.CriticalDamage, IncreasePercentStat(ref BaseCriticalDamage, (int) increaseValue * 100, ref currentBaseCriticalDamage, currentPercentCriticalDamage));
                     break;
-                //TODO: 추후 스쿼드 패널 스탯 추가할 경우 수정
-                // case Enum.SquadStatPanelStatType.AmplificationSkillEffects:
-                //     SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.AmplificationSkillEffects, IncreaseBaseStat(ref baAm, increaseValue, ref currentBaseAttack, currentPercentAttack));
-                //     break;
-                // case Enum.SquadStatPanelStatType.CurrentAtk:
-                //     SquadManager.Instance.SetTotalSquadStat(Enum.SquadStatType.CurrentAtk, IncreaseBaseStat(ref BaseAttack, increaseValue, ref currentBaseAttack, currentPercentAttack));
-                //     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

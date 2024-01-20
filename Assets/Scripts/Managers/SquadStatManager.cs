@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Creature.Data;
 using Function;
+using ScriptableObjects.Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -19,19 +21,12 @@ namespace Managers
 
     public class SquadStatManager : MonoBehaviour
     {
-        public event Action<Enum.SquadStatTypeBySquadPanel, int> UpgradeTotalSquadStatAction;
-
-        [SerializeField] private SquadStatBySquadPanel[] squadStatPanelStat;
-        [SerializeField] private SquadStatPanelStatUI[] squadStatPanelStatUI;
+        public event Action<Enum.SquadStatTypeBySquadPanel, float> UpgradeTotalSquadBaseStatAction;
+        public event Action<Enum.SquadStatTypeBySquadPanel, float> UpgradeTotalSquadPercentStatAction;
         
-        [Header("능력치 조정")]
-        [SerializeField] private int currentIncreaseStatValue;
-        [SerializeField] private int upgradeCost;
-        [Header("깡옵 세팅")]
-        [SerializeField] private int increaseBaseStatValue;
-        [Header("퍼옵 세팅")]
-        [SerializeField] private int increasePercentStatValue;
-
+        //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
+        [SerializeField] private SquadStatSo[] squadStatSo;
+        [SerializeField] private SquadStat[] squadStats;
         public static SquadStatManager Instance;
 
         private void Awake()
@@ -50,12 +45,12 @@ namespace Managers
         // 버튼 초기화 메서드
         private void SetButtonListeners()
         {
-            for (var i = 0; i < squadStatPanelStatUI.Length; i++)
+            for (var i = 0; i < squadStats.Length; i++)
             {
                 var index = i;
-                squadStatPanelStatUI[i].upgradeButton.onClick
+                squadStats[i].GetComponent<SquadStat>().upgradeButton.onClick
                     .AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
-                squadStatPanelStatUI[i].upgradeButton.GetComponent<HoldButton>().onHold.AddListener(() =>
+                squadStats[i].GetComponent<SquadStat>().upgradeButton.GetComponent<HoldButton>().onHold.AddListener(() =>
                     UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
             }
         }
@@ -63,46 +58,53 @@ namespace Managers
         // UpdateData 초기화 메서드 - 여기서 스텟퍼센트 조정 가능
         private void SetUpgradeData()
         {
-            for (var i = 0; i < squadStatPanelStatUI.Length; i++)
-                squadStatPanelStat[i] = new SquadStatBySquadPanel(
-                    squadStatPanelStatUI[i].currentUpgradeLevelText,
-                    squadStatPanelStatUI[i].currentIncreasedStatText,
-                    squadStatPanelStatUI[i].upgradeButton,
-                    (Enum.SquadStatTypeBySquadPanel)i,
-                    ES3.Load($"{nameof(SquadEntireStat)}/{(Enum.SquadStatTypeBySquadPanel)i}/currentUpgradeLevel : ", 0),
-                    upgradeCost,
-                    (Enum.IncreaseStatValueType)1,
-                    increaseBaseStatValue,
-                    currentIncreaseStatValue,
-                    UpgradeTotalSquadStatAction
-                );
+            for (var i = 0; i < squadStats.Length; i++)
+            {
+                squadStats[i].squadStatName = squadStatSo[i].squadStatName;
+                squadStats[i].squadStatTypeBySquadPanel = squadStatSo[i].squadStatTypeBySquadPanel;
+                squadStats[i].increaseStatValueType = squadStatSo[i].increaseStatValueType;
+                squadStats[i].increaseStatValue = squadStatSo[i].increaseStatValue;
+                squadStats[i].currentLevel =
+                    ES3.Load($"{nameof(SquadEntireStat)}/{(Enum.SquadStatTypeBySquadPanel)i}/currentLevel : ",
+                        0);
+                squadStats[i].currentLevelUpCost = squadStatSo[i].levelUpCost;
+                squadStats[i].currentIncreasedStat = squadStats[i].currentLevel * squadStats[i].increaseStatValue;
+                squadStats[i].squadStatSprite = squadStatSo[i].squadStatImage;
+
+                switch (squadStats[i].increaseStatValueType)
+                {
+                    case Enum.IncreaseStatValueType.BaseStat:
+                        squadStats[i].UpgradeTotalSquadStatAction = UpgradeTotalSquadBaseStatAction;
+                        break;
+                    case Enum.IncreaseStatValueType.PercentStat:
+                        squadStats[i].UpgradeTotalSquadStatAction = UpgradeTotalSquadPercentStatAction;
+                        break;
+                }
+                
+                squadStats[i].SetSquadStatUI();
+            }
         }
 
         // 스텟 UI 업데이트
-        private static void SetUpgradeUI(SquadStatBySquadPanel squadStatBySquadPanel)
+        private static void SetUpgradeUI(SquadStat squadStat)
         {
-            squadStatBySquadPanel.UpdateSquadStatUI();
-        }
-
-        private void SetUpgradeUI(Enum.SquadStatTypeBySquadPanel type)
-        {
-            squadStatPanelStat[(int)type].UpdateSquadStatUI();
+            squadStat.UpdateIncreaseSquadStatUI();
         }
 
         // 모든 스텟 UI 업데이트
         private void UpdateAllSquadStatUI()
         {
-            foreach (var squadStat in squadStatPanelStat) squadStat.UpdateSquadStatUI();
+            foreach (var squadStat in squadStats) squadStat.UpdateIncreaseSquadStatUI();
         }
 
         public void UpgradeSquadStatPanelStat(Enum.SquadStatTypeBySquadPanel type)
         {
             if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint,
-                    squadStatPanelStat[(int)type].currentUpgradeCost)) return;
-            if (squadStatPanelStatUI[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
+                    squadStats[(int)type].levelUpCost)) return;
+            if (squadStats[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
 
-            squadStatPanelStat[(int)type].UpdateSquadStat();
-            SetUpgradeUI(squadStatPanelStat[(int)type]);
+            squadStats[(int)type].UpdateSquadStat();
+            SetUpgradeUI(squadStats[(int)type]);
 
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }

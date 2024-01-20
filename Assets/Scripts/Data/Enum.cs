@@ -141,8 +141,8 @@ namespace Data
 
         public enum IncreaseStatValueType
         {
-            Number,
-            Percent
+            BaseStat,
+            PercentStat
         }
 
         public enum SquadStatType

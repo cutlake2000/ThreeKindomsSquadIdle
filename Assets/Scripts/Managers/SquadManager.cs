@@ -26,15 +26,18 @@ namespace Managers
         public static Action<Equipment> EquipAction;
         public static Action<Equipment> UnEquipAction;
 
-        [Header("=== Camera Settings=== ")] [SerializeField]
-        private CameraController cameraController;
+        [Header("=== Camera Settings=== ")]
+        [SerializeField] private CameraController cameraController;
 
-        [Space(5)] [Header("=== Squad Position Info ===")]
+        [Space(5)]
+        [Header("=== Squad Position Info ===")]
         public GameObject[] squads;
 
         [SerializeField] private Vector3[] squadSpawnPosition;
 
-        [Space(5)] [Header("=== Squad Battle Info ===")] [Header("공격 범위")] [SerializeField]
+        [Space(5)]
+        [Header("=== Squad Battle Info ===")]
+        [Header("공격 범위")] [SerializeField]
         private float warriorAttackRange;
 
         [SerializeField] private float archerAttackRange;
@@ -53,7 +56,9 @@ namespace Managers
         [Header("위자드")]
         public SkillCoolTimer[] wizardSkillCoolTimer;
 
-        [FormerlySerializedAs("squadStat")] [Space(5)] [Header("=== Squad Stats Info ===")] [Header("Base SquadStats")] [SerializeField]
+        [Space(5)]
+        [Header("=== Squad Stats Info ===")]
+        [Header("Base SquadStats")] [SerializeField]
         public SquadEntireStat squadEntireStat;
 
         [Header("Total SquadStats")]
@@ -122,15 +127,16 @@ namespace Managers
             totalDefence = squadEntireStat.BaseDefense;
             totalPenetration = squadEntireStat.BasePenetration;
             totalAccuracy = squadEntireStat.BaseAccuracy;
-            totalCriticalRate = squadEntireStat.BaseCriticalDamage;
+            totalCriticalRate = squadEntireStat.BaseCriticalRate;
             totalCriticalDamage = squadEntireStat.BaseCriticalDamage;
         }
 
         // 이벤트 설정하는 메서드
         private void SetEventListeners()
         {
-            SquadStatManager.Instance.UpgradeTotalSquadStatAction += squadEntireStat.IncreaseBaseStatBySquadStatPanel;
-
+            SquadStatManager.Instance.UpgradeTotalSquadBaseStatAction += squadEntireStat.IncreaseBaseStatBySquadStatPanel;
+            SquadStatManager.Instance.UpgradeTotalSquadPercentStatAction += squadEntireStat.IncreasePercentStatBySquadStatPanel;
+            
             EquipAction += Equip;
             UnEquipAction += UnEquip;
         }

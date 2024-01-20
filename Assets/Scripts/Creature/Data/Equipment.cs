@@ -42,22 +42,22 @@ namespace Creature.Data
         
         [SerializeField] private ParticleSystem[] summonEffects;
 
-        public Equipment(string id, int quantity, int tier, bool isEquipped, Enum.EquipmentType type, Enum.EquipmentRarity equipmentRarity,
-            int level, int basicEquippedEffect, int basicOwnedEffect)
-        {
-            this.id = id;
-            this.quantity = quantity;
-            this.tier = tier;
-            this.isEquipped = isEquipped;
-            this.type = type;
-            this.equipmentRarity = equipmentRarity;
-            this.level = level;
-            this.basicEquippedEffect = basicEquippedEffect;
-            this.basicOwnedEffect = basicOwnedEffect;
-
-            equippedEffect = this.basicEquippedEffect;
-            ownedEffect = this.basicOwnedEffect;
-        }
+        // public Equipment(string id, int quantity, int tier, bool isEquipped, Enum.EquipmentType type, Enum.EquipmentRarity equipmentRarity,
+        //     int level, int basicEquippedEffect, int basicOwnedEffect)
+        // {
+        //     this.id = id;
+        //     this.quantity = quantity;
+        //     this.tier = tier;
+        //     this.isEquipped = isEquipped;
+        //     this.type = type;
+        //     this.equipmentRarity = equipmentRarity;
+        //     this.level = level;
+        //     this.basicEquippedEffect = basicEquippedEffect;
+        //     this.basicOwnedEffect = basicOwnedEffect;
+        //
+        //     equippedEffect = this.basicEquippedEffect;
+        //     ownedEffect = this.basicOwnedEffect;
+        // }
         
         public void SetManagedPool(IObjectPool<Equipment> pool)
         {
