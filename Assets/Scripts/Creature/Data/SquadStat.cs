@@ -10,7 +10,7 @@ namespace Creature.Data
 {
     public class SquadStat : MonoBehaviour
     {
-        public Action<Enum.SquadStatTypeBySquadPanel, float> UpgradeTotalSquadStatAction;
+        public Action<Enum.SquadStatTypeBySquadPanel, int> UpgradeTotalSquadStatAction;
 
         [Header("아이콘")]
         public Sprite squadStatSprite;
@@ -27,14 +27,14 @@ namespace Creature.Data
         [Header("스탯 증가량 타입")]
         public Enum.IncreaseStatValueType increaseStatValueType;
         [Header("스탯 증가량")]
-        public float increaseStatValue;
+        public int increaseStatValue;
         [Space(5)]
         [Header("현재 스탯 레벨")]
         public int currentLevel; 
         [Header("현재 스탯 강화 비용")]
         public int currentLevelUpCost;
         [Header("현재 스탯 증가량")]
-        public float currentIncreasedStat;
+        public int currentIncreasedStat;
 
         [Header("UI")]
         public Image squadStatImage;
@@ -52,7 +52,7 @@ namespace Creature.Data
             Enum.IncreaseStatValueType increaseStatValueType,
             int increaseStatValue,
             int currentIncreasedStat,
-            Action<Enum.SquadStatTypeBySquadPanel, float> upgradeTotalSquadStatAction)
+            Action<Enum.SquadStatTypeBySquadPanel, int> upgradeTotalSquadStatAction)
         {
             this.squadStatImage.sprite = squadStatImage;
             this.squadStatTypeBySquadPanel = squadStatTypeBySquadPanel;
@@ -84,7 +84,7 @@ namespace Creature.Data
                     break;
                 case Enum.IncreaseStatValueType.PercentStat:
                     Debug.Log("퍼옵");
-                    squadCurrentIncreasedStatText.text = currentIncreasedStat == 0? "0%" : $"{currentIncreasedStat}%";
+                    squadCurrentIncreasedStatText.text = currentIncreasedStat == 0? "0%" : $"{(double) currentIncreasedStat / 100}%";
                     break;
             }
         }

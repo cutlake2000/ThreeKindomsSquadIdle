@@ -21,8 +21,7 @@ namespace Managers
 
     public class SquadStatManager : MonoBehaviour
     {
-        public event Action<Enum.SquadStatTypeBySquadPanel, float> UpgradeTotalSquadBaseStatAction;
-        public event Action<Enum.SquadStatTypeBySquadPanel, float> UpgradeTotalSquadPercentStatAction;
+        public event Action<Enum.SquadStatTypeBySquadPanel, int> UpgradeTotalSquadStatAction;
         
         //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
         [SerializeField] private SquadStatSo[] squadStatSo;
@@ -70,16 +69,7 @@ namespace Managers
                 squadStats[i].currentLevelUpCost = squadStatSo[i].levelUpCost;
                 squadStats[i].currentIncreasedStat = squadStats[i].currentLevel * squadStats[i].increaseStatValue;
                 squadStats[i].squadStatSprite = squadStatSo[i].squadStatImage;
-
-                switch (squadStats[i].increaseStatValueType)
-                {
-                    case Enum.IncreaseStatValueType.BaseStat:
-                        squadStats[i].UpgradeTotalSquadStatAction = UpgradeTotalSquadBaseStatAction;
-                        break;
-                    case Enum.IncreaseStatValueType.PercentStat:
-                        squadStats[i].UpgradeTotalSquadStatAction = UpgradeTotalSquadPercentStatAction;
-                        break;
-                }
+                squadStats[i].UpgradeTotalSquadStatAction = UpgradeTotalSquadStatAction;
                 
                 squadStats[i].SetSquadStatUI();
             }

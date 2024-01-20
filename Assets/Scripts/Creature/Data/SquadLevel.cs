@@ -83,9 +83,9 @@ namespace Creature.Data
     
         private void SetBaseStats()
         {
-            Managers.SquadManager.Instance.squadEntireStat.IncreaseBaseStat(Enum.SquadStatType.Attack, IncreaseAttack * (CurrentLevel - 1));
-            Managers.SquadManager.Instance.squadEntireStat.IncreaseBaseStat(Enum.SquadStatType.Health, IncreaseHealth * (CurrentLevel - 1));
-            Managers.SquadManager.Instance.squadEntireStat.IncreaseBaseStat(Enum.SquadStatType.Defence, IncreaseDefence * (CurrentLevel - 1));
+            Managers.SquadManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, IncreaseAttack * (CurrentLevel - 1));
+            Managers.SquadManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Health, IncreaseHealth * (CurrentLevel - 1));
+            Managers.SquadManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Defence, IncreaseDefence * (CurrentLevel - 1));
         }
     
         private void UpdateMaxExp()
@@ -95,9 +95,9 @@ namespace Creature.Data
         
         private void UpdateBaseStats()
         {
-            Managers.SquadManager.Instance.squadEntireStat.IncreaseBaseStat(Enum.SquadStatType.Attack, IncreaseAttack);
-            Managers.SquadManager.Instance.squadEntireStat.IncreaseBaseStat(Enum.SquadStatType.Health, IncreaseHealth);
-            Managers.SquadManager.Instance.squadEntireStat.IncreaseBaseStat(Enum.SquadStatType.Defence, IncreaseDefence);
+            Managers.SquadManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, IncreaseAttack);
+            Managers.SquadManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Health, IncreaseHealth);
+            Managers.SquadManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Defence, IncreaseDefence);
         }
     }
 }
