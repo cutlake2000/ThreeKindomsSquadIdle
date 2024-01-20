@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using Controller.UI;
+using Controller.UI.BottomMenuUI;
 using Creature.CreatureClass.SquadClass;
 using Creature.Data;
 using Function;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Enum = Data.Enum;
 
 namespace Managers
@@ -41,7 +43,7 @@ namespace Managers
         [Header("이동 속도")] [SerializeField] private float moveSpeed;
 
         [Space(3)]
-        [Header("--- Skill CoolTime ---")] //TODO: 스킬 쿨 다운을 ScriptableObject에서 긁어와야 함
+        [Header("=== 스킬 쿨타임 ===")] //TODO: 스킬 쿨 다운을 ScriptableObject에서 긁어와야 함
         [Header("워리어")]
         public SkillCoolTimer[] warriorSkillCoolTimer;
 
@@ -51,12 +53,11 @@ namespace Managers
         [Header("위자드")]
         public SkillCoolTimer[] wizardSkillCoolTimer;
 
-        [Space(5)] [Header("=== Squad Stats Info ===")] [Header("Base SquadStats")] [SerializeField]
-        public SquadStat squadStat;
+        [FormerlySerializedAs("squadStat")] [Space(5)] [Header("=== Squad Stats Info ===")] [Header("Base SquadStats")] [SerializeField]
+        public SquadEntireStat squadEntireStat;
 
-        [Header("Total SquadStats")] [SerializeField]
-        private BigInteger totalWarriorAttack;
-
+        [Header("Total SquadStats")]
+        [SerializeField] private BigInteger totalWarriorAttack;
         [SerializeField] private BigInteger totalArcherAttack;
         [SerializeField] private BigInteger totalWizardAttack;
         [SerializeField] private BigInteger totalMaxHealth;
@@ -65,8 +66,8 @@ namespace Managers
         [SerializeField] private int totalAccuracy;
         [SerializeField] private int totalCriticalRate;
         [SerializeField] private int totalCriticalDamage;
+        
         public SquadLevel SquadLevel;
-
         public SummonLevel SummonLevel;
 
         public Equipment EquippedSword { get; }
@@ -113,22 +114,22 @@ namespace Managers
 
         private void SetSquadStatsFromBaseStats()
         {
-            totalWarriorAttack = squadStat.BaseAttack;
-            totalArcherAttack = squadStat.BaseAttack;
-            totalWizardAttack = squadStat.BaseAttack;
+            totalWarriorAttack = squadEntireStat.BaseAttack;
+            totalArcherAttack = squadEntireStat.BaseAttack;
+            totalWizardAttack = squadEntireStat.BaseAttack;
 
-            totalMaxHealth = squadStat.BaseHealth;
-            totalDefence = squadStat.BaseDefense;
-            totalPenetration = squadStat.BasePenetration;
-            totalAccuracy = squadStat.BaseAccuracy;
-            totalCriticalRate = squadStat.BaseCriticalDamage;
-            totalCriticalDamage = squadStat.BaseCriticalDamage;
+            totalMaxHealth = squadEntireStat.BaseHealth;
+            totalDefence = squadEntireStat.BaseDefense;
+            totalPenetration = squadEntireStat.BasePenetration;
+            totalAccuracy = squadEntireStat.BaseAccuracy;
+            totalCriticalRate = squadEntireStat.BaseCriticalDamage;
+            totalCriticalDamage = squadEntireStat.BaseCriticalDamage;
         }
 
         // 이벤트 설정하는 메서드
         private void SetEventListeners()
         {
-            SquadStatManager.Instance.UpgradeTotalSquadStatAction += squadStat.IncreaseBaseStatBySquadStatPanel;
+            SquadStatManager.Instance.UpgradeTotalSquadStatAction += squadEntireStat.IncreaseBaseStatBySquadStatPanel;
 
             EquipAction += Equip;
             UnEquipAction += UnEquip;
@@ -247,9 +248,9 @@ namespace Managers
             equippedEquipment = equipment.GetComponent<Equipment>();
             equippedEquipment.isEquipped = true;
 
-            squadStat.IncreasePercentStat(Enum.SquadStatType.Attack, equippedEquipment.equippedEffect);
+            squadEntireStat.IncreasePercentStat(Enum.SquadStatType.Attack, equippedEquipment.equippedEffect);
 
-            EquipmentUI.UpdateEquipmentUIAction?.Invoke(equippedEquipment.isEquipped);
+            InventoryUI.UpdateEquipmentUIAction?.Invoke(equippedEquipment.isEquipped);
             equippedEquipment.SaveEquipmentAllInfo();
             Debug.Log("장비 장착" + equippedEquipment.id);
         }
@@ -257,8 +258,8 @@ namespace Managers
         private void UnEquip(Equipment equipment)
         {
             equipment.isEquipped = false;
-            EquipmentUI.UpdateEquipmentUIAction?.Invoke(equipment.isEquipped);
-            squadStat.DecreasePercentStat(Enum.SquadStatType.Attack, equipment.equippedEffect);
+            InventoryUI.UpdateEquipmentUIAction?.Invoke(equipment.isEquipped);
+            squadEntireStat.DecreasePercentStat(Enum.SquadStatType.Attack, equipment.equippedEffect);
             equipment.SaveEquipmentAllInfo();
             Debug.Log("장비 장착 해제" + equipment.id);
             equipment = null;

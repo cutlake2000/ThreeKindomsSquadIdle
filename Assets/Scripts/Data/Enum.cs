@@ -126,7 +126,7 @@ namespace Data
             Wizard
         }
 
-        public enum SquadStatPanelStatType
+        public enum SquadStatTypeBySquadPanel
         {
             Atk,                        // 공격력
             Hp,                         // 체력
@@ -137,6 +137,12 @@ namespace Data
             CrtDmg,                     // 치명타 피해량
             AmplificationSkillEffects,  // 스킬 효과 증폭
             CurrentAtk,                 // 최종 공격력
+        }
+
+        public enum IncreaseStatValueType
+        {
+            Number,
+            Percent
         }
 
         public enum SquadStatType

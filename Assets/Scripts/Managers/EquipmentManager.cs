@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Controller.UI;
+using Controller.UI.BottomMenuUI;
 using Creature.Data;
 using Module;
 using Unity.VisualScripting;
@@ -109,7 +110,7 @@ namespace Managers
                         equipment.equipmentBackground = backgroundEffects[(int)rarity];
                         equipment.LoadEquipment(equipmentId);
                         equipment.GetComponent<Button>().onClick
-                            .AddListener(() => EquipmentUI.SelectEquipmentAction(equipment));
+                            .AddListener(() => InventoryUI.SelectEquipmentAction(equipment));
 
                         AddEquipment(equipmentId, equipment);
 
@@ -186,7 +187,7 @@ namespace Managers
                         var ownedEffect = (int)(equippedEffect * 0.5f);
 
                         equipment.SetEquipmentInfo(equipmentId, initQuantity, tier, isEquipped, equipmentType, rarity, 1, equippedEffect, ownedEffect, backgroundEffects[rarityIntValue], equipmentSprite);
-                        equipment.GetComponent<Button>().onClick.AddListener(() => EquipmentUI.SelectEquipmentAction(equipment));
+                        equipment.GetComponent<Button>().onClick.AddListener(() => InventoryUI.SelectEquipmentAction(equipment));
 
                         AddEquipment(equipmentId, equipment);
                         equipment.SaveEquipmentAllInfo(equipmentId);
@@ -194,8 +195,8 @@ namespace Managers
                         if (isEquipped)
                         {
                             SquadManager.EquipAction(equipment);
-                            EquipmentUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
-                            EquipmentUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
+                            InventoryUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
+                            InventoryUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
                         }
 
                         equipmentCount++;
@@ -385,7 +386,7 @@ namespace Managers
             }
 
             SquadManager.EquipAction?.Invoke(highValueEquipment);
-            EquipmentUI.Instance.SelectEquipment(highValueEquipment);
+            InventoryUI.Instance.SelectEquipment(highValueEquipment);
         }
 
         public void AllComposite(Enum.EquipmentType currentEquipmentType)

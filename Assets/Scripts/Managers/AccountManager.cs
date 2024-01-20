@@ -10,8 +10,7 @@ namespace Managers
     public class AccountManager : MonoBehaviour
     {
         public static AccountManager Instance;
-
-        // 이벤트 : 통화의 양이 변경될 때 발생
+        
         public event Action<Enum.CurrencyType, string> OnCurrencyChanged;
 
         // 모든 통화의 목록 
@@ -23,10 +22,15 @@ namespace Managers
         }
 
         // 재화 매니저 초기화 메서드
-        public void InitCurrencyManager()
+        public void InitAccountManager()
+        {
+            SetEventListener();
+            SetCurrencies();
+        }
+
+        private void SetEventListener()
         {
             OnCurrencyChanged += UpdateCurrencyUI;
-            SetCurrencies();
         }
 
         private void SetCurrencies()
@@ -56,16 +60,13 @@ namespace Managers
         {
             // 모든 통화중 매개변수로 받은 이름이 있나 체크
             var currency = currencies.Find(c => c.currencyType == currencyType);
-            if (currency != null)
-            {
-                // 통화의 양을 감소시키, 결과에 따라 이벤트 발생
-                var result = currency.Subtract(value);
-                SaveCurrencies();
-                if (result) OnCurrencyChanged?.Invoke(currencyType, currency.amount);
-                return result;
-            }
-
-            return false;
+            
+            if (currency == null) return false;
+            // 통화의 양을 감소시키, 결과에 따라 이벤트 발생
+            var result = currency.Subtract(value);
+            SaveCurrencies();
+            if (result) OnCurrencyChanged?.Invoke(currencyType, currency.amount);
+            return result;
         }
 
         // 특정 통화의 현재 양을 반환하는 메서드

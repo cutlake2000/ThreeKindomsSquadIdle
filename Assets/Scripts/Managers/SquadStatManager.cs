@@ -19,20 +19,18 @@ namespace Managers
 
     public class SquadStatManager : MonoBehaviour
     {
-        public event Action<Enum.SquadStatPanelStatType, int> UpgradeTotalSquadStatAction;
+        public event Action<Enum.SquadStatTypeBySquadPanel, int> UpgradeTotalSquadStatAction;
 
-        [SerializeField] private SquadStatPanelStat[] squadStatPanelStat;
+        [SerializeField] private SquadStatBySquadPanel[] squadStatPanelStat;
         [SerializeField] private SquadStatPanelStatUI[] squadStatPanelStatUI;
-
+        
         [Header("능력치 조정")]
+        [SerializeField] private int currentIncreaseStatValue;
+        [SerializeField] private int upgradeCost;
         [Header("깡옵 세팅")]
-        [SerializeField] private int upgradeBaseStatIncreaseValue;
-        [SerializeField] private int upgradeBaseStatCurrentIncreaseValue;
-        [SerializeField] private int upgradeBaseStatUpgradeCost;
+        [SerializeField] private int increaseBaseStatValue;
         [Header("퍼옵 세팅")]
-        [SerializeField] private int upgradePercentStatIncreaseValue;
-        [SerializeField] private float upgradePercentStatCurrentIncreaseValue;
-        [SerializeField] private int upgradePercentStatUpgradeCost;
+        [SerializeField] private int increasePercentStatValue;
 
         public static SquadStatManager Instance;
 
@@ -56,9 +54,9 @@ namespace Managers
             {
                 var index = i;
                 squadStatPanelStatUI[i].upgradeButton.onClick
-                    .AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatPanelStatType)index));
+                    .AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
                 squadStatPanelStatUI[i].upgradeButton.GetComponent<HoldButton>().onHold.AddListener(() =>
-                    UpgradeSquadStatPanelStat((Enum.SquadStatPanelStatType)index));
+                    UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
             }
         }
 
@@ -66,26 +64,27 @@ namespace Managers
         private void SetUpgradeData()
         {
             for (var i = 0; i < squadStatPanelStatUI.Length; i++)
-                squadStatPanelStat[i] = new SquadStatPanelStat(
+                squadStatPanelStat[i] = new SquadStatBySquadPanel(
                     squadStatPanelStatUI[i].currentUpgradeLevelText,
                     squadStatPanelStatUI[i].currentIncreasedStatText,
                     squadStatPanelStatUI[i].upgradeButton,
-                    (Enum.SquadStatPanelStatType)i,
-                    ES3.Load($"{nameof(SquadStat)}/{(Enum.SquadStatPanelStatType)i}/currentUpgradeLevel : ", 0),
-                    upgradeBaseStatUpgradeCost,
-                    upgradeBaseStatIncreaseValue,
-                    upgradeBaseStatCurrentIncreaseValue,
+                    (Enum.SquadStatTypeBySquadPanel)i,
+                    ES3.Load($"{nameof(SquadEntireStat)}/{(Enum.SquadStatTypeBySquadPanel)i}/currentUpgradeLevel : ", 0),
+                    upgradeCost,
+                    (Enum.IncreaseStatValueType)1,
+                    increaseBaseStatValue,
+                    currentIncreaseStatValue,
                     UpgradeTotalSquadStatAction
                 );
         }
 
         // 스텟 UI 업데이트
-        private static void SetUpgradeUI(SquadStatPanelStat squadStatPanelStat)
+        private static void SetUpgradeUI(SquadStatBySquadPanel squadStatBySquadPanel)
         {
-            squadStatPanelStat.UpdateSquadStatUI();
+            squadStatBySquadPanel.UpdateSquadStatUI();
         }
 
-        private void SetUpgradeUI(Enum.SquadStatPanelStatType type)
+        private void SetUpgradeUI(Enum.SquadStatTypeBySquadPanel type)
         {
             squadStatPanelStat[(int)type].UpdateSquadStatUI();
         }
@@ -96,7 +95,7 @@ namespace Managers
             foreach (var squadStat in squadStatPanelStat) squadStat.UpdateSquadStatUI();
         }
 
-        public void UpgradeSquadStatPanelStat(Enum.SquadStatPanelStatType type)
+        public void UpgradeSquadStatPanelStat(Enum.SquadStatTypeBySquadPanel type)
         {
             if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint,
                     squadStatPanelStat[(int)type].currentUpgradeCost)) return;

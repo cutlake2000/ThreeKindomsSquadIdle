@@ -8,7 +8,7 @@ namespace Managers
     {
         private void Start()
         {
-            AccountManager.Instance.InitCurrencyManager();
+            AccountManager.Instance.InitAccountManager();
             SquadManager.Instance.InitSquadManager();
             SquadStatManager.Instance.InitSquadStatManager();
             EquipmentManager.Instance.InitEquipmentManager();
