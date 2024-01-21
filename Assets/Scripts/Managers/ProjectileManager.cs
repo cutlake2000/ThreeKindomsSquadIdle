@@ -1,6 +1,7 @@
 using Controller.CharacterProjectiles;
 using Controller.CharacterProjectiles.BaseAttack;
-using Controller.CharacterProjectiles.SkillAttack;
+using Controller.Projectiles.BaseAttack;
+using Controller.Projectiles.SkillAttack;
 using Data;
 using Function;
 using Module;
@@ -45,6 +46,10 @@ namespace Managers
                 case Enum.PoolType.ProjectileBaseAttackWizard:
                     var wizardBaseAttackController = obj.GetComponent<ProjectileBaseAttackWizardController>();
                     wizardBaseAttackController.InitializeWizardBaseAttack(damage, direction);
+                    break;
+                case Enum.PoolType.ProjectileBaseAttackMonster:
+                    var monsterBaseAttackController = obj.GetComponent<ProjectileBaseAttackMonsterController>();
+                    monsterBaseAttackController.InitializeMonsterBaseAttack(damage, direction);
                     break;
             }
 

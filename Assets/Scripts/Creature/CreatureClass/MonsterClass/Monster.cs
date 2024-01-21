@@ -22,16 +22,18 @@ namespace Creature.CreatureClass.MonsterClass
 
         [Header("Sprites")] [SerializeField] private List<Sprite> monsterSprites;
 
-        [Header("HitEffects")] [SerializeField]
-        private bool isEventHitRunning;
+        [Header("HitEffects")]
+        [SerializeField] private bool isEventHitRunning;
         
         [Header("Detector")]
         public GameObject detector;
+        
+        [Header("Projectile")]
+        private Vector2 ProjectileSpawnPosition;
+        private Vector2 Direction;
 
         public ParticleSystem effectHit;
         private readonly WaitForSeconds hitEffectDelay = new(0.2f);
-        private float currentExplorationTime = 0.0f; // 위치 업데이트 간격
-        private float maxExplorationTime = 2.0f; // 위치 업데이트 간격
 
         protected override void OnEnable()
         {
@@ -53,7 +55,7 @@ namespace Creature.CreatureClass.MonsterClass
             monsterStateMachine.Update();
             monsterStateMachine.LogicUpdate();
 
-            if (currentTarget != null && currentTarget.GetComponent<Squad>().isDead == false) return;
+            if (currentTarget != null && currentTarget.gameObject.activeInHierarchy && currentTarget.GetComponent<Squad>().isDead == false) return;
             FindNearbyEnemy();
         }
 
@@ -83,16 +85,23 @@ namespace Creature.CreatureClass.MonsterClass
                 allSprites[i].color = Color.white;
             }
         }
+        
+        protected override void SetCreatureState()
+        {
+            monsterStateMachine.ChangeState(monsterStateMachine.MonsterIdleState);
+        }
 
         protected override void SetCreatureStats()
         {
             //TODO: 추후에 MonsterManager에서 가지고 오도록
-            maxHealth = 500000;
+            maxHealth = 50000;
             currentHealth = maxHealth;
             defence = 1000;
             moveSpeed = 3;
             followRange = 15;
+            attack = 1000;
 
+            currentHealth = maxHealth;
             isDead = false;
             isEventHitRunning = false;
             currentTarget = null;
@@ -126,6 +135,8 @@ namespace Creature.CreatureClass.MonsterClass
 
         protected override void FindNearbyEnemy()
         {
+            currentTarget = null;
+            
             //TODO: 추후에 스테이지가 시작할 때 로직이 돌도록 수정하면 좋을 듯
             if (currentTarget != null && currentTarget.GetComponent<Squad>().isDead == false) return;
 
@@ -136,11 +147,11 @@ namespace Creature.CreatureClass.MonsterClass
         {
             if (currentTarget == null) return;
 
-            projectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
-            direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
+            ProjectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
+            Direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
 
-            ProjectileManager.Instance.InstantiateBaseAttack(attack, projectileSpawnPosition, direction,
-                Enum.PoolType.ProjectileBaseAttackWarrior);
+            ProjectileManager.Instance.InstantiateBaseAttack(attack, ProjectileSpawnPosition, Direction,
+                Enum.PoolType.ProjectileBaseAttackMonster);
         }
 
         private IEnumerator EventHit()

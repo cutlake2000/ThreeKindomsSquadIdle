@@ -1,5 +1,6 @@
 using Data;
 using Managers;
+using UnityEngine;
 
 namespace Creature.CreatureClass.SquadClass
 {
@@ -11,6 +12,7 @@ namespace Creature.CreatureClass.SquadClass
 
             attack = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.ArcherAtk);
             attackRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.ArcherAttackRange);
+            Debug.Log($"아처 공격력 : {attack}");
 
             animator.SetFloat(animationData.ClassTypeParameterHash, 1);
         }

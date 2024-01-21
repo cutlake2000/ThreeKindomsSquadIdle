@@ -7,18 +7,17 @@ using Enum = Data.Enum;
 
 namespace Creature.CreatureClass.SquadClass
 {
-    public class Squad : CreatureClass.Creature
+    public class Squad : Creature
     {
         [Header("Class")]
         [SerializeField] public Enum.SquadClassType squadClassType;
 
         [Header("Sprite")]
         [SerializeField] private SPUM_SpriteList spumSprite;
-
-        protected Vector2 Direction;
-
+        
         [Header("Projectile")]
         protected Vector2 ProjectileSpawnPosition;
+        protected Vector2 Direction;
 
         [Header("StateMachine")]
         private SquadStateMachine squadStateMachine;
@@ -47,7 +46,7 @@ namespace Creature.CreatureClass.SquadClass
             squadStateMachine.Update();
             squadStateMachine.LogicUpdate();
             
-            if (currentTarget != null && currentTarget.GetComponent<MonsterNew>().isDead == false) return;
+            if (currentTarget != null && currentTarget.gameObject.activeInHierarchy && currentTarget.GetComponent<Monster>().isDead == false) return;
             FindNearbyEnemy();
         }
 
@@ -76,6 +75,23 @@ namespace Creature.CreatureClass.SquadClass
             allSprites.AddRange(spumSprite._weaponList);
             allSprites.AddRange(spumSprite._backList);
         }
+        
+        protected override void ResetAllSpritesList()
+        {
+            spumSprite.ResyncData();
+
+            foreach (var sprite in allSprites)
+            {
+                var color = sprite.color;
+                color.a = 1;
+                sprite.color = color;
+            }
+        }
+
+        protected override void SetCreatureState()
+        {
+            squadStateMachine.ChangeState(squadStateMachine.SquadIdleState);
+        }
 
         protected override void SetCreatureStats()
         {
@@ -95,17 +111,21 @@ namespace Creature.CreatureClass.SquadClass
             currentHealth = currentHealth < 0 ? 0 : currentHealth;
             SetUIHealthBar();
 
+            Debug.Log($"{gameObject.name} {damage} 데미지!");
+
             if (currentHealth > 0) return true;
             isDead = true;
+            gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
             squadStateMachine.ChangeState(squadStateMachine.SquadDieState);
-
             return false;
         }
 
         protected override void FindNearbyEnemy()
         {
+            currentTarget = null;
+            
             //TODO: 추후에 스테이지가 시작할 때 로직이 돌도록 수정하면 좋을 듯
-            if (currentTarget != null && currentTarget.GetComponent<MonsterNew>().isDead == false) return;
+            if (currentTarget != null && currentTarget.GetComponent<Monster>().isDead == false) return;
 
             currentTarget = enemyFinder.ScanNearestEnemy(followRange);
         }

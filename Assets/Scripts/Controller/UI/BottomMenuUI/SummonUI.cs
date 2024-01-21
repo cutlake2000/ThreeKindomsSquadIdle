@@ -172,7 +172,7 @@ namespace Controller.UI.BottomMenuUI
         {
             var index = 0;
             
-            foreach (var equipment in SummonManager.Instance.summonedEquipmentList)
+            foreach (var equipment in summonLists)
             {
                 summonLists[index].equipmentRarity = equipment.equipmentRarity;
                 summonLists[index].tier = equipment.tier;
@@ -238,7 +238,6 @@ namespace Controller.UI.BottomMenuUI
             
             summonLists.Clear();
             SummonManager.Instance.SummonedEquipmentDictionary.Clear();
-            SummonManager.Instance.summonedEquipmentList.Clear();
         }
     }
 }

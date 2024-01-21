@@ -10,7 +10,6 @@ namespace Creature.CreatureClass.MonsterFSM.States
         {
             base.Enter();
             
-            Debug.Log("공격!");
             FlipSprite();
             StartAnimationWithBool(AnimationData.AttackParameterHash);
         }

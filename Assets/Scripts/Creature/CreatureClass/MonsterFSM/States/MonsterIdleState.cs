@@ -15,7 +15,7 @@ namespace Creature.CreatureClass.MonsterFSM.States
         {
             base.LogicUpdate();
 
-            if (MonsterNew.currentTarget == null) return;
+            if (Monster.currentTarget == null) return;
             
             MonsterStateMachine.ChangeState(MonsterStateMachine.MonsterRunState);
         }

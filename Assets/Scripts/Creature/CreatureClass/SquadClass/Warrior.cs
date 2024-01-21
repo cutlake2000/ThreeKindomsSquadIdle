@@ -1,4 +1,5 @@
 using Managers;
+using UnityEngine;
 using Enum = Data.Enum;
 
 namespace Creature.CreatureClass.SquadClass
@@ -9,9 +10,11 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.SetCreatureStats();
 
-            attack = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WarriorAtk);
+            // attack = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WarriorAtk);
+            attack = SquadManager.Instance.totalWarriorAttack;
             attackRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WarriorAttackRange);
             
+            Debug.Log($"{attack}");
             animator.SetFloat(animationData.ClassTypeParameterHash, 0);
         }
 

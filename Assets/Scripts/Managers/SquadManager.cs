@@ -62,18 +62,18 @@ namespace Managers
         [SerializeField] public SquadEntireStat squadEntireStat;
 
         [Header("Total SquadStats")]
-        [SerializeField] private BigInteger totalWarriorAttack;
-        [SerializeField] private BigInteger totalArcherAttack;
-        [SerializeField] private BigInteger totalWizardAttack;
-        [SerializeField] private BigInteger totalAttack;
-        [SerializeField] private BigInteger totalMaxHealth;
-        [SerializeField] private BigInteger totalDefence;
-        [SerializeField] private BigInteger totalPenetration;
-        [SerializeField] private BigInteger totalAccuracy;
-        [SerializeField] private BigInteger totalCriticalRate;
-        [SerializeField] private BigInteger totalCriticalDamage;
-        [SerializeField] private BigInteger totalAcquisitionGold;
-        [SerializeField] private BigInteger totalAcquisitionExp;
+        public BigInteger totalWarriorAttack;
+        public BigInteger totalArcherAttack;
+        public BigInteger totalWizardAttack;
+        public BigInteger totalAttack;
+        public BigInteger totalMaxHealth;
+        public BigInteger totalDefence;
+        public BigInteger totalPenetration;
+        public BigInteger totalAccuracy;
+        public BigInteger totalCriticalRate;
+        public BigInteger totalCriticalDamage;
+        public BigInteger totalAcquisitionGold;
+        public BigInteger totalAcquisitionExp;
         
         public SquadLevel SquadLevel;
         public SummonLevel SummonLevel;
@@ -122,18 +122,19 @@ namespace Managers
 
         private void SetSquadStatsFromBaseStats()
         {
-            totalWarriorAttack = squadEntireStat.BaseAttack;
-            totalArcherAttack = squadEntireStat.BaseAttack;
-            totalWizardAttack = squadEntireStat.BaseAttack;
+            totalWarriorAttack = squadEntireStat.baseAttack;
+            totalArcherAttack = squadEntireStat.baseAttack;
+            totalWizardAttack = squadEntireStat.baseAttack;
+            totalAttack = squadEntireStat.baseAttack;
 
-            totalMaxHealth = squadEntireStat.BaseHealth;
-            totalDefence = squadEntireStat.BaseDefense;
-            totalPenetration = squadEntireStat.BasePenetration;
-            totalAccuracy = squadEntireStat.BaseAccuracy;
-            totalCriticalRate = squadEntireStat.BaseCriticalRate;
-            totalCriticalDamage = squadEntireStat.BaseCriticalDamage;
-            totalAcquisitionGold = squadEntireStat.BaseAcquisitionGold;
-            totalAcquisitionExp = squadEntireStat.BaseAcquisitionExp;
+            totalMaxHealth = squadEntireStat.baseHealth;
+            totalDefence = squadEntireStat.baseDefense;
+            totalPenetration = squadEntireStat.basePenetration;
+            totalAccuracy = squadEntireStat.baseAccuracy;
+            totalCriticalRate = squadEntireStat.baseCriticalRate;
+            totalCriticalDamage = squadEntireStat.baseCriticalDamage;
+            totalAcquisitionGold = squadEntireStat.baseAcquisitionGold;
+            totalAcquisitionExp = squadEntireStat.baseAcquisitionExp;
         }
 
         // 이벤트 설정하는 메서드
@@ -271,13 +272,21 @@ namespace Managers
         {
             equipment.isEquipped = false;
             InventoryUI.UpdateEquipmentUIAction?.Invoke(equipment.isEquipped);
-            squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, equipment.equippedEffect);
+            squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, -1 * equipment.equippedEffect);
             equipment.SaveEquipmentAllInfo();
             Debug.Log("장비 장착 해제" + equipment.id);
             equipment = null;
         }
 
         #region Battle
+
+        public void DespawnSquad()
+        {
+            foreach (var squad in squads)
+            {
+                if (squad.activeInHierarchy) squad.SetActive(false);
+            }
+        }
 
         public void SpawnSquad()
         {

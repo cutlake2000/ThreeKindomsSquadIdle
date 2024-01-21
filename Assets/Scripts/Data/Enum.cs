@@ -112,6 +112,7 @@ namespace Data
             ProjectileBaseAttackWarrior,
             ProjectileBaseAttackArcher,
             ProjectileBaseAttackWizard,
+            ProjectileBaseAttackMonster,
             ProjectileSkillAttackWarrior,
             ProjectileSkillAttackArcher,
             ProjectileSkillAttackWizard,

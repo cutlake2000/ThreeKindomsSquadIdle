@@ -62,11 +62,22 @@ namespace Creature.CreatureClass
         
         protected virtual void SetAllSpritesList() { }
         
+        protected virtual void ResetAllSpritesList() { }
+        
         public void InitCreature()
         {
+            gameObject.GetComponent<Collider2D>().enabled = true;
+            ResetAllSpritesList();
             SetCreatureStats();
             SetUIHealthBar();
         }
+
+        protected void OnDisable()
+        {
+            SetCreatureState();
+        }
+
+        protected virtual void SetCreatureState() { }
 
         protected virtual void SetCreatureStats() { }
         

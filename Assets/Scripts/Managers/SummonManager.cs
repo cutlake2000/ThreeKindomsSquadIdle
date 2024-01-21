@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Controller.UI;
 using Controller.UI.BottomMenuUI;
 using Creature.Data;
 using Function;
 using ScriptableObjects.Scripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Enum = Data.Enum;
 using Random = UnityEngine.Random;
 
@@ -27,8 +24,7 @@ namespace Managers
 
         public SummonSo summonProbability;
 
-        public Dictionary<string, int> SummonedEquipmentDictionary = new();
-        public List<Equipment> summonedEquipmentList = new();
+        public readonly Dictionary<string, int> SummonedEquipmentDictionary = new();
 
         private void Awake()
         {
@@ -164,7 +160,6 @@ namespace Managers
                         target.summonCount = summonCount;
                         target.quantity += summonCount;
                         target.SaveEquipmentEachInfo(target.name, Enum.EquipmentProperty.Quantity);
-                        summonedEquipmentList.Add(target);
                     }
                 }
             }

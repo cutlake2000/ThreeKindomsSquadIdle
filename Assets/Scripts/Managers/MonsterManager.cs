@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Creature.CreatureClass.MonsterClass;
 using UnityEngine;
 using Enum = Data.Enum;
@@ -12,10 +13,10 @@ namespace Managers
 
         public GameObject[] monsterNewTypePrefabs;
         public BoxCollider2D[] spawnPosition;
-        [SerializeField] private List<MonsterNew> activeMonsters = new();
+        [SerializeField] private List<Monster> activeMonsters = new();
 
         private readonly Dictionary<string, float> animationLengths = new();
-        private Dictionary<Enum.MonsterClassType, Queue<MonsterNew>> monsterNewPools;
+        private Dictionary<Enum.MonsterClassType, Queue<Monster>> monsterNewPools;
 
         public int monsterNewCount = 20;
         private readonly int[] spawnXs = { -10, 10, 0 };
@@ -30,28 +31,28 @@ namespace Managers
 
         private void InitializeMonsterPools()
         {
-            monsterNewPools = new Dictionary<Enum.MonsterClassType, Queue<MonsterNew>>();
+            monsterNewPools = new Dictionary<Enum.MonsterClassType, Queue<Monster>>();
             foreach (Enum.MonsterClassType type in System.Enum.GetValues(typeof(Enum.MonsterClassType)))
             {
-                var pool = new Queue<MonsterNew>();
+                var pool = new Queue<Monster>();
                 var prefab = monsterNewTypePrefabs[(int)type];
                 FillMonsterPool(prefab, pool);
                 monsterNewPools[type] = pool;
             }
         }
 
-        private void FillMonsterPool(GameObject prefab, Queue<MonsterNew> pool)
+        private void FillMonsterPool(GameObject prefab, Queue<Monster> pool)
         {
             for (var i = 0; i < monsterNewCount; i++)
             {
                 var newMonsterObj = Instantiate(prefab);
-                var monsterNew = newMonsterObj.GetComponent<MonsterNew>();
+                var monsterNew = newMonsterObj.GetComponent<Monster>();
                 monsterNew.gameObject.SetActive(false);
                 pool.Enqueue(monsterNew);
             }
         }
 
-        public void GenerateMonsters(Enum.MonsterClassType[] monsterNewTypes, int totalCount)
+        public void SpawnMonsters(Enum.MonsterClassType[] monsterNewTypes, int totalCount)
         {
             var remainingCount = totalCount;
             var typesCount = monsterNewTypes.Length;
@@ -72,14 +73,14 @@ namespace Managers
                     remainingCount -= countForType;
                 }
 
-                GenerateMonsters(monsterNewTypes[i], countForType);
+                SpawnMonsters(monsterNewTypes[i], countForType);
             }
 
             spawnCount = (spawnCount + 1) % spawnXs.Length;
         }
 
 
-        public void GenerateMonsters(Enum.MonsterClassType monsterNewClassType, int count)
+        public void SpawnMonsters(Enum.MonsterClassType monsterNewClassType, int count)
         {
             for (var i = 0; i < count; i++)
             {
@@ -88,28 +89,36 @@ namespace Managers
             }
         }
 
-        private MonsterNew GetMonster(Enum.MonsterClassType classType)
+        private Monster GetMonster(Enum.MonsterClassType classType)
         {
-            MonsterNew monsterNew;
+            Monster monster;
             if (monsterNewPools[classType].Count > 0)
             {
-                monsterNew = monsterNewPools[classType].Dequeue();
+                monster = monsterNewPools[classType].Dequeue();
             }
             else
             {
                 var newMonsterObj = Instantiate(monsterNewTypePrefabs[(int)classType]);
-                monsterNew = newMonsterObj.GetComponent<MonsterNew>();
+                monster = newMonsterObj.GetComponent<Monster>();
             }
 
-            activeMonsters.Add(monsterNew);
-            return monsterNew;
+            activeMonsters.Add(monster);
+            return monster;
+        }
+        
+        public void DespawnAllMonster()
+        {
+            foreach (var monster in activeMonsters.ToList())
+            {
+                ReturnMonster(monster.monsterClassType, monster);
+            }
         }
 
-        public void ReturnMonster(Enum.MonsterClassType classType, MonsterNew monsterNew)
+        public void ReturnMonster(Enum.MonsterClassType classType, Monster monster)
         {
-            monsterNew.gameObject.SetActive(false);
-            monsterNewPools[classType].Enqueue(monsterNew);
-            activeMonsters.Remove(monsterNew);
+            monster.gameObject.SetActive(false);
+            monsterNewPools[classType].Enqueue(monster);
+            activeMonsters.Remove(monster);
         }
 
         private void PositionMonster(Component monsterNew)
