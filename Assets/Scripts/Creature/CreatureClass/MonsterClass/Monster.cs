@@ -9,7 +9,7 @@ using Enum = Data.Enum;
 
 namespace Creature.CreatureClass.MonsterClass
 {
-    public class MonsterNew : Creature
+    public class Monster : Creature
     {
         [Header("Class")] [SerializeField] public Enum.MonsterClassType monsterClassType;
 
