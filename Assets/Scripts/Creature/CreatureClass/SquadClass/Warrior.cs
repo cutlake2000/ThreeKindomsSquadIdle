@@ -14,7 +14,6 @@ namespace Creature.CreatureClass.SquadClass
             attack = SquadManager.Instance.totalWarriorAttack;
             attackRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WarriorAttackRange);
             
-            Debug.Log($"{attack}");
             animator.SetFloat(animationData.ClassTypeParameterHash, 0);
         }
 

@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
+using Controller.UI.BottomMenuUI.SquadMenu;
 using Creature.Data;
 using Function;
 using ScriptableObjects.Scripts;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Enum = Data.Enum;
 
@@ -22,10 +21,10 @@ namespace Managers
     public class SquadStatManager : MonoBehaviour
     {
         public event Action<Enum.SquadStatTypeBySquadPanel, int> UpgradeTotalSquadStatAction;
-        
+
         //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
         [SerializeField] private SquadStatSo[] squadStatSo;
-        [SerializeField] private SquadStat[] squadStats;
+        public SquadStatUI[] squadStats;
         public static SquadStatManager Instance;
 
         private void Awake()
@@ -47,10 +46,10 @@ namespace Managers
             for (var i = 0; i < squadStats.Length; i++)
             {
                 var index = i;
-                squadStats[i].GetComponent<SquadStat>().upgradeButton.onClick
-                    .AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
-                squadStats[i].GetComponent<SquadStat>().upgradeButton.GetComponent<HoldButton>().onHold.AddListener(() =>
-                    UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
+                squadStats[i].GetComponent<SquadStatUI>().
+                    upgradeButton.onClick.AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
+                squadStats[i].GetComponent<SquadStatUI>().
+                    upgradeButton.GetComponent<HoldButton>().onHold.AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
             }
         }
 
@@ -70,15 +69,15 @@ namespace Managers
                 squadStats[i].currentIncreasedStat = squadStats[i].currentLevel * squadStats[i].increaseStatValue;
                 squadStats[i].squadStatSprite = squadStatSo[i].squadStatImage;
                 squadStats[i].UpgradeTotalSquadStatAction = UpgradeTotalSquadStatAction;
-                
+
                 squadStats[i].SetSquadStatUI();
             }
         }
 
         // 스텟 UI 업데이트
-        private static void SetUpgradeUI(SquadStat squadStat)
+        private static void SetUpgradeUI(SquadStatUI squadStatUI)
         {
-            squadStat.UpdateIncreaseSquadStatUI();
+            squadStatUI.UpdateIncreaseSquadStatUI();
         }
 
         // 모든 스텟 UI 업데이트
@@ -89,12 +88,12 @@ namespace Managers
 
         public void UpgradeSquadStatPanelStat(Enum.SquadStatTypeBySquadPanel type)
         {
-            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint,
-                    squadStats[(int)type].levelUpCost)) return;
+            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, squadStats[(int)type].levelUpCost * SquadUI.Instance.levelUpMagnification)) return;
             if (squadStats[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
 
-            squadStats[(int)type].UpdateSquadStat();
+            squadStats[(int)type].UpdateSquadStat(SquadUI.Instance.levelUpMagnification);
             SetUpgradeUI(squadStats[(int)type]);
+            SquadUI.Instance.CheckRequiredStatPointOfMagnificationButton((int) type);
 
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }

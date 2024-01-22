@@ -78,13 +78,6 @@ namespace Managers
         public SquadLevel SquadLevel;
         public SummonLevel SummonLevel;
 
-        public Equipment EquippedSword { get; }
-        public Equipment EquippedBow { get; }
-        public Equipment EquippedStaff { get; }
-        public Equipment EquippedHelmet { get; }
-        public Equipment EquippedArmor { get; }
-        public Equipment EquippedGauntlet { get; }
-
         private void Awake()
         {
             Instance = this;
@@ -247,18 +240,7 @@ namespace Managers
         {
             UnEquip(equipment);
 
-            var equippedEquipment = equipment.type switch
-            {
-                Enum.EquipmentType.Sword => EquippedSword,
-                Enum.EquipmentType.Bow => EquippedBow,
-                Enum.EquipmentType.Staff => EquippedStaff,
-                Enum.EquipmentType.Helmet => EquippedHelmet,
-                Enum.EquipmentType.Armor => EquippedArmor,
-                Enum.EquipmentType.Gauntlet => EquippedGauntlet,
-                _ => null
-            };
-
-            equippedEquipment = equipment.GetComponent<Equipment>();
+            var equippedEquipment = equipment.GetComponent<Equipment>();
             equippedEquipment.isEquipped = true;
 
             squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, equippedEquipment.equippedEffect);
@@ -275,7 +257,6 @@ namespace Managers
             squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, -1 * equipment.equippedEffect);
             equipment.SaveEquipmentAllInfo();
             Debug.Log("장비 장착 해제" + equipment.id);
-            equipment = null;
         }
 
         #region Battle

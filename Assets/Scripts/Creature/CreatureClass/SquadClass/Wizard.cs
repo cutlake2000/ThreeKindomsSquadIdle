@@ -12,7 +12,6 @@ namespace Creature.CreatureClass.SquadClass
 
             attack = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WizardAtk);
             attackRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WizardAttackRange);
-            Debug.Log($"위자드 공격력 : {attack}");
 
             animator.SetFloat(animationData.ClassTypeParameterHash, 2);
         }

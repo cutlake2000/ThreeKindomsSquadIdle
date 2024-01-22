@@ -1,3 +1,4 @@
+using Controller.UI.BottomMenuUI.SquadMenu;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,6 +34,13 @@ namespace Controller.UI.BottomMenuUI
             for (var i = 0; i < panels.Length; i++)
             {
                 panels[i].SetActive(i == index);
+
+                switch (i)
+                {
+                    case 0:
+                        SquadUI.Instance.InitializeLevelUpMagnificationButton(0);
+                        break;
+                }
             }
             
             for (var i = 0; i < closeButtons.Length; i++)
