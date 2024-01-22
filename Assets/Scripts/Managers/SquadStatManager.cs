@@ -24,7 +24,7 @@ namespace Managers
 
         //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
         [SerializeField] private SquadStatSo[] squadStatSo;
-        public SquadStatUI[] squadStats;
+        public SquadStatItemUI[] squadStats;
         public static SquadStatManager Instance;
 
         private void Awake()
@@ -46,9 +46,9 @@ namespace Managers
             for (var i = 0; i < squadStats.Length; i++)
             {
                 var index = i;
-                squadStats[i].GetComponent<SquadStatUI>().
+                squadStats[i].GetComponent<SquadStatItemUI>().
                     upgradeButton.onClick.AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
-                squadStats[i].GetComponent<SquadStatUI>().
+                squadStats[i].GetComponent<SquadStatItemUI>().
                     upgradeButton.GetComponent<HoldButton>().onHold.AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
             }
         }
@@ -75,9 +75,9 @@ namespace Managers
         }
 
         // 스텟 UI 업데이트
-        private static void SetUpgradeUI(SquadStatUI squadStatUI)
+        private static void SetUpgradeUI(SquadStatItemUI squadStatItemUI)
         {
-            squadStatUI.UpdateIncreaseSquadStatUI();
+            squadStatItemUI.UpdateIncreaseSquadStatUI();
         }
 
         // 모든 스텟 UI 업데이트
@@ -88,12 +88,12 @@ namespace Managers
 
         public void UpgradeSquadStatPanelStat(Enum.SquadStatTypeBySquadPanel type)
         {
-            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, squadStats[(int)type].levelUpCost * SquadUI.Instance.levelUpMagnification)) return;
+            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, squadStats[(int)type].levelUpCost * SquadPanelUI.Instance.levelUpMagnification)) return;
             if (squadStats[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
 
-            squadStats[(int)type].UpdateSquadStat(SquadUI.Instance.levelUpMagnification);
+            squadStats[(int)type].UpdateSquadStat(SquadPanelUI.Instance.levelUpMagnification);
             SetUpgradeUI(squadStats[(int)type]);
-            SquadUI.Instance.CheckRequiredStatPointOfMagnificationButton((int) type);
+            SquadPanelUI.Instance.CheckRequiredStatPointOfMagnificationButton((int) type);
 
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }

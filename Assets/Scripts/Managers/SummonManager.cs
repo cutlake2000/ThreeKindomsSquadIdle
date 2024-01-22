@@ -194,7 +194,7 @@ namespace Managers
                 }
             }
             
-            SummonUI.OnSummon?.Invoke(type, SummonedItemDictionary.Count);
+            SummonPanelUI.OnSummon?.Invoke(type, SummonedItemDictionary.Count);
         }
 
         private void SetWeaponSummoner()

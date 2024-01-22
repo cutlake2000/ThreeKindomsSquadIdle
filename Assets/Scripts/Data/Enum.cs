@@ -39,10 +39,12 @@ namespace Data
 
         public enum CurrencyType
         {
-            StatPoint,
             Gold,
             Dia,
-            EnhanceStone
+            StatPoint,
+            WeaponEnhanceStone,
+            GearEnhanceStone,
+            SquadEnhanceStone
         }
 
         // 장비 능력치

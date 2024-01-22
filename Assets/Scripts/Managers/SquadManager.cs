@@ -245,7 +245,7 @@ namespace Managers
 
             squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, equippedEquipment.equippedEffect);
 
-            InventoryUI.UpdateEquipmentUIAction?.Invoke(equippedEquipment.isEquipped);
+            InventoryPanelUI.UpdateEquipmentUIAction?.Invoke(equippedEquipment.isEquipped);
             equippedEquipment.SaveEquipmentAllInfo();
             Debug.Log("장비 장착" + equippedEquipment.id);
         }
@@ -253,7 +253,7 @@ namespace Managers
         private void UnEquip(Equipment equipment)
         {
             equipment.isEquipped = false;
-            InventoryUI.UpdateEquipmentUIAction?.Invoke(equipment.isEquipped);
+            InventoryPanelUI.UpdateEquipmentUIAction?.Invoke(equipment.isEquipped);
             squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, -1 * equipment.equippedEffect);
             equipment.SaveEquipmentAllInfo();
             Debug.Log("장비 장착 해제" + equipment.id);

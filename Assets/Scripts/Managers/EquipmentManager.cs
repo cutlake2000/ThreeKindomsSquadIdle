@@ -110,7 +110,7 @@ namespace Managers
                         equipment.equipmentBackground = backgroundEffects[(int)rarity];
                         equipment.LoadEquipment(equipmentId);
                         equipment.GetComponent<Button>().onClick
-                            .AddListener(() => InventoryUI.SelectEquipmentAction(equipment));
+                            .AddListener(() => InventoryPanelUI.SelectEquipmentAction(equipment));
 
                         AddEquipment(equipmentId, equipment);
 
@@ -118,8 +118,8 @@ namespace Managers
                         {
                             SquadManager.EquipAction(equipment);
 
-                            InventoryUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
-                            InventoryUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
+                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
+                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
                         }
 
                         equipmentCount++;
@@ -189,7 +189,7 @@ namespace Managers
                         var ownedEffect = (int)(equippedEffect * 0.5f);
 
                         equipment.SetEquipmentInfo(equipmentId, initQuantity, tier, isEquipped, equipmentType, rarity, 1, equippedEffect, ownedEffect, backgroundEffects[rarityIntValue], equipmentSprite);
-                        equipment.GetComponent<Button>().onClick.AddListener(() => InventoryUI.SelectEquipmentAction(equipment));
+                        equipment.GetComponent<Button>().onClick.AddListener(() => InventoryPanelUI.SelectEquipmentAction(equipment));
 
                         AddEquipment(equipmentId, equipment);
                         equipment.SaveEquipmentAllInfo(equipmentId);
@@ -197,8 +197,8 @@ namespace Managers
                         if (isEquipped)
                         {
                             SquadManager.EquipAction(equipment);
-                            InventoryUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
-                            InventoryUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
+                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
+                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
                         }
 
                         equipmentCount++;
@@ -388,7 +388,7 @@ namespace Managers
             }
 
             SquadManager.EquipAction?.Invoke(highValueEquipment);
-            InventoryUI.Instance.SelectEquipment(highValueEquipment);
+            InventoryPanelUI.Instance.SelectEquipment(highValueEquipment);
         }
 
         public void AllComposite(Enum.EquipmentType currentEquipmentType)

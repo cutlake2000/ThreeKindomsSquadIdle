@@ -38,7 +38,7 @@ namespace Controller.UI.BottomMenuUI
                 switch (i)
                 {
                     case 0:
-                        SquadUI.Instance.InitializeLevelUpMagnificationButton(0);
+                        SquadPanelUI.Instance.InitializeLevelUpMagnificationButton(0);
                         break;
                 }
             }

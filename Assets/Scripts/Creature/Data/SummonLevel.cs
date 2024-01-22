@@ -53,7 +53,7 @@ namespace Creature.Data
             SetMaxExp(Enum.SummonEquipmentType.Weapon);
             SetMaxExp(Enum.SummonEquipmentType.Gear);
         
-            SummonUI.Instance.SetSummonUI();
+            SummonPanelUI.Instance.SetSummonUI();
         }
     
         public void SetupEventListeners()
@@ -88,7 +88,7 @@ namespace Creature.Data
                     break;
             }
         
-            SummonUI.Instance.SetSummonUI();
+            SummonPanelUI.Instance.SetSummonUI();
         }
     
         private void UpdateLevel(Enum.SummonEquipmentType type)
@@ -117,7 +117,7 @@ namespace Creature.Data
         
             SetMaxExp(type);
         
-            SummonUI.Instance.SetSummonUI();
+            SummonPanelUI.Instance.SetSummonUI();
         }
 
         private void SetMaxExp(Enum.SummonEquipmentType type)
