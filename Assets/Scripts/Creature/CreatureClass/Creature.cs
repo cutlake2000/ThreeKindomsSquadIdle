@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Creature.CreatureClass.SquadClass;
 using Creature.Data;
 using Function;
 using Managers;
@@ -149,6 +150,7 @@ namespace Creature.CreatureClass
             {
                 StageManager.CheckRemainedSquad?.Invoke();   
             }
+            
             gameObject.SetActive(false);
         }
     }

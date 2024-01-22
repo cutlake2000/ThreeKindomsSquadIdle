@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Creature.CreatureClass.SquadFSM.States
 {
     public class SquadDieState : SquadBaseState
