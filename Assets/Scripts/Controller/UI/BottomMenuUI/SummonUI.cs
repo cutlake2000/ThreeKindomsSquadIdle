@@ -20,6 +20,8 @@ namespace Controller.UI.BottomMenuUI
         public static Action<Enum.SummonEquipmentType, int> OnSummon;
         
         [Header("무기 소환 레벨 / 무기 소환 경험치 /  장비 소환 레벨 / 장비 소환 경험치")]
+        [SerializeField] private TMP_Text currentSquadSummonLevelText;
+        [SerializeField] private Slider currentSquadSummonExpSlider;
         [SerializeField] private TMP_Text currentWeaponSummonLevelText;
         [SerializeField] private Slider currentWeaponSummonExpSlider;
         [SerializeField] private TMP_Text currentGearSummonLevelText;
@@ -172,7 +174,7 @@ namespace Controller.UI.BottomMenuUI
         {
             var index = 0;
             
-            foreach (var equipment in summonLists)
+            foreach (var equipment in SummonManager.Instance.summonedEquipmentList)
             {
                 summonLists[index].equipmentRarity = equipment.equipmentRarity;
                 summonLists[index].tier = equipment.tier;
@@ -196,6 +198,9 @@ namespace Controller.UI.BottomMenuUI
 
         public void SetSummonUI()
         {
+            currentSquadSummonLevelText.text = $"소환 레벨 : {SquadManager.Instance.SummonLevel.CurrentSquadLevel} ({SquadManager.Instance.SummonLevel.CurrentSquadExp} / {SquadManager.Instance.SummonLevel.MaxSquadExp})";
+            currentSquadSummonExpSlider.value = SquadManager.Instance.SummonLevel.CurrentSquadExp / SquadManager.Instance.SummonLevel.MaxSquadExp;
+            
             currentWeaponSummonLevelText.text = $"소환 레벨 : {SquadManager.Instance.SummonLevel.CurrentWeaponLevel} ({SquadManager.Instance.SummonLevel.CurrentWeaponExp} / {SquadManager.Instance.SummonLevel.MaxWeaponExp})";
             currentWeaponSummonExpSlider.value = SquadManager.Instance.SummonLevel.CurrentWeaponExp / SquadManager.Instance.SummonLevel.MaxWeaponExp;
                 
@@ -230,14 +235,15 @@ namespace Controller.UI.BottomMenuUI
         }
 
         public void ResetSummonPool()
-        {
+        { 
             foreach (var equipment in summonLists)
             {
                 SummonPool.Release(equipment);
             }
             
             summonLists.Clear();
-            SummonManager.Instance.SummonedEquipmentDictionary.Clear();
+            SummonManager.Instance.SummonedItemDictionary.Clear();
+            SummonManager.Instance.summonedEquipmentList.Clear();
         }
     }
 }

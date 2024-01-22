@@ -116,8 +116,8 @@ namespace Data
             ProjectileSkillAttackWarrior,
             ProjectileSkillAttackArcher,
             ProjectileSkillAttackWizard,
-            ProjectileBaseAttackEnemy,
-            EffectDamage
+            EffectDamage,
+            SummonEquipment
         }
 
         public enum SquadClassType
@@ -178,7 +178,7 @@ namespace Data
         {
             Weapon,
             Gear,
-            A
+            Squad
         }
 
         public enum UISliderType

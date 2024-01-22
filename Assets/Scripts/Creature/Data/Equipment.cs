@@ -41,6 +41,8 @@ namespace Creature.Data
         public int maxLevel = 250;
         
         [SerializeField] private ParticleSystem[] summonEffects;
+        [SerializeField] private Animator summonEffectFrameAnimator;
+        private static readonly int Summon = Animator.StringToHash("Summon");
 
         // public Equipment(string id, int quantity, int tier, bool isEquipped, Enum.EquipmentType type, Enum.EquipmentRarity equipmentRarity,
         //     int level, int basicEquippedEffect, int basicOwnedEffect)
@@ -299,6 +301,7 @@ namespace Creature.Data
             summonCountText.text = $"{summonCount}";
             
             summonEffects[(int) equipmentRarity].Play();
+            summonEffectFrameAnimator.SetTrigger(Summon);
         }
 
         public void ResetEquipment()

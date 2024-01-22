@@ -36,6 +36,7 @@ namespace Controller.UI.BottomMenuUI
         [Header("--- 장비 정보 ---")]
         [SerializeField] private Equipment selectEquipment;
         [SerializeField] private TMP_Text selectEquipmentName;
+        [SerializeField] private TMP_Text selectEquipmentGrade;
         [SerializeField] private TMP_Text selectEquipmentEquippedEffect;
         [SerializeField] private TMP_Text selectEquipmentOwnedEffect;
         [SerializeField] private TMP_Text selectEquipmentLevel;
@@ -118,7 +119,8 @@ namespace Controller.UI.BottomMenuUI
         {
             //TODO: 추후에 해당 무기 보유 / 장착 효과에 맞게 공격력 / 방어력 증가 등 옵션 추가해야함
             selectEquipmentName.text = equipment.id;
-            selectEquipmentLevel.text = $"{equipment.tier / equipment.maxLevel}";
+            selectEquipmentLevel.text = $"{equipment.level} / {equipment.maxLevel}";
+            selectEquipmentGrade.text = $"{equipment.equipmentRarity}";
             selectEquipmentEquippedEffect.text = $"공격력 {BigInteger.ChangeMoney(equipment.equippedEffect.ToString())}% 증가";
             selectEquipmentOwnedEffect.text = $"공격력 {equipment.ownedEffect}% 증가";
         }

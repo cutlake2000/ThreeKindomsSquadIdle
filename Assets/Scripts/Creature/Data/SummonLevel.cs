@@ -18,6 +18,11 @@ namespace Creature.Data
         private const int ExpFirstValue = 0;
         private const int MaxExpFirstValue = 1000;
         private const int MaxExpIncreaseValue = 200;
+        
+        public int CurrentSquadLevel { get; private set; }
+        public float CurrentSquadExp { get; private set; }
+        public int MaxSquadLevel { get; private set; }
+        public float MaxSquadExp { get; private set; }
 
         public int CurrentWeaponLevel { get; private set; }
         public float CurrentWeaponExp { get; private set; }
@@ -31,15 +36,20 @@ namespace Creature.Data
 
         public void InitializeData()
         {
+            CurrentSquadLevel = ES3.Load($"{Enum.LevelType.CurrentLv}{Enum.SummonEquipmentType.Squad}CurrentLevel", LevelFirstValue);
+            CurrentSquadExp = ES3.Load<float>($"{Enum.LevelType.CurrentExp}{Enum.SummonEquipmentType.Squad}CurrentExp", ExpFirstValue);
+            
             CurrentWeaponLevel = ES3.Load($"{Enum.LevelType.CurrentLv}{Enum.SummonEquipmentType.Weapon}CurrentLevel", LevelFirstValue);
             CurrentWeaponExp = ES3.Load<float>($"{Enum.LevelType.CurrentExp}{Enum.SummonEquipmentType.Weapon}CurrentExp", ExpFirstValue);
             
             CurrentGearLevel = ES3.Load($"{Enum.LevelType.CurrentLv}{Enum.SummonEquipmentType.Gear}CurrentLevel", LevelFirstValue);
             CurrentGearExp = ES3.Load<float>($"{Enum.LevelType.CurrentExp}{Enum.SummonEquipmentType.Gear}CurrentExp", ExpFirstValue);
 
+            MaxSquadExp = MaxExpFirstValue;
             MaxWeaponExp = MaxExpFirstValue;
             MaxGearExp = MaxExpFirstValue;
         
+            SetMaxExp(Enum.SummonEquipmentType.Squad);
             SetMaxExp(Enum.SummonEquipmentType.Weapon);
             SetMaxExp(Enum.SummonEquipmentType.Gear);
         
@@ -61,6 +71,11 @@ namespace Creature.Data
         {
             switch (type)
             {
+                case Enum.SummonEquipmentType.Squad:
+                    CurrentSquadExp += currentExpIncreaseValue;
+                    if (CurrentSquadExp >= MaxSquadExp && CurrentSquadLevel < MaxLevelFirstValue) OnLevelUpgrade?.Invoke(type);
+                    ES3.Save($"{Enum.LevelType.CurrentExp}{Enum.SummonEquipmentType.Squad}CurrentExp", CurrentWeaponExp);
+                    break;
                 case Enum.SummonEquipmentType.Weapon:
                     CurrentWeaponExp += currentExpIncreaseValue;
                     if (CurrentWeaponExp >= MaxWeaponExp && CurrentWeaponLevel < MaxLevelFirstValue) OnLevelUpgrade?.Invoke(type);
@@ -80,6 +95,12 @@ namespace Creature.Data
         {
             switch (type)
             {
+                case Enum.SummonEquipmentType.Squad:
+                    CurrentSquadLevel++;
+                    CurrentSquadExp -= MaxSquadExp;
+            
+                    ES3.Save($"{Enum.LevelType.CurrentLv}{Enum.SummonEquipmentType.Squad}CurrentLevel", CurrentSquadLevel);
+                    break;
                 case Enum.SummonEquipmentType.Weapon:
                     CurrentWeaponLevel++;
                     CurrentWeaponExp -= MaxWeaponExp;
@@ -103,6 +124,9 @@ namespace Creature.Data
         {
             switch (type)
             {
+                case Enum.SummonEquipmentType.Squad:
+                    MaxSquadExp = MaxExpFirstValue + CurrentSquadLevel * MaxExpIncreaseValue;
+                    break;
                 case Enum.SummonEquipmentType.Weapon:
                     MaxWeaponExp = MaxExpFirstValue + CurrentWeaponLevel * MaxExpIncreaseValue;
                     break;

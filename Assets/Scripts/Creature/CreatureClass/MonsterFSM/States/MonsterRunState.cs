@@ -54,6 +54,8 @@ namespace Creature.CreatureClass.MonsterFSM.States
 
         private void MoveCharacter()
         {
+            if (Monster.currentTarget == null) return;
+            
             var monsterNewTransform = Monster.transform;
             var position = Rigid.transform.position;
             var direction = (Monster.currentTarget.position - position).normalized;

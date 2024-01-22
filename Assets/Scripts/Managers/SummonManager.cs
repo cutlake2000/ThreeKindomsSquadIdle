@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Controller.UI;
 using Controller.UI.BottomMenuUI;
 using Creature.Data;
 using Function;
 using ScriptableObjects.Scripts;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Enum = Data.Enum;
 using Random = UnityEngine.Random;
 
@@ -18,13 +21,16 @@ namespace Managers
 
         private WeightedRandomPicker<string> weaponSummoner;
         private WeightedRandomPicker<string> armorSummoner;
+        private WeightedRandomPicker<string> squadSummoner;
 
+        private Enum.SquadClassType[] squadType;
         private Enum.EquipmentType[] weaponType;
         private Enum.EquipmentType[] gearType;
 
         public SummonSo summonProbability;
 
-        public readonly Dictionary<string, int> SummonedEquipmentDictionary = new();
+        public readonly Dictionary<string, int> SummonedItemDictionary = new();
+        public List<Equipment> summonedEquipmentList = new();
 
         private void Awake()
         {
@@ -39,21 +45,37 @@ namespace Managers
 
         private void SetupEventListeners()
         {
-            OnSummonEquipment += SummonRandomEquipment;
+            OnSummonEquipment += RandomSummon;
             OnSummonEquipment += IncreaseAchievementValue;
             SquadManager.Instance.SummonLevel.OnLevelUpgrade += SetupSummoner;
         }
 
         private void InitAllSummoner()
         {
+            squadSummoner = new WeightedRandomPicker<string>();
             weaponSummoner = new WeightedRandomPicker<string>();
             armorSummoner = new WeightedRandomPicker<string>();
 
+            squadType = new[] { Enum.SquadClassType.Warrior, Enum.SquadClassType.Archer, Enum.SquadClassType.Wizard };
             weaponType = new[] { Enum.EquipmentType.Sword, Enum.EquipmentType.Bow, Enum.EquipmentType.Staff };
             gearType = new[] { Enum.EquipmentType.Helmet, Enum.EquipmentType.Armor, Enum.EquipmentType.Gauntlet };
 
             InitWeaponSummoner();
             InitGearSummoner();
+        }
+        
+        private void InitSquadSummoner()
+        {
+            var currentSquadLevel = SquadManager.Instance.SummonLevel.CurrentSquadLevel;
+            
+            if (currentSquadLevel == 0) currentSquadLevel = 1;
+            
+            var squadProbability = summonProbability.GetProbability(currentSquadLevel).SummonProbabilities;
+            
+            foreach (var probability in squadProbability)
+            {
+                squadSummoner.Add($"{probability.equipmentRarity}", probability.weight);
+            }
         }
 
         private void InitWeaponSummoner()
@@ -88,6 +110,9 @@ namespace Managers
         {
             switch (type)
             {
+                case Enum.SummonEquipmentType.Squad:
+                    SetSquadSummoner();
+                    break;
                 case Enum.SummonEquipmentType.Weapon:
                     SetWeaponSummoner();
                     break;
@@ -97,7 +122,7 @@ namespace Managers
             }
         }
 
-        private void SummonRandomEquipment(Enum.SummonEquipmentType type, int count)
+        private void RandomSummon(Enum.SummonEquipmentType type, int count)
         {
             for (var i = 0; i < count; i++)
             {
@@ -107,6 +132,10 @@ namespace Managers
             
                 switch (type)
                 {
+                    case Enum.SummonEquipmentType.Squad:
+                        randomRarity = squadSummoner?.GetRandomPick();
+                        // randomType = squadType[Random.Range(0, 3)];
+                        break;
                     case Enum.SummonEquipmentType.Weapon:
                         randomRarity = weaponSummoner?.GetRandomPick();
                         randomType = weaponType[Random.Range(0, 3)];
@@ -119,13 +148,13 @@ namespace Managers
                 
                 var targetName = $"{randomRarity}_{randomTier}_{randomType}";
 
-                if (!CheckDictionaryKey(SummonedEquipmentDictionary, targetName))
+                if (!CheckDictionaryKey(SummonedItemDictionary, targetName))
                 {
-                    SummonedEquipmentDictionary.Add(targetName, 1);
+                    SummonedItemDictionary.Add(targetName, 1);
                 }
                 else
                 {
-                    SummonedEquipmentDictionary[targetName]++;
+                    SummonedItemDictionary[targetName]++;
                 }
                 
                 Debug.Log($"가챠! {targetName}");
@@ -152,7 +181,7 @@ namespace Managers
                     {
                         var targetId = $"{(Enum.EquipmentRarity) i}_{j}_{(Enum.EquipmentType) typeEnumIndex + k}";
                     
-                        if (!SummonedEquipmentDictionary.TryGetValue(targetId, out var summonCount)) continue;
+                        if (!SummonedItemDictionary.TryGetValue(targetId, out var summonCount)) continue;
                     
                         Debug.Log($"가챠2 {targetId}");
                         var target = EquipmentManager.GetEquipment(targetId);
@@ -160,11 +189,12 @@ namespace Managers
                         target.summonCount = summonCount;
                         target.quantity += summonCount;
                         target.SaveEquipmentEachInfo(target.name, Enum.EquipmentProperty.Quantity);
+                        summonedEquipmentList.Add(target);
                     }
                 }
             }
             
-            SummonUI.OnSummon?.Invoke(type, SummonedEquipmentDictionary.Count);
+            SummonUI.OnSummon?.Invoke(type, SummonedItemDictionary.Count);
         }
 
         private void SetWeaponSummoner()
@@ -186,6 +216,17 @@ namespace Managers
             foreach (var probability in armorProbability)
             {
                 armorSummoner.ModifyWeight($"{probability.equipmentRarity}", probability.weight);
+            }
+        }
+        
+        private void SetSquadSummoner()
+        {
+            var currentSquadLevel = SquadManager.Instance.SummonLevel.CurrentSquadLevel;
+            var squadProbability = summonProbability.GetProbability(currentSquadLevel).SummonProbabilities;
+            
+            foreach (var probability in squadProbability)
+            {
+                squadSummoner.ModifyWeight($"{probability.equipmentRarity}", probability.weight);
             }
         }
 

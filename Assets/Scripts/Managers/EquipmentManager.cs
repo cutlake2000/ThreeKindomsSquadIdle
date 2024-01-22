@@ -117,7 +117,9 @@ namespace Managers
                         if (equipment.isEquipped)
                         {
                             SquadManager.EquipAction(equipment);
-                            // InventoryUI.Instance.SelectEquipment(equipment);
+
+                            InventoryUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
+                            InventoryUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
                         }
 
                         equipmentCount++;

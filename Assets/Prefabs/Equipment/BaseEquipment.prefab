@@ -649,8 +649,9 @@ MonoBehaviour:
   ownedEffect: 0
   summonCount: 0
   maxQuantity: 0
-  maxLevel: 0
+  maxLevel: 250
   summonEffects: []
+  summonEffectFrameAnimator: {fileID: 0}
 --- !u!114 &455273361009326824
 MonoBehaviour:
   m_ObjectHideFlags: 0
