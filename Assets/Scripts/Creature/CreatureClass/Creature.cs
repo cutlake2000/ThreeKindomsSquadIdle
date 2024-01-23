@@ -14,7 +14,7 @@ namespace Creature.CreatureClass
 {
     public class Creature : MonoBehaviour
     {
-        private const float FadeTime = 2f;
+        private const float FADE_TIME = 1.0f;
         [SerializeField] protected Enum.CreatureClassType creatureClassType;
 
         [Header("EnemyFinder")]
@@ -39,6 +39,9 @@ namespace Creature.CreatureClass
 
         [Header("Sprite")]
         [SerializeField] protected List<SpriteRenderer> allSprites = new();
+
+        [Header("HpBar")]
+        [SerializeField] protected GameObject hpBar;
 
         protected TargetFinder TargetFinder;
 
@@ -67,19 +70,12 @@ namespace Creature.CreatureClass
         
         public void InitCreature()
         {
+            hpBar.gameObject.SetActive(true);
             gameObject.GetComponent<Collider2D>().enabled = true;
             ResetAllSpritesList();
             SetCreatureStats();
             SetUIHealthBar();
         }
-
-        protected void OnDisable()
-        {
-            SetCreatureState();
-        }
-
-        protected virtual void SetCreatureState() { }
-
         protected virtual void SetCreatureStats() { }
         
         private void SetCreatureComponent()
@@ -131,10 +127,10 @@ namespace Creature.CreatureClass
             var currentTime = 0.0f;
             var percent = 0.0f;
 
-            while (percent < 1)
+            while (percent < 1.0f)
             {
                 currentTime += Time.deltaTime;
-                percent = currentTime / FadeTime;
+                percent = currentTime / FADE_TIME;
 
                 foreach (var item in allSprites)
                 {
@@ -146,16 +142,7 @@ namespace Creature.CreatureClass
                 yield return null;
             }
 
-            switch (creatureClassType)
-            {
-                case Enum.CreatureClassType.Squad:
-                    CreatureDeath();
-                    break;
-                case Enum.CreatureClassType.Monster:
-                    CreatureDeath();
-                    break;
-            }
-            
+            CreatureDeath();
             gameObject.SetActive(false);
         }
 

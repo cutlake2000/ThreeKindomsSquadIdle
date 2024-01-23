@@ -276,7 +276,6 @@ namespace Managers
             foreach (var squad in squads)
             {
                 squad.SetActive(true);
-                squad.GetComponent<Squad>().InitCreature();
                 squad.transform.position = squadSpawnPosition[index];
 
                 index++;

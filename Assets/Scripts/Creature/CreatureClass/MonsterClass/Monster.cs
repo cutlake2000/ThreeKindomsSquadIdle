@@ -22,6 +22,8 @@ namespace Creature.CreatureClass.MonsterClass
 
         [Header("HitEffects")]
         [SerializeField] private bool isEventHitRunning;
+        public ParticleSystem effectHit;
+        private readonly WaitForSeconds hitEffectDelay = new(0.2f);
         
         [Header("Detector")]
         public GameObject detector;
@@ -29,9 +31,6 @@ namespace Creature.CreatureClass.MonsterClass
         [Header("Projectile")]
         private Vector2 projectileSpawnPosition;
         private Vector2 direction;
-
-        public ParticleSystem effectHit;
-        private readonly WaitForSeconds hitEffectDelay = new(0.2f);
 
         protected override void OnEnable()
         {
@@ -86,17 +85,13 @@ namespace Creature.CreatureClass.MonsterClass
             {
                 allSprites[i].sprite = monsterSprites[i];
 
-                if (!allSprites[i].gameObject.activeSelf) allSprites[i].gameObject.SetActive(true);
+                if (!allSprites[i].gameObject.activeInHierarchy) allSprites[i].gameObject.SetActive(true);
                 allSprites[i].transform.rotation = Quaternion.identity;
+
                 allSprites[i].color = Color.white;
             }
         }
         
-        protected override void SetCreatureState()
-        {
-            monsterStateMachine.ChangeState(monsterStateMachine.MonsterIdleState);
-        }
-
         protected override void SetCreatureStats()
         {
             //TODO: 추후에 MonsterManager에서 가지고 오도록
@@ -113,7 +108,7 @@ namespace Creature.CreatureClass.MonsterClass
             currentTarget = null;
         }
 
-        public bool TakeDamage(BigInteger damage)
+        public void TakeDamage(BigInteger damage)
         {
             currentHealth -= damage;
             currentHealth = currentHealth < 0 ? 0 : currentHealth;
@@ -129,18 +124,19 @@ namespace Creature.CreatureClass.MonsterClass
 
             if (isEventHitRunning == false && !isDead) StartCoroutine(EventHit());
 
-            if (currentHealth > 0 || isDead) return true;
+            if (currentHealth > 0 || isDead) return;
             isDead = true;
+            hpBar.gameObject.SetActive(false);
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+            StageManager.CheckRemainedMonsterAction?.Invoke();
             HideSpritesExceptBody();
             monsterStateMachine.ChangeState(monsterStateMachine.MonsterDieState);
-            return false;
         }
         
         protected override void CreatureDeath()
         {
             ResetAllSprites();
-            StageManager.CheckRemainedMonsterAction?.Invoke();
+            monsterStateMachine.ChangeState(monsterStateMachine.MonsterIdleState);
             MonsterManager.Instance.ReturnMonster(monsterClassType, this);
         }
         
@@ -161,8 +157,7 @@ namespace Creature.CreatureClass.MonsterClass
             projectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
             direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
 
-            ProjectileManager.Instance.InstantiateBaseAttack(attack, projectileSpawnPosition, direction,
-                Enum.PoolType.ProjectileBaseAttackMonster);
+            ProjectileManager.Instance.InstantiateBaseAttack(attack, projectileSpawnPosition, direction, Enum.PoolType.ProjectileBaseAttackMonster);
         }
 
         private IEnumerator EventHit()

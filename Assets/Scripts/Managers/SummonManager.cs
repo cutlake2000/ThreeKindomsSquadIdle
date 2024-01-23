@@ -189,6 +189,7 @@ namespace Managers
                         target.summonCount = summonCount;
                         target.quantity += summonCount;
                         target.SaveEquipmentEachInfo(target.name, Enum.EquipmentProperty.Quantity);
+                        target.SetQuantityText();
                         summonedEquipmentList.Add(target);
                     }
                 }

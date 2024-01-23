@@ -88,11 +88,6 @@ namespace Creature.CreatureClass.SquadClass
             }
         }
 
-        protected override void SetCreatureState()
-        {
-            squadStateMachine.ChangeState(squadStateMachine.SquadIdleState);
-        }
-
         protected override void SetCreatureStats()
         {
             maxHealth = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Health);
@@ -105,7 +100,7 @@ namespace Creature.CreatureClass.SquadClass
             currentTarget = null;
         }
 
-        public bool TakeDamage(BigInteger damage)
+        public void TakeDamage(BigInteger damage)
         {
             currentHealth -= damage;
             currentHealth = currentHealth < 0 ? 0 : currentHealth;
@@ -113,16 +108,17 @@ namespace Creature.CreatureClass.SquadClass
 
             Debug.Log($"{gameObject.name} {damage} 데미지!");
 
-            if (currentHealth > 0) return true;
+            if (currentHealth > 0) return;
             isDead = true;
+            hpBar.gameObject.SetActive(false);
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+            StageManager.CheckRemainedSquadAction?.Invoke();
             squadStateMachine.ChangeState(squadStateMachine.SquadDieState);
-            return false;
         }
 
         protected override void CreatureDeath()
         {
-            StageManager.CheckRemainedSquadAction?.Invoke();
+            squadStateMachine.ChangeState(squadStateMachine.SquadIdleState);
         }
 
         protected override void FindNearbyEnemy()

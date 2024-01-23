@@ -25,7 +25,6 @@ namespace Controller.Projectiles.BaseAttack
             if (collision.gameObject.layer != LayerMask.NameToLayer("Enemy")) return;
             
             collision.GetComponent<Monster>().TakeDamage(Damage);
-            gameObject.SetActive(false);
         }
         
         // protected override void AttackEnemy()

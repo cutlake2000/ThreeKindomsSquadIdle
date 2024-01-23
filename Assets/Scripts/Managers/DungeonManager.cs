@@ -83,8 +83,6 @@ namespace Managers
                     targetScore = 100;
                     waveTime = 60.0f;
                     monsterSpawnCountsPerSubStage = 10;
-
-                    StageManager.Instance.isStageRunnerRunning = true;
                     
                     StartCoroutine(KillCountDungeonRunner());
                 });

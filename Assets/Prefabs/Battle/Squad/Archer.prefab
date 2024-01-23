@@ -166,6 +166,7 @@ MonoBehaviour:
   attackRange: 0
   moveSpeed: 0
   allSprites: []
+  hpBar: {fileID: 7560218327994880032}
   squadClassType: 1
   spumSprite: {fileID: 1956401465986304886}
   detector: {fileID: 914982310830887439}
@@ -761,6 +762,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -794,7 +803,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -810,7 +819,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7024561907568747354, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.2
+      value: 0.002
       objectReference: {fileID: 0}
     - target: {fileID: 7024561907568747354, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -849,6 +858,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7560218327994880032 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4348132969128671925, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
+  m_PrefabInstance: {fileID: 6106003025654737557}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6806514163402756778
 PrefabInstance:
   m_ObjectHideFlags: 0

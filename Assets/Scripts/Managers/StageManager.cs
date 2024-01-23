@@ -20,7 +20,6 @@ namespace Managers
         [SerializeField] private StageSo stageSo;
         
         [Header("=== 스테이지 정보 ===")]
-        public bool isStageRunnerRunning;
         [SerializeField] private string currentMainStageName;
         [SerializeField] private int currentMainStage;
         [SerializeField] private int currentSubStage;

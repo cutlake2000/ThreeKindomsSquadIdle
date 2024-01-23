@@ -648,9 +648,15 @@ MonoBehaviour:
   equippedEffect: 0
   ownedEffect: 0
   summonCount: 0
-  maxQuantity: 0
+  maxQuantity: 5
   maxLevel: 250
-  summonEffects: []
+  summonEffects:
+  - {fileID: 858583682821206030, guid: 0e784f16b8d0b4938949561c96a395ce, type: 3}
+  - {fileID: 7298486211065236016, guid: a3dd6d7ebd51a468c96a44017036a200, type: 3}
+  - {fileID: 8568613467927830317, guid: 19ecb6a8651c346728469072551de0b8, type: 3}
+  - {fileID: 4718795235744434346, guid: ecc8e85e05b47492782bd132d9258838, type: 3}
+  - {fileID: 9118439823786173761, guid: 79895bdaf83dd4216a9048cf1af0de9c, type: 3}
+  - {fileID: 2736308757672531745, guid: 36e641a2295914682939e3301b6eb2bc, type: 3}
   summonEffectFrameAnimator: {fileID: 0}
 --- !u!114 &455273361009326824
 MonoBehaviour:

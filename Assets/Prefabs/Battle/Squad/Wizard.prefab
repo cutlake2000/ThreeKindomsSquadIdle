@@ -166,6 +166,7 @@ MonoBehaviour:
   attackRange: 0
   moveSpeed: 0
   allSprites: []
+  hpBar: {fileID: 8393115084427163441}
   squadClassType: 2
   spumSprite: {fileID: 2541985491156917118}
   detector: {fileID: 2134215503410017125}
@@ -337,6 +338,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -370,7 +379,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -386,11 +395,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7024561907568747354, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.2
+      value: 0.002
       objectReference: {fileID: 0}
     - target: {fileID: 7024561907568747354, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7618096698790693947, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_Layer
@@ -423,6 +432,11 @@ MonoBehaviour:
 --- !u!224 &1760574337657511626 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5783518429527561038, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
+  m_PrefabInstance: {fileID: 5201092793146330500}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8393115084427163441 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4348132969128671925, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
   m_PrefabInstance: {fileID: 5201092793146330500}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7081837238786202591
