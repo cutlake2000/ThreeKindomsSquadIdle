@@ -22,9 +22,6 @@ namespace Creature.CreatureClass.SquadClass
         [Header("StateMachine")]
         private SquadStateMachine squadStateMachine;
 
-        [Header("Detector")]
-        public GameObject detector;
-
         protected override void OnEnable()
         {
             base.OnEnable();

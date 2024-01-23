@@ -36,10 +36,11 @@ namespace Creature.CreatureClass.MonsterFSM.States
             else
             {
                 if (OnAttack) OnAttack = false;
-                if (!Monster.detector.activeSelf) Monster.detector.SetActive(true);
 
                 if (Monster.currentTarget == null)
-                    MonsterStateMachine.ChangeState(MonsterStateMachine.MonsterIdleState);
+                {
+                    MonsterStateMachine.ChangeState(MonsterStateMachine.MonsterIdleState);   
+                }
             }
         }
 

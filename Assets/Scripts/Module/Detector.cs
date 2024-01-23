@@ -6,12 +6,11 @@ namespace Module
 {
     public class Detector : MonoBehaviour
     {
-        [SerializeField] private LayerMask targetLayer;
+        [SerializeField] private string targetTag;
         private void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log($"{other.name} | {other.gameObject.layer} || {gameObject.name} | {targetLayer.value}");
-            if (other.gameObject.layer != targetLayer) return;
-            Debug.Log($"{gameObject.transform.parent.GetComponent<Creature.CreatureClass.Creature>()} 타겟 감지");
+            if (other.CompareTag(targetTag)) return;
+            Debug.Log($"{gameObject.name}가 {other.gameObject.name} 감지");
             gameObject.transform.parent.GetComponent<Creature.CreatureClass.Creature>().currentTarget = other.transform;
             gameObject.SetActive(false);
         }

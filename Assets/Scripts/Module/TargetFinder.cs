@@ -12,11 +12,11 @@ namespace Module
         
         private Collider2D[] nearbyTargets;
         
-        public Transform ScanNearestEnemy(float followRange)
+        public Transform ScanNearestEnemy(float range)
         {
             Transform target = null;
 
-            if (ScanNearby(followRange) == null) return null;
+            if (ScanNearby(range) == null) return null;
             
             var distance = Vector3.Distance(transform.position, nearbyTargets[0].transform.position);
             
@@ -37,7 +37,7 @@ namespace Module
         {
             followRange = range;
             
-            nearbyTargets = Physics2D.OverlapCircleAll(transform.position, this.followRange, targetLayers);
+            nearbyTargets = Physics2D.OverlapCircleAll(transform.position, followRange, targetLayers);
 
             return nearbyTargets.Length <= 0 ? null : nearbyTargets;
         }

@@ -14,7 +14,7 @@ namespace Creature.CreatureClass
 {
     public class Creature : MonoBehaviour
     {
-        private const float FADE_TIME = 1.0f;
+        private const float FADE_TIME = 0.8f;
         [SerializeField] protected Enum.CreatureClassType creatureClassType;
 
         [Header("EnemyFinder")]

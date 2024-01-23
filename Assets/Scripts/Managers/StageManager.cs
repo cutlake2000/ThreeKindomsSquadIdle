@@ -133,7 +133,7 @@ namespace Managers
             currentWave = 1;
             currentSquadCount = maxSquadCount;
             
-            DespawnSquad();
+            DespawnSquad(); 
                 
             SetCurrentMainStageInfo();
             StartCoroutine(StageRunner());

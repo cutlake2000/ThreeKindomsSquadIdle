@@ -62,9 +62,11 @@ namespace Creature.CreatureClass.SquadFSM.States
             else
             {
                 if (OnAttack) OnAttack = false;
-                if (!Squad.detector.activeSelf) Squad.detector.SetActive(true);
 
-                if (Squad.currentTarget == null) SquadStateMachine.ChangeState(SquadStateMachine.SquadIdleState);
+                if (Squad.currentTarget == null)
+                {
+                    SquadStateMachine.ChangeState(SquadStateMachine.SquadIdleState);
+                }
             }
         }
 

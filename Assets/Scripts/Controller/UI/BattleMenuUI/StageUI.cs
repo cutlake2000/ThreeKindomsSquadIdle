@@ -15,7 +15,7 @@ namespace Controller.UI
         [SerializeField] private Button loopButton;
         [SerializeField] private Button challengeButton;
         
-        public void InitiateEventListener()
+        private void Start()
         {
             loopButton.onClick.AddListener(() => OnClickStageProgressButton(true));
             challengeButton.onClick.AddListener(() => OnClickStageProgressButton(false));
