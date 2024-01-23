@@ -77,7 +77,7 @@ namespace Controller.UI.BottomMenuUI.SquadMenu
             currentIncreasedStat += increaseStatValue * count;
             
             ES3.Save($"{nameof(SquadEntireStat)}/{squadStatTypeBySquadPanel}/currentLevel : ", currentLevel);
-            UpgradeTotalSquadStatAction?.Invoke(squadStatTypeBySquadPanel, increaseStatValue);
+            UpgradeTotalSquadStatAction?.Invoke(squadStatTypeBySquadPanel, increaseStatValue * count);
         }
 
         // 스텟 로드할 때 부르는 메서드

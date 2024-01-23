@@ -118,8 +118,6 @@ namespace Managers
                     goToNextSubStage = true;
                     currentWave = 1;
                 }
-                
-                DespawnSquad();
             }
 
             SetCurrentMainStageInfo();

@@ -40,7 +40,7 @@ namespace Creature.CreatureClass
         [Header("Sprite")]
         [SerializeField] protected List<SpriteRenderer> allSprites = new();
 
-        protected EnemyFinder enemyFinder;
+        protected TargetFinder TargetFinder;
 
         protected virtual void Awake()
         {
@@ -86,7 +86,7 @@ namespace Creature.CreatureClass
         {
             animator = GetComponentInChildren<Animator>();
             animationEventReceiver = GetComponentInChildren<AnimationEventReceiver>();
-            enemyFinder = GetComponent<EnemyFinder>();
+            TargetFinder = GetComponent<TargetFinder>();
             rigid = GetComponent<Rigidbody2D>();
             healthBar.maxValue = 100;
 
@@ -146,12 +146,19 @@ namespace Creature.CreatureClass
                 yield return null;
             }
 
-            if (creatureClassType == Enum.CreatureClassType.Squad)
+            switch (creatureClassType)
             {
-                StageManager.CheckRemainedSquadAction?.Invoke();   
+                case Enum.CreatureClassType.Squad:
+                    CreatureDeath();
+                    break;
+                case Enum.CreatureClassType.Monster:
+                    CreatureDeath();
+                    break;
             }
             
             gameObject.SetActive(false);
         }
+
+        protected virtual void CreatureDeath() { }
     }
 }

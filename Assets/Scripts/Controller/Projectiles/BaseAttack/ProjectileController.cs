@@ -10,7 +10,7 @@ namespace Controller.CharacterProjectiles.BaseAttack
         [SerializeField] protected float duration;
         [SerializeField] protected float attackRange;
         
-        protected EnemyFinder EnemyFinder;
+        protected TargetFinder TargetFinder;
         protected Vector3 Direction;
         protected Collider2D[] NearbyTargets;
         protected float CurrentDuration;
@@ -19,7 +19,7 @@ namespace Controller.CharacterProjectiles.BaseAttack
         
         protected virtual void Awake()
         {
-            EnemyFinder = GetComponent<EnemyFinder>();
+            TargetFinder = GetComponent<TargetFinder>();
         }
 
         protected virtual void OnEnable()
@@ -33,7 +33,7 @@ namespace Controller.CharacterProjectiles.BaseAttack
         {
             if (NearbyTargets != null || attackRange == 0) return;
             
-            NearbyTargets = EnemyFinder.ScanNearby(attackRange);
+            NearbyTargets = TargetFinder.ScanNearby(attackRange);
                 
             if (NearbyTargets != null) AttackEnemy();
         }

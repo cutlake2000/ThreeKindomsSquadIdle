@@ -11,16 +11,14 @@ namespace Creature.CreatureClass.MonsterClass
 {
     public class Monster : Creature
     {
-        [Header("Class")] [SerializeField] public Enum.MonsterClassType monsterClassType;
+        [Header("Class")]
+        [SerializeField] public Enum.MonsterClassType monsterClassType;
 
-        [SerializeField] private Vector2 direction;
+        [Header("StateMachine")]
+        private MonsterStateMachine monsterStateMachine;
 
-        [Header("Projectile")] [SerializeField]
-        private Vector2 projectileSpawnPosition;
-
-        [Header("StateMachine")] private MonsterStateMachine monsterStateMachine;
-
-        [Header("Sprites")] [SerializeField] private List<Sprite> monsterSprites;
+        [Header("Sprites")]
+        [SerializeField] private List<Sprite> monsterSprites;
 
         [Header("HitEffects")]
         [SerializeField] private bool isEventHitRunning;
@@ -29,8 +27,8 @@ namespace Creature.CreatureClass.MonsterClass
         public GameObject detector;
         
         [Header("Projectile")]
-        private Vector2 ProjectileSpawnPosition;
-        private Vector2 Direction;
+        private Vector2 projectileSpawnPosition;
+        private Vector2 direction;
 
         public ParticleSystem effectHit;
         private readonly WaitForSeconds hitEffectDelay = new(0.2f);
@@ -72,6 +70,14 @@ namespace Creature.CreatureClass.MonsterClass
         protected override void SetAllSpritesList()
         {
             foreach (var allSprite in allSprites) monsterSprites.Add(allSprite.sprite);
+        }
+
+        private void HideSpritesExceptBody()
+        {
+            for (var i = 1; i < allSprites.Count; i++)
+            {
+                allSprites[i].gameObject.SetActive(false);
+            }
         }
 
         private void ResetAllSprites()
@@ -125,14 +131,19 @@ namespace Creature.CreatureClass.MonsterClass
 
             if (currentHealth > 0 || isDead) return true;
             isDead = true;
+            gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+            HideSpritesExceptBody();
             monsterStateMachine.ChangeState(monsterStateMachine.MonsterDieState);
-
+            return false;
+        }
+        
+        protected override void CreatureDeath()
+        {
             ResetAllSprites();
             StageManager.CheckRemainedMonsterAction?.Invoke();
             MonsterManager.Instance.ReturnMonster(monsterClassType, this);
-            return false;
         }
-
+        
         protected override void FindNearbyEnemy()
         {
             currentTarget = null;
@@ -140,17 +151,17 @@ namespace Creature.CreatureClass.MonsterClass
             //TODO: 추후에 스테이지가 시작할 때 로직이 돌도록 수정하면 좋을 듯
             if (currentTarget != null && currentTarget.GetComponent<Squad>().isDead == false) return;
 
-            currentTarget = enemyFinder.ScanNearestEnemy(followRange);
+            currentTarget = TargetFinder.ScanNearestEnemy(followRange);
         }
 
         private void OnNormalAttack()
         {
             if (currentTarget == null) return;
 
-            ProjectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
-            Direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
+            projectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
+            direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
 
-            ProjectileManager.Instance.InstantiateBaseAttack(attack, ProjectileSpawnPosition, Direction,
+            ProjectileManager.Instance.InstantiateBaseAttack(attack, projectileSpawnPosition, direction,
                 Enum.PoolType.ProjectileBaseAttackMonster);
         }
 

@@ -88,9 +88,23 @@ namespace Managers
                     
                     StartCoroutine(KillCountDungeonRunner());
                 });
+                
+                dungeonItems[index].previousStageButton.onClick.AddListener(() => ChooseStage(index, -1));
+                dungeonItems[index].nextStageButton.onClick.AddListener(() => ChooseStage(index, 1));
             }
         }
         
+        private void ChooseStage(int index, int levelIndex)
+        {
+            dungeonItems[index].currentDungeonLevel += levelIndex;
+
+            if (dungeonItems[index].currentDungeonLevel <= 0) dungeonItems[index].currentDungeonLevel = 1;
+            if (dungeonItems[index].currentDungeonLevel <= maxDungeonLevel) dungeonItems[index].currentDungeonLevel = maxDungeonLevel;
+            dungeonItems[index].currentDungeonReward = (int)(baseClearReward * Mathf.Pow((100 + increaseRewardPercent) / 100, dungeonItems[index].currentDungeonLevel));
+            
+            dungeonItems[index].SetSquadStatUI();
+        }
+
         private void SetDungeonData()
         {
             for (var i = 0; i < dungeonItems.Length; i++)
@@ -123,6 +137,8 @@ namespace Managers
                 }
                 else
                 {
+                    Debug.Log("성공");
+                    
                     foreach (var stageUI in stageUIs)
                     {
                         stageUI.SetActive(true);

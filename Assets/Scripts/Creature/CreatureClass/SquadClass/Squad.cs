@@ -120,6 +120,11 @@ namespace Creature.CreatureClass.SquadClass
             return false;
         }
 
+        protected override void CreatureDeath()
+        {
+            StageManager.CheckRemainedSquadAction?.Invoke();
+        }
+
         protected override void FindNearbyEnemy()
         {
             currentTarget = null;
@@ -127,7 +132,7 @@ namespace Creature.CreatureClass.SquadClass
             //TODO: 추후에 스테이지가 시작할 때 로직이 돌도록 수정하면 좋을 듯
             if (currentTarget != null && currentTarget.GetComponent<Monster>().isDead == false) return;
 
-            currentTarget = enemyFinder.ScanNearestEnemy(followRange);
+            currentTarget = TargetFinder.ScanNearestEnemy(followRange);
         }
 
         protected virtual void OnNormalAttack()
