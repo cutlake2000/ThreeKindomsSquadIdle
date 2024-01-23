@@ -111,11 +111,11 @@ namespace Managers
                     break;
                 case Enum.CurrencyType.Gold:
                     currency = currencies.Find(c => c.currencyType == Enum.CurrencyType.Gold);
-                    currency.currencyUI.text = BigInteger.ChangeMoney(amount);
+                    currency.currencyUI.text = $"<sprite=15> {BigInteger.ChangeMoney(amount)}";
                     break;
                 case Enum.CurrencyType.Dia:
                     currency = currencies.Find(c => c.currencyType == Enum.CurrencyType.Dia);
-                    currency.currencyUI.text = BigInteger.ChangeMoney(amount);
+                    currency.currencyUI.text = $"<sprite=16> {BigInteger.ChangeMoney(amount)}";
                     break;
             }
         }

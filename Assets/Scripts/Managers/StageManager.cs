@@ -12,34 +12,32 @@ namespace Managers
     {
         public static StageManager Instance;
 
-        public static Action CheckRemainedMonster;
-        public static Action CheckRemainedSquad;
+        public static Action CheckRemainedMonsterAction;
+        public static Action CheckRemainedSquadAction;
         public static Action<bool> CheckStageProgressType;
 
         [SerializeField] private StageUI stageUIController;
         [SerializeField] private StageSo stageSo;
         
         [Header("=== 스테이지 정보 ===")]
+        public bool isStageRunnerRunning;
         [SerializeField] private string currentMainStageName;
         [SerializeField] private int currentMainStage;
         [SerializeField] private int currentSubStage;
-        [SerializeField] private int currentWave;
+        [SerializeField] public int currentWave;
         [SerializeField] private int currentRemainedMonsterCount;
         [SerializeField] private float waveTime;
-        [SerializeField] private float stageLimitedTime;
+        [SerializeField] private float stageLimitedTime = 60.0f;
         [SerializeField] private int currentSquadCount;
 
         [Header("--- 스테이지 러너 상태 ---")]
-        [SerializeField] private bool waveClear;
-        [SerializeField] private bool timeOver;
-        [SerializeField] private bool squadAnnihilation;
         [SerializeField] private bool nextStageChallenge;
         [SerializeField] private int maxSquadCount;
         [SerializeField] private int maxMainStageCounts;
         [SerializeField] private int subStageCountsPerMainStage;
         [SerializeField] private int waveCountsPerSubStage;
         [SerializeField] private int monsterSpawnCountsPerSubStage;
-        [SerializeField] private bool goToNextSubStage;
+        [SerializeField] public bool goToNextSubStage;
         [SerializeField] private bool isWaveTimerRunning;
         [SerializeField] private bool stopWaveTimer;
 
@@ -50,8 +48,8 @@ namespace Managers
 
         public void InitStageManager()
         {
-            CheckRemainedMonster += CalculateRemainedMonster;
-            CheckRemainedSquad += CalculateRemainedSquad;
+            CheckRemainedMonsterAction += CalculateRemainedMonster;
+            CheckRemainedSquadAction += CalculateRemainedSquad;
             CheckStageProgressType += SetStageProgressType;
 
             maxMainStageCounts = stageSo.MainStageInfos.Count;
@@ -73,7 +71,7 @@ namespace Managers
             SetCurrentMainStageInfo();
         }
 
-        private void SetCurrentMainStageInfo()
+        public void SetCurrentMainStageInfo()
         {
             currentMainStageName = stageSo.MainStageInfos[currentMainStage - 1].MainStageName;
         }
@@ -83,13 +81,12 @@ namespace Managers
             StartCoroutine(StageRunner());
         }
 
-        private void CalculateRemainedMonster()
+        public void CalculateRemainedMonster()
         {
             currentRemainedMonsterCount--;
 
-            if (currentRemainedMonsterCount != 0) return;
+            if (currentRemainedMonsterCount > 0) return;
             
-            waveClear = true;
             currentWave++;
 
             if (currentWave > waveCountsPerSubStage)
@@ -100,10 +97,10 @@ namespace Managers
                     currentSubStage++;
 
                     stopWaveTimer = true;
+                    goToNextSubStage = true;
 
                     if (currentSubStage > subStageCountsPerMainStage)
                     {
-                        goToNextSubStage = true;
                         currentSubStage -= subStageCountsPerMainStage;
                         currentMainStage++;
 
@@ -121,20 +118,20 @@ namespace Managers
                     goToNextSubStage = true;
                     currentWave = 1;
                 }
+                
+                DespawnSquad();
             }
 
             SetCurrentMainStageInfo();
             StartCoroutine(StageRunner());
         }
 
-        private void CalculateRemainedSquad()
+        public void CalculateRemainedSquad()
         {
             currentSquadCount--;
 
             if (currentSquadCount > 0) return;
-            squadAnnihilation = true; // TODO: 추후 삭제
             stopWaveTimer = true;
-            timeOver = false;
             goToNextSubStage = true;
             currentWave = 1;
             currentSquadCount = maxSquadCount;
@@ -148,11 +145,7 @@ namespace Managers
         private void CalculateRemainedTime()
         {
             if (waveTime > 0) return;
-            timeOver = true; // TODO: 추후 삭제
-            
             stopWaveTimer = true;
-            
-            squadAnnihilation = false;
             goToNextSubStage = true;
             currentWave = 1;
             
@@ -169,7 +162,6 @@ namespace Managers
 
         private IEnumerator StageRunner()
         {
-            IniStageRunner();
             SetUI();
 
             yield return new WaitForSeconds(1.0f);
@@ -186,13 +178,6 @@ namespace Managers
 
             SpawnMonster();
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
-        }
-
-        private void IniStageRunner()
-        {
-            squadAnnihilation = false;
-            waveClear = false;
-            timeOver = false;
         }
 
         private void SetUI()
@@ -253,13 +238,17 @@ namespace Managers
         private void InitWaveTimer()
         {
             stopWaveTimer = false;
-            timeOver = false;
             waveTime = stageLimitedTime;
         }
 
         private void SetTimerUI(int currentTime)
         {
             stageUIController.SetUIText(Enum.UITextType.Timer, $"{currentTime}");
+        }
+
+        public void StopStageRunner()
+        {
+            StopAllCoroutines();
         }
     }
 }

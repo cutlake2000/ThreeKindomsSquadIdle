@@ -148,7 +148,7 @@ namespace Creature.CreatureClass
 
             if (creatureClassType == Enum.CreatureClassType.Squad)
             {
-                StageManager.CheckRemainedSquad?.Invoke();   
+                StageManager.CheckRemainedSquadAction?.Invoke();   
             }
             
             gameObject.SetActive(false);

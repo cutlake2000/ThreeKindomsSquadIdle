@@ -72,12 +72,12 @@ namespace Controller.UI.BottomMenuUI.SquadMenu
 
         public void CheckRequiredStatPointOfMagnificationButton(int index)
         {
-            Debug.Log($"계십니까~ {Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.StatPoint))} | {levelUpMagnification * SquadStatManager.Instance.squadStats[index].levelUpCost}");
-            var levelUpCost = SquadStatManager.Instance.squadStats[index].levelUpCost;
+            Debug.Log($"계십니까~ {Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.StatPoint))} | {levelUpMagnification * SquadStatManager.Instance.squadStatItem[index].levelUpCost}");
+            var levelUpCost = SquadStatManager.Instance.squadStatItem[index].levelUpCost;
             
             if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.StatPoint)) < levelUpMagnification * levelUpCost)
             {
-                foreach (var squadStat in SquadStatManager.Instance.squadStats)
+                foreach (var squadStat in SquadStatManager.Instance.squadStatItem)
                 {
                     if (squadStat.maxLevel - squadStat.currentLevel <= Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.StatPoint))) continue;
                     
@@ -87,7 +87,7 @@ namespace Controller.UI.BottomMenuUI.SquadMenu
             }
             else
             {
-                foreach (var squadStat in SquadStatManager.Instance.squadStats)
+                foreach (var squadStat in SquadStatManager.Instance.squadStatItem)
                 {
                     squadStat.upgradeButton.gameObject.SetActive(true);
                     squadStat.upgradeBlockButton.gameObject.SetActive(false);

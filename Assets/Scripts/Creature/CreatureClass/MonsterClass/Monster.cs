@@ -128,7 +128,7 @@ namespace Creature.CreatureClass.MonsterClass
             monsterStateMachine.ChangeState(monsterStateMachine.MonsterDieState);
 
             ResetAllSprites();
-            StageManager.CheckRemainedMonster?.Invoke();
+            StageManager.CheckRemainedMonsterAction?.Invoke();
             MonsterManager.Instance.ReturnMonster(monsterClassType, this);
             return false;
         }

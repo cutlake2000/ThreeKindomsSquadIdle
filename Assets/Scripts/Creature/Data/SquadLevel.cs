@@ -7,7 +7,7 @@ namespace Creature.Data
 {
     public class SquadLevel
     {
-            public event Action OnLevelUpgrade;
+        public event Action OnLevelUpgrade;
         public event Action<float> OnExpUpgrade;
     
         public int IncreaseAttack => 2;

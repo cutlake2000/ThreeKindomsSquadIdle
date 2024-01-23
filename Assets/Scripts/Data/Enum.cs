@@ -36,6 +36,11 @@ namespace Data
             Squad,
             Monster
         }
+        
+        public enum DungeonType
+        {
+            GoldDungeon
+        }
 
         public enum CurrencyType
         {
@@ -193,6 +198,12 @@ namespace Data
             CurrentStageName,
             CurrentWave,
             Timer
+        }
+
+        public enum DungeonClearType
+        {
+            KillCount,
+            WaveCount
         }
 
         public static readonly EquipmentType[] equipmentTypes =

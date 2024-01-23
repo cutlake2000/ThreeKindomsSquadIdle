@@ -39,11 +39,11 @@ namespace Managers
 
         public void InitSummonManager()
         {
-            SetupEventListeners();
+            InitializeEventListeners();
             InitAllSummoner();
         }
 
-        private void SetupEventListeners()
+        private void InitializeEventListeners()
         {
             OnSummonEquipment += RandomSummon;
             OnSummonEquipment += IncreaseAchievementValue;

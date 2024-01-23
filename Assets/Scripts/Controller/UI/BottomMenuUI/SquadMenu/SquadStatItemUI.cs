@@ -47,7 +47,7 @@ namespace Controller.UI.BottomMenuUI.SquadMenu
         public Button upgradeButton;
         public Button upgradeBlockButton;
 
-        public void SetSquadStatUI()
+        public void InitSquadStatUI()
         {
             squadStatImage.sprite = squadStatSprite;
             squadStatMaxLevelText.text = $"최대 레벨 | {maxLevel}";
@@ -55,7 +55,7 @@ namespace Controller.UI.BottomMenuUI.SquadMenu
         }
 
         // 스텟 UI 업데이트 하는 메서드
-        public void UpdateIncreaseSquadStatUI()
+        public void UpdateSquadStatUI()
         {
             squadStatLevelText.text = $"Lv. {currentLevel}";
             

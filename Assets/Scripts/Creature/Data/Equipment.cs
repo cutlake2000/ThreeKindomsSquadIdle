@@ -21,7 +21,7 @@ namespace Creature.Data
         public int level; // 강화 상태 (예: 0, 1, 2, ...)
         public int basicEquippedEffect;
         public int basicOwnedEffect;
-        [FormerlySerializedAs("basicBackgroundEffect")] public Image basicEquipmentBackground;
+        public Image basicEquipmentBackground;
         public Image basicEquipmentImage;
         
         public Sprite equipmentBackground;
@@ -43,23 +43,6 @@ namespace Creature.Data
         [SerializeField] private ParticleSystem[] summonEffects;
         [SerializeField] private Animator summonEffectFrameAnimator;
         private static readonly int Summon = Animator.StringToHash("Summon");
-
-        // public Equipment(string id, int quantity, int tier, bool isEquipped, Enum.EquipmentType type, Enum.EquipmentRarity equipmentRarity,
-        //     int level, int basicEquippedEffect, int basicOwnedEffect)
-        // {
-        //     this.id = id;
-        //     this.quantity = quantity;
-        //     this.tier = tier;
-        //     this.isEquipped = isEquipped;
-        //     this.type = type;
-        //     this.equipmentRarity = equipmentRarity;
-        //     this.level = level;
-        //     this.basicEquippedEffect = basicEquippedEffect;
-        //     this.basicOwnedEffect = basicOwnedEffect;
-        //
-        //     equippedEffect = this.basicEquippedEffect;
-        //     ownedEffect = this.basicOwnedEffect;
-        // }
         
         public void SetManagedPool(IObjectPool<Equipment> pool)
         {
@@ -273,6 +256,8 @@ namespace Creature.Data
         // 배경색 바꾸는 메서드 (Sprite로 변경해야함)
         public void SetBackgroundEffectText()
         {
+            if (basicEquipmentBackground == null) return;
+            
             basicEquipmentBackground.sprite = equipmentBackground;
         }
         

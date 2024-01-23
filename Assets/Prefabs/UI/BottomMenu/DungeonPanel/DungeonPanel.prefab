@@ -1856,7 +1856,7 @@ GameObject:
   - component: {fileID: 4891752802613710576}
   - component: {fileID: 5027116546211585466}
   - component: {fileID: 7976995272294843358}
-  - component: {fileID: 5002020828129529885}
+  - component: {fileID: 6398800422980678964}
   m_Layer: 5
   m_Name: DungeonPanel
   m_TagString: Untagged
@@ -1929,7 +1929,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5002020828129529885
+--- !u!114 &6398800422980678964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1941,13 +1941,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f3b7c155834f91aab0e9d1dd1b9cf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ClearDungeonButton: {fileID: 1791796037045958467}
+  dungeonType: 0
+  clearDungeonButton: {fileID: 1791796037045958467}
   enterDungeonButton: {fileID: 5729962299877117738}
   autoChallengeButton: {fileID: 8762736369073835182}
   previousStageButton: {fileID: 1792119864103088451}
   nextStageButton: {fileID: 2100507339367551722}
-  currentStageName: {fileID: 7876848429539898931}
-  currentStageReward: {fileID: 6696274848603775010}
+  currentDungeonLevelText: {fileID: 7876848429539898931}
+  currentDungeonRewardText: {fileID: 6696274848603775010}
+  currentDungeonLevel: 0
 --- !u!1 &8536394269759809702
 GameObject:
   m_ObjectHideFlags: 0
