@@ -18,18 +18,19 @@ namespace Controller.UI.BottomMenuUI.DungeonPanel
         public TMP_Text currentDungeonLevelText;
         public TMP_Text currentDungeonRewardText;
 
+        public int clearDungeonLevel;
         public int currentDungeonLevel;
-        public BigInteger currentDungeonReward;
+        public int currentDungeonReward; //TODO :BigInteger로 수정
         
-        public void SetSquadStatUI()
+        public void SetDungeonUI()
         {
             currentDungeonLevelText.text = $"{currentDungeonLevel} 단계";
-            currentDungeonRewardText.text = $"+ <sprite=1> {currentDungeonReward}";
+            currentDungeonRewardText.text = $"+ <sprite=15> {currentDungeonReward}";
         }
         public void UpdateIncreaseDungeonUI()
         {
             currentDungeonLevelText.text = $"{currentDungeonLevel} 단계";
-            currentDungeonRewardText.text = $"+ <sprite=1> {currentDungeonReward}";
+            currentDungeonRewardText.text = $"+ <sprite=15> {currentDungeonReward}";
         }
 
         public void UpdateDungeonLevel(int level, int baseReward, int increaseRewardPercent)

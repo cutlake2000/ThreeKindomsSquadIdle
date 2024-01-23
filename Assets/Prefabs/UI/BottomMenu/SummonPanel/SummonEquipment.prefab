@@ -637,8 +637,8 @@ MonoBehaviour:
   equippedEffect: 0
   ownedEffect: 0
   summonCount: 0
-  maxQuantity: 0
-  maxLevel: 0
+  maxQuantity: 5
+  maxLevel: 250
   summonEffects:
   - {fileID: 2942539192277065106}
   - {fileID: 8553885542098310225}

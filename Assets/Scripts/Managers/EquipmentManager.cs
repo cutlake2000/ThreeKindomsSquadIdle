@@ -185,7 +185,7 @@ namespace Managers
                         if (equipment == null) continue;
                         
                         var equipmentId = $"{rarity}_{tier}_{equipmentType}";
-                        var equippedEffect = tier * ((int)Mathf.Pow(10, rarityIntValue + 1));
+                        var equippedEffect = (tier % 5 + 1) * ((int)Mathf.Pow(10, rarityIntValue + 1));
                         var ownedEffect = (int)(equippedEffect * 0.5f);
 
                         equipment.SetEquipmentInfo(equipmentId, initQuantity, tier, isEquipped, equipmentType, rarity, 1, equippedEffect, ownedEffect, backgroundEffects[rarityIntValue], equipmentSprite);

@@ -188,10 +188,10 @@ namespace Controller.UI.BottomMenuUI
 
         private IEnumerator SetSummonedEquipmentOnPanel()
         {
-            for (var i = summonLists.Count; i > 0 ; i--)
+            for (var i = summonLists.Count - 1 ; i >= 0 ; i--)
             {
-                summonLists[i - 1].gameObject.SetActive(true);
-                summonLists[i - 1].SetSummonUI();
+                summonLists[i].gameObject.SetActive(true);
+                summonLists[i].SetSummonUI();
                 yield return summonWaitForSeconds;
             }
         }

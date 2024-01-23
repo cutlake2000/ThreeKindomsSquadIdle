@@ -247,6 +247,9 @@ namespace Managers
 
             InventoryPanelUI.UpdateEquipmentUIAction?.Invoke(equippedEquipment.isEquipped);
             equippedEquipment.SaveEquipmentAllInfo();
+            InventoryPanelUI.Instance.equipmentButton[(int)equipment.type].GetComponent<Equipment>().SetEquipmentInfo(equipment);
+            InventoryPanelUI.Instance.equipmentButton[(int)equipment.type].GetComponent<Equipment>().SetUI();
+
             Debug.Log("장비 장착" + equippedEquipment.id);
         }
 

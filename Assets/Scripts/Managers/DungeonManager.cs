@@ -53,7 +53,7 @@ namespace Managers
         public void InitDungeonManager()
         {
             InitializeEventListeners();
-            SetDungeonData();
+            InitiateDungeonData();
             UpdateAllDungeonUI();
         }
 
@@ -94,24 +94,44 @@ namespace Managers
         
         private void ChooseStage(int index, int levelIndex)
         {
+            Debug.Log($"{levelIndex} levelIndex");
+            
             dungeonItems[index].currentDungeonLevel += levelIndex;
 
-            if (dungeonItems[index].currentDungeonLevel <= 0) dungeonItems[index].currentDungeonLevel = 1;
-            if (dungeonItems[index].currentDungeonLevel <= maxDungeonLevel) dungeonItems[index].currentDungeonLevel = maxDungeonLevel;
-            dungeonItems[index].currentDungeonReward = (int)(baseClearReward * Mathf.Pow((100 + increaseRewardPercent) / 100, dungeonItems[index].currentDungeonLevel));
-            
-            dungeonItems[index].SetSquadStatUI();
+            if (dungeonItems[index].currentDungeonLevel == 0)
+            {
+                dungeonItems[index].currentDungeonLevel = 1;
+            }
+            else if (dungeonItems[index].currentDungeonLevel > maxDungeonLevel)
+            {
+                dungeonItems[index].currentDungeonLevel = maxDungeonLevel;
+            }
+            else
+            {
+                switch (levelIndex)
+                {
+                    case -1:
+                        dungeonItems[index].currentDungeonReward = dungeonItems[index].currentDungeonReward * 100 / (100 + increaseRewardPercent);
+                        break;
+                    case 1:
+                        dungeonItems[index].currentDungeonReward = dungeonItems[index].currentDungeonReward * (100 + increaseRewardPercent) / 100;
+                        break;
+                }
+            }
+         
+            dungeonItems[index].SetDungeonUI();
         }
 
-        private void SetDungeonData()
+        private void InitiateDungeonData()
         {
             for (var i = 0; i < dungeonItems.Length; i++)
             {
                 dungeonItems[i].dungeonType = (Enum.DungeonType)i;
-                dungeonItems[i].currentDungeonLevel = ES3.Load($"{nameof(Enum.DungeonType)}/{(Enum.DungeonType)i}/currentLevel : ", 1);
-                dungeonItems[i].currentDungeonReward = (int)(baseClearReward * Mathf.Pow((100 + increaseRewardPercent) / 100, dungeonItems[i].currentDungeonLevel));
+                dungeonItems[i].clearDungeonLevel = ES3.Load($"{nameof(Enum.DungeonType)}/{(Enum.DungeonType)i}/clearDungeonLevel : ", 1);
+                dungeonItems[i].currentDungeonLevel = dungeonItems[i].clearDungeonLevel;
+                dungeonItems[i].currentDungeonReward = baseClearReward;
 
-                dungeonItems[i].SetSquadStatUI();
+                dungeonItems[i].SetDungeonUI();
             }
         }
         
@@ -155,6 +175,7 @@ namespace Managers
             currentSquadCount = maxSquadCount;
             
             DespawnSquad();
+            DespawnMonster();
             
             Debug.Log("실패!");
             
@@ -176,6 +197,7 @@ namespace Managers
             currentSquadCount = maxSquadCount;
             
             DespawnSquad();
+            DespawnMonster();
             
             Debug.Log("실패!");
             

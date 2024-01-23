@@ -17,7 +17,7 @@ namespace Creature.Data
         public int tier;
         public bool isEquipped;
         public Enum.EquipmentType type;   // 장비의 타입 (예: 무기, 방어구 등)
-        [FormerlySerializedAs("rarity")] public Enum.EquipmentRarity equipmentRarity;        // 장비의 희귀도
+        public Enum.EquipmentRarity equipmentRarity;        // 장비의 희귀도
         public int level; // 강화 상태 (예: 0, 1, 2, ...)
         public int basicEquippedEffect;
         public int basicOwnedEffect;
@@ -204,7 +204,7 @@ namespace Creature.Data
             basicOwnedEffect = equipment.basicOwnedEffect;
             equipmentBackground = equipment.equipmentBackground;
             equipmentImage = equipment.equipmentImage;
-
+            
             equippedEffect = this.basicEquippedEffect;
             ownedEffect = this.basicOwnedEffect;
         }
@@ -232,7 +232,7 @@ namespace Creature.Data
         public void SetUI()
         {
             SetEquipmentImage();
-            SetBackgroundEffectText();
+            SetBackgroundEffect();
             SetTierText();
             SetQuantityText();
             SetLevelText();
@@ -254,7 +254,7 @@ namespace Creature.Data
         }
 
         // 배경색 바꾸는 메서드 (Sprite로 변경해야함)
-        public void SetBackgroundEffectText()
+        public void SetBackgroundEffect()
         {
             if (basicEquipmentBackground == null) return;
             
