@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 6195527055930484651}
   - component: {fileID: 1892212585872494443}
   - component: {fileID: 8352524276817244468}
+  - component: {fileID: 5886108370595033426}
   m_Layer: 6
   m_Name: Archer
   m_TagString: Player
@@ -196,6 +197,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   gizmoColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!210 &5886108370595033426
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6913221824526808051}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1001 &4623159973612034713
 PrefabInstance:
   m_ObjectHideFlags: 0

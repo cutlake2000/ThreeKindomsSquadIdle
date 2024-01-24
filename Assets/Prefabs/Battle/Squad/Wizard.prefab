@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 7549923186286817692}
   - component: {fileID: 5025210099471803458}
   - component: {fileID: 7151331999960477836}
+  - component: {fileID: 7757385482700364038}
   m_Layer: 6
   m_Name: Wizard
   m_TagString: Player
@@ -196,6 +197,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   gizmoColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!210 &7757385482700364038
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8904647278541098348}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1001 &5201092793146330500
 PrefabInstance:
   m_ObjectHideFlags: 0

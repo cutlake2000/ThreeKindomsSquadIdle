@@ -26,8 +26,7 @@ namespace Creature.CreatureClass.SquadClass
 
         protected override void OnNormalAttackEffect()
         {
-            EffectManager.Instance.CreateParticlesAtPosition(projectileSpawn.position, Enum.SquadClassType.Archer,
-                false);
+            EffectManager.Instance.CreateParticlesAtPosition(projectileSpawn.position, Enum.SquadClassType.Archer, false);
         }
 
         protected override void OnSkillAttack1()

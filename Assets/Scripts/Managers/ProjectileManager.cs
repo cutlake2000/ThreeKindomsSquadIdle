@@ -1,5 +1,7 @@
 using Controller.Projectiles.BaseAttack;
 using Controller.Projectiles.SkillAttack;
+using Controller.Projectiles.SkillAttack.Warrior;
+using Controller.Projectiles.SkillAttack.Wizard;
 using Data;
 using Function;
 using Module;
@@ -52,19 +54,8 @@ namespace Managers
         
         public void InstantiateSkillAttack(GameObject targetSkill, BigInteger damage, Vector2 startPosition, Vector2 targetPosition)
         {
-            switch (targetSkill.GetComponent<ProjectileSkillAttackController>().skillType)
-            {
-                case Enum.SkillType.MoveTo:
-                    var skillMoveAttackController = targetSkill.GetComponent<ProjectileSkillMoveAttackController>();
-                    skillMoveAttackController.InitializeSkillAttack(damage, startPosition, targetPosition);
-                    break;
-                case Enum.SkillType.Spawn:
-                    var skillSpawnAttackController = targetSkill.GetComponent<ProjectileSkillSpawnAttackController>();
-                    skillSpawnAttackController.InitializeSkillAttack(damage, startPosition, targetPosition);
-                    break;
-                case Enum.SkillType.Follow:
-                    break;
-            }
+            var skillAttackController = targetSkill.GetComponent<SkillAttackController>();
+            skillAttackController.InitializeSkillAttack(damage, startPosition, targetPosition);
         }
     }
 }
