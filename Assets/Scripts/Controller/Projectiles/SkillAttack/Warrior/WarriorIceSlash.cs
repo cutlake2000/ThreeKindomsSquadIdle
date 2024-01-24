@@ -4,6 +4,9 @@ namespace Controller.Projectiles.SkillAttack.Warrior
 {
     public class WarriorIceSlash : SkillAttackController
     {
+        [Header("파티클 회전 관련")]
+        [SerializeField] protected GameObject particle;
+        
         protected override void ActivateSkill()
         {
             projectileTransform.position = startPosition;

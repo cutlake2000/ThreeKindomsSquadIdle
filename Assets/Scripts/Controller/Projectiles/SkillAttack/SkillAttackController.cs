@@ -20,14 +20,11 @@ namespace Controller.Projectiles.SkillAttack
         [Header("파티클 Transform")]
         [SerializeField] protected Transform projectileTransform;
         
-        [Header("파티클 회전 관련")]
-        [SerializeField] protected GameObject particle;
-        
         [Header("AttackCollider")]
         [SerializeField] protected GameObject attackCollider;
         
         [Header("AttackCollider 이동 관련 파리미터")]
-        [SerializeField] protected float particleCurrentTime = 0.0f;
+        [SerializeField] protected float particleCurrentTime;
         [SerializeField] protected float particleMaxTime = 0.5f;
         
         [Header("InitializeSkillAttackData")]

@@ -9,9 +9,8 @@ namespace Creature.CreatureClass.SquadClass
         protected override void SetCreatureStats()
         {
             base.SetCreatureStats();
-
-            // attack = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WarriorAtk);
-            damage = SquadManager.Instance.totalWarriorAttack;
+            
+            damage = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WarriorAtk);
             attackRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WarriorAttackRange);
             
             animator.SetFloat(animationData.ClassTypeParameterHash, 0);
@@ -32,6 +31,9 @@ namespace Creature.CreatureClass.SquadClass
             for (var i = 0; i < SquadManager.Instance.warriorSkillCoolTimer.Length; i++)
             {
                 if (!SquadManager.Instance.warriorSkillCoolTimer[i].isSkillReady) continue;
+                
+                if (currentTarget == null) return;
+                
                 SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Warrior, i);
                 ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.warriorSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
             }

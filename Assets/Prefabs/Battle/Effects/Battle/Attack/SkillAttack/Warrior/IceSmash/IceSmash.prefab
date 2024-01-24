@@ -19555,7 +19555,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5210893460371675053}
   m_Layer: 0
-  m_Name: Particle
+  m_Name: Ice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141276,8 +141276,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4586019657727991425}
-  - component: {fileID: 3796019074766868727}
   - component: {fileID: 3758733304027689185}
+  - component: {fileID: 3796019074766868727}
   - component: {fileID: 5022107419398061567}
   m_Layer: 0
   m_Name: IceSmash
@@ -141303,6 +141303,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3758733304027689185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8458960297981314039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7bd474f1c1f419c9fe95a2409df5b9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillType: 0
+  direction: {x: 0, y: 0, z: 0}
+  projectileTransform: {fileID: 0}
+  attackCollider: {fileID: 842947133195272169}
+  particleCurrentTime: 0
+  particleMaxTime: 0.5
+  startPosition: {x: 0, y: 0, z: 0}
+  targetPosition: {x: 0, y: 0, z: 0}
+  particle: {fileID: 1505327451275790596}
 --- !u!198 &3796019074766868727
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -146026,23 +146047,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!114 &3758733304027689185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8458960297981314039}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7bd474f1c1f419c9fe95a2409df5b9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillType: 0
-  particle: {fileID: 1505327451275790596}
-  attackCollider: {fileID: 842947133195272169}
-  particleCurrentTime: 0
-  particleMaxTime: 0.5
 --- !u!199 &5022107419398061567
 ParticleSystemRenderer:
   serializedVersion: 6

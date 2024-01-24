@@ -54,7 +54,6 @@ MonoBehaviour:
   skillType: 1
   direction: {x: 0, y: 0, z: 0}
   projectileTransform: {fileID: 0}
-  particle: {fileID: 7994246673768145570}
   attackCollider: {fileID: 1950593144807177814, guid: 7f4f1cc4dac174948a183264b16f3ed0, type: 3}
   particleCurrentTime: 0
   particleMaxTime: 0
