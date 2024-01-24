@@ -9,9 +9,8 @@ namespace Controller.Projectiles.SkillAttack
     public class ProjectileSkillAttackController : ProjectileController
     {
         [SerializeField] private GameObject AttackCollider;
-
-        private float particleCurrentTime = 0.0f;
-        private float particleMaxTime = 0.5f;
+        [SerializeField] private float particleCurrentTime = 0.0f;
+        [SerializeField] private float particleMaxTime = 0.5f;
 
         public void InitializeSkillAttack(BigInteger damage, Vector3 startPosition, Vector3 direction)
         {
