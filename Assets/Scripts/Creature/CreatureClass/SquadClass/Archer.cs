@@ -38,7 +38,7 @@ namespace Creature.CreatureClass.SquadClass
             {
                 if (!SquadManager.Instance.archerSkillCoolTimer[i].isSkillReady) continue;
                 SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Archer, i);
-                ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.archerSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, Direction, Enum.PoolType.ProjectileSkillAttackArcher);
+                ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.archerSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
             }
         }
     }

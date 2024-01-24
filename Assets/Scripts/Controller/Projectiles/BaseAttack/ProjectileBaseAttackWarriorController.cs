@@ -14,12 +14,11 @@ namespace Controller.Projectiles.BaseAttack
             FlipSprite(Direction.x);
 
             Damage = damage;
-            CurrentDuration = 0;
             
             transform.right = Direction * -1;
         }
         
-        protected override void OnTriggerEnter2D(Collider2D collision)
+        private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.layer != LayerMask.NameToLayer("Enemy")) return;
             

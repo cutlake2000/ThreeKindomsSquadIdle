@@ -2,35 +2,85 @@ using Creature.CreatureClass.MonsterClass;
 using Data;
 using Function;
 using Managers;
+using Module;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Controller.Projectiles.BaseAttack
 {
-    public class ProjectileBaseAttackWizardController : ProjectileBaseRangedAttackController
+    public class ProjectileBaseAttackWizardController : ProjectileController
     {
+        protected TargetFinder TargetFinder;
+        
+        [SerializeField] protected float maxDuration;
+        [SerializeField] protected float currentDuration;
+        [SerializeField] protected float projectileSpeed;
+        [SerializeField] protected bool readyToLaunch;
+        [SerializeField] protected float splashRange;
+        
+        [SerializeField] protected Collider2D[] nearbyTargets;
+        
         public void InitializeWizardBaseAttack(BigInteger damage, Vector3 direction)
         {
             Direction = direction;
             FlipSprite(Direction.x);
 
             Damage = damage;
-            CurrentDuration = 0;
+            currentDuration = 0;
             transform.right = Direction;
-            ReadyToLaunch = true;
+            readyToLaunch = true;
         }
         
-        protected override void OnTriggerEnter2D(Collider2D collision)
+        protected virtual void Awake()
+        {
+            TargetFinder = GetComponent<TargetFinder>();
+        }
+
+        protected virtual void OnEnable()
+        {
+            nearbyTargets = null;
+        }
+        
+        protected virtual void Update()
+        {
+            if (!readyToLaunch) return;
+            
+            currentDuration += Time.deltaTime;
+            
+            if (currentDuration > maxDuration)
+            {
+                DestroyProjectile(transform.position);
+            }
+        }
+        
+        protected void FixedUpdate()
+        {
+            if (!readyToLaunch) return;
+
+            transform.position += Direction * (projectileSpeed * Time.deltaTime);
+        }
+        
+        private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.layer != LayerMask.NameToLayer("Enemy")) return;
             
             FindNearbyEnemy();
         }
         
+        protected void FindNearbyEnemy()
+        {
+            if (nearbyTargets != null || splashRange == 0) return;
+            
+            nearbyTargets = TargetFinder.ScanNearby(splashRange);
+                
+            if (nearbyTargets != null) AttackEnemy();
+        }
+        
         protected override void AttackEnemy()
         {
             base.AttackEnemy();
             
-            foreach (var target in NearbyTargets)
+            foreach (var target in nearbyTargets)
             {
                 if (target.gameObject.layer != LayerMask.NameToLayer("Enemy")) continue;
                 
@@ -40,7 +90,7 @@ namespace Controller.Projectiles.BaseAttack
             DestroyProjectile(transform.position);
         }
         
-        protected override void DestroyProjectile(Vector3 position)
+        private void DestroyProjectile(Vector3 position)
         {
             EffectManager.Instance.CreateParticlesAtPosition(position, Enum.SquadClassType.Wizard, true);
             gameObject.SetActive(false);

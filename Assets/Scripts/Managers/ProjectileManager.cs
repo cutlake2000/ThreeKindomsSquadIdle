@@ -4,7 +4,6 @@ using Data;
 using Function;
 using Module;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Managers
 {
@@ -51,23 +50,19 @@ namespace Managers
             obj.SetActive(true);
         }
         
-        public void InstantiateSkillAttack(GameObject targetSkill, BigInteger damage, Vector2 startPosition, Vector2 direction, Enum.PoolType poolType)
+        public void InstantiateSkillAttack(GameObject targetSkill, BigInteger damage, Vector2 startPosition, Vector2 targetPosition)
         {
-            GameObject obj = null;
-            
-            switch (poolType)
+            switch (targetSkill.GetComponent<ProjectileSkillAttackController>().skillType)
             {
-                case Enum.PoolType.ProjectileSkillAttackWarrior:
-                    var warriorSkillAttackController = targetSkill.GetComponent<ProjectileSkillAttackController>();
-                    warriorSkillAttackController.InitializeSkillAttack(damage, startPosition, direction);
+                case Enum.SkillType.MoveTo:
+                    var skillMoveAttackController = targetSkill.GetComponent<ProjectileSkillMoveAttackController>();
+                    skillMoveAttackController.InitializeSkillAttack(damage, startPosition, targetPosition);
                     break;
-                case Enum.PoolType.ProjectileSkillAttackArcher:
-                    var archerSkillAttackController = targetSkill.GetComponent<ProjectileSkillAttackController>();
-                    archerSkillAttackController.InitializeSkillAttack(damage, startPosition, direction);
+                case Enum.SkillType.Spawn:
+                    var skillSpawnAttackController = targetSkill.GetComponent<ProjectileSkillSpawnAttackController>();
+                    skillSpawnAttackController.InitializeSkillAttack(damage, startPosition, targetPosition);
                     break;
-                case Enum.PoolType.ProjectileSkillAttackWizard:
-                    var wizardSkillAttackController = targetSkill.GetComponent<ProjectileSkillAttackController>();
-                    wizardSkillAttackController.InitializeSkillAttack(damage, startPosition, direction);
+                case Enum.SkillType.Follow:
                     break;
             }
         }

@@ -34318,12 +34318,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd04ffae3f2644d569ad6df364cff60b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCollisionLayer:
-    serializedVersion: 2
-    m_Bits: 1
-  duration: 2
-  attackRange: 0.5
+  maxDuration: 2
+  currentDuration: 0
   projectileSpeed: 15
+  readyToLaunch: 0
+  splashRange: 3
+  nearbyTargets: []
 --- !u!114 &-1811103630617727793
 MonoBehaviour:
   m_ObjectHideFlags: 0

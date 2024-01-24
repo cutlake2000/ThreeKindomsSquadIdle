@@ -14,12 +14,11 @@ namespace Controller.Projectiles.BaseAttack
 
             Damage = damage;
             Debug.Log($"몬스터 데미지 : {Damage}");
-            CurrentDuration = 0;
             
             transform.right = Direction * -1;
         }
         
-        protected override void OnTriggerEnter2D(Collider2D collision)
+        protected void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.layer != LayerMask.NameToLayer("Player")) return;
             

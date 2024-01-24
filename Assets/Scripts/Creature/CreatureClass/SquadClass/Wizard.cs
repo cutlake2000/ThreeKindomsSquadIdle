@@ -31,7 +31,7 @@ namespace Creature.CreatureClass.SquadClass
             {
                 if (!SquadManager.Instance.wizardSkillCoolTimer[i].isSkillReady) continue;
                 SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Wizard, i);
-                ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.wizardSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, Direction, Enum.PoolType.ProjectileSkillAttackWizard);
+                ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.wizardSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
             }
         }
     }

@@ -3,23 +3,48 @@ using Data;
 using Function;
 using Managers;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Controller.Projectiles.BaseAttack
 {
-    public class ProjectileBaseAttackArcherController : ProjectileBaseRangedAttackController
+    public class ProjectileBaseAttackArcherController : ProjectileController
     {
+        [SerializeField] protected float maxDuration;
+        [SerializeField] protected float currentDuration;
+        [SerializeField] protected float projectileSpeed;
+        [SerializeField] protected bool readyToLaunch;
+        
         public void InitializeArcherBaseAttack(BigInteger damage, Vector3 direction)
         {
             Direction = direction;
             FlipSprite(Direction.x);
 
             Damage = damage;
-            CurrentDuration = 0;
+            currentDuration = 0;
             transform.right = Direction;
-            ReadyToLaunch = true;
+            readyToLaunch = true;
         }
         
-        protected override void OnTriggerEnter2D(Collider2D collision)
+        private void Update()
+        {
+            if (!readyToLaunch) return;
+            
+            currentDuration += Time.deltaTime;
+            
+            if (currentDuration > maxDuration)
+            {
+                DestroyProjectile(transform.position);
+            }
+        }
+        
+        private void FixedUpdate()
+        {
+            if (!readyToLaunch) return;
+
+            transform.position += Direction * (projectileSpeed * Time.deltaTime);
+        }
+        
+        private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.layer != LayerMask.NameToLayer("Enemy")) return;
                 
@@ -34,8 +59,9 @@ namespace Controller.Projectiles.BaseAttack
             collision.GetComponent<Monster>().TakeDamage(Damage);
         }
         
-        protected override void DestroyProjectile(Vector3 position)
+        private void DestroyProjectile(Vector3 position)
         {
+            gameObject.SetActive(false);
             EffectManager.Instance.CreateParticlesAtPosition(position, Enum.SquadClassType.Archer, true);
             gameObject.SetActive(false);
         }

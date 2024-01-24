@@ -2,6 +2,13 @@ namespace Data
 {
     public static class Enum
     {
+        public enum SkillType
+        {
+            MoveTo,
+            Spawn,
+            Follow
+        }
+        
         public enum AchievementProperty
         {
             Name,

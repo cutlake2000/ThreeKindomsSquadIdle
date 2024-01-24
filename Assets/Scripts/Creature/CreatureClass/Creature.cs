@@ -30,7 +30,7 @@ namespace Creature.CreatureClass
         public Rigidbody2D rigid;
 
         public bool isDead;
-        [FormerlySerializedAs("attack")] public BigInteger damage;
+        public BigInteger damage;
         public BigInteger currentHealth;
         public BigInteger maxHealth;
         public BigInteger defence;

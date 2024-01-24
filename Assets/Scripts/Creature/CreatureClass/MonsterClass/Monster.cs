@@ -95,7 +95,7 @@ namespace Creature.CreatureClass.MonsterClass
         protected override void SetCreatureStats()
         {
             //TODO: 추후에 MonsterManager에서 가지고 오도록
-            maxHealth = 50000;
+            maxHealth = 500000;
             currentHealth = maxHealth;
             defence = 1000;
             moveSpeed = 3;
