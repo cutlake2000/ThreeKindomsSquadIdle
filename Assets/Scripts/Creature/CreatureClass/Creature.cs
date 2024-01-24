@@ -7,6 +7,7 @@ using Function;
 using Managers;
 using Module;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Enum = Data.Enum;
 
@@ -29,7 +30,7 @@ namespace Creature.CreatureClass
         public Rigidbody2D rigid;
 
         public bool isDead;
-        public BigInteger attack;
+        [FormerlySerializedAs("attack")] public BigInteger damage;
         public BigInteger currentHealth;
         public BigInteger maxHealth;
         public BigInteger defence;

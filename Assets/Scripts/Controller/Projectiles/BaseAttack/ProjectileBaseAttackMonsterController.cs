@@ -1,4 +1,3 @@
-using Controller.CharacterProjectiles.BaseAttack;
 using Creature.CreatureClass.SquadClass;
 using Function;
 using Module;

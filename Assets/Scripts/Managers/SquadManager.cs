@@ -206,7 +206,7 @@ namespace Managers
                     totalArcherAttack = statValue;
                     totalWizardAttack = statValue;
 
-                    foreach (var squad in squads) squad.GetComponent<Squad>().attack = statValue;
+                    foreach (var squad in squads) squad.GetComponent<Squad>().damage = statValue;
 
                     break;
                 case Enum.SquadStatType.Health:

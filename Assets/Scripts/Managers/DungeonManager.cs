@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Controller.UI;
+using Controller.UI.BottomMenuUI;
 using Controller.UI.BottomMenuUI.DungeonPanel;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,6 +21,10 @@ namespace Managers
 
         [Header("=== UI On/Off 패널 목록 ===")]
         [SerializeField] private GameObject[] stageUIs;
+        
+        [Header("=== 전투 결과창 UI ===")]
+        [SerializeField] private GameObject stageResultUI;
+        
         [Header("=== 던전 정보 ===")]
         [SerializeField] private Enum.DungeonClearType dungeonClearType;
         [SerializeField] private string currentDungeonName;
@@ -76,7 +81,11 @@ namespace Managers
                     {
                         stageUI.SetActive(false);
                     }
+                    
+                    DespawnSquad();
+                    DespawnMonster();
 
+                    //TODO: So 등에서 값을 가져오도록
                     currentDungeonName = "황금 미믹 던전";
                     currentDungeonLevel = 1;
                     currentScore = 0;
@@ -155,12 +164,7 @@ namespace Managers
                 }
                 else
                 {
-                    Debug.Log("성공");
-                    
-                    foreach (var stageUI in stageUIs)
-                    {
-                        stageUI.SetActive(true);
-                    }
+                    StartCoroutine(RunStageRunner(true));
                 }
             }
         }
@@ -170,39 +174,47 @@ namespace Managers
             currentSquadCount--;
 
             if (currentSquadCount > 0) return;
-            stopWaveTimer = true;
-            StageManager.Instance.currentWave = 1;
-            currentSquadCount = maxSquadCount;
-            
-            DespawnSquad();
-            DespawnMonster();
-            
-            Debug.Log("실패!");
-            
-            StageManager.Instance.goToNextSubStage = true;
-            StageManager.Instance.SetCurrentMainStageInfo();
-            StageManager.Instance.StartStageRunner();
-            
-            foreach (var stageUI in stageUIs)
-            {
-                stageUI.SetActive(true);
-            }
+
+            StartCoroutine(RunStageRunner(false));
         }
 
         private void CalculateRemainedTime()
         {
             if (waveTime > 0) return;
+            
+            StartCoroutine(RunStageRunner(false));
+        }
+        
+        private IEnumerator RunStageRunner(bool isClear)
+        {
+            StageManager.CheckRemainedMonsterAction += StageManager.Instance.CalculateRemainedMonster;
+            StageManager.CheckRemainedSquadAction += StageManager.Instance.CalculateRemainedSquad;
+                    
+            StageManager.CheckRemainedMonsterAction -= CalculateRemainedMonster;
+            StageManager.CheckRemainedSquadAction -= CalculateRemainedSquad;
+            
             stopWaveTimer = true;
-            StageManager.Instance.currentWave = 1;
             currentSquadCount = maxSquadCount;
+
+            stageResultUI.SetActive(true);
+            Debug.Log("패널 온!");
+            stageResultUI.GetComponent<StageResultPanelUI>().PopUpStageClearMessage(isClear);
+
+            yield return new WaitForSeconds(1.5f);
+            
+            stageResultUI.GetComponent<StageResultPanelUI>().PopUnderStageClearMessage();
+            stageResultUI.SetActive(false);
+            
+            yield return new WaitForSeconds(1.0f);
             
             DespawnSquad();
             DespawnMonster();
             
-            Debug.Log("실패!");
+            SetTimerUI((int)waveTime);
             
+            StageManager.Instance.currentWave = 1;
+            StageManager.Instance.isWaveTimerRunning = false;
             StageManager.Instance.goToNextSubStage = true;
-                
             StageManager.Instance.SetCurrentMainStageInfo();
             StageManager.Instance.StartStageRunner();
             
@@ -210,18 +222,6 @@ namespace Managers
             {
                 stageUI.SetActive(true);
             }
-        }
-        
-        public void UpgradeDungeonPanelDungeonLevel(Enum.SquadStatTypeBySquadPanel type)
-        {
-            // if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, squadStatItem[(int)type].levelUpCost * SquadPanelUI.Instance.levelUpMagnification)) return;
-            // if (squadStatItem[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
-            //
-            // squadStatItem[(int)type].UpdateSquadStat(SquadPanelUI.Instance.levelUpMagnification);
-            // SetUpgradeUI(squadStatItem[(int)type]);
-            // SquadPanelUI.Instance.CheckRequiredStatPointOfMagnificationButton((int) type);
-
-            // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }
 
         private IEnumerator KillCountDungeonRunner()

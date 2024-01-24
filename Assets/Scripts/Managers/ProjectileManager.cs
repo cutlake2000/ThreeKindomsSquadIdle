@@ -1,11 +1,10 @@
-using Controller.CharacterProjectiles;
-using Controller.CharacterProjectiles.BaseAttack;
 using Controller.Projectiles.BaseAttack;
 using Controller.Projectiles.SkillAttack;
 using Data;
 using Function;
 using Module;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Managers
 {
@@ -13,10 +12,6 @@ namespace Managers
     {
         public static ProjectileManager Instance;
         private ObjectPool objectPool;
-
-        [SerializeField] private GameObject[] WarriorSkillProjectiles;
-        [SerializeField] private GameObject[] ArcherSkillProjectiles;
-        [SerializeField] private GameObject[] WizardSkillProjectiles;
         
         private void Awake()
         {
@@ -56,33 +51,25 @@ namespace Managers
             obj.SetActive(true);
         }
         
-        public void InstantiateSkillAttack(BigInteger damage, Vector2 startPosition, Vector2 direction, Enum.PoolType poolType, int skillIndex)
+        public void InstantiateSkillAttack(GameObject targetSkill, BigInteger damage, Vector2 startPosition, Vector2 direction, Enum.PoolType poolType)
         {
             GameObject obj = null;
             
             switch (poolType)
             {
                 case Enum.PoolType.ProjectileSkillAttackWarrior:
-                    obj = WarriorSkillProjectiles[skillIndex];
-                    var warriorSkillAttackController = obj.GetComponent<ProjectileSkillAttackController>();
-                    warriorSkillAttackController.InitializeBaseAttack(damage, direction);
+                    var warriorSkillAttackController = targetSkill.GetComponent<ProjectileSkillAttackController>();
+                    warriorSkillAttackController.InitializeSkillAttack(damage, startPosition, direction);
                     break;
                 case Enum.PoolType.ProjectileSkillAttackArcher:
-                    obj = ArcherSkillProjectiles[skillIndex];
-                    var archerSkillAttackController = obj.GetComponent<ProjectileSkillAttackController>();
-                    archerSkillAttackController.InitializeBaseAttack(damage, direction);
+                    var archerSkillAttackController = targetSkill.GetComponent<ProjectileSkillAttackController>();
+                    archerSkillAttackController.InitializeSkillAttack(damage, startPosition, direction);
                     break;
                 case Enum.PoolType.ProjectileSkillAttackWizard:
-                    obj = WizardSkillProjectiles[skillIndex];
-                    var wizardSkillAttackController = obj.GetComponent<ProjectileSkillAttackController>();
-                    wizardSkillAttackController.InitializeBaseAttack(damage, direction);
+                    var wizardSkillAttackController = targetSkill.GetComponent<ProjectileSkillAttackController>();
+                    wizardSkillAttackController.InitializeSkillAttack(damage, startPosition, direction);
                     break;
             }
-
-            if (obj == null) return;
-            
-            obj.transform.position = startPosition;
-            obj.SetActive(true);
         }
     }
 }

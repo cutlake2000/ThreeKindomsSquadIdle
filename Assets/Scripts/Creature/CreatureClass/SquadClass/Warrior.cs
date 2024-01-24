@@ -11,7 +11,7 @@ namespace Creature.CreatureClass.SquadClass
             base.SetCreatureStats();
 
             // attack = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WarriorAtk);
-            attack = SquadManager.Instance.totalWarriorAttack;
+            damage = SquadManager.Instance.totalWarriorAttack;
             attackRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WarriorAttackRange);
             
             animator.SetFloat(animationData.ClassTypeParameterHash, 0);
@@ -21,7 +21,7 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.OnNormalAttack();
 
-            ProjectileManager.Instance.InstantiateBaseAttack(attack, ProjectileSpawnPosition, Direction,
+            ProjectileManager.Instance.InstantiateBaseAttack(damage, ProjectileSpawnPosition, Direction,
                 Enum.PoolType.ProjectileBaseAttackWarrior);
         }
 
@@ -33,8 +33,7 @@ namespace Creature.CreatureClass.SquadClass
             {
                 if (!SquadManager.Instance.warriorSkillCoolTimer[i].isSkillReady) continue;
                 SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Warrior, i);
-                ProjectileManager.Instance.InstantiateSkillAttack(attack, ProjectileSpawnPosition, Direction,
-                    Enum.PoolType.ProjectileSkillAttackWarrior, i);
+                ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.warriorSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, Direction, Enum.PoolType.ProjectileSkillAttackWarrior);
             }
         }
     }

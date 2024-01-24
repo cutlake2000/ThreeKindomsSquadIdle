@@ -2,7 +2,7 @@ using Function;
 using Module;
 using UnityEngine;
 
-namespace Controller.CharacterProjectiles.BaseAttack
+namespace Controller.Projectiles.BaseAttack
 {
     public class ProjectileController : MonoBehaviour
     {        

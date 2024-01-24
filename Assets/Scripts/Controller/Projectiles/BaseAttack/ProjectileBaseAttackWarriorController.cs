@@ -1,4 +1,3 @@
-using Controller.CharacterProjectiles.BaseAttack;
 using Creature.CreatureClass.MonsterClass;
 using Function;
 using Managers;
@@ -26,19 +25,5 @@ namespace Controller.Projectiles.BaseAttack
             
             collision.GetComponent<Monster>().TakeDamage(Damage);
         }
-        
-        // protected override void AttackEnemy()
-        // {
-        //     base.AttackEnemy();
-        //     
-        //     foreach (var target in NearbyTargets)
-        //     {
-        //         if (target.gameObject.layer != LayerMask.NameToLayer("Enemy")) continue;
-        //         target.GetComponent<Monster>().TakeDamage(Damage);
-        //         
-        //         // var position = target.transform.position; 
-        //         // EffectManager.Instance.CreateParticlesAtPosition(position, Enum.SquadClassType.Warrior, true);
-        //     }
-        // }
     }
 }

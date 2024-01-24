@@ -100,7 +100,7 @@ namespace Creature.CreatureClass.MonsterClass
             defence = 1000;
             moveSpeed = 3;
             followRange = 15;
-            attack = 1000;
+            damage = 1000;
 
             currentHealth = maxHealth;
             isDead = false;
@@ -155,7 +155,7 @@ namespace Creature.CreatureClass.MonsterClass
             projectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
             direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
 
-            ProjectileManager.Instance.InstantiateBaseAttack(attack, projectileSpawnPosition, direction, Enum.PoolType.ProjectileBaseAttackMonster);
+            ProjectileManager.Instance.InstantiateBaseAttack(damage, projectileSpawnPosition, direction, Enum.PoolType.ProjectileBaseAttackMonster);
         }
 
         private IEnumerator EventHit()

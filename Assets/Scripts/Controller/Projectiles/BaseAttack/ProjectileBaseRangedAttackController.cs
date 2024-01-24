@@ -1,4 +1,3 @@
-using Controller.CharacterProjectiles.BaseAttack;
 using UnityEngine;
 
 namespace Controller.Projectiles.BaseAttack

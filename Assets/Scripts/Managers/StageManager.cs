@@ -37,7 +37,7 @@ namespace Managers
         [SerializeField] private int waveCountsPerSubStage;
         [SerializeField] private int monsterSpawnCountsPerSubStage;
         [SerializeField] public bool goToNextSubStage;
-        [SerializeField] private bool isWaveTimerRunning;
+        [SerializeField] public bool isWaveTimerRunning;
         [SerializeField] private bool stopWaveTimer;
 
         private void Awake()
