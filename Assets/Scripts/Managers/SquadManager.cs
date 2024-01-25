@@ -47,6 +47,9 @@ namespace Managers
 
         [Space(3)]
         [Header("=== 스킬 쿨타임 ===")] //TODO: 스킬 쿨 다운을 ScriptableObject에서 긁어와야 함
+        [Header("Auto")]
+        public bool runAutoSkill;
+        
         [Header("워리어")]
         public SkillCoolTimer[] warriorSkillCoolTimer;
 
@@ -86,6 +89,8 @@ namespace Managers
             SquadLevel = new SquadLevel();
 
             cameraController.InitCameraTarget(squads[0].transform);
+
+            runAutoSkill = true;
         }
 
         public void InitSquadManager()
@@ -304,66 +309,66 @@ namespace Managers
                 case Enum.SquadClassType.Warrior:
                     warriorSkillCoolTimer[index].remainedSkillCoolTime = warriorSkillCoolTimer[index].maxSkillCoolTime; 
                     warriorSkillCoolTimer[index].isSkillReady = false;
-                    SkillTimerUI.Instance.ActivateSkillTimer(type, index, warriorSkillCoolTimer[index].isSkillReady);
+                    UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index].ActivateSkillCoolTimer(warriorSkillCoolTimer[index].isSkillReady);
                     
                     while (true)
                     {
                         warriorSkillCoolTimer[index].remainedSkillCoolTime -= Time.deltaTime;
 
                         if (warriorSkillCoolTimer[index].remainedSkillCoolTime <= 0) break;
-                        SkillTimerUI.Instance.SetSkillTimerText(type, index, warriorSkillCoolTimer[index].remainedSkillCoolTime, warriorSkillCoolTimer[index].maxSkillCoolTime);
+                        UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index].UpdateSkillCoolTimerText(warriorSkillCoolTimer[index].remainedSkillCoolTime, warriorSkillCoolTimer[index].maxSkillCoolTime);
                         
                         yield return null;
                     }
 
                     warriorSkillCoolTimer[index].remainedSkillCoolTime = 0.0f;
-                    SkillTimerUI.Instance.SetSkillTimerText(type, index, warriorSkillCoolTimer[index].remainedSkillCoolTime, warriorSkillCoolTimer[index].maxSkillCoolTime);
+                    UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index].UpdateSkillCoolTimerText(warriorSkillCoolTimer[index].remainedSkillCoolTime, warriorSkillCoolTimer[index].maxSkillCoolTime);
                     
                     warriorSkillCoolTimer[index].isSkillReady = true;
-                    SkillTimerUI.Instance.ActivateSkillTimer(type, index, warriorSkillCoolTimer[index].isSkillReady);
+                    UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index].ActivateSkillCoolTimer(warriorSkillCoolTimer[index].isSkillReady);
                     yield break;
                 
                 case Enum.SquadClassType.Archer:
                     archerSkillCoolTimer[index].remainedSkillCoolTime = archerSkillCoolTimer[index].maxSkillCoolTime; 
                     archerSkillCoolTimer[index].isSkillReady = false;
-                    SkillTimerUI.Instance.ActivateSkillTimer(type, index, archerSkillCoolTimer[index].isSkillReady);
+                    UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index].ActivateSkillCoolTimer(archerSkillCoolTimer[index].isSkillReady);
                     
                     while (true)
                     {
                         archerSkillCoolTimer[index].remainedSkillCoolTime -= Time.deltaTime;
 
                         if (archerSkillCoolTimer[index].remainedSkillCoolTime <= 0) break;
-                        SkillTimerUI.Instance.SetSkillTimerText(type, index, archerSkillCoolTimer[index].remainedSkillCoolTime, archerSkillCoolTimer[index].maxSkillCoolTime);
+                        UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index].UpdateSkillCoolTimerText(archerSkillCoolTimer[index].remainedSkillCoolTime, archerSkillCoolTimer[index].maxSkillCoolTime);
                         
                         yield return null;
                     }
 
                     archerSkillCoolTimer[index].remainedSkillCoolTime = 0.0f;
-                    SkillTimerUI.Instance.SetSkillTimerText(type, index, archerSkillCoolTimer[index].remainedSkillCoolTime, archerSkillCoolTimer[index].maxSkillCoolTime);
+                    UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index].UpdateSkillCoolTimerText(archerSkillCoolTimer[index].remainedSkillCoolTime, archerSkillCoolTimer[index].maxSkillCoolTime);
                     
                     archerSkillCoolTimer[index].isSkillReady = true;
-                    SkillTimerUI.Instance.ActivateSkillTimer(type, index, archerSkillCoolTimer[index].isSkillReady);
+                    UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index].ActivateSkillCoolTimer(archerSkillCoolTimer[index].isSkillReady);
                     yield break;
                 case Enum.SquadClassType.Wizard:
                     wizardSkillCoolTimer[index].remainedSkillCoolTime = wizardSkillCoolTimer[index].maxSkillCoolTime; 
                     wizardSkillCoolTimer[index].isSkillReady = false;
-                    SkillTimerUI.Instance.ActivateSkillTimer(type, index, wizardSkillCoolTimer[index].isSkillReady);
+                    UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index].ActivateSkillCoolTimer(wizardSkillCoolTimer[index].isSkillReady);
                     
                     while (true)
                     {
                         wizardSkillCoolTimer[index].remainedSkillCoolTime -= Time.deltaTime;
 
                         if (wizardSkillCoolTimer[index].remainedSkillCoolTime <= 0) break;
-                        SkillTimerUI.Instance.SetSkillTimerText(type, index, wizardSkillCoolTimer[index].remainedSkillCoolTime, wizardSkillCoolTimer[index].maxSkillCoolTime);
+                        UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index].UpdateSkillCoolTimerText(wizardSkillCoolTimer[index].remainedSkillCoolTime, wizardSkillCoolTimer[index].maxSkillCoolTime);
                         
                         yield return null;
                     }
 
                     wizardSkillCoolTimer[index].remainedSkillCoolTime = 0.0f;
-                    SkillTimerUI.Instance.SetSkillTimerText(type, index, wizardSkillCoolTimer[index].remainedSkillCoolTime, wizardSkillCoolTimer[index].maxSkillCoolTime);
+                    UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index].UpdateSkillCoolTimerText(wizardSkillCoolTimer[index].remainedSkillCoolTime, wizardSkillCoolTimer[index].maxSkillCoolTime);
                     
                     wizardSkillCoolTimer[index].isSkillReady = true;
-                    SkillTimerUI.Instance.ActivateSkillTimer(type, index, wizardSkillCoolTimer[index].isSkillReady);
+                    UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index].ActivateSkillCoolTimer(wizardSkillCoolTimer[index].isSkillReady);
                     yield break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

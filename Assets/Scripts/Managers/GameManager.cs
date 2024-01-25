@@ -16,6 +16,7 @@ namespace Managers
             // AchievementManager.instance.InitAchievementManager();
             StageManager.Instance.InitStageManager();
             DungeonManager.Instance.InitDungeonManager();
+            UIManager.Instance.InitUIManager();
             
             StageManager.Instance.StartStageRunner();
             ES3.Save("Init_Game", true);

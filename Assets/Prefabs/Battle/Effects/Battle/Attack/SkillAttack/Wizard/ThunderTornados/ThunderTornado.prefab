@@ -19675,7 +19675,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9220191402828813494}
-  - component: {fileID: 2031863107139385531}
+  - component: {fileID: 6594871940600045821}
   - component: {fileID: 5866602368559872993}
   - component: {fileID: 4893296901024244260}
   m_Layer: 0
@@ -19702,7 +19702,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2031863107139385531
+--- !u!114 &6594871940600045821
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -19711,7 +19711,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6093556709133727922}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0667c99bf278496ca550e5001e65c285, type: 3}
+  m_Script: {fileID: 11500000, guid: 0045d7431280d424691b4d3f0510b455, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   skillType: 0
@@ -19720,8 +19720,8 @@ MonoBehaviour:
   attackCollider: {fileID: 4650808756837007817}
   particleCurrentTime: 0
   particleMaxTime: 2
-  startPosition: {x: -2.554674, y: -4.019421, z: 0}
-  targetPosition: {x: -3.3879232, y: -4.640558, z: 0}
+  startPosition: {x: 0, y: 0, z: 0}
+  targetPosition: {x: 0, y: 0, z: 0}
   moveSpeed: 5
   readyToLaunch: 0
 --- !u!198 &5866602368559872993
