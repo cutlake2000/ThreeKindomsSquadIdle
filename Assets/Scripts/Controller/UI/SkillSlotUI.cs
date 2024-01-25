@@ -2,6 +2,7 @@ using System;
 using Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Enum = Data.Enum;
@@ -11,6 +12,9 @@ namespace Controller.UI
     [Serializable]
     public struct SkillSlotUI
     {
+        [Header("스킬 슬롯 버튼")]
+        public Button skillButton;
+        
         [Header("스킬 쿨타임")]
         public GameObject coolTimer;
         
@@ -19,7 +23,7 @@ namespace Controller.UI
         
         [Header("스킬 쿨타임 슬라이더")]
         public Image coolTimeSlider;
-        
+
         public void ActivateSkillCoolTimer(bool isReady)
         {
             coolTimer.SetActive(!isReady);
@@ -51,14 +55,14 @@ namespace Controller.UI
                 stopAutoSkill.SetActive(true);
                 runAutoSkill.SetActive(false);
 
-                SquadManager.Instance.runAutoSkill = false;
+                SquadManager.Instance.autoSkill = false;
             }
             else
             {
                 stopAutoSkill.SetActive(false);
                 runAutoSkill.SetActive(true);
                 
-                SquadManager.Instance.runAutoSkill = true;
+                SquadManager.Instance.autoSkill = true;
             }
         }
     }
@@ -83,8 +87,35 @@ namespace Controller.UI
         public void InitializeEventListener()
         {
             skillAutoUseButton.InitializeEventListener();
+
+            for (var i = 0; i < 2; i++)
+            {
+                var index = i;
+                warriorSkillCoolTimerUI[i].skillButton.onClick.AddListener(() => ActivateSkill(Enum.SquadClassType.Warrior, index));
+                archerSkillCoolTimerUI[i].skillButton.onClick.AddListener(() => ActivateSkill(Enum.SquadClassType.Archer, index));
+                wizardSkillCoolTimerUI[i].skillButton.onClick.AddListener(() => ActivateSkill(Enum.SquadClassType.Wizard, index));
+            }
         }
-        
+
+        private static void ActivateSkill(Enum.SquadClassType squadClassType, int index)
+        {
+            switch (squadClassType)
+            {
+                case Enum.SquadClassType.Warrior:
+                    if (!SquadManager.Instance.warriorSkillCoolTimer[index].isSkillReady) return;
+                    SquadManager.Instance.warriorSkillCoolTimer[index].orderToInstantiate = true;
+                    break;
+                case Enum.SquadClassType.Archer:
+                    if (!SquadManager.Instance.archerSkillCoolTimer[index].isSkillReady) return;
+                    SquadManager.Instance.archerSkillCoolTimer[index].orderToInstantiate = true;
+                    break;
+                case Enum.SquadClassType.Wizard:
+                    if (!SquadManager.Instance.wizardSkillCoolTimer[index].isSkillReady) return;
+                    SquadManager.Instance.wizardSkillCoolTimer[index].orderToInstantiate = true;
+                    break;
+            }
+        }
+
         public void SetSkillCoolTimerUIIcon(Enum.SquadClassType squadClassType, Sprite currentCharacterSprite)
         {
             switch (squadClassType)

@@ -23,18 +23,22 @@ namespace Creature.CreatureClass.SquadClass
             ProjectileManager.Instance.InstantiateBaseAttack(damage, ProjectileSpawnPosition, Direction, Enum.PoolType.ProjectileBaseAttackWizard);
         }
         
-        protected override void OnSkillAttack1()
+        protected override void OnSkillAttack()
         {
-            base.OnSkillAttack1();
+            base.OnSkillAttack();
             
             for (var i = 0; i < SquadManager.Instance.wizardSkillCoolTimer.Length; i++)
             {
                 if (!SquadManager.Instance.wizardSkillCoolTimer[i].isSkillReady) continue;
+                if (!SquadManager.Instance.autoSkill && !SquadManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate) continue;
                 
                 if (currentTarget == null) return;
                 
                 SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Wizard, i);
                 ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.wizardSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
+                SquadManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate = false;
+                
+                break;
             }
         }
     }

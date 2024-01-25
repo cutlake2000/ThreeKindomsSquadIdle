@@ -24,18 +24,22 @@ namespace Creature.CreatureClass.SquadClass
                 Enum.PoolType.ProjectileBaseAttackWarrior);
         }
 
-        protected override void OnSkillAttack1()
+        protected override void OnSkillAttack()
         {
-            base.OnSkillAttack1();
+            base.OnSkillAttack();
             
             for (var i = 0; i < SquadManager.Instance.warriorSkillCoolTimer.Length; i++)
             {
                 if (!SquadManager.Instance.warriorSkillCoolTimer[i].isSkillReady) continue;
+                if (!SquadManager.Instance.autoSkill && !SquadManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate) continue;
                 
                 if (currentTarget == null) return;
                 
                 SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Warrior, i);
                 ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.warriorSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
+                SquadManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate = false;
+                
+                break;
             }
         }
     }

@@ -67,11 +67,11 @@ namespace Creature.CreatureClass.SquadFSM
             
             switch (directionX)
             {
-                case > 0.1f:
+                case > 0f:
                     localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
                     Squad.transform.localScale = localScale;
                     break;
-                case < -0.1f:
+                case < 0f:
                     localScale = new Vector3(localScale.x, localScale.y, localScale.z);
                     Squad.transform.localScale = localScale;
                     break;

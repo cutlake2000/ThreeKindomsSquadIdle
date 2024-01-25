@@ -1,4 +1,5 @@
 using Controller.UI.BottomMenuUI.SquadMenu;
+using Managers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,7 +39,7 @@ namespace Controller.UI.BottomMenuUI
                 switch (i)
                 {
                     case 0:
-                        SquadPanelUI.Instance.InitializeLevelUpMagnificationButton(0);
+                        UIManager.Instance.squadPanelUI.InitializeLevelUpMagnificationButton(0);
                         break;
                 }
             }

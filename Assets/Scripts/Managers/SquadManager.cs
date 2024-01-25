@@ -6,6 +6,7 @@ using Creature.CreatureClass.SquadClass;
 using Creature.Data;
 using Function;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Enum = Data.Enum;
 
 namespace Managers
@@ -14,6 +15,7 @@ namespace Managers
     public struct SkillCoolTimer
     {
         public GameObject skill;
+        public bool orderToInstantiate;
         public bool isSkillReady;
         public float remainedSkillCoolTime;
         public float maxSkillCoolTime;
@@ -23,7 +25,6 @@ namespace Managers
     {
         public static SquadManager Instance;
         public static Action<Equipment> EquipAction;
-        public static Action<Equipment> UnEquipAction;
 
         [Header("=== Camera Settings=== ")]
         [SerializeField] private CameraController cameraController;
@@ -44,11 +45,11 @@ namespace Managers
         [SerializeField] private float followRange;
         [Header("이동 속도")]
         [SerializeField] private float moveSpeed;
-
+        
         [Space(3)]
         [Header("=== 스킬 쿨타임 ===")] //TODO: 스킬 쿨 다운을 ScriptableObject에서 긁어와야 함
         [Header("Auto")]
-        public bool runAutoSkill;
+        public bool autoSkill;
         
         [Header("워리어")]
         public SkillCoolTimer[] warriorSkillCoolTimer;
@@ -90,7 +91,7 @@ namespace Managers
 
             cameraController.InitCameraTarget(squads[0].transform);
 
-            runAutoSkill = true;
+            autoSkill = true;
         }
 
         public void InitSquadManager()
@@ -141,7 +142,6 @@ namespace Managers
             SquadStatManager.Instance.UpgradeTotalSquadStatAction += squadEntireStat.UpdateTotalStatBySquadStatPanel;
             
             EquipAction += Equip;
-            UnEquipAction += UnEquip;
         }
 
         public BigInteger GetTotalSquadStat(Enum.SquadStatType statusType)
@@ -349,6 +349,7 @@ namespace Managers
                     archerSkillCoolTimer[index].isSkillReady = true;
                     UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index].ActivateSkillCoolTimer(archerSkillCoolTimer[index].isSkillReady);
                     yield break;
+                
                 case Enum.SquadClassType.Wizard:
                     wizardSkillCoolTimer[index].remainedSkillCoolTime = wizardSkillCoolTimer[index].maxSkillCoolTime; 
                     wizardSkillCoolTimer[index].isSkillReady = false;

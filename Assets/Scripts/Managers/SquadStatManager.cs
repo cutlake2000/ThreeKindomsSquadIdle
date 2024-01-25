@@ -83,12 +83,12 @@ namespace Managers
 
         public void UpgradeSquadStatPanelStat(Enum.SquadStatTypeBySquadPanel type)
         {
-            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, squadStatItem[(int)type].levelUpCost * SquadPanelUI.Instance.levelUpMagnification)) return;
+            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, squadStatItem[(int)type].levelUpCost * UIManager.Instance.squadPanelUI.levelUpMagnification)) return;
             if (squadStatItem[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
 
-            squadStatItem[(int)type].UpdateSquadStat(SquadPanelUI.Instance.levelUpMagnification);
+            squadStatItem[(int)type].UpdateSquadStat(UIManager.Instance.squadPanelUI.levelUpMagnification);
             SetUpgradeUI(squadStatItem[(int)type]);
-            SquadPanelUI.Instance.CheckRequiredStatPointOfMagnificationButton((int) type);
+            UIManager.Instance.squadPanelUI.CheckRequiredStatPointOfMagnificationButton((int) type);
 
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }

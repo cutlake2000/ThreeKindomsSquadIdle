@@ -9,39 +9,28 @@ using Enum = Data.Enum;
 
 namespace Controller.UI.BottomMenuUI.SquadMenu
 {
-    public class SquadPanelUI : MonoBehaviour
+    [Serializable]
+    public struct SquadPanelUI
     {
-        public static SquadPanelUI Instance;
-
         [Header("=== 스쿼드 스탯 패널 ===")]
         [Header("--- 스쿼드 스탯 패널 UI ---")]
-        [SerializeField] private TMP_Text squadLevelText;
-        [SerializeField] private TMP_Text squadStatPointText;
-        [SerializeField] private Slider squadExpSlider;
-        [SerializeField] private TMP_Text squadExpText;
-        [SerializeField] private Button levelUpButton;
-        [SerializeField] private Button[] levelUpMagnificationButton;
+        public TMP_Text squadLevelText;
+        public TMP_Text squadStatPointText;
+        public Slider squadExpSlider;
+        public TMP_Text squadExpText;
+        public Button levelUpButton;
+        public Button[] levelUpMagnificationButton;
         
         [Space(5)]
-        [SerializeField]
         public int levelUpMagnification;
         
-        private void Awake()
-        {
-            Instance = this;
-        }
-        
-        private void Start()
-        {
-            InitializeButtonListeners();
-        }
-
-        private void InitializeButtonListeners()
+        public void InitializeEventListeners()
         {
             for (var i = 0; i < levelUpMagnificationButton.Length; i++)
             {
                 var index = i;
-                levelUpMagnificationButton[i].GetComponent<Button>().onClick.AddListener(() => InitializeLevelUpMagnificationButton(index));
+                var squadPanel = this;
+                levelUpMagnificationButton[i].GetComponent<Button>().onClick.AddListener(() => squadPanel.InitializeLevelUpMagnificationButton(index));
             }
         }
 

@@ -56,7 +56,7 @@ namespace Creature.CreatureClass.SquadClass
         {
             animationEventReceiver.OnNormalAttackEffect += OnNormalAttackEffect;
             animationEventReceiver.OnNormalAttack += OnNormalAttack;
-            animationEventReceiver.OnSkill1Attack += OnSkillAttack1;
+            animationEventReceiver.OnSkill1Attack += OnSkillAttack;
             animationEventReceiver.OnSkill2Attack += OnSkillAttack2;
         }
 
@@ -138,7 +138,7 @@ namespace Creature.CreatureClass.SquadClass
 
         protected virtual void OnNormalAttackEffect() { }
 
-        protected virtual void OnSkillAttack1()
+        protected virtual void OnSkillAttack()
         {
             if (currentTarget == null) return;
 

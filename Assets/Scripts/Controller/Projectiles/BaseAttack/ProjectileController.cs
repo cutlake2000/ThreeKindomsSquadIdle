@@ -20,11 +20,11 @@ namespace Controller.Projectiles.BaseAttack
             
             switch (directionX)
             {
-                case > 0.1f:
+                case > 0f:
                     localScale = new Vector3(localScale.x, -localScale.y, localScale.z);
                     transform.localScale = localScale;
                     break;
-                case < -0.1f:
+                case < 0f:
                     localScale = new Vector3(localScale.x, localScale.y, localScale.z);
                     transform.localScale = localScale;
                     break;
