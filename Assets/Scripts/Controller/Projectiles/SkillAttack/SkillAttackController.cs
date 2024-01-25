@@ -41,7 +41,7 @@ namespace Controller.Projectiles.SkillAttack
             startPosition = start;
             targetPosition = target;
             
-            attackCollider.GetComponent<AttackCollider>().damage = damage * 2;
+            attackCollider.GetComponent<AttackCollider>().damage = skillDamage * 2;
             gameObject.GetComponent<ParticleSystem>().Play(true);
 
             FlipSprite(direction.x);

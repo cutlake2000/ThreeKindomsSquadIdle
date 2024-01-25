@@ -37,7 +37,7 @@ Transform:
   - {fileID: 5617003302885199620}
   - {fileID: 2848759147801728172}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1018808326247178527
 MonoBehaviour:
@@ -74,7 +74,7 @@ MonoBehaviour:
   comet: {fileID: 3340802577591564490, guid: 51e7d720b1a9b42be82a1b1d2ecd4b09, type: 3}
   startPoint: {fileID: 6922236227692818656}
   endPoint: {fileID: 7994246673768145570}
-  delay: 0.5
+  delay: 0.3
   rateOfFire: 0.3
   radius: 2
   quantity: 3
@@ -4964,7 +4964,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5650688726131290902}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 3
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 1
@@ -9826,7 +9826,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6219811251844702997}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 3
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 1
@@ -19584,7 +19584,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9053097520151076045}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 3
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 1
