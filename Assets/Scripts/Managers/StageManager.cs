@@ -188,12 +188,12 @@ namespace Managers
         private void SpawnSquad()
         {
             currentSquadCount = maxSquadCount;
-            SquadManager.Instance.SpawnSquad();
+            SquadBattleManager.Instance.SpawnSquad();
         }
 
         private void DespawnSquad()
         {
-            SquadManager.Instance.DespawnSquad();
+            SquadBattleManager.Instance.DespawnSquad();
         }
 
         private void SpawnMonster()

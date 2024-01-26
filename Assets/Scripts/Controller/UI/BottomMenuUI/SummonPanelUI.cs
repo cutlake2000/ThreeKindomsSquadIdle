@@ -126,10 +126,10 @@ namespace Controller.UI.BottomMenuUI
             switch (type)
             {
                 case Enum.SummonEquipmentType.Weapon:
-                    SquadManager.Instance.SummonLevel.IncreaseExp(type, count);
+                    SquadBattleManager.Instance.SummonLevel.IncreaseExp(type, count);
                     break;
                 case Enum.SummonEquipmentType.Gear:
-                    SquadManager.Instance.SummonLevel.IncreaseExp(type, count);
+                    SquadBattleManager.Instance.SummonLevel.IncreaseExp(type, count);
                     break;
             }
         }
@@ -145,14 +145,14 @@ namespace Controller.UI.BottomMenuUI
             switch (currentSummonEquipmentType)
             {
                 case Enum.SummonEquipmentType.Weapon:
-                    summonPanelSummonLevelText.text = $"소환 레벨 {SquadManager.Instance.SummonLevel.CurrentWeaponLevel}";
-                    summonPanelSummonExpText.text = $"{SquadManager.Instance.SummonLevel.CurrentWeaponExp} / {SquadManager.Instance.SummonLevel.MaxWeaponExp}";
-                    summonPanelSummonExpSlider.value = SquadManager.Instance.SummonLevel.CurrentWeaponExp / SquadManager.Instance.SummonLevel.MaxWeaponExp;
+                    summonPanelSummonLevelText.text = $"소환 레벨 {SquadBattleManager.Instance.SummonLevel.CurrentWeaponLevel}";
+                    summonPanelSummonExpText.text = $"{SquadBattleManager.Instance.SummonLevel.CurrentWeaponExp} / {SquadBattleManager.Instance.SummonLevel.MaxWeaponExp}";
+                    summonPanelSummonExpSlider.value = SquadBattleManager.Instance.SummonLevel.CurrentWeaponExp / SquadBattleManager.Instance.SummonLevel.MaxWeaponExp;
                     break;
                 case Enum.SummonEquipmentType.Gear:
-                    summonPanelSummonLevelText.text = $"소환 레벨 {SquadManager.Instance.SummonLevel.CurrentGearLevel}";
-                    summonPanelSummonExpText.text = $"{SquadManager.Instance.SummonLevel.CurrentGearExp} / {SquadManager.Instance.SummonLevel.MaxGearExp}";
-                    summonPanelSummonExpSlider.value = SquadManager.Instance.SummonLevel.CurrentGearExp / SquadManager.Instance.SummonLevel.MaxGearExp;
+                    summonPanelSummonLevelText.text = $"소환 레벨 {SquadBattleManager.Instance.SummonLevel.CurrentGearLevel}";
+                    summonPanelSummonExpText.text = $"{SquadBattleManager.Instance.SummonLevel.CurrentGearExp} / {SquadBattleManager.Instance.SummonLevel.MaxGearExp}";
+                    summonPanelSummonExpSlider.value = SquadBattleManager.Instance.SummonLevel.CurrentGearExp / SquadBattleManager.Instance.SummonLevel.MaxGearExp;
                     break;
             }
         }
@@ -198,14 +198,14 @@ namespace Controller.UI.BottomMenuUI
 
         public void SetSummonUI()
         {
-            currentSquadSummonLevelText.text = $"소환 레벨 : {SquadManager.Instance.SummonLevel.CurrentSquadLevel} ({SquadManager.Instance.SummonLevel.CurrentSquadExp} / {SquadManager.Instance.SummonLevel.MaxSquadExp})";
-            currentSquadSummonExpSlider.value = SquadManager.Instance.SummonLevel.CurrentSquadExp / SquadManager.Instance.SummonLevel.MaxSquadExp;
+            currentSquadSummonLevelText.text = $"소환 레벨 : {SquadBattleManager.Instance.SummonLevel.CurrentSquadLevel} ({SquadBattleManager.Instance.SummonLevel.CurrentSquadExp} / {SquadBattleManager.Instance.SummonLevel.MaxSquadExp})";
+            currentSquadSummonExpSlider.value = SquadBattleManager.Instance.SummonLevel.CurrentSquadExp / SquadBattleManager.Instance.SummonLevel.MaxSquadExp;
             
-            currentWeaponSummonLevelText.text = $"소환 레벨 : {SquadManager.Instance.SummonLevel.CurrentWeaponLevel} ({SquadManager.Instance.SummonLevel.CurrentWeaponExp} / {SquadManager.Instance.SummonLevel.MaxWeaponExp})";
-            currentWeaponSummonExpSlider.value = SquadManager.Instance.SummonLevel.CurrentWeaponExp / SquadManager.Instance.SummonLevel.MaxWeaponExp;
+            currentWeaponSummonLevelText.text = $"소환 레벨 : {SquadBattleManager.Instance.SummonLevel.CurrentWeaponLevel} ({SquadBattleManager.Instance.SummonLevel.CurrentWeaponExp} / {SquadBattleManager.Instance.SummonLevel.MaxWeaponExp})";
+            currentWeaponSummonExpSlider.value = SquadBattleManager.Instance.SummonLevel.CurrentWeaponExp / SquadBattleManager.Instance.SummonLevel.MaxWeaponExp;
                 
-            currentGearSummonLevelText.text = $"소환 레벨 : {SquadManager.Instance.SummonLevel.CurrentGearLevel} ({SquadManager.Instance.SummonLevel.CurrentGearExp} / {SquadManager.Instance.SummonLevel.MaxGearExp})";
-            currentGearSummonExpSlider.value = SquadManager.Instance.SummonLevel.CurrentGearExp / SquadManager.Instance.SummonLevel.MaxWeaponExp;
+            currentGearSummonLevelText.text = $"소환 레벨 : {SquadBattleManager.Instance.SummonLevel.CurrentGearLevel} ({SquadBattleManager.Instance.SummonLevel.CurrentGearExp} / {SquadBattleManager.Instance.SummonLevel.MaxGearExp})";
+            currentGearSummonExpSlider.value = SquadBattleManager.Instance.SummonLevel.CurrentGearExp / SquadBattleManager.Instance.SummonLevel.MaxWeaponExp;
         }
         
         private Equipment CreateSummon()

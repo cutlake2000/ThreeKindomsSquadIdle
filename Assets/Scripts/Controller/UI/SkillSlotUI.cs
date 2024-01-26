@@ -55,14 +55,14 @@ namespace Controller.UI
                 stopAutoSkill.SetActive(true);
                 runAutoSkill.SetActive(false);
 
-                SquadManager.Instance.autoSkill = false;
+                SquadBattleManager.Instance.autoSkill = false;
             }
             else
             {
                 stopAutoSkill.SetActive(false);
                 runAutoSkill.SetActive(true);
                 
-                SquadManager.Instance.autoSkill = true;
+                SquadBattleManager.Instance.autoSkill = true;
             }
         }
     }
@@ -91,44 +91,44 @@ namespace Controller.UI
             for (var i = 0; i < 2; i++)
             {
                 var index = i;
-                warriorSkillCoolTimerUI[i].skillButton.onClick.AddListener(() => ActivateSkill(Enum.SquadClassType.Warrior, index));
-                archerSkillCoolTimerUI[i].skillButton.onClick.AddListener(() => ActivateSkill(Enum.SquadClassType.Archer, index));
-                wizardSkillCoolTimerUI[i].skillButton.onClick.AddListener(() => ActivateSkill(Enum.SquadClassType.Wizard, index));
+                warriorSkillCoolTimerUI[i].skillButton.onClick.AddListener(() => ActivateSkill(Enum.CharacterType.Warrior, index));
+                archerSkillCoolTimerUI[i].skillButton.onClick.AddListener(() => ActivateSkill(Enum.CharacterType.Archer, index));
+                wizardSkillCoolTimerUI[i].skillButton.onClick.AddListener(() => ActivateSkill(Enum.CharacterType.Wizard, index));
             }
         }
 
-        private static void ActivateSkill(Enum.SquadClassType squadClassType, int index)
+        private static void ActivateSkill(Enum.CharacterType characterType, int index)
         {
-            switch (squadClassType)
+            switch (characterType)
             {
-                case Enum.SquadClassType.Warrior:
-                    if (!SquadManager.Instance.warriorSkillCoolTimer[index].isSkillReady) return;
-                    SquadManager.Instance.warriorSkillCoolTimer[index].orderToInstantiate = true;
+                case Enum.CharacterType.Warrior:
+                    if (!SquadBattleManager.Instance.warriorSkillCoolTimer[index].isSkillReady) return;
+                    SquadBattleManager.Instance.warriorSkillCoolTimer[index].orderToInstantiate = true;
                     break;
-                case Enum.SquadClassType.Archer:
-                    if (!SquadManager.Instance.archerSkillCoolTimer[index].isSkillReady) return;
-                    SquadManager.Instance.archerSkillCoolTimer[index].orderToInstantiate = true;
+                case Enum.CharacterType.Archer:
+                    if (!SquadBattleManager.Instance.archerSkillCoolTimer[index].isSkillReady) return;
+                    SquadBattleManager.Instance.archerSkillCoolTimer[index].orderToInstantiate = true;
                     break;
-                case Enum.SquadClassType.Wizard:
-                    if (!SquadManager.Instance.wizardSkillCoolTimer[index].isSkillReady) return;
-                    SquadManager.Instance.wizardSkillCoolTimer[index].orderToInstantiate = true;
+                case Enum.CharacterType.Wizard:
+                    if (!SquadBattleManager.Instance.wizardSkillCoolTimer[index].isSkillReady) return;
+                    SquadBattleManager.Instance.wizardSkillCoolTimer[index].orderToInstantiate = true;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(squadClassType), squadClassType, null);
+                    throw new ArgumentOutOfRangeException(nameof(characterType), characterType, null);
             }
         }
 
-        public void SetSkillCoolTimerUIIcon(Enum.SquadClassType squadClassType, Sprite currentCharacterSprite)
+        public void SetSkillCoolTimerUIIcon(Enum.CharacterType characterType, Sprite currentCharacterSprite)
         {
-            switch (squadClassType)
+            switch (characterType)
             {
-                case Enum.SquadClassType.Warrior:
+                case Enum.CharacterType.Warrior:
                     warriorIcon.sprite = currentCharacterSprite;
                     break;
-                case Enum.SquadClassType.Archer:
+                case Enum.CharacterType.Archer:
                     archerIcon.sprite = currentCharacterSprite;
                     break;
-                case Enum.SquadClassType.Wizard:
+                case Enum.CharacterType.Wizard:
                     wizardIcon.sprite = currentCharacterSprite;
                     break;
             }

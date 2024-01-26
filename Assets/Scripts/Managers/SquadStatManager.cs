@@ -1,5 +1,6 @@
 using System;
-using Controller.UI.BottomMenuUI.SquadMenu;
+using Controller.UI.BottomMenuUI.SquadPanel;
+using Controller.UI.BottomMenuUI.SquadPanel.SquadStatPanel;
 using Creature.Data;
 using Function;
 using ScriptableObjects.Scripts;
@@ -11,18 +12,10 @@ using Enum = Data.Enum;
 
 namespace Managers
 {
-    [Serializable]
-    public struct SquadStatPanelStatUI
-    {
-        public TMP_Text currentUpgradeLevelText;
-        public TMP_Text currentIncreasedStatText;
-        public Button upgradeButton;
-    }
-
     public class SquadStatManager : MonoBehaviour
     {
         public static SquadStatManager Instance;
-        public event Action<Enum.SquadStatTypeBySquadPanel, int> UpgradeTotalSquadStatAction;
+        public event Action<Enum.SquadStatTypeBySquadPanel, int> OnUpgradeTotalSquadStat;
 
         //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
         [SerializeField] private SquadStatSo[] squadStatSo;
@@ -70,7 +63,7 @@ namespace Managers
                 squadStatItem[i].currentLevelUpCost = squadStatSo[i].levelUpCost;
                 squadStatItem[i].currentIncreasedStat = squadStatItem[i].currentLevel * squadStatItem[i].increaseStatValue;
                 squadStatItem[i].squadStatSprite = squadStatSo[i].squadStatImage;
-                squadStatItem[i].UpgradeTotalSquadStatAction = UpgradeTotalSquadStatAction;
+                squadStatItem[i].UpgradeTotalSquadStatAction = OnUpgradeTotalSquadStat;
 
                 squadStatItem[i].InitSquadStatUI();
             }
@@ -93,7 +86,7 @@ namespace Managers
 
             squadStatItem[(int)type].UpdateSquadStat(levelUpMagnification);
             SetUpgradeUI(squadStatItem[(int)type]);
-            UIManager.Instance.squadPanelUI.CheckRequiredStatPointOfMagnificationButton((int) type);
+            SquadStatPanelUI.CheckRequiredStatPointOfMagnificationButton((int) type);
 
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }

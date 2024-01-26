@@ -35,9 +35,9 @@ namespace Controller.UI
         
         private void SetButtonClickedListener()
         {
-            warriorButton.onClick.AddListener(() => SetCameraTarget(SquadManager.Instance.squads[0].transform));
-            archerButton.onClick.AddListener(() => SetCameraTarget(SquadManager.Instance.squads[1].transform));
-            wizardButton.onClick.AddListener(() => SetCameraTarget(SquadManager.Instance.squads[2].transform));
+            warriorButton.onClick.AddListener(() => SetCameraTarget(SquadBattleManager.Instance.squads[0].transform));
+            archerButton.onClick.AddListener(() => SetCameraTarget(SquadBattleManager.Instance.squads[1].transform));
+            wizardButton.onClick.AddListener(() => SetCameraTarget(SquadBattleManager.Instance.squads[2].transform));
         }
 
         private void SetCameraTarget(Component target)

@@ -62,7 +62,7 @@ namespace Controller.Projectiles.BaseAttack
         private void DestroyProjectile(Vector3 position)
         {
             gameObject.SetActive(false);
-            EffectManager.Instance.CreateParticlesAtPosition(position, Enum.SquadClassType.Archer, true);
+            EffectManager.Instance.CreateParticlesAtPosition(position, Enum.CharacterType.Archer, true);
             gameObject.SetActive(false);
         }
     }

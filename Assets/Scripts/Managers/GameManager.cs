@@ -9,9 +9,12 @@ namespace Managers
         private void Start()
         {
             AccountManager.Instance.InitAccountManager();
-            SquadManager.Instance.InitSquadManager();
+            SquadBattleManager.Instance.InitSquadManager();
             SquadStatManager.Instance.InitSquadStatManager();
+            
             EquipmentManager.Instance.InitEquipmentManager();
+            SquadConfigureManager.Instance.InitSquadConfigureManager();
+            
             SummonManager.Instance.InitSummonManager();
             // AchievementManager.instance.InitAchievementManager();
             StageManager.Instance.InitStageManager();

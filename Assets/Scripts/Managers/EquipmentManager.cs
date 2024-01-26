@@ -32,15 +32,8 @@ namespace Managers
         public List<Sprite> armorSprites = new();
         public List<Sprite> gauntletSprites = new();
         public Sprite[] backgroundEffects;
-        
-        public static Dictionary<string, Equipment> AllEquipments = new();
 
-        // private static readonly Dictionary<string, Equipment> AllSwords = new();
-        // private static readonly Dictionary<string, Equipment> AllBows = new();
-        // private static readonly Dictionary<string, Equipment> AllStaffs = new();
-        // private static readonly Dictionary<string, Equipment> AllHelmets = new();
-        // private static readonly Dictionary<string, Equipment> AllArmors = new();
-        // private static readonly Dictionary<string, Equipment> AllGauntlets = new();
+        private static readonly Dictionary<string, Equipment> allEquipments = new();
         
         private const int MaxLevel = 1;
 
@@ -116,7 +109,7 @@ namespace Managers
 
                         if (equipment.isEquipped)
                         {
-                            SquadManager.EquipAction(equipment);
+                            SquadBattleManager.EquipAction(equipment);
 
                             InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
                             InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
@@ -196,7 +189,7 @@ namespace Managers
                         
                         if (isEquipped)
                         {
-                            SquadManager.EquipAction(equipment);
+                            SquadBattleManager.EquipAction(equipment);
                             InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
                             InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
                         }
@@ -229,7 +222,7 @@ namespace Managers
         // AllEquipment에 Equipment 더하는 메서드
         private static void AddEquipment(string equipmentId, Equipment equipment)
         {
-            if (!AllEquipments.TryAdd(equipmentId, equipment))
+            if (!allEquipments.TryAdd(equipmentId, equipment))
             {
                 Debug.LogWarning($"Weapon already exists in the dictionary: {equipmentId}");
             }
@@ -238,7 +231,7 @@ namespace Managers
         // AllEquipment에서 매개변수로 받은 string을 key로 사용해 Equipment 찾는 매서드
         public static Equipment GetEquipment(string equipmentId)
         {
-            if (AllEquipments.TryGetValue(equipmentId, out var equipment))
+            if (allEquipments.TryGetValue(equipmentId, out var equipment))
             {
                 return equipment;
             }
@@ -250,7 +243,7 @@ namespace Managers
         // AllEquipment에서 매개변수로 받은 key을 사용하는 Equipment 업데이트 하는 메서드
         public static void SetEquipment(string equipmentId, Equipment equipment)
         {
-            var targetEquipment = AllEquipments[equipmentId];
+            var targetEquipment = allEquipments[equipmentId];
 
             if (targetEquipment == null) return;
             Debug.Log("이름 : " + targetEquipment.gameObject.name);
@@ -296,7 +289,7 @@ namespace Managers
                 nextKey = Enum.equipmentRarities[currentRarityIndex + 1] + "_1" + "_" + $"{type}";
             }
                 
-            return AllEquipments.GetValueOrDefault(nextKey);
+            return allEquipments.GetValueOrDefault(nextKey);
         }
 
         // // 매개변수로 받은 key값을 사용하는 장비의 이전레벨 장비를 불러오는 메서드
@@ -387,7 +380,7 @@ namespace Managers
                 }
             }
 
-            SquadManager.EquipAction?.Invoke(highValueEquipment);
+            SquadBattleManager.EquipAction?.Invoke(highValueEquipment);
             InventoryPanelUI.Instance.SelectEquipment(highValueEquipment);
         }
 

@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 487031b44a8b49ab961ad94866112ea7, type: 3}
+  m_Name: Wizard
+  m_EditorClassIdentifier: 
+  squadClassType: 2
+  characterSos:
+  - characterIcon: {fileID: 21300000, guid: c5a67ba47a145457a9b7b00544223f0c, type: 3}
+    characterName: "\uC81C\uAC08\uB7C9"
+    model: {fileID: 3101414608292247896, guid: 15609630b68c82042888f4c7f0f6cf53, type: 3}
+    characterSkills:
+    - skillIcon: {fileID: 21300000, guid: b8b6f07286d904ca791978820e2febbb, type: 3}
+      skillObject: {fileID: 398055126405330442, guid: 95f601c7476134c4b82e54a75fb11fb3, type: 3}
+      skillDescription: "\uC720\uC131\uC6B0"
+      skillDamagePercent: 200
+    ownedEffects:
+    - increaseStatType: 4
+      increaseStatPercent: 301
+    - increaseStatType: 3
+      increaseStatPercent: 301
+    equippedEffects:
+    - increaseStatType: 4
+      increaseStatPercent: 301
+    - increaseStatType: 3
+      increaseStatPercent: 301
+  - characterIcon: {fileID: 21300000, guid: b2a7e7f355d484662b6ddcc000a82167, type: 3}
+    characterName: "\uC0AC\uB9C8\uC758"
+    model: {fileID: 8181873377073930765, guid: 43b761521be8a6c4dbcf12af04127ea9, type: 3}
+    characterSkills:
+    - skillIcon: {fileID: 21300000, guid: ab91c7a668b014b34b7799182e55362a, type: 3}
+      skillObject: {fileID: 6093556709133727922, guid: 08b0e217d703a44d8b0bd3f409e2d55d, type: 3}
+      skillDescription: "\uD3ED\uD48D\uC6B0"
+      skillDamagePercent: 200
+    ownedEffects:
+    - increaseStatType: 4
+      increaseStatPercent: 302
+    - increaseStatType: 3
+      increaseStatPercent: 302
+    equippedEffects:
+    - increaseStatType: 4
+      increaseStatPercent: 302
+    - increaseStatType: 3
+      increaseStatPercent: 302
+  - characterIcon: {fileID: 21300000, guid: 4b619538c617743f4993678eba3a8335, type: 3}
+    characterName: "\uC11C\uC11C"
+    model: {fileID: 4060327539805523120, guid: 834fde5e33dcfa847aeecd14651a3f18, type: 3}
+    characterSkills:
+    - skillIcon: {fileID: 21300000, guid: 9d8d37d684d094b1a9f8b592bf8e4109, type: 3}
+      skillObject: {fileID: 6093556709133727922, guid: 08b0e217d703a44d8b0bd3f409e2d55d, type: 3}
+      skillDescription: "\uBB3C\uC74C\uD45C?"
+      skillDamagePercent: 200
+    ownedEffects:
+    - increaseStatType: 4
+      increaseStatPercent: 303
+    - increaseStatType: 3
+      increaseStatPercent: 303
+    equippedEffects:
+    - increaseStatType: 4
+      increaseStatPercent: 303
+    - increaseStatType: 3
+      increaseStatPercent: 303

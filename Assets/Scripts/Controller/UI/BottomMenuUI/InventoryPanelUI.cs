@@ -195,13 +195,13 @@ namespace Controller.UI.BottomMenuUI
         // 장착 버튼 눌렸을 때 불리는 메서드
         public void OnClickEquip()
         {
-            SquadManager.EquipAction?.Invoke(EquipmentManager.GetEquipment(selectEquipment.id));
+            SquadBattleManager.EquipAction?.Invoke(EquipmentManager.GetEquipment(selectEquipment.id));
         }
     
         private void OnClickAutoEquip()
         {
             EquipmentManager.Instance.AutoEquip(selectEquipment.type);
-            SquadManager.EquipAction?.Invoke(EquipmentManager.GetEquipment(selectEquipment.id));
+            SquadBattleManager.EquipAction?.Invoke(EquipmentManager.GetEquipment(selectEquipment.id));
         }
 
         // 선택한 장비 데이터 업데이트 (저장한다고 생각하면 편함)

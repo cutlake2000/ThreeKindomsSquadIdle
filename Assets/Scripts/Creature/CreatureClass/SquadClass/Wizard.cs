@@ -10,8 +10,8 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.SetCreatureStats();
 
-            damage = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WizardAtk);
-            attackRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WizardAttackRange);
+            damage = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WizardAtk);
+            attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WizardAttackRange);
 
             animator.SetFloat(animationData.ClassTypeParameterHash, 2);
         }
@@ -27,16 +27,16 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.OnSkillAttack();
             
-            for (var i = 0; i < SquadManager.Instance.wizardSkillCoolTimer.Length; i++)
+            for (var i = 0; i < SquadBattleManager.Instance.wizardSkillCoolTimer.Length; i++)
             {
-                if (!SquadManager.Instance.wizardSkillCoolTimer[i].isSkillReady) continue;
-                if (!SquadManager.Instance.autoSkill && !SquadManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate) continue;
+                if (!SquadBattleManager.Instance.wizardSkillCoolTimer[i].isSkillReady) continue;
+                if (!SquadBattleManager.Instance.autoSkill && !SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate) continue;
                 
                 if (currentTarget == null) return;
                 
-                SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Wizard, i);
-                ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.wizardSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
-                SquadManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate = false;
+                SquadBattleManager.Instance.RunSkillCoolTimer(Enum.CharacterType.Wizard, i);
+                ProjectileManager.Instance.InstantiateSkillAttack(SquadBattleManager.Instance.wizardSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
+                SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate = false;
                 
                 break;
             }

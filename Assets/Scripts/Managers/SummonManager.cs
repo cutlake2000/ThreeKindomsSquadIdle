@@ -23,7 +23,7 @@ namespace Managers
         private WeightedRandomPicker<string> armorSummoner;
         private WeightedRandomPicker<string> squadSummoner;
 
-        private Enum.SquadClassType[] squadType;
+        private Enum.CharacterType[] squadType;
         private Enum.EquipmentType[] weaponType;
         private Enum.EquipmentType[] gearType;
 
@@ -47,7 +47,7 @@ namespace Managers
         {
             OnSummonEquipment += RandomSummon;
             OnSummonEquipment += IncreaseAchievementValue;
-            SquadManager.Instance.SummonLevel.OnLevelUpgrade += SetupSummoner;
+            SquadBattleManager.Instance.SummonLevel.OnLevelUpgrade += SetupSummoner;
         }
 
         private void InitAllSummoner()
@@ -56,7 +56,7 @@ namespace Managers
             weaponSummoner = new WeightedRandomPicker<string>();
             armorSummoner = new WeightedRandomPicker<string>();
 
-            squadType = new[] { Enum.SquadClassType.Warrior, Enum.SquadClassType.Archer, Enum.SquadClassType.Wizard };
+            squadType = new[] { Enum.CharacterType.Warrior, Enum.CharacterType.Archer, Enum.CharacterType.Wizard };
             weaponType = new[] { Enum.EquipmentType.Sword, Enum.EquipmentType.Bow, Enum.EquipmentType.Staff };
             gearType = new[] { Enum.EquipmentType.Helmet, Enum.EquipmentType.Armor, Enum.EquipmentType.Gauntlet };
 
@@ -66,7 +66,7 @@ namespace Managers
         
         private void InitSquadSummoner()
         {
-            var currentSquadLevel = SquadManager.Instance.SummonLevel.CurrentSquadLevel;
+            var currentSquadLevel = SquadBattleManager.Instance.SummonLevel.CurrentSquadLevel;
             
             if (currentSquadLevel == 0) currentSquadLevel = 1;
             
@@ -80,7 +80,7 @@ namespace Managers
 
         private void InitWeaponSummoner()
         {
-            var currentWeaponLevel = SquadManager.Instance.SummonLevel.CurrentWeaponLevel;
+            var currentWeaponLevel = SquadBattleManager.Instance.SummonLevel.CurrentWeaponLevel;
             
             if (currentWeaponLevel == 0) currentWeaponLevel = 1;
             
@@ -94,7 +94,7 @@ namespace Managers
 
         private void InitGearSummoner()
         {
-            var currentGearLevel = SquadManager.Instance.SummonLevel.CurrentGearLevel;
+            var currentGearLevel = SquadBattleManager.Instance.SummonLevel.CurrentGearLevel;
             
             if (currentGearLevel == 0) currentGearLevel = 1;
             
@@ -200,7 +200,7 @@ namespace Managers
 
         private void SetWeaponSummoner()
         {
-            var currentWeaponLevel = SquadManager.Instance.SummonLevel.CurrentWeaponLevel;
+            var currentWeaponLevel = SquadBattleManager.Instance.SummonLevel.CurrentWeaponLevel;
             var weaponProbability = summonProbability.GetProbability(currentWeaponLevel).SummonProbabilities;
             
             foreach (var probability in weaponProbability)
@@ -211,7 +211,7 @@ namespace Managers
 
         private void SetGearSummoner()
         {
-            var currentGearLevel = SquadManager.Instance.SummonLevel.CurrentWeaponLevel;
+            var currentGearLevel = SquadBattleManager.Instance.SummonLevel.CurrentWeaponLevel;
             var armorProbability = summonProbability.GetProbability(currentGearLevel).SummonProbabilities;
             
             foreach (var probability in armorProbability)
@@ -222,7 +222,7 @@ namespace Managers
         
         private void SetSquadSummoner()
         {
-            var currentSquadLevel = SquadManager.Instance.SummonLevel.CurrentSquadLevel;
+            var currentSquadLevel = SquadBattleManager.Instance.SummonLevel.CurrentSquadLevel;
             var squadProbability = summonProbability.GetProbability(currentSquadLevel).SummonProbabilities;
             
             foreach (var probability in squadProbability)

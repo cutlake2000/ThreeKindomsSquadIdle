@@ -92,7 +92,7 @@ namespace Controller.Projectiles.BaseAttack
         
         private void DestroyProjectile(Vector3 position)
         {
-            EffectManager.Instance.CreateParticlesAtPosition(position, Enum.SquadClassType.Wizard, true);
+            EffectManager.Instance.CreateParticlesAtPosition(position, Enum.CharacterType.Wizard, true);
             gameObject.SetActive(false);
         }
     }

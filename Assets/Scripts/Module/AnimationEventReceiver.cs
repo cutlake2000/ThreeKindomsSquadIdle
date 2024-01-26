@@ -7,7 +7,7 @@ namespace Module
     {
         public event Action OnNormalAttackEffect;
         public event Action OnNormalAttack;
-        public event Action OnSkill1Attack;
+        public event Action OnSkillAttack;
         public event Action OnSkill2Attack;
         public event Action OnDie;
 
@@ -23,7 +23,7 @@ namespace Module
 
         private void InvokeSkill1AttackEvent(int characterClass)
         {
-            OnSkill1Attack?.Invoke();
+            OnSkillAttack?.Invoke();
         }
 
         private void InvokeSkill2AttackEvent(int characterClass)

@@ -29,24 +29,24 @@ namespace Managers
             objectPool = GetComponent<ObjectPool>();
         }
         
-        public void CreateParticlesAtPosition(Vector3 position, Enum.SquadClassType squadClassType, bool destroy)
+        public void CreateParticlesAtPosition(Vector3 position, Enum.CharacterType characterType, bool destroy)
         {
             ParticleSystem effectParticle = null;
             int index;
 
             if (destroy)
             {
-                switch (squadClassType)
+                switch (characterType)
                 {
-                    case Enum.SquadClassType.Warrior:
+                    case Enum.CharacterType.Warrior:
                         index = Random.Range(0, (warriorProjectileEffectOnDestroy.Length));
                         effectParticle = warriorProjectileEffectOnDestroy[index];
                         break;
-                    case Enum.SquadClassType.Archer:
+                    case Enum.CharacterType.Archer:
                         index = Random.Range(0, (archerProjectileEffectOnDestroy.Length));
                         effectParticle = archerProjectileEffectOnDestroy[index];
                         break;
-                    case Enum.SquadClassType.Wizard:
+                    case Enum.CharacterType.Wizard:
                         index = Random.Range(0, (wizardProjectileEffectOnDestroy.Length));
                         effectParticle = wizardProjectileEffectOnDestroy[index];
                         break;
@@ -54,13 +54,13 @@ namespace Managers
             }
             else
             {
-                switch (squadClassType)
+                switch (characterType)
                 {
                     // case Enum.CharacterClass.Warrior:
                     //     index = Random.Range(0, (warriorProjectileEffectOnDestroy.Length));
                     //     effectParticle = warriorProjectileEffectOnShoot[index];
                     //     break;
-                    case Enum.SquadClassType.Archer:
+                    case Enum.CharacterType.Archer:
                         index = Random.Range(0, (archerProjectileEffectOnDestroy.Length));
                         effectParticle = archerProjectileEffectOnShoot[index];
                         break;

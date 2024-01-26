@@ -3,14 +3,17 @@ using Creature.CreatureClass.SquadFSM;
 using Function;
 using Managers;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Enum = Data.Enum;
 
 namespace Creature.CreatureClass.SquadClass
 {
     public class Squad : Creature
     {
+        [FormerlySerializedAs("characterClassType")]
+        [FormerlySerializedAs("squadClassType")]
         [Header("Class")]
-        [SerializeField] public Enum.SquadClassType squadClassType;
+        [SerializeField] public Enum.CharacterType characterType;
 
         [Header("Sprite")]
         [SerializeField] private SPUM_SpriteList spumSprite;
@@ -56,8 +59,7 @@ namespace Creature.CreatureClass.SquadClass
         {
             animationEventReceiver.OnNormalAttackEffect += OnNormalAttackEffect;
             animationEventReceiver.OnNormalAttack += OnNormalAttack;
-            animationEventReceiver.OnSkill1Attack += OnSkillAttack;
-            animationEventReceiver.OnSkill2Attack += OnSkillAttack2;
+            animationEventReceiver.OnSkillAttack += OnSkillAttack;
         }
 
         protected override void SetAllSpritesList()
@@ -87,10 +89,10 @@ namespace Creature.CreatureClass.SquadClass
 
         protected override void SetCreatureStats()
         {
-            maxHealth = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Health);
-            defence = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Defence);
-            moveSpeed = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.MoveSpeed);
-            followRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.FollowRange);
+            maxHealth = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Health);
+            defence = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Defence);
+            moveSpeed = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.MoveSpeed);
+            followRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.FollowRange);
             
             currentHealth = maxHealth;
             isDead = false;
@@ -144,11 +146,6 @@ namespace Creature.CreatureClass.SquadClass
 
             ProjectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
             Direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
-        }
-
-        private void OnSkillAttack2()
-        {
-            Debug.Log("내려ㅓㅓㅓㅓㅓㅓㅓㅓ찍기!");
         }
     }
 }

@@ -10,8 +10,8 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.SetCreatureStats();
 
-            damage = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.ArcherAtk);
-            attackRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.ArcherAttackRange);
+            damage = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.ArcherAtk);
+            attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.ArcherAttackRange);
 
             animator.SetFloat(animationData.ClassTypeParameterHash, 1);
         }
@@ -26,23 +26,23 @@ namespace Creature.CreatureClass.SquadClass
 
         protected override void OnNormalAttackEffect()
         {
-            EffectManager.Instance.CreateParticlesAtPosition(projectileSpawn.position, Enum.SquadClassType.Archer, false);
+            EffectManager.Instance.CreateParticlesAtPosition(projectileSpawn.position, Enum.CharacterType.Archer, false);
         }
 
         protected override void OnSkillAttack()
         {
             base.OnSkillAttack();
 
-            for (var i = 0; i < SquadManager.Instance.archerSkillCoolTimer.Length; i++)
+            for (var i = 0; i < SquadBattleManager.Instance.archerSkillCoolTimer.Length; i++)
             {
-                if (!SquadManager.Instance.archerSkillCoolTimer[i].isSkillReady) continue;
-                if (!SquadManager.Instance.autoSkill && !SquadManager.Instance.archerSkillCoolTimer[i].orderToInstantiate) continue;
+                if (!SquadBattleManager.Instance.archerSkillCoolTimer[i].isSkillReady) continue;
+                if (!SquadBattleManager.Instance.autoSkill && !SquadBattleManager.Instance.archerSkillCoolTimer[i].orderToInstantiate) continue;
                 
                 if (currentTarget == null) return;
                 
-                SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Archer, i);
-                ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.archerSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
-                SquadManager.Instance.archerSkillCoolTimer[i].orderToInstantiate = false;
+                SquadBattleManager.Instance.RunSkillCoolTimer(Enum.CharacterType.Archer, i);
+                ProjectileManager.Instance.InstantiateSkillAttack(SquadBattleManager.Instance.archerSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
+                SquadBattleManager.Instance.archerSkillCoolTimer[i].orderToInstantiate = false;
                 
                 break;
             }

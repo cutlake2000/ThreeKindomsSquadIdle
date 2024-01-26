@@ -111,8 +111,6 @@ namespace Data
         {
             CurrentLv,
             CurrentExp,
-            MaxLv,
-            MaxExp
         }
 
         public enum MonsterClassType
@@ -134,11 +132,18 @@ namespace Data
             SummonEquipment
         }
 
-        public enum SquadClassType
+        public enum CharacterType
         {
             Warrior = 0,
             Archer,
             Wizard
+        }
+
+        public enum CharacterRarity
+        {
+            Magic,
+            Rare,
+            Legend
         }
 
         public enum SquadStatTypeBySquadPanel
@@ -170,18 +175,13 @@ namespace Data
             Defence,                        // 방어력 (Defense)
             CriticalRate,                        // 치명타 확률 (Critical Hit Rate)
             CriticalDamage,                     // 치명타 피해량 (Critical Hit Damage)
-            As,                         // 공격 속도 (Attack Speed)
             Accuracy,                   // 명중률 (Accuracy)
             Penetration,                // 관통 (Penetration)
             Evasion,                    // 회피율 (Evasion
-            MagicPower,                 // 마법력 (Magic Power)
-            Resistance,                 // 저항력 (Resistance)
             MoveSpeed,                  // 이동 속도 (Movement Speed)
             AcquisitionGold,            // 골드 획득량
             AcquisitionExp,             // 경험치 획득량
             AmplificationSkillEffects,  // 스킬 효과 증폭
-            CurrentAtk,
-            
             WarriorAttackRange,
             ArcherAttackRange,
             WizardAttackRange,
@@ -235,6 +235,20 @@ namespace Data
             // Rarity.Ancient,
             // Rarity.Legendary,
             // Rarity.Mythology,
+        };
+
+        public static readonly CharacterType[] characterTypes =
+        {
+            CharacterType.Warrior,
+            CharacterType.Archer,
+            CharacterType.Wizard
+        };
+
+        public static readonly CharacterRarity[] characterRarities =
+        {
+            CharacterRarity.Rare,
+            CharacterRarity.Magic,
+            CharacterRarity.Legend
         };
     }
 }

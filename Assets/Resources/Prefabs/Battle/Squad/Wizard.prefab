@@ -167,7 +167,7 @@ MonoBehaviour:
   moveSpeed: 0
   allSprites: []
   hpBar: {fileID: 8393115084427163441}
-  squadClassType: 2
+  characterType: 2
   spumSprite: {fileID: 2541985491156917118}
 --- !u!114 &5025210099471803458
 MonoBehaviour:

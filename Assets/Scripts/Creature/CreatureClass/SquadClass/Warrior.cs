@@ -10,8 +10,8 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.SetCreatureStats();
             
-            damage = SquadManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WarriorAtk);
-            attackRange = SquadManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WarriorAttackRange);
+            damage = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WarriorAtk);
+            attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WarriorAttackRange);
             
             animator.SetFloat(animationData.ClassTypeParameterHash, 0);
         }
@@ -28,16 +28,16 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.OnSkillAttack();
             
-            for (var i = 0; i < SquadManager.Instance.warriorSkillCoolTimer.Length; i++)
+            for (var i = 0; i < SquadBattleManager.Instance.warriorSkillCoolTimer.Length; i++)
             {
-                if (!SquadManager.Instance.warriorSkillCoolTimer[i].isSkillReady) continue;
-                if (!SquadManager.Instance.autoSkill && !SquadManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate) continue;
+                if (!SquadBattleManager.Instance.warriorSkillCoolTimer[i].isSkillReady) continue;
+                if (!SquadBattleManager.Instance.autoSkill && !SquadBattleManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate) continue;
                 
                 if (currentTarget == null) return;
                 
-                SquadManager.Instance.RunSkillCoolTimer(Enum.SquadClassType.Warrior, i);
-                ProjectileManager.Instance.InstantiateSkillAttack(SquadManager.Instance.warriorSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
-                SquadManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate = false;
+                SquadBattleManager.Instance.RunSkillCoolTimer(Enum.CharacterType.Warrior, i);
+                ProjectileManager.Instance.InstantiateSkillAttack(SquadBattleManager.Instance.warriorSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
+                SquadBattleManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate = false;
                 
                 break;
             }
