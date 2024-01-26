@@ -27,6 +27,7 @@ namespace Managers
         //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
         [SerializeField] private SquadStatSo[] squadStatSo;
         public SquadStatItemUI[] squadStatItem;
+        public int levelUpMagnification;
 
         private void Awake()
         {
@@ -83,10 +84,14 @@ namespace Managers
 
         public void UpgradeSquadStatPanelStat(Enum.SquadStatTypeBySquadPanel type)
         {
-            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, squadStatItem[(int)type].levelUpCost * UIManager.Instance.squadPanelUI.levelUpMagnification)) return;
+            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, squadStatItem[(int)type].levelUpCost * levelUpMagnification)) return;
             if (squadStatItem[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
+            
+            Debug.Log($"levelUpCost {squadStatItem[(int)type].levelUpCost}");
+            Debug.Log($"levelUpMagnification {levelUpMagnification}");
+            Debug.Log($"Magnification {squadStatItem[(int)type].levelUpCost * levelUpMagnification}");
 
-            squadStatItem[(int)type].UpdateSquadStat(UIManager.Instance.squadPanelUI.levelUpMagnification);
+            squadStatItem[(int)type].UpdateSquadStat(levelUpMagnification);
             SetUpgradeUI(squadStatItem[(int)type]);
             UIManager.Instance.squadPanelUI.CheckRequiredStatPointOfMagnificationButton((int) type);
 

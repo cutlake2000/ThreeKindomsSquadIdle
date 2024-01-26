@@ -84,7 +84,7 @@ namespace Controller.UI
         public SkillSlotUI[] archerSkillCoolTimerUI;
         public SkillSlotUI[] wizardSkillCoolTimerUI;
 
-        public void InitializeEventListener()
+        public void InitializeEventListeners()
         {
             skillAutoUseButton.InitializeEventListener();
 
@@ -113,6 +113,8 @@ namespace Controller.UI
                     if (!SquadManager.Instance.wizardSkillCoolTimer[index].isSkillReady) return;
                     SquadManager.Instance.wizardSkillCoolTimer[index].orderToInstantiate = true;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(squadClassType), squadClassType, null);
             }
         }
 

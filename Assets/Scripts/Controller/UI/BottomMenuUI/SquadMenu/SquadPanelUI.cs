@@ -3,16 +3,21 @@ using Function;
 using Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Enum = Data.Enum;
 
 namespace Controller.UI.BottomMenuUI.SquadMenu
 {
-    [Serializable]
-    public struct SquadPanelUI
+    public class SquadPanelUI : MonoBehaviour
     {
-        [Header("=== 스쿼드 스탯 패널 ===")]
+        [Header("=== 스쿼드 패널 ===")]
+        [Header("--- 스쿼드 스탯 / 스쿼드 구성 / 스쿼드 ---")]
+        public Button[] squadPanelButton;
+        public GameObject[] squadPanel;
+        
+        [Space(5)]
         [Header("--- 스쿼드 스탯 패널 UI ---")]
         public TMP_Text squadLevelText;
         public TMP_Text squadStatPointText;
@@ -21,16 +26,29 @@ namespace Controller.UI.BottomMenuUI.SquadMenu
         public Button levelUpButton;
         public Button[] levelUpMagnificationButton;
         
-        [Space(5)]
-        public int levelUpMagnification;
-        
         public void InitializeEventListeners()
         {
+            for (var i = 0; i < squadPanelButton.Length; i++)
+            {
+                var index = i;
+                squadPanelButton[i].GetComponent<Button>().onClick.AddListener(() => InitializeSquadPanelButton(index));
+            }
+            
             for (var i = 0; i < levelUpMagnificationButton.Length; i++)
             {
                 var index = i;
-                var squadPanel = this;
-                levelUpMagnificationButton[i].GetComponent<Button>().onClick.AddListener(() => squadPanel.InitializeLevelUpMagnificationButton(index));
+                levelUpMagnificationButton[i].GetComponent<Button>().onClick.AddListener(() => InitializeLevelUpMagnificationButton(index));
+            }
+        }
+
+        private void InitializeSquadPanelButton(int index)
+        {
+            for (var i = 0; i < squadPanelButton.Length; i++)
+            {
+                if (i == index)
+                {
+                    
+                }
             }
         }
 
@@ -44,8 +62,8 @@ namespace Controller.UI.BottomMenuUI.SquadMenu
                     color.a = 1;
                     levelUpMagnificationButton[i].GetComponent<Image>().color = color;
                     levelUpMagnificationButton[i].GetComponentInChildren<TextMeshProUGUI>().color = Color.black;
-                    
-                    levelUpMagnification = (int) Mathf.Pow(10, i);
+
+                    SquadStatManager.Instance.levelUpMagnification = (int) Mathf.Pow(10, i);
                     
                     CheckRequiredStatPointOfMagnificationButton(i);
                 }
@@ -61,10 +79,10 @@ namespace Controller.UI.BottomMenuUI.SquadMenu
 
         public void CheckRequiredStatPointOfMagnificationButton(int index)
         {
-            Debug.Log($"계십니까~ {Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.StatPoint))} | {levelUpMagnification * SquadStatManager.Instance.squadStatItem[index].levelUpCost}");
+            Debug.Log($"계십니까~ {Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.StatPoint))} | {SquadStatManager.Instance.levelUpMagnification * SquadStatManager.Instance.squadStatItem[index].levelUpCost}");
             var levelUpCost = SquadStatManager.Instance.squadStatItem[index].levelUpCost;
             
-            if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.StatPoint)) < levelUpMagnification * levelUpCost)
+            if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.StatPoint)) < SquadStatManager.Instance.levelUpMagnification * levelUpCost)
             {
                 foreach (var squadStat in SquadStatManager.Instance.squadStatItem)
                 {

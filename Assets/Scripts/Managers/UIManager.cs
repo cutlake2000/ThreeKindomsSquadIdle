@@ -21,12 +21,13 @@ namespace Managers
 
         public void InitUIManager()
         {
-            InitializeEventListener();
+            InitializeEventListeners();
         }
         
-        private void InitializeEventListener()
+        private void InitializeEventListeners()
         {
-            squadSkillCoolTimerUI.InitializeEventListener();
+            squadSkillCoolTimerUI.InitializeEventListeners();
+            squadPanelUI.InitializeEventListeners();
         }
     }
 }
