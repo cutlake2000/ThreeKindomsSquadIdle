@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Creature.Data;
+using Module;
 using ScriptableObjects.Scripts;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 using Enum = Data.Enum;
 
 namespace Managers
@@ -13,8 +16,11 @@ namespace Managers
         
         //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
         [SerializeField] private SquadConfigureSo[] squadConfigureSo;
+        [SerializeField] private SquadEffectSo[] squadOwnedEffectValueSoByRarity;
+        [SerializeField] private SquadEffectSo[] squadEquippedEffectValueSoByRarity;
         
         [Header("캐릭터 정보 컨테이너")]
+        private static readonly Dictionary<string, Character> AllCharacters = new();
         public List<Character> warriors = new();
         public List<Character> archers = new();
         public List<Character> wizards = new();
@@ -61,7 +67,7 @@ namespace Managers
                 {
                     if (characterType != characterSo.characterType) continue;
                     
-                    var character = characterSo.characterType switch
+                    var character = characterType switch
                     {
                         Enum.CharacterType.Warrior => warriors[characterIndex],
                         Enum.CharacterType.Archer => archers[characterIndex],
@@ -69,8 +75,45 @@ namespace Managers
                         _ => null
                     };
                     
+                    if (character == null) continue;
+
+                    var characterId = $"{characterSo.characterName}";
+                    var characterName = characterSo.characterName;
+                    var characterIcon = characterType switch
+                    {
+                        Enum.CharacterType.Warrior => SpriteManager.WarriorSprite[characterSo.characterIconIndex],
+                        Enum.CharacterType.Archer => SpriteManager.ArcherSprite[characterSo.characterIconIndex],
+                        Enum.CharacterType.Wizard => SpriteManager.WizardSprite[characterSo.characterIconIndex],
+                        _ => null
+                    };
                     
+                    var characterModel = characterSo.characterModel;
+                    var equippedEffect = squadEquippedEffectValueSoByRarity[(int)characterSo.characterRarity];
+                    var ownedEffect = squadOwnedEffectValueSoByRarity[(int)characterSo.characterRarity];
+
+                    character.SetCharacterInfo(characterId, characterName, characterType, characterIcon, characterModel, equippedEffect, ownedEffect);
+                    // character.GetComponent<Button>().onClick.AddListener(); //TODO: 캐릭터 클릭 시 뚜돵돵 되는 거
+
+                    AddCharacter(characterId, character);
+                    character.SaveCharacterAllInfo(characterId);
+
+                    // if (isEquipped)
+                    // {
+                    //     
+                    // }
+
+                    characterIndex++;
+                    
+                    InfiniteLoopDetector.Run();
                 }
+            }
+        }
+
+        private static void AddCharacter(string characterId, Character character)
+        {
+            if (!AllCharacters.TryAdd(characterId, character))
+            {
+                Debug.LogWarning($"Character already exists in the dictionary: {character}");
             }
         }
     }

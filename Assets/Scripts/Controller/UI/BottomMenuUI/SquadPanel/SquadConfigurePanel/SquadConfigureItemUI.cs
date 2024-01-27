@@ -13,7 +13,7 @@ namespace Controller.UI.BottomMenuUI.SquadPanel.SquadConfigurePanel
         [Header("캐릭터 아이콘")]
         public Image characterIcon;
 
-        public void UpdateSquadConfigureItemUI(string level, string name, Sprite icon)
+        public void UpdateSquadConfigureItemUI(int level, string name, Sprite icon)
         {
             characterLevel.text = $"Lv. {level}";
             characterName.text = $"Lv. {name}";

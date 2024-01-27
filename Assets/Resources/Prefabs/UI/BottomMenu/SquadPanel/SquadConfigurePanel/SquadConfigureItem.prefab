@@ -377,8 +377,8 @@ GameObject:
   - component: {fileID: 1043700036356614924}
   - component: {fileID: 3659616801073678099}
   - component: {fileID: 1530724703759724033}
-  - component: {fileID: 1157982703908230826}
   - component: {fileID: 4854319794953508447}
+  - component: {fileID: 1157982703908230826}
   m_Layer: 5
   m_Name: SquadConfigureItem
   m_TagString: Untagged
@@ -491,21 +491,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1157982703908230826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7573024622553901456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3c7756fc4fb46608121c4b7041d3942, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterLevel: {fileID: 6219546039474527888}
-  characterName: {fileID: 222837597281355708}
-  characterIcon: {fileID: 2219211061795722469}
 --- !u!114 &4854319794953508447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,6 +507,21 @@ MonoBehaviour:
   characterName: 
   characterType: 0
   model: {fileID: 0}
+--- !u!114 &1157982703908230826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7573024622553901456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c7756fc4fb46608121c4b7041d3942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterLevel: {fileID: 6219546039474527888}
+  characterName: {fileID: 222837597281355708}
+  characterIcon: {fileID: 2219211061795722469}
 --- !u!1 &7582451257866508474
 GameObject:
   m_ObjectHideFlags: 0
