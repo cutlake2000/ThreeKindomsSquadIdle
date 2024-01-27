@@ -81,9 +81,9 @@ namespace Managers
                     var characterName = characterSo.characterName;
                     var characterIcon = characterType switch
                     {
-                        Enum.CharacterType.Warrior => SpriteManager.WarriorSprite[characterSo.characterIconIndex],
-                        Enum.CharacterType.Archer => SpriteManager.ArcherSprite[characterSo.characterIconIndex],
-                        Enum.CharacterType.Wizard => SpriteManager.WizardSprite[characterSo.characterIconIndex],
+                        Enum.CharacterType.Warrior => SpriteManager.Instance.warriorSprite[characterSo.characterIconIndex],
+                        Enum.CharacterType.Archer => SpriteManager.Instance.archerSprite[characterSo.characterIconIndex],
+                        Enum.CharacterType.Wizard => SpriteManager.Instance.wizardSprite[characterSo.characterIconIndex],
                         _ => null
                     };
                     
