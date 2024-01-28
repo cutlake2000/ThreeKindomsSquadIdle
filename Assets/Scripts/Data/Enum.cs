@@ -143,20 +143,27 @@ namespace Data
         {
             Magic,
             Rare,
+            Unique,
             Legend
         }
 
-        public enum SquadStatTypeBySquadPanel
+        public enum SquadStatTypeBySquadStatPanel
         {
-            Atk,                        // 공격력
-            Hp,                         // 체력
+            Attack,                     // 공격력
+            Health,                     // 체력
             Penetration,                // 관통
-            Accuracy,                    // 명중
+            Accuracy,                   // 명중
             AcquisitionGold,            // 골드 획득량
             AcquisitionExp,             // 경험치 증가량
-            CrtDmg,                     // 치명타 피해량
+            CriticalDamage,             // 치명타 피해량
             AmplificationSkillEffects,  // 스킬 효과 증폭
             CurrentAtk,                 // 최종 공격력
+        }
+        
+        public enum SquadStatTypeBySquadConfigurePanel
+        {
+            Attack,                        // 공격력
+            Health,                         // 체력
         }
 
         public enum IncreaseStatValueType

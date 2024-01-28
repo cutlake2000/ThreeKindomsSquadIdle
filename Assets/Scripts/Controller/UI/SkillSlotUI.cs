@@ -12,6 +12,9 @@ namespace Controller.UI
     [Serializable]
     public struct SkillSlotUI
     {
+        [Header("스킬 아이콘")]
+        public Image skillIcon;
+        
         [Header("스킬 슬롯 버튼")]
         public Button skillButton;
         

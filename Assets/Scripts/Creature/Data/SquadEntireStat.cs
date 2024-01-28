@@ -74,33 +74,89 @@ namespace Creature.Data
             }
         }
         
-        public void UpdateTotalStatBySquadStatPanel(Enum.SquadStatTypeBySquadPanel type, int adjustValue)
+        public void UpdateBaseStatBySquadStatPanel(Enum.SquadStatTypeBySquadStatPanel statType, int adjustValue)
         {
-            switch (type)
+            switch (statType)
             {
-                case Enum.SquadStatTypeBySquadPanel.Atk:
-                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Attack, AdjustTotalStat(ref baseAttack, adjustValue, percentAttack));
+                case Enum.SquadStatTypeBySquadStatPanel.Attack:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Attack, AdjustTotalStat(ref baseAttack, adjustValue, percentAttack));   
                     break;
-                case Enum.SquadStatTypeBySquadPanel.Hp:
+                case Enum.SquadStatTypeBySquadStatPanel.Health:
                     SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Health, AdjustTotalStat(ref baseHealth, adjustValue, percentHealth));
                     break;
-                case Enum.SquadStatTypeBySquadPanel.Penetration:
+                case Enum.SquadStatTypeBySquadStatPanel.Penetration:
                     SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Penetration, AdjustTotalStat(ref basePenetration, adjustValue, percentPenetration));
                     break;
-                case Enum.SquadStatTypeBySquadPanel.Accuracy:
+                case Enum.SquadStatTypeBySquadStatPanel.Accuracy:
                     SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Evasion, AdjustTotalStat(ref baseAccuracy, adjustValue, percentAccuracy));
                     break;
-                case Enum.SquadStatTypeBySquadPanel.AcquisitionGold:
+                case Enum.SquadStatTypeBySquadStatPanel.AcquisitionGold:
                     SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.AcquisitionGold, AdjustTotalStat(ref baseAcquisitionGold, adjustValue, percentAcquisitionGold));
                     break;
-                case Enum.SquadStatTypeBySquadPanel.AcquisitionExp:
+                case Enum.SquadStatTypeBySquadStatPanel.AcquisitionExp:
                     SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.AcquisitionExp, AdjustTotalStat(ref baseAcquisitionExp, adjustValue, percentAcquisitionExp));
                     break;
-                case Enum.SquadStatTypeBySquadPanel.CrtDmg:
+                case Enum.SquadStatTypeBySquadStatPanel.CriticalDamage:
                     SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.CriticalDamage, AdjustTotalStat(ref baseCriticalDamage, adjustValue, percentCriticalDamage));
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    throw new ArgumentOutOfRangeException(nameof(statType), statType, null);
+            }
+        }
+        
+        public void UpdatePercentStatBySquadStatPanel(Enum.SquadStatTypeBySquadStatPanel statType, int adjustValue)
+        {
+            switch (statType)
+            {
+                case Enum.SquadStatTypeBySquadStatPanel.Attack:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Attack, AdjustTotalStat(ref baseAttack, 0, percentAttack + adjustValue));   
+                    break;
+                case Enum.SquadStatTypeBySquadStatPanel.Health:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Health, AdjustTotalStat(ref baseHealth, 0, percentHealth + adjustValue));   
+                    break;
+                case Enum.SquadStatTypeBySquadStatPanel.Penetration:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Penetration, AdjustTotalStat(ref basePenetration, 0, percentPenetration + adjustValue));   
+                    break;
+                case Enum.SquadStatTypeBySquadStatPanel.Accuracy:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Evasion, AdjustTotalStat(ref baseAccuracy, 0, percentAccuracy + adjustValue));   
+                    break;
+                case Enum.SquadStatTypeBySquadStatPanel.AcquisitionGold:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.AcquisitionGold, AdjustTotalStat(ref baseAcquisitionGold, 0, percentAcquisitionGold + adjustValue));   
+                    break;
+                case Enum.SquadStatTypeBySquadStatPanel.AcquisitionExp:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.AcquisitionExp, AdjustTotalStat(ref baseAcquisitionExp, 0, percentAcquisitionExp + adjustValue));   
+                    break;
+                case Enum.SquadStatTypeBySquadStatPanel.CriticalDamage:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.CriticalDamage, AdjustTotalStat(ref baseCriticalDamage, 0, percentCriticalDamage + adjustValue));   
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(statType), statType, null);
+            }
+        }
+        
+        public void UpdateBaseStatBySquadConfigurePanel(Enum.SquadStatTypeBySquadConfigurePanel type, int adjustValue)
+        {
+            switch (type)
+            {
+                case Enum.SquadStatTypeBySquadConfigurePanel.Attack:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Attack, AdjustTotalStat(ref baseAttack, adjustValue, percentAttack));
+                    break;
+                case Enum.SquadStatTypeBySquadConfigurePanel.Health:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Health, AdjustTotalStat(ref baseHealth, adjustValue, percentHealth));
+                    break;
+            }
+        }
+        
+        public void UpdatePercentStatBySquadConfigurePanel(Enum.SquadStatTypeBySquadConfigurePanel type, int adjustValue)
+        {
+            switch (type)
+            {
+                case Enum.SquadStatTypeBySquadConfigurePanel.Attack:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Attack, AdjustTotalStat(ref baseAttack, 0, percentAttack + adjustValue));   
+                    break;
+                case Enum.SquadStatTypeBySquadConfigurePanel.Health:
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enum.SquadStatType.Health, AdjustTotalStat(ref baseHealth, 0, percentHealth + adjustValue));   
+                    break;
             }
         }
 

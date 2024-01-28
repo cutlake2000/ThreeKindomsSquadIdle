@@ -45,16 +45,12 @@ namespace Creature.CreatureClass
         [SerializeField] protected GameObject hpBar;
 
         protected TargetFinder TargetFinder;
-
-        protected virtual void Awake()
+        
+        protected virtual void OnEnable()
         {
             SetCreatureComponent();
             SetEventListener();
             SetAllSpritesList();
-        }
-
-        protected virtual void OnEnable()
-        {
             InitCreature();
         }
 
@@ -65,11 +61,11 @@ namespace Creature.CreatureClass
 
         protected virtual void SetEventListener() { }
         
-        protected virtual void SetAllSpritesList() { }
+        public virtual void SetAllSpritesList() { }
         
         protected virtual void ResetAllSpritesList() { }
-        
-        public void InitCreature()
+
+        private void InitCreature()
         {
             hpBar.gameObject.SetActive(true);
             gameObject.GetComponent<Collider2D>().enabled = true;

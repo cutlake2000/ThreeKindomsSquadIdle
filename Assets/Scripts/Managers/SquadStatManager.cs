@@ -15,7 +15,7 @@ namespace Managers
     public class SquadStatManager : MonoBehaviour
     {
         public static SquadStatManager Instance;
-        public event Action<Enum.SquadStatTypeBySquadPanel, int> OnUpgradeTotalSquadStat;
+        public event Action<Enum.SquadStatTypeBySquadStatPanel, int> OnUpgradeTotalSquadStat;
 
         //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
         [SerializeField] private SquadStatSo[] squadStatSo;
@@ -42,9 +42,9 @@ namespace Managers
             {
                 var index = i;
                 squadStatItem[i].GetComponent<SquadStatItemUI>().
-                    upgradeButton.onClick.AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
+                    upgradeButton.onClick.AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadStatPanel)index));
                 squadStatItem[i].GetComponent<SquadStatItemUI>().
-                    upgradeButton.GetComponent<HoldButton>().onHold.AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadPanel)index));
+                    upgradeButton.GetComponent<HoldButton>().onHold.AddListener(() => UpgradeSquadStatPanelStat((Enum.SquadStatTypeBySquadStatPanel)index));
             }
         }
 
@@ -54,11 +54,11 @@ namespace Managers
             for (var i = 0; i < squadStatItem.Length; i++)
             {
                 squadStatItem[i].squadStatName = squadStatSo[i].squadStatName;
-                squadStatItem[i].squadStatTypeBySquadPanel = squadStatSo[i].squadStatTypeBySquadPanel;
+                squadStatItem[i].squadStatTypeBySquadStatPanel = squadStatSo[i].squadStatTypeBySquadStatPanel;
                 squadStatItem[i].increaseStatValueType = squadStatSo[i].increaseStatValueType;
                 squadStatItem[i].increaseStatValue = squadStatSo[i].increaseStatValue;
                 squadStatItem[i].currentLevel =
-                    ES3.Load($"{nameof(SquadEntireStat)}/{(Enum.SquadStatTypeBySquadPanel)i}/currentLevel : ",
+                    ES3.Load($"{nameof(SquadEntireStat)}/{(Enum.SquadStatTypeBySquadStatPanel)i}/currentLevel : ",
                         0);
                 squadStatItem[i].currentLevelUpCost = squadStatSo[i].levelUpCost;
                 squadStatItem[i].currentIncreasedStat = squadStatItem[i].currentLevel * squadStatItem[i].increaseStatValue;
@@ -75,7 +75,7 @@ namespace Managers
             foreach (var squadStat in squadStatItem) squadStat.UpdateSquadStatUI();
         }
 
-        public void UpgradeSquadStatPanelStat(Enum.SquadStatTypeBySquadPanel type)
+        public void UpgradeSquadStatPanelStat(Enum.SquadStatTypeBySquadStatPanel type)
         {
             if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.StatPoint, squadStatItem[(int)type].levelUpCost * levelUpMagnification)) return;
             if (squadStatItem[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;

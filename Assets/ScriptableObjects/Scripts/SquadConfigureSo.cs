@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 using Enum = Data.Enum;
 
 namespace ScriptableObjects.Scripts
@@ -31,8 +32,11 @@ namespace ScriptableObjects.Scripts
     {
         [Header("스킬 아이콘 인덱스")]
         public int skillIconIndex;
+        public Image skillIcon;
         public GameObject skillObject;
+        public string skillName;
         public string skillDescription;
         public int skillDamagePercent;
+        public int maxSkillCoolTime;
     }
 }

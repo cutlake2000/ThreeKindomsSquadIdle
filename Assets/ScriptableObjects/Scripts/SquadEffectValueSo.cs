@@ -8,13 +8,13 @@ namespace ScriptableObjects.Scripts
     [Serializable]
     public class SquadEffectSo
     {
-        public List<SquadEffect> squadEffects;
+        public List<SquadEffect> squadEffects = new();
     }
 
     [Serializable]
-    public struct SquadEffect
+    public class SquadEffect
     {
-        public Enum.SquadStatType statType;
+        public Enum.SquadStatTypeBySquadConfigurePanel statType;
         public Enum.IncreaseStatValueType increaseStatType;
         public int increaseValue;
     }

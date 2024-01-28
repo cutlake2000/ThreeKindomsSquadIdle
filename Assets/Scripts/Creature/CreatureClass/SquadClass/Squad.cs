@@ -2,6 +2,7 @@ using Creature.CreatureClass.MonsterClass;
 using Creature.CreatureClass.SquadFSM;
 using Function;
 using Managers;
+using Module;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Enum = Data.Enum;
@@ -10,13 +11,11 @@ namespace Creature.CreatureClass.SquadClass
 {
     public class Squad : Creature
     {
-        [FormerlySerializedAs("characterClassType")]
-        [FormerlySerializedAs("squadClassType")]
         [Header("Class")]
         [SerializeField] public Enum.CharacterType characterType;
 
         [Header("Sprite")]
-        [SerializeField] private SPUM_SpriteList spumSprite;
+        [SerializeField] public SPUM_SpriteList spumSprite;
         
         [Header("Projectile")]
         protected Vector2 ProjectileSpawnPosition;
@@ -31,7 +30,6 @@ namespace Creature.CreatureClass.SquadClass
             
             squadStateMachine?.ChangeState(squadStateMachine.SquadIdleState);
         }
-        
         
         protected virtual void Start()
         {
@@ -62,7 +60,7 @@ namespace Creature.CreatureClass.SquadClass
             animationEventReceiver.OnSkillAttack += OnSkillAttack;
         }
 
-        protected override void SetAllSpritesList()
+        public override void SetAllSpritesList()
         {
             allSprites.AddRange(spumSprite._itemList);
             allSprites.AddRange(spumSprite._eyeList);

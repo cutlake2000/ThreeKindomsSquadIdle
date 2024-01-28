@@ -17,12 +17,14 @@ namespace Controller.UI.BottomMenuUI
             for (var i = 0; i < openButtons.Length; i++)
             {
                 var index = i; // 현재 인덱스 캡처
+                if (i == 3) continue; // TODO : 유물 버튼 락
                 openButtons[i].onClick.AddListener(() => OnClickOpenPanel(index));
             }
             
             for (var i = 0; i < closeButtons.Length; i++)
             {
                 var index = i; // 현재 인덱스 캡처
+                if (i == 3) continue; // TODO : 유물 버튼 락
                 closeButtons[i].onClick.AddListener(() => OnClickClosePanel(index));
             }
         }

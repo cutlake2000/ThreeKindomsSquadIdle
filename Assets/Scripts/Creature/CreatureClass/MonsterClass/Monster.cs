@@ -66,7 +66,7 @@ namespace Creature.CreatureClass.MonsterClass
             animationEventReceiver.OnNormalAttackEffect += OnNormalAttack;
         }
 
-        protected override void SetAllSpritesList()
+        public override void SetAllSpritesList()
         {
             foreach (var allSprite in allSprites) monsterSprites.Add(allSprite.sprite);
         }

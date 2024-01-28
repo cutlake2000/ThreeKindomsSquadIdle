@@ -2,6 +2,7 @@ using System;
 using Creature.Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Enum = Data.Enum;
 
@@ -9,7 +10,7 @@ namespace Controller.UI.BottomMenuUI.SquadPanel.SquadStatPanel
 {
     public class SquadStatItemUI : MonoBehaviour
     {
-        public Action<Enum.SquadStatTypeBySquadPanel, int> UpgradeTotalSquadStatAction;
+        public Action<Enum.SquadStatTypeBySquadStatPanel, int> UpgradeTotalSquadStatAction;
 
         [Header("아이콘")]
         public Sprite squadStatSprite;
@@ -20,9 +21,10 @@ namespace Controller.UI.BottomMenuUI.SquadPanel.SquadStatPanel
         public int initStatValue = 0;
         [Header("레벨 업 비용")]
         public int levelUpCost = 1;
+        [FormerlySerializedAs("squadStatTypeBySquadPanel")]
         [Space(5)]
         [Header("스탯 증가 타입")]
-        public Enum.SquadStatTypeBySquadPanel squadStatTypeBySquadPanel;
+        public Enum.SquadStatTypeBySquadStatPanel squadStatTypeBySquadStatPanel;
         [Header("스탯 증가량 타입")]
         public Enum.IncreaseStatValueType increaseStatValueType;
         [Header("스탯 증가량")]
@@ -76,8 +78,8 @@ namespace Controller.UI.BottomMenuUI.SquadPanel.SquadStatPanel
             currentLevel += count;
             currentIncreasedStat += increaseStatValue * count;
             
-            ES3.Save($"{nameof(SquadEntireStat)}/{squadStatTypeBySquadPanel}/currentLevel : ", currentLevel);
-            UpgradeTotalSquadStatAction?.Invoke(squadStatTypeBySquadPanel, increaseStatValue * count);
+            ES3.Save($"{nameof(SquadEntireStat)}/{squadStatTypeBySquadStatPanel}/currentLevel : ", currentLevel);
+            UpgradeTotalSquadStatAction?.Invoke(squadStatTypeBySquadStatPanel, increaseStatValue * count);
         }
 
         // 스텟 로드할 때 부르는 메서드
@@ -87,7 +89,7 @@ namespace Controller.UI.BottomMenuUI.SquadPanel.SquadStatPanel
             {
                 currentIncreasedStat += increaseStatValue;
 
-                UpgradeTotalSquadStatAction?.Invoke(squadStatTypeBySquadPanel, increaseStatValue);
+                UpgradeTotalSquadStatAction?.Invoke(squadStatTypeBySquadStatPanel, increaseStatValue);
             }
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Controller.UI;
 using Controller.UI.BottomMenuUI;
 using Creature.CreatureClass.SquadClass;
@@ -62,6 +63,11 @@ namespace Managers
 
         [Space(5)]
         [Header("=== Squad Stats Info ===")]
+        [Header("스킬 데미지")]
+        [SerializeField] public List<int> warriorSkillDamagePercent;
+        [SerializeField] public List<int> archerSkillDamagePercent;
+        [SerializeField] public List<int> wizardSkillDamagePercent;
+        
         [Header("Base SquadStats")]
         [SerializeField] public SquadEntireStat squadEntireStat;
 
@@ -139,7 +145,7 @@ namespace Managers
         // 이벤트 설정하는 메서드
         private void SetEventListeners()
         {
-            SquadStatManager.Instance.OnUpgradeTotalSquadStat += squadEntireStat.UpdateTotalStatBySquadStatPanel;
+            SquadStatManager.Instance.OnUpgradeTotalSquadStat += squadEntireStat.UpdateBaseStatBySquadStatPanel;
             
             EquipAction += Equip;
         }

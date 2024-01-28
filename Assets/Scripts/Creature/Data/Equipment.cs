@@ -56,7 +56,7 @@ namespace Creature.Data
             equippedEffect += basicEquippedEffect;
             ownedEffect += basicOwnedEffect;
 
-            tier++;
+            level++;
             // 강화효과 업데이트...
         }
 
