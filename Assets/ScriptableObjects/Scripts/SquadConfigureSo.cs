@@ -16,10 +16,10 @@ namespace ScriptableObjects.Scripts
         public Enum.CharacterType characterType;
         [Header("캐릭터 등급")]
         public Enum.CharacterRarity characterRarity;
-        
+
         [Space(5)]
         [Header("캐릭터 모델")]
-        public GameObject characterModel;
+        public int characterModelIndex;
         
         [Space(5)]
         [Header("캐릭터 스킬")]

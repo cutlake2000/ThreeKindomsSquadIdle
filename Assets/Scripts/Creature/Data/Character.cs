@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Controller.UI.BottomMenuUI.SquadPanel.SquadConfigurePanel;
 using Managers;
@@ -9,66 +10,98 @@ using Image = UnityEngine.UI.Image;
 
 namespace Creature.Data
 {
-    public class Character : MonoBehaviour
+    [Serializable]
+    public class Character
     {
         [Header("ES3 ID")]
-        public string characterId;
+        public string CharacterId;
         [Header("이름")]
-        public string characterName;
+        public string CharacterName;
         [Header("스프라이트 인덱스")]
-        public int characterIconIndex;
-        [Header("스프라이트")]
-        public Image characterIcon;
+        public int CharacterIconIndex;
         [Header("레벨")]
-        public int characterLevel;
+        public int CharacterLevel;
         [Header("클래스 타입")]
-        public Enum.CharacterType characterType;
+        public Enum.CharacterType CharacterType;
+        [Header("클래스 등급")]
+        public Enum.CharacterRarity CharacterRarity;
         [Header("장착 여부")]
-        public bool isEquippedCharacter;
-        
-        [Space(5)]
-        [Header("장착 효과")]
-        public SquadEffectSo characterEquippedEffect;
+        public bool IsEquipped;
+        [Header("보유 여부")]
+        public bool IsPossessed;
+
+        [field: Space(5)]
+        [field: Header("장착 효과")]
+        public SquadEffectSo CharacterEquippedEffect;
         [Header("보유 효과")]
-        public SquadEffectSo characterOwnedEffect;
-        
+        public SquadEffectSo CharacterOwnedEffect;
+
         [Space(5)]
         [Header("프리팹 모델")]
-        public GameObject characterModel;
+        public int CharacterModelIndex;
+        public GameObject CharacterModel;
 
-        public void SetCharacterInfo(string id, string name, Enum.CharacterType type, Sprite icon, GameObject model, SquadEffectSo equippedEffect, SquadEffectSo ownedEffect)
+        public Character (string id, string name, int level, bool isEquipped, bool isPossessed, Enum.CharacterType type, int iconIndex, Sprite icon, Enum.CharacterRarity rarity, int modelIndex, GameObject model, SquadEffectSo equippedEffect, SquadEffectSo ownedEffect)
         {
-            characterId = id;
-            characterName = name;
-            characterType = type;
-            characterIcon.sprite = icon;
+            CharacterId = id;
+            CharacterName = name;
+            CharacterLevel = level;
+            IsEquipped = isEquipped;
+            IsPossessed = isPossessed;
+            CharacterType = type;
+            CharacterIconIndex = iconIndex;
+            CharacterRarity = rarity;
 
-            characterModel = model;
+            CharacterModelIndex = modelIndex;
+            CharacterModel = model;
 
-            characterEquippedEffect = equippedEffect;
-            characterOwnedEffect = ownedEffect;
+            CharacterEquippedEffect = equippedEffect;
+            CharacterOwnedEffect = ownedEffect;
 
-            SetSquadConfigureBaseItemUI();
+            SaveCharacterAllInfo();
         }
 
-        private void SetSquadConfigureBaseItemUI()
+        public Character (string characterId)
         {
-            gameObject.GetComponent<SquadConfigureItemUI>().UpdateSquadConfigureItemUI(characterLevel, characterName, characterIcon.sprite);
+            LoadCharacterAllInfo(characterId);
         }
 
-        public void SaveCharacterAllInfo(string characterId)
+        public void LoadCharacterAllInfo(string characterId)
         {
-            ES3.Save("characterId_" + characterId, characterId);
-            ES3.Save("characterName_" + characterId, characterName);
-            ES3.Save("characterLevel_" + characterId, characterLevel);
-            ES3.Save("isEquippedCharacter" + characterId, isEquippedCharacter);
-            ES3.Save("characterType_" + characterId, characterType);
-            // ES3.Save("rarity_" + characterId, equipmentRarity);
-            // ES3.Save("level_"+ characterId, level);
-            // ES3.Save("basicEquippedEffect_" + characterId, basicEquippedEffect);
-            // ES3.Save("basicOwnedEffect_" + characterId, basicOwnedEffect);
-            // ES3.Save("equippedEffect_" + characterId, equippedEffect);
-            // ES3.Save("ownedEffect_" + characterId, ownedEffect);
+            if (!ES3.KeyExists("id_" + characterId)) return;
+            
+            CharacterId = ES3.Load<string>("characterId_" + characterId);
+            CharacterName = ES3.Load<string>("characterName_" + characterId);
+            CharacterLevel = ES3.Load<int>("characterLevel_" + characterId);
+            IsEquipped = ES3.Load<bool>("isEquipped_" + characterId);
+            IsPossessed = ES3.Load<bool>("characterName_" + characterId);
+            CharacterType = ES3.Load<Enum.CharacterType>("characterType_" + characterId);
+            CharacterIconIndex = ES3.Load<int>("characterIconIndex_" + characterId);
+            CharacterRarity = ES3.Load<Enum.CharacterRarity>("characterRarity_" + characterId);
+
+            CharacterModelIndex = ES3.Load<int>("characterName_" + characterId);
+            CharacterModel = ES3.Load<GameObject>("characterName_" + characterId);
+
+            CharacterEquippedEffect = ES3.Load<SquadEffectSo>("characterName_" + characterId);
+            CharacterOwnedEffect = ES3.Load<SquadEffectSo>("characterName_" + characterId);
+        }
+
+        public void SaveCharacterAllInfo()
+        {
+            ES3.Save("characterId_" + CharacterId, CharacterId);
+            ES3.Save("characterName_" + CharacterId, CharacterName);
+            ES3.Save("characterLevel_" + CharacterId, CharacterLevel);
+            ES3.Save("isEquipped_" + CharacterId, IsEquipped);
+            ES3.Save("isPossessed_" + CharacterId, IsPossessed);
+            ES3.Save("characterType_" + CharacterId, CharacterType);
+            ES3.Save("characterIconIndex_" + CharacterId, CharacterIconIndex);
+            ES3.Save("characterRarity_" + CharacterId, CharacterRarity);
+            
+            ES3.Save("characterModelIndex_" + CharacterId, CharacterModelIndex);
+            ES3.Save("characterModel_" + CharacterId, CharacterModel);
+            
+            ES3.Save("characterEquippedEffect_" + CharacterId, CharacterEquippedEffect);
+            ES3.Save("characterOwnedEffect_" + CharacterId, CharacterOwnedEffect);
         }
     }
 }

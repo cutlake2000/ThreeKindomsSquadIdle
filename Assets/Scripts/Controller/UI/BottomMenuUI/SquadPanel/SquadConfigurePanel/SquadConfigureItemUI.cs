@@ -12,12 +12,18 @@ namespace Controller.UI.BottomMenuUI.SquadPanel.SquadConfigurePanel
         public TMP_Text characterName;
         [Header("캐릭터 아이콘")]
         public Image characterIcon;
+        [Header("장착 여부")]
+        public GameObject equipMark;
+        [Header("보유 여부")]
+        public GameObject possessMark;
 
-        public void UpdateSquadConfigureItemUI(int level, string name, Sprite icon)
+        public void UpdateSquadConfigureItemUI(int level, bool isEquipped, bool isPossessed, string name, Sprite icon)
         {
             characterLevel.text = $"Lv. {level}";
             characterName.text = $"Lv. {name}";
             characterIcon.sprite = icon;
+            equipMark.SetActive(isEquipped);
+            possessMark.SetActive(!isPossessed);
         }
     }
 }
