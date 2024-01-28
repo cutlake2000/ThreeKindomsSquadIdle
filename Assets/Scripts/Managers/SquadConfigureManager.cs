@@ -34,6 +34,9 @@ namespace Managers
         public List<GameObject> warriorModels = new();
         public List<GameObject> archerModels = new();
         public List<GameObject> wizardModels = new();
+
+        [Header("캐릭터 모델 스폰 좌표")]
+        public GameObject[] modelSpawnObjects;
         
         [Header("스쿼드 구성 패널 아이템 UI")]
         public List<GameObject> SquadConfigureScrollViewItemWarriors = new();
@@ -71,7 +74,7 @@ namespace Managers
                     if (characterType != characterSo.characterType) continue;
                     
                     var character = new Character(characterSo.characterName);
-                    AddCharacter(character.CharacterId, character);
+                    AddCharacter(characterSo.characterName, character);
                     
                     InfiniteLoopDetector.Run();
                 }

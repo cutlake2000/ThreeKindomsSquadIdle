@@ -74,7 +74,7 @@ namespace Creature.Data
             CharacterName = ES3.Load<string>("characterName_" + characterId);
             CharacterLevel = ES3.Load<int>("characterLevel_" + characterId);
             IsEquipped = ES3.Load<bool>("isEquipped_" + characterId);
-            IsPossessed = ES3.Load<bool>("characterName_" + characterId);
+            IsPossessed = ES3.Load<bool>("isPossessed_" + characterId);
             CharacterType = ES3.Load<Enum.CharacterType>("characterType_" + characterId);
             CharacterIconIndex = ES3.Load<int>("characterIconIndex_" + characterId);
             CharacterRarity = ES3.Load<Enum.CharacterRarity>("characterRarity_" + characterId);
