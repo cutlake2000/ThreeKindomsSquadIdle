@@ -147,7 +147,7 @@ namespace Data
             Legend
         }
 
-        public enum SquadStatTypeBySquadStatPanel
+        public enum StatTypeBySquadStatPanel
         {
             Attack,                     // 공격력
             Health,                     // 체력
@@ -160,10 +160,29 @@ namespace Data
             CurrentAtk,                 // 최종 공격력
         }
         
-        public enum SquadStatTypeBySquadConfigurePanel
+        public enum StatTypeBySquadConfigurePanel
         {
             Attack,                        // 공격력
             Health,                         // 체력
+        }
+        
+        public enum StatTypeBySquadTalentPanel
+        {
+            Attack,
+            Health,
+            Defence,
+            CriticalRate,
+            CriticalDamage,
+            Accuracy,
+            Penetration,
+            LuckyCriticalRate,
+            LuckyCriticalDamage,
+            SpecialCriticalRate,
+            SpecialCriticalDamage,
+            AccuracyPlus,
+            PenetrationPlus,
+            AmplificationAttack,
+            AmplificationHealth
         }
 
         public enum IncreaseStatValueType

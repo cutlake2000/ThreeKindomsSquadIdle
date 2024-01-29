@@ -42,6 +42,9 @@ namespace Controller.UI.BottomMenuUI
                     case 0:
                         UIManager.Instance.squadPanelUI.squadStatPanelUI.InitializeLevelUpMagnificationButton(0);
                         break;
+                    case 2:
+                        UIManager.Instance.talentPanelUI.InitializeLevelUpMagnificationButton(0);
+                        break;
                 }
             }
             

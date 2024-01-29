@@ -1,6 +1,10 @@
 using System;
 using UnityEngine;
 using Managers;
+using Managers.BottomMenuManager;
+using Managers.BottomMenuManager.SquadPanel;
+using Managers.BottomMenuManager.SummonPanel;
+using Managers.BottomMenuManager.TalentPanel;
 
 namespace Managers
 {
@@ -8,14 +12,14 @@ namespace Managers
     {
         private void Start()
         {
-            AccountManager.Instance.InitAccountManager();
             SquadBattleManager.Instance.InitSquadManager();
             SquadStatManager.Instance.InitSquadStatManager();
-            
-            EquipmentManager.Instance.InitEquipmentManager();
+            SquadTalentManager.Instance.InitSquadTalentManager();
             SquadConfigureManager.Instance.InitSquadConfigureManager();
+            SquadSummonManager.Instance.InitSummonManager();
             
-            SummonManager.Instance.InitSummonManager();
+            AccountManager.Instance.InitAccountManager();
+            EquipmentManager.Instance.InitEquipmentManager();
             // AchievementManager.instance.InitAchievementManager();
             StageManager.Instance.InitStageManager();
             DungeonManager.Instance.InitDungeonManager();

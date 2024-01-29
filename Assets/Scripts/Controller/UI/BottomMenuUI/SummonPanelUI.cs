@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Creature.Data;
 using Managers;
+using Managers.BottomMenuManager;
+using Managers.BottomMenuManager.SummonPanel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -118,7 +120,7 @@ namespace Controller.UI.BottomMenuUI
 
             currentSummonEquipmentType = type;
                 
-            SummonManager.OnSummonEquipment?.Invoke(type, count);
+            SquadSummonManager.OnSummonEquipment?.Invoke(type, count);
         }
             
         private static void IncreaseExp(Enum.SummonEquipmentType type, int count)
@@ -174,7 +176,7 @@ namespace Controller.UI.BottomMenuUI
         {
             var index = 0;
             
-            foreach (var equipment in SummonManager.Instance.summonedEquipmentList)
+            foreach (var equipment in SquadSummonManager.Instance.summonedEquipmentList)
             {
                 summonLists[index].equipmentRarity = equipment.equipmentRarity;
                 summonLists[index].tier = equipment.tier;
@@ -242,8 +244,8 @@ namespace Controller.UI.BottomMenuUI
             }
             
             summonLists.Clear();
-            SummonManager.Instance.SummonedItemDictionary.Clear();
-            SummonManager.Instance.summonedEquipmentList.Clear();
+            SquadSummonManager.Instance.SummonedItemDictionary.Clear();
+            SquadSummonManager.Instance.summonedEquipmentList.Clear();
         }
     }
 }

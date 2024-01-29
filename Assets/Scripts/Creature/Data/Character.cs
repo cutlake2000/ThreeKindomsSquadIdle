@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Controller.UI.BottomMenuUI.SquadPanel.SquadConfigurePanel;
 using Function;
 using Managers;
+using Managers.BottomMenuManager;
+using Managers.BottomMenuManager.SquadPanel;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -14,7 +15,7 @@ namespace Creature.Data
     [Serializable]
     public class CharacterEffect
     {
-        public Enum.SquadStatTypeBySquadConfigurePanel statType;
+        public Enum.StatTypeBySquadConfigurePanel statType;
         public Enum.IncreaseStatValueType increaseStatType;
         public int increaseValue;
     }

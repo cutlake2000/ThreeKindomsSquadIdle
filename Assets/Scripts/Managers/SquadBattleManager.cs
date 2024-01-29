@@ -6,6 +6,8 @@ using Controller.UI.BottomMenuUI;
 using Creature.CreatureClass.SquadClass;
 using Creature.Data;
 using Function;
+using Managers.BottomMenuManager;
+using Managers.BottomMenuManager.SquadPanel;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Enum = Data.Enum;
@@ -145,7 +147,7 @@ namespace Managers
         // 이벤트 설정하는 메서드
         private void SetEventListeners()
         {
-            SquadStatManager.Instance.OnUpgradeTotalSquadStat += squadEntireStat.UpdateBaseStatBySquadStatPanel;
+            SquadStatManager.Instance.OnUpgradeTotalSquadStatFromSquadStatPanel += squadEntireStat.UpdateBaseStatFromSquadStatPanelBySquadStatFromSquadStatPanelPanel;
             
             EquipAction += Equip;
         }
