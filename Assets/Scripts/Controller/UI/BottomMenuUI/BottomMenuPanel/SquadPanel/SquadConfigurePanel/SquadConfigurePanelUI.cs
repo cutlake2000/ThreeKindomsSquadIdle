@@ -5,7 +5,7 @@ using System.Text;
 using Creature.Data;
 using Function;
 using Managers;
-using Managers.BottomMenuManager;
+using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using TMPro;
 using UnityEngine;
@@ -16,14 +16,12 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
 {
     public class SquadConfigurePanelUI : MonoBehaviour
     {
-        public static event Action<Character> OnClickSquadConfigureItem;
+        [Header("선택 영웅")] public Character currentSelectedSquadConfigurePanelItem;
 
-        [Header("선택 영웅")]
-        public Character currentSelectedSquadConfigurePanelItem;
         public int currentSelectedSquadConfigurePanelItemIndex;
-        
-        [Header("선택 영웅 정보")]
-        public Image selectedCharacterIcon;
+
+        [Header("선택 영웅 정보")] public Image selectedCharacterIcon;
+
         public TMP_Text selectedCharacterName;
         public TMP_Text selectedCharacterLevel;
         public TMP_Text selectedCharacterOwnedEffect1;
@@ -39,23 +37,21 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         public TMP_Text selectedCharacter2SkillDescription;
         public Button selectedCharacterLevelUpButton;
         public Button selectedCharacterEquipButton;
-        
-        [Header("워리어 / 아처 / 위자드 스크롤뷰")]
-        public GameObject[] squadScrollViewPanel;
-        
-        [Header("스쿼드 구성 패널 아이템 UI")]
-        public List<GameObject> squadConfigureScrollViewItemWarriors = new();
+
+        [Header("워리어 / 아처 / 위자드 스크롤뷰")] public GameObject[] squadScrollViewPanel;
+
+        [Header("스쿼드 구성 패널 아이템 UI")] public List<GameObject> squadConfigureScrollViewItemWarriors = new();
+
         public List<GameObject> squadConfigureScrollViewItemArchers = new();
         public List<GameObject> squadConfigureScrollViewItemWizards = new();
-        
-        [Header("워리어 / 아처 / 위자드 스크롤뷰 전환 버튼")]
-        public Button[] squadScrollViewPanelButtons;
+
+        [Header("워리어 / 아처 / 위자드 스크롤뷰 전환 버튼")] public Button[] squadScrollViewPanelButtons;
+
         public Image[] squadScrollViewPanelButtonIcons;
         public TMP_Text[] squadScrollViewPanelButtonTexts;
-        
-        [Header("스크롤뷰 전환 버튼 On / Off 스프라이트")]
-        public Color[] squadScrollViewPanelButtonsColors;
-        
+
+        [Header("스크롤뷰 전환 버튼 On / Off 스프라이트")] public Color[] squadScrollViewPanelButtonsColors;
+
         private void OnEnable()
         {
             OnClickSquadConfigureItem += UpdateSquadConfigurePanelSelectedCharacterInfoUI;
@@ -65,22 +61,35 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         {
             OnClickSquadConfigureItem -= UpdateSquadConfigurePanelSelectedCharacterInfoUI;
         }
-        
+
+        public static event Action<Character> OnClickSquadConfigureItem;
+
         public void UpdateSquadConfigurePanelSelectedCharacterInfoUI(Character character)
         {
             currentSelectedSquadConfigurePanelItem = character;
-            
-            selectedCharacterIcon.sprite = SpriteManager.Instance.GetCharacterSprite(currentSelectedSquadConfigurePanelItem.characterType, currentSelectedSquadConfigurePanelItem.characterIconIndex);
+
+            selectedCharacterIcon.sprite = SpriteManager.Instance.GetCharacterSprite(
+                currentSelectedSquadConfigurePanelItem.characterType,
+                currentSelectedSquadConfigurePanelItem.characterIconIndex);
             selectedCharacterName.text = currentSelectedSquadConfigurePanelItem.characterName;
-            selectedCharacterLevel.text = $"Lv. {currentSelectedSquadConfigurePanelItem.characterLevel} / {SquadConfigureManager.CharacterMaxLevel}";
-            selectedCharacterOwnedEffect1.text = SetCharacterEffectDescriptionToString(currentSelectedSquadConfigurePanelItem, true, 0);
-            selectedCharacterOwnedEffect2.text = SetCharacterEffectDescriptionToString(currentSelectedSquadConfigurePanelItem, true, 1);
-            selectedCharacterEquippedEffect1.text = SetCharacterEffectDescriptionToString(currentSelectedSquadConfigurePanelItem, false, 0);
-            selectedCharacterEquippedEffect2.text = SetCharacterEffectDescriptionToString(currentSelectedSquadConfigurePanelItem, false, 1);
-            selectedCharacter1SkillIcon.sprite = SpriteManager.Instance.GetSkillSprite(currentSelectedSquadConfigurePanelItem.characterType, currentSelectedSquadConfigurePanelItem.characterSkills[0].skillIconIndex);
+            selectedCharacterLevel.text =
+                $"Lv. {currentSelectedSquadConfigurePanelItem.characterLevel} / {SquadConfigureManager.CharacterMaxLevel}";
+            selectedCharacterOwnedEffect1.text =
+                SetCharacterEffectDescriptionToString(currentSelectedSquadConfigurePanelItem, true, 0);
+            selectedCharacterOwnedEffect2.text =
+                SetCharacterEffectDescriptionToString(currentSelectedSquadConfigurePanelItem, true, 1);
+            selectedCharacterEquippedEffect1.text =
+                SetCharacterEffectDescriptionToString(currentSelectedSquadConfigurePanelItem, false, 0);
+            selectedCharacterEquippedEffect2.text =
+                SetCharacterEffectDescriptionToString(currentSelectedSquadConfigurePanelItem, false, 1);
+            selectedCharacter1SkillIcon.sprite = SpriteManager.Instance.GetSkillSprite(
+                currentSelectedSquadConfigurePanelItem.characterType,
+                currentSelectedSquadConfigurePanelItem.characterSkills[0].skillIconIndex);
             selectedCharacter1SkillName.text = currentSelectedSquadConfigurePanelItem.characterSkills[0].skillName;
-            selectedCharacter1SkillDescription.text = currentSelectedSquadConfigurePanelItem.characterSkills[0].skillDescription;
-            selectedCharacter1SkillCoolTime.text = $"쿨타임 {currentSelectedSquadConfigurePanelItem.characterSkills[0].maxSkillCoolTime}";
+            selectedCharacter1SkillDescription.text =
+                currentSelectedSquadConfigurePanelItem.characterSkills[0].skillDescription;
+            selectedCharacter1SkillCoolTime.text =
+                $"쿨타임 {currentSelectedSquadConfigurePanelItem.characterSkills[0].maxSkillCoolTime}";
 
             selectedCharacterLevelUpButton.gameObject.SetActive(currentSelectedSquadConfigurePanelItem.isPossessed);
             selectedCharacterEquipButton.gameObject.SetActive(currentSelectedSquadConfigurePanelItem.isPossessed);
@@ -106,7 +115,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     Enum.StatTypeBySquadConfigurePanel.Health => "체력 ",
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                    
+
                 var increaseStatType = character.characterOwnedEffects[index].increaseStatType switch
                 {
                     Enum.IncreaseStatValueType.BaseStat =>
@@ -115,8 +124,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                         $"{character.characterOwnedEffects[index].increaseValue}% 증가",
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                    
-                                                    
+
+
                 stringBuilder.Append(statType);
                 stringBuilder.Append(increaseStatType);
             }
@@ -137,23 +146,24 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                         $"{character.characterEquippedEffects[index].increaseValue}% 증가",
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                    
-                                                    
+
+
                 stringBuilder.Append(statType);
                 stringBuilder.Append(increaseStatType);
             }
 
             return stringBuilder.ToString();
         }
-        
+
         public void InitializeEventListeners()
         {
             for (var i = 0; i < squadScrollViewPanelButtons.Length; i++)
             {
                 var index = i;
-                squadScrollViewPanelButtons[i].GetComponent<Button>().onClick.AddListener(() => InitializeSquadPanelButton(index));
+                squadScrollViewPanelButtons[i].GetComponent<Button>().onClick
+                    .AddListener(() => InitializeSquadPanelButton(index));
             }
-            
+
             selectedCharacterLevelUpButton.onClick.AddListener(OnClickCharacterLevelUp);
             selectedCharacterEquipButton.onClick.AddListener(OnClickCharacterEquip);
         }
@@ -161,7 +171,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         private void InitializeSquadPanelButton(int index)
         {
             for (var i = 0; i < squadScrollViewPanel.Length; i++)
-            {
                 if (i == index)
                 {
                     squadScrollViewPanel[i].SetActive(true);
@@ -176,11 +185,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     squadScrollViewPanelButtonIcons[i].color = Color.white;
                     squadScrollViewPanelButtonTexts[i].color = Color.white;
                 }
-            }
         }
-        
+
         /// <summary>
-        /// 선택한 캐릭터 레벨 업하는 메서드
+        ///     선택한 캐릭터 레벨 업하는 메서드
         /// </summary>
         private void OnClickCharacterLevelUp()
         {
@@ -198,25 +206,39 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             if (character == null || !character.isPossessed) return;
 
             if (character.characterLevel >= SquadConfigureManager.CharacterMaxLevel) return;
-            
-            if (character.RequiredCurrencyForLevelUp() > new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.SquadEnhanceStone))) return;
-            
-            AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.SquadEnhanceStone,character.RequiredCurrencyForLevelUp());
+
+            if (character.RequiredCurrencyForLevelUp() >
+                new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.SquadEnhanceStone))) return;
+
+            AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.SquadEnhanceStone,
+                character.RequiredCurrencyForLevelUp());
             character.CharacterLevelUp();
             UpdateSquadConfigurePanelSelectedCharacterInfoUI(character);
-            
+
             UpdateCharacterData(character);
-            
+
             switch (character.characterType)
             {
                 case Enum.CharacterType.Warrior:
-                    squadConfigureScrollViewItemWarriors[currentSelectedSquadConfigurePanelItemIndex].GetComponent<SquadConfigureItemUI>().UpdateSquadConfigureItemUI(character.characterLevel, character.isEquipped, character.isPossessed, character.characterName, SpriteManager.Instance.GetCharacterSprite(character.characterType, character.characterIconIndex));
+                    squadConfigureScrollViewItemWarriors[currentSelectedSquadConfigurePanelItemIndex]
+                        .GetComponent<SquadConfigureItemUI>().UpdateSquadConfigureItemUI(character.characterLevel,
+                            character.isEquipped, character.isPossessed, character.characterName,
+                            SpriteManager.Instance.GetCharacterSprite(character.characterType,
+                                character.characterIconIndex));
                     break;
                 case Enum.CharacterType.Archer:
-                    squadConfigureScrollViewItemArchers[currentSelectedSquadConfigurePanelItemIndex].GetComponent<SquadConfigureItemUI>().UpdateSquadConfigureItemUI(character.characterLevel, character.isEquipped, character.isPossessed, character.characterName, SpriteManager.Instance.GetCharacterSprite(character.characterType, character.characterIconIndex));
+                    squadConfigureScrollViewItemArchers[currentSelectedSquadConfigurePanelItemIndex]
+                        .GetComponent<SquadConfigureItemUI>().UpdateSquadConfigureItemUI(character.characterLevel,
+                            character.isEquipped, character.isPossessed, character.characterName,
+                            SpriteManager.Instance.GetCharacterSprite(character.characterType,
+                                character.characterIconIndex));
                     break;
                 case Enum.CharacterType.Wizard:
-                    squadConfigureScrollViewItemWizards[currentSelectedSquadConfigurePanelItemIndex].GetComponent<SquadConfigureItemUI>().UpdateSquadConfigureItemUI(character.characterLevel, character.isEquipped, character.isPossessed, character.characterName, SpriteManager.Instance.GetCharacterSprite(character.characterType, character.characterIconIndex));
+                    squadConfigureScrollViewItemWizards[currentSelectedSquadConfigurePanelItemIndex]
+                        .GetComponent<SquadConfigureItemUI>().UpdateSquadConfigureItemUI(character.characterLevel,
+                            character.isEquipped, character.isPossessed, character.characterName,
+                            SpriteManager.Instance.GetCharacterSprite(character.characterType,
+                                character.characterIconIndex));
                     break;
             }
         }
@@ -225,13 +247,14 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         {
             throw new NotImplementedException();
         }
-        
+
         public void UpdateSquadConfigureScrollViewItemUI(Enum.CharacterType characterType)
         {
             switch (characterType)
             {
                 case Enum.CharacterType.Warrior:
-                    SquadConfigureManager.Instance.warriors = SquadConfigureManager.Instance.WarriorDictionary.Values.OrderByDescending(x => x.isEquipped)
+                    SquadConfigureManager.Instance.warriors = SquadConfigureManager.Instance.WarriorDictionary.Values
+                        .OrderByDescending(x => x.isEquipped)
                         .ThenBy(x => x.characterRarity).ToList();
                     for (var i = 0; i < SquadConfigureManager.Instance.warriors.Count; i++)
                     {
@@ -245,15 +268,18 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                                 characterType, characterId);
                         });
                         squadConfigureScrollViewItemWarriors[index].GetComponent<SquadConfigureItemUI>()
-                            .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.warriors[index].characterLevel, SquadConfigureManager.Instance.warriors[index].isEquipped,
-                                SquadConfigureManager.Instance.warriors[index].isPossessed, SquadConfigureManager.Instance.warriors[index].characterName,
+                            .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.warriors[index].characterLevel,
+                                SquadConfigureManager.Instance.warriors[index].isEquipped,
+                                SquadConfigureManager.Instance.warriors[index].isPossessed,
+                                SquadConfigureManager.Instance.warriors[index].characterName,
                                 SpriteManager.Instance.GetCharacterSprite(characterType,
                                     SquadConfigureManager.Instance.warriors[index].characterIconIndex));
                     }
 
                     break;
                 case Enum.CharacterType.Archer:
-                    SquadConfigureManager.Instance.archers = SquadConfigureManager.Instance.ArchersDictionary.Values.OrderByDescending(x => x.isEquipped)
+                    SquadConfigureManager.Instance.archers = SquadConfigureManager.Instance.ArchersDictionary.Values
+                        .OrderByDescending(x => x.isEquipped)
                         .ThenBy(x => x.characterRarity).ToList();
                     for (var i = 0; i < SquadConfigureManager.Instance.archers.Count; i++)
                     {
@@ -267,15 +293,18 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                                 characterType, characterId);
                         });
                         squadConfigureScrollViewItemArchers[index].GetComponent<SquadConfigureItemUI>()
-                            .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.archers[index].characterLevel, SquadConfigureManager.Instance.archers[index].isEquipped,
-                                SquadConfigureManager.Instance.archers[index].isPossessed, SquadConfigureManager.Instance.archers[index].characterName,
+                            .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.archers[index].characterLevel,
+                                SquadConfigureManager.Instance.archers[index].isEquipped,
+                                SquadConfigureManager.Instance.archers[index].isPossessed,
+                                SquadConfigureManager.Instance.archers[index].characterName,
                                 SpriteManager.Instance.GetCharacterSprite(characterType,
                                     SquadConfigureManager.Instance.archers[index].characterIconIndex));
                     }
 
                     break;
                 case Enum.CharacterType.Wizard:
-                    SquadConfigureManager.Instance.wizards = SquadConfigureManager.Instance.WizardsDictionary.Values.OrderByDescending(x => x.isEquipped)
+                    SquadConfigureManager.Instance.wizards = SquadConfigureManager.Instance.WizardsDictionary.Values
+                        .OrderByDescending(x => x.isEquipped)
                         .ThenBy(x => x.characterRarity).ToList();
                     for (var i = 0; i < SquadConfigureManager.Instance.wizards.Count; i++)
                     {
@@ -289,8 +318,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                                 characterType, characterId);
                         });
                         squadConfigureScrollViewItemWizards[index].GetComponent<SquadConfigureItemUI>()
-                            .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.wizards[index].characterLevel, SquadConfigureManager.Instance.wizards[index].isEquipped,
-                                SquadConfigureManager.Instance.wizards[index].isPossessed, SquadConfigureManager.Instance.wizards[index].characterName,
+                            .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.wizards[index].characterLevel,
+                                SquadConfigureManager.Instance.wizards[index].isEquipped,
+                                SquadConfigureManager.Instance.wizards[index].isPossessed,
+                                SquadConfigureManager.Instance.wizards[index].characterName,
                                 SpriteManager.Instance.GetCharacterSprite(characterType,
                                     SquadConfigureManager.Instance.wizards[index].characterIconIndex));
                     }
@@ -300,7 +331,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     throw new ArgumentOutOfRangeException(nameof(characterType), characterType, null);
             }
         }
-        
+
         public void SelectSquadConfigureItem(Enum.CharacterType type, string key)
         {
             switch (type)

@@ -2,17 +2,16 @@ using System;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel;
 using Creature.Data;
 using Function;
+using Managers.BattleManager;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 using Enum = Data.Enum;
 
 namespace Managers.BottomMenuManager.TalentPanel
 {
-    public class SquadTalentManager : MonoBehaviour
+    public class TalentManager : MonoBehaviour
     {
-        public static SquadTalentManager Instance;
-
-        public event Action<Enum.StatTypeBySquadTalentPanel, int> OnUpgradeTotalSquadStatFromSquadTalentPanel;
+        public static TalentManager Instance;
 
         [SerializeField] private SquadTalentSo[] squadTalentSo;
         public TalentItemUI[] talentItem;
@@ -22,6 +21,8 @@ namespace Managers.BottomMenuManager.TalentPanel
         {
             Instance = this;
         }
+
+        public event Action<Enum.StatTypeBySquadTalentPanel, int> OnUpgradeTotalSquadStatFromSquadTalentPanel;
 
         public void InitSquadTalentManager()
         {
@@ -76,10 +77,6 @@ namespace Managers.BottomMenuManager.TalentPanel
             if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.Gold,
                     talentItem[(int)type].levelUpCost * levelUpMagnification)) return;
             if (talentItem[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
-
-            Debug.Log($"levelUpCost {talentItem[(int)type].levelUpCost}");
-            Debug.Log($"levelUpMagnification {levelUpMagnification}");
-            Debug.Log($"Magnification {talentItem[(int)type].levelUpCost * levelUpMagnification}");
 
             talentItem[(int)type].UpdateSquadTalent(levelUpMagnification);
             SetUpgradeUI(talentItem[(int)type]);

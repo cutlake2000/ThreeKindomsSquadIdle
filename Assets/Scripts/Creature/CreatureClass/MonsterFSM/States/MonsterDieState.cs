@@ -2,19 +2,21 @@ namespace Creature.CreatureClass.MonsterFSM.States
 {
     public class MonsterDieState : MonsterBaseState
     {
-        public MonsterDieState(MonsterStateMachine monsterStateMachine) : base(monsterStateMachine) { }
-        
+        public MonsterDieState(MonsterStateMachine monsterStateMachine) : base(monsterStateMachine)
+        {
+        }
+
         public override void Enter()
         {
             base.Enter();
-            
+
             StartAnimationWithBool(AnimationData.DieParameterHash);
         }
 
         public override void Exit()
         {
             base.Exit();
-            
+
             StopAnimationWithBool(AnimationData.DieParameterHash);
         }
 

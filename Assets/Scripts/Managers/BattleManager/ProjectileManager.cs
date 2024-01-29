@@ -1,30 +1,29 @@
 using Controller.Projectiles.BaseAttack;
 using Controller.Projectiles.SkillAttack;
-using Controller.Projectiles.SkillAttack.Warrior;
-using Controller.Projectiles.SkillAttack.Wizard;
 using Data;
 using Function;
 using Module;
 using UnityEngine;
 
-namespace Managers
+namespace Managers.BattleManager
 {
     public class ProjectileManager : MonoBehaviour
     {
         public static ProjectileManager Instance;
         private ObjectPool objectPool;
-        
+
         private void Awake()
         {
             Instance = this;
         }
-        
+
         protected void Start()
         {
             objectPool = GetComponent<ObjectPool>();
         }
-        
-        public void InstantiateBaseAttack(BigInteger damage, Vector2 startPosition, Vector2 direction, Enum.PoolType poolType)
+
+        public void InstantiateBaseAttack(BigInteger damage, Vector2 startPosition, Vector2 direction,
+            Enum.PoolType poolType)
         {
             var obj = objectPool.SpawnFromPool(poolType);
             obj.transform.position = startPosition;
@@ -51,8 +50,9 @@ namespace Managers
 
             obj.SetActive(true);
         }
-        
-        public void InstantiateSkillAttack(GameObject targetSkill, BigInteger damage, Vector2 startPosition, Vector2 targetPosition)
+
+        public void InstantiateSkillAttack(GameObject targetSkill, BigInteger damage, Vector2 startPosition,
+            Vector2 targetPosition)
         {
             var skillAttackController = targetSkill.GetComponent<SkillAttackController>();
             skillAttackController.InitializeSkillAttack(damage, startPosition, targetPosition);

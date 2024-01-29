@@ -1,4 +1,4 @@
-using System;
+using Data;
 using Managers;
 using TMPro;
 using UnityEngine;
@@ -14,7 +14,7 @@ namespace Controller.UI
         [SerializeField] private Slider currentWaveSlider;
         [SerializeField] private Button loopButton;
         [SerializeField] private Button challengeButton;
-        
+
         private void Start()
         {
             loopButton.onClick.AddListener(() => OnClickStageProgressButton(true));
@@ -33,28 +33,28 @@ namespace Controller.UI
             loopButton.gameObject.SetActive(!challenge);
             challengeButton.gameObject.SetActive(challenge);
         }
-        
-        public void SetUIText(Data.Enum.UITextType textType, string value)
+
+        public void SetUIText(Enum.UITextType textType, string value)
         {
             switch (textType)
             {
-                case Data.Enum.UITextType.CurrentStageName:
+                case Enum.UITextType.CurrentStageName:
                     currentStageNameText.text = value;
                     break;
-                case Data.Enum.UITextType.CurrentWave:
+                case Enum.UITextType.CurrentWave:
                     currentWaveText.text = value;
                     break;
-                case Data.Enum.UITextType.Timer:
+                case Enum.UITextType.Timer:
                     timerText.text = value;
                     break;
             }
         }
 
-        public void SetUISlider(Data.Enum.UISliderType sliderType, float value)
+        public void SetUISlider(Enum.UISliderType sliderType, float value)
         {
             switch (sliderType)
             {
-                case Data.Enum.UISliderType.CurrentWaveSlider:
+                case Enum.UISliderType.CurrentWaveSlider:
                     currentWaveSlider.value = value;
                     break;
             }

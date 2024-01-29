@@ -2,39 +2,41 @@ using System;
 using Creature.Data;
 using Function;
 using Managers;
+using Managers.BattleManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Enum = Data.Enum;
 
 namespace Controller.UI.BottomMenuUI
 {
     public class InventoryPanelUI : MonoBehaviour
     {
-        public static event Action<Equipment> OnClickSelectEquipment;
         public static Action<bool> UpdateEquipmentUIAction;
 
         public static InventoryPanelUI Instance;
 
-        [Header("=== 인벤토리 패널 ===")]
-        public GameObject[] equipmentButton;
+        [Header("=== 인벤토리 패널 ===")] public GameObject[] equipmentButton;
+
         [SerializeField] private GameObject[] scrollViewEquipmentPanel;
         [SerializeField] private GameObject squadEquipmentStatusPanel;
         [SerializeField] private GameObject selectedEquipmentPanel;
-        
-        [Space(5)]
-        [Header("=== 장비 선택 팝업 창 ===")]
-        [Header("--- 팝업 창 버튼 ---")]
-        [SerializeField] private Button allCompositeButton;
+
+        [Space(5)] [Header("=== 장비 선택 팝업 창 ===")] [Header("--- 팝업 창 버튼 ---")] [SerializeField]
+        private Button allCompositeButton;
+
         [SerializeField] private Button autoEquipButton;
         [SerializeField] private Button levelUpButton;
         [SerializeField] private Button exitButton;
-        
+
         [FormerlySerializedAs("selectBaseEquipment")]
         [FormerlySerializedAs("selectEquipmentInfo")]
         [Header("=== 선택한 장비 정보 ===")]
         [Header("--- 장비 정보 ---")]
-        [SerializeField] private Equipment selectEquipment;
+        [SerializeField]
+        private Equipment selectEquipment;
+
         [SerializeField] private TMP_Text selectEquipmentName;
         [SerializeField] private TMP_Text selectEquipmentGrade;
         [SerializeField] private TMP_Text selectEquipmentEquippedEffect;
@@ -65,6 +67,8 @@ namespace Controller.UI.BottomMenuUI
             UpdateEquipmentUIAction -= SetOnEquippedBtnUI;
         }
 
+        public static event Action<Equipment> OnClickSelectEquipment;
+
         // 버튼 클릭 리스너 설정하는 메서드 
         private void InitializeButtonListeners()
         {
@@ -73,7 +77,7 @@ namespace Controller.UI.BottomMenuUI
                 var index = i;
                 equipmentButton[i].GetComponent<Button>().onClick.AddListener(() => OnClickEquipment(index));
             }
-            
+
             allCompositeButton.onClick.AddListener(OnClickAllComposite);
             autoEquipButton.onClick.AddListener(OnClickAutoEquip);
             levelUpButton.onClick.AddListener(OnClickLevelUp);
@@ -82,10 +86,7 @@ namespace Controller.UI.BottomMenuUI
 
         private void OnClickEquipment(int index)
         {
-            for (var i = 0; i < scrollViewEquipmentPanel.Length; i++)
-            {
-                scrollViewEquipmentPanel[i].SetActive(i == index);
-            }
+            for (var i = 0; i < scrollViewEquipmentPanel.Length; i++) scrollViewEquipmentPanel[i].SetActive(i == index);
         }
 
         // 장비 선택 이벤트 트리거 하는 메서드 
@@ -99,16 +100,16 @@ namespace Controller.UI.BottomMenuUI
         {
             if (squadEquipmentStatusPanel.activeInHierarchy) squadEquipmentStatusPanel.SetActive(false);
             if (!selectedEquipmentPanel.activeInHierarchy) selectedEquipmentPanel.SetActive(true);
-            
+
             selectEquipment.GetComponent<Equipment>().SetEquipmentInfo(equipment.GetComponent<Equipment>());
             UpdateSelectedEquipmentUI(selectEquipment);
         }
-    
+
         private void UpdateSelectedEquipmentUI(Equipment equipment)
         {
             equipment.SetQuantityText();
             selectEquipment.GetComponent<Equipment>().SetUI();
-       
+
             SetOnEquippedBtnUI(selectEquipment.isEquipped);
             SetSelectEquipmentTextUI(equipment);
         }
@@ -121,7 +122,8 @@ namespace Controller.UI.BottomMenuUI
             selectEquipmentName.text = equipment.id;
             selectEquipmentLevel.text = $"{equipment.level} / {equipment.maxLevel}";
             selectEquipmentGrade.text = $"{equipment.equipmentRarity}";
-            selectEquipmentEquippedEffect.text = $"공격력 {BigInteger.ChangeMoney(equipment.equippedEffect.ToString())}% 증가";
+            selectEquipmentEquippedEffect.text =
+                $"공격력 {BigInteger.ChangeMoney(equipment.equippedEffect.ToString())}% 증가";
             selectEquipmentOwnedEffect.text = $"공격력 {equipment.ownedEffect}% 증가";
         }
 
@@ -143,11 +145,11 @@ namespace Controller.UI.BottomMenuUI
         // 강화 판넬 버튼 눌렸을 때 불리는 메서드
         public void OnClickEnhancePanel()
         {
-            var enhanceEquipmentTemp = EquipmentManager.GetEquipment(selectEquipment.id);
+            var enhanceEquipmentTemp = InventoryManager.GetEquipment(selectEquipment.id);
             selectEquipment.GetComponent<Equipment>().SetEquipmentInfo(enhanceEquipmentTemp.GetComponent<Equipment>());
-            
+
             if (enhanceEquipmentTemp == null) return;
-            
+
             selectEquipmentLevel.text =
                 $"Lv.{enhanceEquipmentTemp.level} / {enhanceEquipmentTemp.maxLevel}"; //장비 강화(0 / 0)
             selectEquipmentEquippedEffect.text =
@@ -158,10 +160,10 @@ namespace Controller.UI.BottomMenuUI
             // requiredCurrencyText.text = enhanceEquipmentTemp.GetEnhanceStone().ToString();
             selectEquipment.SetUI();
         }
-    
+
         private void OnClickAllComposite()
         {
-            EquipmentManager.Instance.AllComposite(selectEquipment.type);
+            InventoryManager.Instance.AllComposite(selectEquipment.type);
         }
 
         // 강화 버튼 눌렸을 때 불리는 메서드
@@ -169,9 +171,11 @@ namespace Controller.UI.BottomMenuUI
         {
             if (selectEquipment.level >= selectEquipment.maxLevel) return;
 
-            if (selectEquipment.GetEnhanceStone() > new BigInteger(AccountManager.Instance.GetCurrencyAmount(Data.Enum.CurrencyType.WeaponEnhanceStone))) return; 
-            
-            AccountManager.Instance.SubtractCurrency(Data.Enum.CurrencyType.WeaponEnhanceStone,selectEquipment.GetEnhanceStone());
+            if (selectEquipment.GetEnhanceStone() >
+                new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.WeaponEnhanceStone))) return;
+
+            AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.WeaponEnhanceStone,
+                selectEquipment.GetEnhanceStone());
             selectEquipment.Enhance();
             SetSelectEquipmentTextUI(selectEquipment);
 
@@ -181,11 +185,11 @@ namespace Controller.UI.BottomMenuUI
             UpdateSelectEquipmentData();
 
             OnClickEnhancePanel();
-            
+
             //TODO : Achievement
             // AchievementManager.Instance.IncreaseAchievementValue(Data.Enum.AchieveType.Enhance, 1);
         }
-        
+
         private void OnClickExit()
         {
             selectedEquipmentPanel.SetActive(false);
@@ -195,19 +199,19 @@ namespace Controller.UI.BottomMenuUI
         // 장착 버튼 눌렸을 때 불리는 메서드
         public void OnClickEquip()
         {
-            SquadBattleManager.EquipAction?.Invoke(EquipmentManager.GetEquipment(selectEquipment.id));
+            SquadBattleManager.EquipAction?.Invoke(InventoryManager.GetEquipment(selectEquipment.id));
         }
-    
+
         private void OnClickAutoEquip()
         {
-            EquipmentManager.Instance.AutoEquip(selectEquipment.type);
-            SquadBattleManager.EquipAction?.Invoke(EquipmentManager.GetEquipment(selectEquipment.id));
+            InventoryManager.Instance.AutoEquip(selectEquipment.type);
+            SquadBattleManager.EquipAction?.Invoke(InventoryManager.GetEquipment(selectEquipment.id));
         }
 
         // 선택한 장비 데이터 업데이트 (저장한다고 생각하면 편함)
         public void UpdateSelectEquipmentData()
         {
-            EquipmentManager.SetEquipment(selectEquipment.id, selectEquipment);
+            InventoryManager.SetEquipment(selectEquipment.id, selectEquipment);
         }
     }
 }

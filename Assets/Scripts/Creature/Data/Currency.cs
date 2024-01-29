@@ -1,7 +1,6 @@
 using System;
 using Function;
 using TMPro;
-using UnityEngine;
 using Enum = Data.Enum;
 
 namespace Creature.Data
@@ -12,7 +11,13 @@ namespace Creature.Data
         public Enum.CurrencyType currencyType;
         public string amount;
         public TMP_Text currencyUI;
-    
+
+        public Currency(Enum.CurrencyType currencyType, string initialAmount)
+        {
+            this.currencyType = currencyType;
+            amount = initialAmount;
+        }
+
         public void Add(BigInteger value)
         {
             var currentAmount = new BigInteger(amount);
@@ -27,12 +32,6 @@ namespace Creature.Data
             currentAmount -= value;
             amount = currentAmount.ToString();
             return true;
-        }
-    
-        public Currency(Enum.CurrencyType currencyType, string initialAmount)
-        {
-            this.currencyType = currencyType;
-            this.amount = initialAmount;
         }
     }
 }

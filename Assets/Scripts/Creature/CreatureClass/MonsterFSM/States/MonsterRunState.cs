@@ -1,4 +1,3 @@
-using Creature.CreatureClass.SquadClass;
 using UnityEngine;
 
 namespace Creature.CreatureClass.MonsterFSM.States
@@ -38,9 +37,7 @@ namespace Creature.CreatureClass.MonsterFSM.States
                 if (OnAttack) OnAttack = false;
 
                 if (Monster.currentTarget == null)
-                {
-                    MonsterStateMachine.ChangeState(MonsterStateMachine.MonsterIdleState);   
-                }
+                    MonsterStateMachine.ChangeState(MonsterStateMachine.MonsterIdleState);
             }
         }
 
@@ -56,7 +53,7 @@ namespace Creature.CreatureClass.MonsterFSM.States
         private void MoveCharacter()
         {
             if (Monster.currentTarget == null) return;
-            
+
             var monsterNewTransform = Monster.transform;
             var position = Rigid.transform.position;
             var direction = (Monster.currentTarget.position - position).normalized;

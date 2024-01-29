@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using Creature.CreatureClass.MonsterClass;
 using Managers;
 using UnityEngine;
 using Enum = Data.Enum;
@@ -38,32 +36,26 @@ namespace Creature.CreatureClass.SquadFSM.States
                 switch (Squad.characterType)
                 {
                     case Enum.CharacterType.Warrior:
-                        
+
                         if (!CheckWarriorSkill())
-                        {
                             SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
-                        }
-                        
-                        break;
-                    
-                    case Enum.CharacterType.Archer:
-                        
-                        if (!CheckArcherSkill())
-                        {
-                            SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
-                        }
-                        
-                        break;
-                    
-                    case Enum.CharacterType.Wizard:
-                        
-                        if (!CheckWizardSkill ())
-                        {
-                            SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
-                        }
 
                         break;
-                    
+
+                    case Enum.CharacterType.Archer:
+
+                        if (!CheckArcherSkill())
+                            SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
+
+                        break;
+
+                    case Enum.CharacterType.Wizard:
+
+                        if (!CheckWizardSkill())
+                            SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
+
+                        break;
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -72,10 +64,7 @@ namespace Creature.CreatureClass.SquadFSM.States
             {
                 if (OnAttack) OnAttack = false;
 
-                if (Squad.currentTarget == null)
-                {
-                    SquadStateMachine.ChangeState(SquadStateMachine.SquadIdleState);
-                }
+                if (Squad.currentTarget == null) SquadStateMachine.ChangeState(SquadStateMachine.SquadIdleState);
             }
         }
 
@@ -92,7 +81,7 @@ namespace Creature.CreatureClass.SquadFSM.States
         {
             var squadTransform = Squad.transform;
             var position = Rigid.transform.position;
-            
+
             if (Squad.currentTarget == null) return;
             var direction = (Squad.currentTarget.position - position).normalized;
 
@@ -102,13 +91,15 @@ namespace Creature.CreatureClass.SquadFSM.States
 
             FlipSprite(direction.x);
         }
-        
+
         private bool CheckWarriorSkill()
         {
             for (var i = 0; i < SquadBattleManager.Instance.warriorSkillCoolTimer.Length; i++)
             {
-                if (!SquadBattleManager.Instance.warriorSkillCoolTimer[i].isSkillReady || (!SquadBattleManager.Instance.autoSkill && !SquadBattleManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate)) continue;
-                
+                if (!SquadBattleManager.Instance.warriorSkillCoolTimer[i].isSkillReady ||
+                    (!SquadBattleManager.Instance.autoSkill &&
+                     !SquadBattleManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate)) continue;
+
                 SquadStateMachine.ChangeState(SquadStateMachine.SquadSkillAttackState);
 
                 return true;
@@ -116,13 +107,15 @@ namespace Creature.CreatureClass.SquadFSM.States
 
             return false;
         }
-        
+
         private bool CheckArcherSkill()
         {
             for (var i = 0; i < SquadBattleManager.Instance.archerSkillCoolTimer.Length; i++)
             {
-                if (!SquadBattleManager.Instance.archerSkillCoolTimer[i].isSkillReady || (!SquadBattleManager.Instance.autoSkill && !SquadBattleManager.Instance.archerSkillCoolTimer[i].orderToInstantiate)) continue;
-                
+                if (!SquadBattleManager.Instance.archerSkillCoolTimer[i].isSkillReady ||
+                    (!SquadBattleManager.Instance.autoSkill &&
+                     !SquadBattleManager.Instance.archerSkillCoolTimer[i].orderToInstantiate)) continue;
+
                 SquadStateMachine.ChangeState(SquadStateMachine.SquadSkillAttackState);
 
                 return true;
@@ -130,13 +123,15 @@ namespace Creature.CreatureClass.SquadFSM.States
 
             return false;
         }
-        
+
         private bool CheckWizardSkill()
         {
             for (var i = 0; i < SquadBattleManager.Instance.wizardSkillCoolTimer.Length; i++)
             {
-                if (!SquadBattleManager.Instance.wizardSkillCoolTimer[i].isSkillReady || (!SquadBattleManager.Instance.autoSkill && !SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate)) continue;
-                
+                if (!SquadBattleManager.Instance.wizardSkillCoolTimer[i].isSkillReady ||
+                    (!SquadBattleManager.Instance.autoSkill &&
+                     !SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate)) continue;
+
                 SquadStateMachine.ChangeState(SquadStateMachine.SquadSkillAttackState);
 
                 return true;

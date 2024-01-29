@@ -4,6 +4,7 @@ using Creature.CreatureClass.MonsterFSM;
 using Creature.CreatureClass.SquadClass;
 using Function;
 using Managers;
+using Managers.BattleManager;
 using UnityEngine;
 using Enum = Data.Enum;
 
@@ -11,33 +12,23 @@ namespace Creature.CreatureClass.MonsterClass
 {
     public class Monster : Creature
     {
-        [Header("Class")]
-        [SerializeField] public Enum.MonsterClassType monsterClassType;
+        [Header("Class")] [SerializeField] public Enum.MonsterClassType monsterClassType;
 
-        [Header("StateMachine")]
-        private MonsterStateMachine monsterStateMachine;
+        [Header("Sprites")] [SerializeField] private List<Sprite> monsterSprites;
 
-        [Header("Sprites")]
-        [SerializeField] private List<Sprite> monsterSprites;
+        [Header("HitEffects")] [SerializeField]
+        private bool isEventHitRunning;
 
-        [Header("HitEffects")]
-        [SerializeField] private bool isEventHitRunning;
         public ParticleSystem effectHit;
+
+        [Header("Detector")] public GameObject detector;
+
         private readonly WaitForSeconds hitEffectDelay = new(0.2f);
-        
-        [Header("Detector")]
-        public GameObject detector;
-        
-        [Header("Projectile")]
-        private Vector2 projectileSpawnPosition;
         private Vector2 direction;
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
+        [Header("StateMachine")] private MonsterStateMachine monsterStateMachine;
 
-            monsterStateMachine?.ChangeState(monsterStateMachine.MonsterIdleState);
-        }
+        [Header("Projectile")] private Vector2 projectileSpawnPosition;
 
         protected void Start()
         {
@@ -61,6 +52,13 @@ namespace Creature.CreatureClass.MonsterClass
             monsterStateMachine.PhysicsUpdate();
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            monsterStateMachine?.ChangeState(monsterStateMachine.MonsterIdleState);
+        }
+
         protected override void SetEventListener()
         {
             animationEventReceiver.OnNormalAttackEffect += OnNormalAttack;
@@ -73,10 +71,7 @@ namespace Creature.CreatureClass.MonsterClass
 
         private void HideSpritesExceptBody()
         {
-            for (var i = 1; i < allSprites.Count; i++)
-            {
-                allSprites[i].gameObject.SetActive(false);
-            }
+            for (var i = 1; i < allSprites.Count; i++) allSprites[i].gameObject.SetActive(false);
         }
 
         private void ResetAllSprites()
@@ -91,7 +86,7 @@ namespace Creature.CreatureClass.MonsterClass
                 allSprites[i].color = Color.white;
             }
         }
-        
+
         protected override void SetCreatureStats()
         {
             //TODO: 추후에 MonsterManager에서 가지고 오도록
@@ -132,14 +127,14 @@ namespace Creature.CreatureClass.MonsterClass
             HideSpritesExceptBody();
             monsterStateMachine.ChangeState(monsterStateMachine.MonsterDieState);
         }
-        
+
         protected override void CreatureDeath()
         {
             ResetAllSprites();
             monsterStateMachine.ChangeState(monsterStateMachine.MonsterIdleState);
             MonsterManager.Instance.ReturnMonster(monsterClassType, this);
         }
-        
+
         protected override void FindNearbyEnemy()
         {
             currentTarget = null;
@@ -155,7 +150,8 @@ namespace Creature.CreatureClass.MonsterClass
             projectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
             direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
 
-            ProjectileManager.Instance.InstantiateBaseAttack(damage, projectileSpawnPosition, direction, Enum.PoolType.ProjectileBaseAttackMonster);
+            ProjectileManager.Instance.InstantiateBaseAttack(damage, projectileSpawnPosition, direction,
+                Enum.PoolType.ProjectileBaseAttackMonster);
         }
 
         private IEnumerator EventHit()

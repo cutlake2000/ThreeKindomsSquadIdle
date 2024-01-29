@@ -18,7 +18,7 @@ namespace Controller.Effects
             var normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
             if (!(normalizedTime >= 1.0f)) return;
-            
+
             gameObject.SetActive(false);
         }
 

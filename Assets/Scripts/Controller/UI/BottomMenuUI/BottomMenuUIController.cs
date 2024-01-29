@@ -1,4 +1,5 @@
 using Managers;
+using Managers.BattleManager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,8 +7,8 @@ namespace Controller.UI.BottomMenuUI
 {
     public class BottomMenuUIController : MonoBehaviour
     {
-        [Header("버튼과 패널")]
-        [SerializeField] private Button[] openButtons;
+        [Header("버튼과 패널")] [SerializeField] private Button[] openButtons;
+
         [SerializeField] private Button[] closeButtons;
         [SerializeField] private GameObject[] panels;
 
@@ -20,7 +21,7 @@ namespace Controller.UI.BottomMenuUI
                 if (i == 3) continue; // TODO : 유물 버튼 락
                 openButtons[i].onClick.AddListener(() => OnClickOpenPanel(index));
             }
-            
+
             for (var i = 0; i < closeButtons.Length; i++)
             {
                 var index = i; // 현재 인덱스 캡처
@@ -47,18 +48,12 @@ namespace Controller.UI.BottomMenuUI
                         break;
                 }
             }
-            
-            for (var i = 0; i < closeButtons.Length; i++)
-            {
-                openButtons[i].gameObject.SetActive(i != index);
-            }
-            
-            for (var i = 0; i < closeButtons.Length; i++)
-            {
-                closeButtons[i].gameObject.SetActive(i == index);
-            }
+
+            for (var i = 0; i < closeButtons.Length; i++) openButtons[i].gameObject.SetActive(i != index);
+
+            for (var i = 0; i < closeButtons.Length; i++) closeButtons[i].gameObject.SetActive(i == index);
         }
-        
+
         private void OnClickClosePanel(int index)
         {
             closeButtons[index].gameObject.SetActive(false);

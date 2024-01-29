@@ -1,22 +1,24 @@
 using System;
-using UnityEngine;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using UnityEditor;
 
 namespace Module
 {
     public static class InfiniteLoopDetector
     {
+        private const int DetectionThreshold = 100000;
         private static string _prevPoint = "";
         private static int _detectionCount;
-        private const int DetectionThreshold = 100000;
 
-        [System.Diagnostics.Conditional("UNITY_EDITOR")]
+        [Conditional("UNITY_EDITOR")]
         public static void Run(
-            [System.Runtime.CompilerServices.CallerMemberName] string mn = "",
-            [System.Runtime.CompilerServices.CallerFilePath] string fp = "",
-            [System.Runtime.CompilerServices.CallerLineNumber] int ln = 0
+            [CallerMemberName] string mn = "",
+            [CallerFilePath] string fp = "",
+            [CallerLineNumber] int ln = 0
         )
         {
-            string currentPoint = $"{fp}:{ln}, {mn}()";
+            var currentPoint = $"{fp}:{ln}, {mn}()";
 
             if (_prevPoint == currentPoint)
                 _detectionCount++;
@@ -30,13 +32,10 @@ namespace Module
         }
 
 #if UNITY_EDITOR
-        [UnityEditor.InitializeOnLoadMethod]
+        [InitializeOnLoadMethod]
         private static void Init()
         {
-            UnityEditor.EditorApplication.update += () =>
-            {
-                _detectionCount = 0;
-            };
+            EditorApplication.update += () => { _detectionCount = 0; };
         }
 #endif
     }

@@ -1,9 +1,8 @@
 using Creature.CreatureClass.MonsterClass;
 using Data;
 using Function;
-using Managers;
+using Managers.BattleManager;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Controller.Projectiles.BaseAttack
 {
@@ -13,7 +12,31 @@ namespace Controller.Projectiles.BaseAttack
         [SerializeField] protected float currentDuration;
         [SerializeField] protected float projectileSpeed;
         [SerializeField] protected bool readyToLaunch;
-        
+
+        private void Update()
+        {
+            if (!readyToLaunch) return;
+
+            currentDuration += Time.deltaTime;
+
+            if (currentDuration > maxDuration) DestroyProjectile(transform.position);
+        }
+
+        private void FixedUpdate()
+        {
+            if (!readyToLaunch) return;
+
+            transform.position += Direction * (projectileSpeed * Time.deltaTime);
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.layer != LayerMask.NameToLayer("Enemy")) return;
+
+            AttackEnemy(collision);
+            DestroyProjectile(collision.transform.position);
+        }
+
         public void InitializeArcherBaseAttack(BigInteger damage, Vector3 direction)
         {
             Direction = direction;
@@ -24,41 +47,14 @@ namespace Controller.Projectiles.BaseAttack
             transform.right = Direction;
             readyToLaunch = true;
         }
-        
-        private void Update()
-        {
-            if (!readyToLaunch) return;
-            
-            currentDuration += Time.deltaTime;
-            
-            if (currentDuration > maxDuration)
-            {
-                DestroyProjectile(transform.position);
-            }
-        }
-        
-        private void FixedUpdate()
-        {
-            if (!readyToLaunch) return;
 
-            transform.position += Direction * (projectileSpeed * Time.deltaTime);
-        }
-        
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if (collision.gameObject.layer != LayerMask.NameToLayer("Enemy")) return;
-                
-            AttackEnemy(collision);
-            DestroyProjectile(collision.transform.position);
-        }
-        
         protected override void AttackEnemy(Collider2D collision)
         {
             base.AttackEnemy(collision);
-            
+
             collision.GetComponent<Monster>().TakeDamage(Damage);
         }
-        
+
         private void DestroyProjectile(Vector3 position)
         {
             gameObject.SetActive(false);

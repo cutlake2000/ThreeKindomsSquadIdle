@@ -1,15 +1,15 @@
-using UnityEngine;
-
 namespace Creature.CreatureClass.MonsterFSM.States
 {
     public class MonsterAttackState : MonsterBaseState
     {
-        public MonsterAttackState(MonsterStateMachine monsterStateMachine) : base(monsterStateMachine) { }
-        
+        public MonsterAttackState(MonsterStateMachine monsterStateMachine) : base(monsterStateMachine)
+        {
+        }
+
         public override void Enter()
         {
             base.Enter();
-            
+
             FlipSprite();
             StartAnimationWithBool(AnimationData.AttackParameterHash);
         }
@@ -17,23 +17,23 @@ namespace Creature.CreatureClass.MonsterFSM.States
         public override void Exit()
         {
             base.Exit();
-            
+
             StopAnimationWithBool(AnimationData.AttackParameterHash);
         }
 
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            
+
             ChangeNextState();
         }
-        
+
         private void ChangeNextState()
         {
             var normalizedTime = GetNormalizedTime(Animator, "Attack");
 
             if (!(normalizedTime >= 1.0f)) return;
-            
+
             MonsterStateMachine.ChangeState(MonsterStateMachine.MonsterRunState);
         }
     }

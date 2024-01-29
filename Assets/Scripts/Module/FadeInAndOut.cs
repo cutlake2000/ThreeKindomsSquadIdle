@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Module
@@ -12,7 +11,7 @@ namespace Module
 
         private CanvasGroup canvasGroup;
 
-        void Start()
+        private void Start()
         {
             canvasGroup = GetComponent<CanvasGroup>();
         }
@@ -21,7 +20,7 @@ namespace Module
         {
             StartCoroutine(FadeIn());
         }
-        
+
         public void StartFadeOutCoroutine()
         {
             StartCoroutine(FadeOut());

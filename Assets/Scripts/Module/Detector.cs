@@ -1,12 +1,11 @@
-using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Module
 {
     public class Detector : MonoBehaviour
     {
         [SerializeField] private string targetTag;
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag(targetTag)) return;

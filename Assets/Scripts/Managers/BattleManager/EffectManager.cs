@@ -1,10 +1,9 @@
-using Controller;
 using Controller.Effects;
 using Module;
 using UnityEngine;
 using Enum = Data.Enum;
 
-namespace Managers
+namespace Managers.BattleManager
 {
     public class EffectManager : MonoBehaviour
     {
@@ -28,32 +27,29 @@ namespace Managers
         {
             objectPool = GetComponent<ObjectPool>();
         }
-        
+
         public void CreateParticlesAtPosition(Vector3 position, Enum.CharacterType characterType, bool destroy)
         {
             ParticleSystem effectParticle = null;
             int index;
 
             if (destroy)
-            {
                 switch (characterType)
                 {
                     case Enum.CharacterType.Warrior:
-                        index = Random.Range(0, (warriorProjectileEffectOnDestroy.Length));
+                        index = Random.Range(0, warriorProjectileEffectOnDestroy.Length);
                         effectParticle = warriorProjectileEffectOnDestroy[index];
                         break;
                     case Enum.CharacterType.Archer:
-                        index = Random.Range(0, (archerProjectileEffectOnDestroy.Length));
+                        index = Random.Range(0, archerProjectileEffectOnDestroy.Length);
                         effectParticle = archerProjectileEffectOnDestroy[index];
                         break;
                     case Enum.CharacterType.Wizard:
-                        index = Random.Range(0, (wizardProjectileEffectOnDestroy.Length));
+                        index = Random.Range(0, wizardProjectileEffectOnDestroy.Length);
                         effectParticle = wizardProjectileEffectOnDestroy[index];
                         break;
                 }
-            }
             else
-            {
                 switch (characterType)
                 {
                     // case Enum.CharacterClass.Warrior:
@@ -61,7 +57,7 @@ namespace Managers
                     //     effectParticle = warriorProjectileEffectOnShoot[index];
                     //     break;
                     case Enum.CharacterType.Archer:
-                        index = Random.Range(0, (archerProjectileEffectOnDestroy.Length));
+                        index = Random.Range(0, archerProjectileEffectOnDestroy.Length);
                         effectParticle = archerProjectileEffectOnShoot[index];
                         break;
                     // case Enum.CharacterClass.Wizard:
@@ -69,7 +65,6 @@ namespace Managers
                     //     effectParticle = wizardProjectileEffectOnDestroy[index];
                     //     break;
                 }
-            }
 
 
             if (effectParticle == null) return;
@@ -77,7 +72,7 @@ namespace Managers
             effectParticle.transform.position = position;
             effectParticle.Play(true);
         }
-        
+
         //TODO: 추후에 인자로 BIGINTEGER 타입의 데미지를 전해줘야 한다
         public void CreateEffectsAtPosition(Vector2 startPosition, string damage, Enum.PoolType poolType)
         {

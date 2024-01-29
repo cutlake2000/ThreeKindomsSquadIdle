@@ -1,9 +1,8 @@
- using System;
+using System;
 using System.Collections;
 using Controller.UI;
 using ScriptableObjects.Scripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Enum = Data.Enum;
 
 namespace Managers
@@ -18,9 +17,11 @@ namespace Managers
 
         [SerializeField] private StageUI stageUIController;
         [SerializeField] private StageSo stageSo;
-        
+
         [Header("=== 스테이지 정보 ===")]
         [SerializeField] private string currentMainStageName;
+        public int currentStageIndex; // 누적 스테이지 정보
+
         [SerializeField] private int currentMainStage;
         [SerializeField] private int currentSubStage;
         [SerializeField] public int currentWave;
@@ -29,8 +30,9 @@ namespace Managers
         [SerializeField] private float stageLimitedTime = 60.0f;
         [SerializeField] private int currentSquadCount;
 
-        [Header("--- 스테이지 러너 상태 ---")]
-        [SerializeField] private bool nextStageChallenge;
+        [Header("--- 스테이지 러너 상태 ---")] [SerializeField]
+        private bool nextStageChallenge;
+
         [SerializeField] private int maxSquadCount;
         [SerializeField] private int maxMainStageCounts;
         [SerializeField] private int subStageCountsPerMainStage;
@@ -62,11 +64,11 @@ namespace Managers
 
             //TODO: Easy 뭐시깽이에서 불러와야 합미둥둥
             maxSquadCount = 3;
-            currentMainStage = 1;
-            currentSubStage = 1;
-            currentWave = 1;
             currentSquadCount = 3;
-
+            currentMainStage = ES3.Load($"{nameof(StageManager)}/{nameof(currentMainStage)}", 1);
+            currentSubStage = ES3.Load($"{nameof(StageManager)}/{nameof(currentSubStage)}", 1);
+            currentWave = 1;
+            
             SetCurrentMainStageInfo();
         }
 
@@ -85,7 +87,7 @@ namespace Managers
             currentRemainedMonsterCount--;
 
             if (currentRemainedMonsterCount > 0) return;
-            
+
             currentWave++;
 
             if (currentWave > waveCountsPerSubStage)
@@ -132,9 +134,9 @@ namespace Managers
             goToNextSubStage = true;
             currentWave = 1;
             currentSquadCount = maxSquadCount;
-            
-            DespawnSquad(); 
-                
+
+            DespawnSquad();
+
             SetCurrentMainStageInfo();
             StartCoroutine(StageRunner());
         }
@@ -145,9 +147,9 @@ namespace Managers
             stopWaveTimer = true;
             goToNextSubStage = true;
             currentWave = 1;
-            
+
             DespawnSquad();
-                
+
             SetCurrentMainStageInfo();
             StartCoroutine(StageRunner());
         }
@@ -202,7 +204,7 @@ namespace Managers
             MonsterManager.Instance.SpawnMonsters(stageSo.MainStageInfos[currentMainStage - 1].MainStageMonsterTypes,
                 monsterSpawnCountsPerSubStage);
         }
-        
+
         private void DespawnMonster()
         {
             MonsterManager.Instance.DespawnAllMonster();
@@ -220,12 +222,12 @@ namespace Managers
                 SetTimerUI((int)waveTime);
                 waveTime -= Time.deltaTime;
                 CalculateRemainedTime();
-                
+
                 yield return null;
 
                 if (!stopWaveTimer) continue;
                 stopWaveTimer = false;
-                    
+
                 break;
             }
 

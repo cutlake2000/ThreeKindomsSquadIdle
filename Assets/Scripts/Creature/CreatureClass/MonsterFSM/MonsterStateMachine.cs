@@ -9,7 +9,7 @@ namespace Creature.CreatureClass.MonsterFSM
         public MonsterStateMachine(Monster monster)
         {
             Monster = monster;
-            
+
             MonsterIdleState = new MonsterIdleState(this);
             MonsterRunState = new MonsterRunState(this);
             MonsterAttackState = new MonsterAttackState(this);

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Controller.Projectiles.SkillAttack.Wizard
 {
     public class BlueMeteor : SkillAttackController

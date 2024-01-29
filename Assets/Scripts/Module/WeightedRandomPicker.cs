@@ -35,6 +35,15 @@ namespace Function
     /// <summary> 가중치 랜덤 뽑기 </summary>
     public class WeightedRandomPicker<T>
     {
+        private readonly Dictionary<T, double> itemWeightDict;
+        private readonly Dictionary<T, double> normalizedItemWeightDict; // 확률이 정규화된 아이템 목록
+        private double _sumOfWeights;
+
+        /// <summary> 가중치 합이 계산되지 않은 상태인지 여부 </summary>
+        private bool isDirty;
+
+        private Random randomInstance;
+
         /// <summary> 전체 아이템의 가중치 합 </summary>
         public double SumOfWeights
         {
@@ -45,21 +54,15 @@ namespace Function
             }
         }
 
-        private System.Random randomInstance;
-        private readonly Dictionary<T, double> itemWeightDict;
-        private readonly Dictionary<T, double> normalizedItemWeightDict; // 확률이 정규화된 아이템 목록
-
-        /// <summary> 가중치 합이 계산되지 않은 상태인지 여부 </summary>
-        private bool isDirty;
-        private double _sumOfWeights;
-
         /***********************************************************************
-        *                               Constructors
-        ***********************************************************************/
+         *                               Constructors
+         ***********************************************************************/
+
         #region .
+
         public WeightedRandomPicker()
         {
-            randomInstance = new System.Random();
+            randomInstance = new Random();
             itemWeightDict = new Dictionary<T, double>();
             normalizedItemWeightDict = new Dictionary<T, double>();
             isDirty = true;
@@ -68,7 +71,7 @@ namespace Function
 
         public WeightedRandomPicker(int randomSeed)
         {
-            randomInstance = new System.Random(randomSeed);
+            randomInstance = new Random(randomSeed);
             itemWeightDict = new Dictionary<T, double>();
             normalizedItemWeightDict = new Dictionary<T, double>();
             isDirty = true;
@@ -76,9 +79,11 @@ namespace Function
         }
 
         #endregion
+
         /***********************************************************************
-        *                               Add Methods
-        ***********************************************************************/
+         *                               Add Methods
+         ***********************************************************************/
+
         #region .
 
         /// <summary> 새로운 아이템-가중치 쌍 추가 </summary>
@@ -101,13 +106,16 @@ namespace Function
 
                 itemWeightDict.Add(pair.item, pair.weight);
             }
+
             isDirty = true;
         }
 
         #endregion
+
         /***********************************************************************
-        *                               Public Methods
-        ***********************************************************************/
+         *                               Public Methods
+         ***********************************************************************/
+
         #region .
 
         /// <summary> 목록에서 대상 아이템 제거 </summary>
@@ -132,20 +140,22 @@ namespace Function
         /// <summary> 랜덤 시드 재설정 </summary>
         public void ReSeed(int seed)
         {
-            randomInstance = new System.Random(seed);
+            randomInstance = new Random(seed);
         }
 
         #endregion
+
         /***********************************************************************
-        *                               Getter Methods
-        ***********************************************************************/
+         *                               Getter Methods
+         ***********************************************************************/
+
         #region .
 
         /// <summary> 랜덤 뽑기 </summary>
         public T GetRandomPick()
         {
             // 랜덤 계산
-            double chance = randomInstance.NextDouble(); // [0.0, 1.0)
+            var chance = randomInstance.NextDouble(); // [0.0, 1.0)
             chance *= SumOfWeights;
 
             return GetRandomPick(chance);
@@ -157,15 +167,12 @@ namespace Function
             if (randomValue < 0.0) randomValue = 0.0;
             if (randomValue > SumOfWeights) randomValue = SumOfWeights - 0.00000001;
 
-            double current = 0.0;
+            var current = 0.0;
             foreach (var pair in itemWeightDict)
             {
                 current += pair.Value;
 
-                if (randomValue < current)
-                {
-                    return pair.Key;
-                }
+                if (randomValue < current) return pair.Key;
             }
 
             throw new Exception($"Unreachable - [Random Value : {randomValue}, Current Value : {current}]");
@@ -199,22 +206,21 @@ namespace Function
         }
 
         #endregion
+
         /***********************************************************************
-        *                               Private Methods
-        ***********************************************************************/
+         *                               Private Methods
+         ***********************************************************************/
+
         #region .
 
         /// <summary> 모든 아이템의 가중치 합 계산해놓기 </summary>
         private void CalculateSumIfDirty()
         {
-            if(!isDirty) return;
+            if (!isDirty) return;
             isDirty = false;
 
             _sumOfWeights = 0.0;
-            foreach (var pair in itemWeightDict)
-            {
-                _sumOfWeights += pair.Value;
-            }
+            foreach (var pair in itemWeightDict) _sumOfWeights += pair.Value;
 
             // 정규화 딕셔너리도 업데이트
             UpdateNormalizedDict();
@@ -224,23 +230,20 @@ namespace Function
         private void UpdateNormalizedDict()
         {
             normalizedItemWeightDict.Clear();
-            foreach(var pair in itemWeightDict)
-            {
-                normalizedItemWeightDict.Add(pair.Key, pair.Value / _sumOfWeights);
-            }
+            foreach (var pair in itemWeightDict) normalizedItemWeightDict.Add(pair.Key, pair.Value / _sumOfWeights);
         }
 
         /// <summary> 이미 아이템이 존재하는지 여부 검사 </summary>
         private void CheckDuplicatedItem(T item)
         {
-            if(itemWeightDict.ContainsKey(item))
+            if (itemWeightDict.ContainsKey(item))
                 throw new Exception($"이미 [{item}] 아이템이 존재합니다.");
         }
 
         /// <summary> 존재하지 않는 아이템인 경우 </summary>
         private void CheckNotExistedItem(T item)
         {
-            if(!itemWeightDict.ContainsKey(item))
+            if (!itemWeightDict.ContainsKey(item))
                 throw new Exception($"[{item}] 아이템이 목록에 존재하지 않습니다.");
         }
 

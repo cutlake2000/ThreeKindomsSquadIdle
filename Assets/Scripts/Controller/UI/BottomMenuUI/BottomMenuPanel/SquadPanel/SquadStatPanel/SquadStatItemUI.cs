@@ -2,7 +2,6 @@ using System;
 using Creature.Data;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Enum = Data.Enum;
 
@@ -10,36 +9,30 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 {
     public class SquadStatItemUI : MonoBehaviour
     {
-        public Action<Enum.StatTypeBySquadStatPanel, int> UpgradeTotalSquadStatBySquadStatItem;
+        [Header("아이콘")] public Sprite squadStatSprite;
 
-        [Header("아이콘")]
-        public Sprite squadStatSprite;
-        [Header("스탯 이름")]
-        public string squadStatName;
-        [Space(5)]
-        [Header("초기값")]
-        public int initStatValue = 0;
-        [Header("레벨 업 비용")]
-        public int levelUpCost = 1;
-        [Space(5)]
-        [Header("스탯 증가 타입")]
-        public Enum.StatTypeBySquadStatPanel statTypeBySquadStatPanel;
-        [Header("스탯 증가량 타입")]
-        public Enum.IncreaseStatValueType increaseStatValueType;
-        [Header("스탯 증가량")]
-        public int increaseStatValue;
-        [Space(5)]
-        [Header("현재 스탯 레벨")]
-        public int currentLevel; 
-        [Header("최대 스탯 레벨")]
-        public int maxLevel = 10000; 
-        [Header("현재 스탯 강화 비용")]
-        public int currentLevelUpCost;
-        [Header("현재 스탯 증가량")]
-        public int currentIncreasedStat;
+        [Header("스탯 이름")] public string squadStatName;
 
-        [Header("UI")]
-        public Image squadStatImage;
+        [Space(5)] [Header("초기값")] public int initStatValue;
+
+        [Header("레벨 업 비용")] public int levelUpCost = 1;
+
+        [Space(5)] [Header("스탯 증가 타입")] public Enum.StatTypeBySquadStatPanel statTypeBySquadStatPanel;
+
+        [Header("스탯 증가량 타입")] public Enum.IncreaseStatValueType increaseStatValueType;
+
+        [Header("스탯 증가량")] public int increaseStatValue;
+
+        [Space(5)] [Header("현재 스탯 레벨")] public int currentLevel;
+
+        [Header("최대 스탯 레벨")] public int maxLevel = 10000;
+
+        [Header("현재 스탯 강화 비용")] public int currentLevelUpCost;
+
+        [Header("현재 스탯 증가량")] public int currentIncreasedStat;
+
+        [Header("UI")] public Image squadStatImage;
+
         public TMP_Text squadStatNameText;
         public TMP_Text squadStatLevelText;
         public TMP_Text squadStatMaxLevelText;
@@ -47,6 +40,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         public Button resetButton;
         public Button upgradeButton;
         public Button upgradeBlockButton;
+        public Action<Enum.StatTypeBySquadStatPanel, int> UpgradeTotalSquadStatBySquadStatItem;
 
         public void InitSquadStatUI()
         {
@@ -59,14 +53,15 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         public void UpdateSquadStatUI()
         {
             squadStatLevelText.text = $"Lv. {currentLevel}";
-            
+
             switch (increaseStatValueType)
             {
                 case Enum.IncreaseStatValueType.BaseStat:
-                    squadCurrentIncreasedStatText.text = currentIncreasedStat == 0? "0" : $"{currentIncreasedStat}";
+                    squadCurrentIncreasedStatText.text = currentIncreasedStat == 0 ? "0" : $"{currentIncreasedStat}";
                     break;
                 case Enum.IncreaseStatValueType.PercentStat:
-                    squadCurrentIncreasedStatText.text = currentIncreasedStat == 0? "0%" : $"{(double) currentIncreasedStat / 100}%";
+                    squadCurrentIncreasedStatText.text =
+                        currentIncreasedStat == 0 ? "0%" : $"{(double)currentIncreasedStat / 100}%";
                     break;
             }
         }
@@ -76,7 +71,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         {
             currentLevel += count;
             currentIncreasedStat += increaseStatValue * count;
-            
+
             ES3.Save($"{nameof(SquadEntireStat)}/{statTypeBySquadStatPanel}/currentLevel : ", currentLevel);
             UpgradeTotalSquadStatBySquadStatItem?.Invoke(statTypeBySquadStatPanel, increaseStatValue * count);
         }

@@ -1,6 +1,6 @@
 using Data;
 using Managers;
-using UnityEngine;
+using Managers.BattleManager;
 
 namespace Creature.CreatureClass.SquadClass
 {
@@ -26,7 +26,8 @@ namespace Creature.CreatureClass.SquadClass
 
         protected override void OnNormalAttackEffect()
         {
-            EffectManager.Instance.CreateParticlesAtPosition(projectileSpawn.position, Enum.CharacterType.Archer, false);
+            EffectManager.Instance.CreateParticlesAtPosition(projectileSpawn.position, Enum.CharacterType.Archer,
+                false);
         }
 
         protected override void OnSkillAttack()
@@ -36,14 +37,17 @@ namespace Creature.CreatureClass.SquadClass
             for (var i = 0; i < SquadBattleManager.Instance.archerSkillCoolTimer.Length; i++)
             {
                 if (!SquadBattleManager.Instance.archerSkillCoolTimer[i].isSkillReady) continue;
-                if (!SquadBattleManager.Instance.autoSkill && !SquadBattleManager.Instance.archerSkillCoolTimer[i].orderToInstantiate) continue;
-                
+                if (!SquadBattleManager.Instance.autoSkill &&
+                    !SquadBattleManager.Instance.archerSkillCoolTimer[i].orderToInstantiate) continue;
+
                 if (currentTarget == null) return;
-                
+
                 SquadBattleManager.Instance.RunSkillCoolTimer(Enum.CharacterType.Archer, i);
-                ProjectileManager.Instance.InstantiateSkillAttack(SquadBattleManager.Instance.archerSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
+                ProjectileManager.Instance.InstantiateSkillAttack(
+                    SquadBattleManager.Instance.archerSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition,
+                    currentTarget.transform.position);
                 SquadBattleManager.Instance.archerSkillCoolTimer[i].orderToInstantiate = false;
-                
+
                 break;
             }
         }

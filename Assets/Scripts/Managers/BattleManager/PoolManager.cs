@@ -1,20 +1,18 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Managers
 {
-    using System.Collections.Generic;
-    using UnityEngine;
-
     public class PoolManager : MonoBehaviour
     {
         public GameObject[] prefabs; // 인스펙터에서 초기화
-        List<GameObject>[] pools;
+        private List<GameObject>[] pools;
 
-        void Awake()
+        private void Awake()
         {
             pools = new List<GameObject>[prefabs.Length];
 
-            for (int index = 0; index < pools.Length; index++)
+            for (var index = 0; index < pools.Length; index++)
                 pools[index] = new List<GameObject>();
         }
 
@@ -22,32 +20,33 @@ namespace Managers
         {
             GameObject select = null;
 
-            foreach (GameObject item in pools[index]) {
-                if (!item.activeSelf) {
+            foreach (var item in pools[index])
+                if (!item.activeSelf)
+                {
                     select = item;
                     select.SetActive(true);
                     break;
                 }
-            }
 
-            if (!select) {
+            if (!select)
+            {
                 select = Instantiate(prefabs[index], transform);
                 pools[index].Add(select);
             }
-        
+
             return select;
         }
 
         public void Clear(int index)
         {
-            foreach (GameObject item in pools[index])
+            foreach (var item in pools[index])
                 item.SetActive(false);
         }
 
         public void ClearAll()
         {
-            for (int index = 0; index < pools.Length; index++)
-                foreach (GameObject item in pools[index])
+            for (var index = 0; index < pools.Length; index++)
+                foreach (var item in pools[index])
                     item.SetActive(false);
         }
     }

@@ -5,14 +5,14 @@ using Function;
 using UnityEngine;
 using Enum = Data.Enum;
 
-namespace Managers
+namespace Managers.BattleManager
 {
     public class AccountManager : MonoBehaviour
     {
         public static AccountManager Instance;
-        
-        public event Action<Enum.CurrencyType, string> OnCurrencyChanged;
 
+        public int accountLevel;
+        
         // 모든 통화의 목록 
         public List<Currency> currencies = new();
 
@@ -20,6 +20,8 @@ namespace Managers
         {
             Instance = this;
         }
+
+        public event Action<Enum.CurrencyType, string> OnCurrencyChanged;
 
         // 재화 매니저 초기화 메서드
         public void InitAccountManager()
@@ -37,10 +39,7 @@ namespace Managers
         {
             if (ES3.KeyExists("currencies")) LoadCurrencies();
 
-            foreach (var currency in currencies)
-            {
-                UpdateCurrencyUI(currency.currencyType, currency.amount);
-            }
+            foreach (var currency in currencies) UpdateCurrencyUI(currency.currencyType, currency.amount);
         }
 
         // 특정 통화를 증가시키는 메서드
@@ -60,7 +59,7 @@ namespace Managers
         {
             // 모든 통화중 매개변수로 받은 이름이 있나 체크
             var currency = currencies.Find(c => c.currencyType == currencyType);
-            
+
             if (currency == null) return false;
             // 통화의 양을 감소시키, 결과에 따라 이벤트 발생
             var result = currency.Subtract(value);
@@ -86,11 +85,9 @@ namespace Managers
         private void LoadCurrencies()
         {
             currencies = ES3.Load<List<Currency>>("currencies");
-            
-            foreach (var currency in currencies)
-            {
-                OnCurrencyChanged?.Invoke(currency.currencyType, currency.amount); // 로딩 후 이벤트 발생
-            }
+
+            foreach (var currency in
+                     currencies) OnCurrencyChanged?.Invoke(currency.currencyType, currency.amount); // 로딩 후 이벤트 발생
         }
 
         private void CreateCurrencies()
@@ -102,7 +99,7 @@ namespace Managers
         private void UpdateCurrencyUI(Enum.CurrencyType currencyType, string amount)
         {
             Currency currency;
-            
+
             switch (currencyType)
             {
                 case Enum.CurrencyType.StatPoint:

@@ -10,7 +10,7 @@ namespace Function
         public Scrollbar scrollbar;
 
         [SerializeField] private GameObject[] summonCategories;
-    
+
         private int categoriesIndex, curPos, targetPos;
 
         private void Start()
@@ -47,19 +47,19 @@ namespace Function
 
         private IEnumerator SmootheScrollView()
         {
-            float elapsedTime = 0.0f;
+            var elapsedTime = 0.0f;
 
             while (elapsedTime < 0.1f)
             {
                 elapsedTime += Time.deltaTime;
 
                 scrollbar.value = Mathf.Lerp(curPos, targetPos, elapsedTime / 0.1f);
-                
+
                 yield return null;
             }
 
             curPos = targetPos;
-        
+
             yield return null;
         }
     }

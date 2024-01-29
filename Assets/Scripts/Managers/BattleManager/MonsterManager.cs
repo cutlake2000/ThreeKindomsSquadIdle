@@ -15,11 +15,11 @@ namespace Managers
         public BoxCollider2D[] spawnPosition;
         [SerializeField] private List<Monster> activeMonsters = new();
 
-        private readonly Dictionary<string, float> animationLengths = new();
-        private Dictionary<Enum.MonsterClassType, Queue<Monster>> monsterNewPools;
-
         public int monsterNewCount = 20;
+
+        private readonly Dictionary<string, float> animationLengths = new();
         private readonly int[] spawnXs = { -10, 10, 0 };
+        private Dictionary<Enum.MonsterClassType, Queue<Monster>> monsterNewPools;
         private int spawnCount;
 
         private void Awake()
@@ -105,13 +105,11 @@ namespace Managers
             activeMonsters.Add(monster);
             return monster;
         }
-        
+
         public void DespawnAllMonster()
         {
-            foreach (var monster in activeMonsters.ToList())
-            {
-                ReturnMonster(monster.monsterClassType, monster);
-            }
+            if (activeMonsters.Count == 0) return;
+            foreach (var monster in activeMonsters.ToList()) ReturnMonster(monster.monsterClassType, monster);
         }
 
         public void ReturnMonster(Enum.MonsterClassType classType, Monster monster)

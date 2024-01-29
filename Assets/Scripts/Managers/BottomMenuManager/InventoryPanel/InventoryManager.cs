@@ -1,41 +1,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Controller.UI;
 using Controller.UI.BottomMenuUI;
 using Creature.Data;
 using Module;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Enum = Data.Enum;
 
 namespace Managers
 {
-    public class EquipmentManager : MonoBehaviour
+    public class InventoryManager : MonoBehaviour
     {
-        public static EquipmentManager Instance;
+        private const int MaxLevel = 1;
+        public static InventoryManager Instance;
 
-        [Header("장비 리스트")]
-        public List<Equipment> swords = new();
+        private static readonly Dictionary<string, Equipment> allEquipments = new();
+
+        [Header("장비 리스트")] public List<Equipment> swords = new();
+
         public List<Equipment> bows = new();
         public List<Equipment> staffs = new();
         public List<Equipment> helmets = new();
         public List<Equipment> armors = new();
         public List<Equipment> gauntlets = new();
-        
-        [Header("장비 스프라이트")]
-        public List<Sprite> swordSprites = new();
+
+        [Header("장비 스프라이트")] public List<Sprite> swordSprites = new();
+
         public List<Sprite> bowSprites = new();
         public List<Sprite> staffSprites = new();
         public List<Sprite> helmetSprites = new();
         public List<Sprite> armorSprites = new();
         public List<Sprite> gauntletSprites = new();
         public Sprite[] backgroundEffects;
-
-        private static readonly Dictionary<string, Equipment> allEquipments = new();
-        
-        private const int MaxLevel = 1;
 
         private void Awake()
         {
@@ -52,13 +49,9 @@ namespace Managers
         private void SetAllEquipment()
         {
             if (ES3.KeyExists("Init_Game"))
-            {
                 LoadAllEquipment();
-            }
             else
-            {
                 CreateAllEquipment();
-            }
         }
 
         // 로컬에 저장되어 있는 장비 데이터들 불러오는 메서드
@@ -67,11 +60,11 @@ namespace Managers
             foreach (var equipmentType in Enum.equipmentTypes)
             {
                 var equipmentCount = 0;
-                
+
                 foreach (var rarity in Enum.equipmentRarities)
                 {
                     var rarityIntValue = Convert.ToInt32(rarity);
-                    
+
                     for (var tier = 5; tier >= MaxLevel; tier--)
                     {
                         var equipmentId = $"{rarity}_{tier}_{equipmentType}";
@@ -88,7 +81,7 @@ namespace Managers
                         };
 
                         if (equipment == null) continue;
-                        
+
                         equipment.equipmentImage = equipmentType switch
                         {
                             Enum.EquipmentType.Sword => swordSprites[equipmentCount],
@@ -111,15 +104,17 @@ namespace Managers
                         {
                             SquadBattleManager.EquipAction(equipment);
 
-                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
-                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
+                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>()
+                                .SetEquipmentInfo(equipment);
+                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>()
+                                .SetUI();
                         }
 
                         equipmentCount++;
 
                         equipment.equipmentBackground = backgroundEffects[rarityIntValue];
                         equipment.SetUI();
-                        
+
                         InfiniteLoopDetector.Run();
                     }
                 }
@@ -132,7 +127,7 @@ namespace Managers
             foreach (var equipmentType in Enum.equipmentTypes)
             {
                 var equipmentCount = 0;
-                
+
                 foreach (var rarity in Enum.equipmentRarities)
                 {
                     var rarityIntValue = Convert.ToInt32(rarity);
@@ -141,7 +136,7 @@ namespace Managers
                     {
                         int initQuantity;
                         bool isEquipped;
-                        
+
                         var equipment = equipmentType switch
                         {
                             Enum.EquipmentType.Sword => swords[equipmentCount],
@@ -152,7 +147,7 @@ namespace Managers
                             Enum.EquipmentType.Gauntlet => gauntlets[equipmentCount],
                             _ => null
                         };
-                        
+
                         var equipmentSprite = equipmentType switch
                         {
                             Enum.EquipmentType.Sword => swordSprites[equipmentCount],
@@ -163,7 +158,7 @@ namespace Managers
                             Enum.EquipmentType.Gauntlet => gauntletSprites[equipmentCount],
                             _ => null
                         };
-                        
+
                         if (tier == 5 && rarity == Enum.EquipmentRarity.Common)
                         {
                             initQuantity = 1;
@@ -176,32 +171,36 @@ namespace Managers
                         }
 
                         if (equipment == null) continue;
-                        
+
                         var equipmentId = $"{rarity}_{tier}_{equipmentType}";
-                        var equippedEffect = (tier % 5 + 1) * ((int)Mathf.Pow(10, rarityIntValue + 1));
+                        var equippedEffect = (tier % 5 + 1) * (int)Mathf.Pow(10, rarityIntValue + 1);
                         var ownedEffect = (int)(equippedEffect * 0.5f);
 
-                        equipment.SetEquipmentInfo(equipmentId, initQuantity, tier, isEquipped, equipmentType, rarity, 1, equippedEffect, ownedEffect, backgroundEffects[rarityIntValue], equipmentSprite);
-                        equipment.GetComponent<Button>().onClick.AddListener(() => InventoryPanelUI.SelectEquipmentAction(equipment));
+                        equipment.SetEquipmentInfo(equipmentId, initQuantity, tier, isEquipped, equipmentType, rarity,
+                            1, equippedEffect, ownedEffect, backgroundEffects[rarityIntValue], equipmentSprite);
+                        equipment.GetComponent<Button>().onClick
+                            .AddListener(() => InventoryPanelUI.SelectEquipmentAction(equipment));
 
                         AddEquipment(equipmentId, equipment);
                         equipment.SaveEquipmentAllInfo(equipmentId);
-                        
+
                         if (isEquipped)
                         {
                             SquadBattleManager.EquipAction(equipment);
-                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetEquipmentInfo(equipment);
-                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>().SetUI();
+                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>()
+                                .SetEquipmentInfo(equipment);
+                            InventoryPanelUI.Instance.equipmentButton[(int)equipmentType].GetComponent<Equipment>()
+                                .SetUI();
                         }
 
                         equipmentCount++;
-                        
+
                         InfiniteLoopDetector.Run();
                     }
-                }   
+                }
             }
         }
-        
+
         // 매개변수로 받은 장비 합성하는 메서드
         private void CompositeAllEquipment(Equipment equipment)
         {
@@ -212,7 +211,7 @@ namespace Managers
 
             equipment.SetQuantityText();
             equipment.SaveEquipmentEachInfo(equipment.id, Enum.EquipmentProperty.Quantity);
-            
+
             var nextEquipment = GetNextEquipment(equipment.id, equipment.type);
 
             if (nextEquipment == null) return;
@@ -223,18 +222,13 @@ namespace Managers
         private static void AddEquipment(string equipmentId, Equipment equipment)
         {
             if (!allEquipments.TryAdd(equipmentId, equipment))
-            {
                 Debug.LogWarning($"Weapon already exists in the dictionary: {equipmentId}");
-            }
         }
 
         // AllEquipment에서 매개변수로 받은 string을 key로 사용해 Equipment 찾는 매서드
         public static Equipment GetEquipment(string equipmentId)
         {
-            if (allEquipments.TryGetValue(equipmentId, out var equipment))
-            {
-                return equipment;
-            }
+            if (allEquipments.TryGetValue(equipmentId, out var equipment)) return equipment;
 
             Debug.LogError($"Equipment not found: {equipmentId}");
             return null;
@@ -268,27 +262,23 @@ namespace Managers
             foreach (var rarity in Enum.equipmentRarities)
             {
                 if (!currentKey.StartsWith(rarity.ToString())) continue;
-                
+
                 currentRarityIndex = Array.IndexOf(Enum.equipmentRarities, rarity);
                 int.TryParse(currentKey.Replace(rarity + "_", "")[0].ToString(), out currentLevel);
                 break;
             }
 
             if (currentRarityIndex == -1 || currentLevel == -1) return null;
-            
+
             var nextKey = string.Empty;
 
             if (currentLevel < MaxLevel)
-            {
                 // 같은 희귀도 내에서 다음 레벨 찾기
                 nextKey = Enum.equipmentRarities[currentRarityIndex] + "_" + (currentLevel + 1) + "_" + $"{type}";
-            }
             else if (currentRarityIndex < Enum.equipmentRarities.Length - 1)
-            {
                 // 희귀도를 증가시키고 첫 번째 레벨의 장비 찾기
                 nextKey = Enum.equipmentRarities[currentRarityIndex + 1] + "_1" + "_" + $"{type}";
-            }
-                
+
             return allEquipments.GetValueOrDefault(nextKey);
         }
 
@@ -367,18 +357,14 @@ namespace Managers
             };
 
             if (equipments != null)
-            {
                 foreach (var equipment in equipments.Where(equipment => equipment.quantity != 0))
                 {
                     if (i == 0) highValueEquipment = equipment;
                     else if (highValueEquipment != null && highValueEquipment.equippedEffect < equipment.equippedEffect)
-                    {
                         highValueEquipment = equipment;
-                    }
 
                     i++;
                 }
-            }
 
             SquadBattleManager.EquipAction?.Invoke(highValueEquipment);
             InventoryPanelUI.Instance.SelectEquipment(highValueEquipment);
@@ -401,23 +387,22 @@ namespace Managers
 
             var index = 0;
             foreach (var equipment in equipments)
-            {
                 if (index == equipments.Count - 1)
                 {
                     equipment.SetQuantityText();
                     equipment.SaveEquipmentEachInfo(equipment.id, Enum.EquipmentProperty.Quantity);
                 }
-                else{
+                else
+                {
                     CompositeAllEquipment(equipment);
                     index++;
                 }
-            }
         }
 
         public static void IncreaseQuantity(Equipment equipment, int increaseValue)
         {
             equipment.quantity += increaseValue;
-            
+
             equipment.SetQuantityText();
             equipment.SaveEquipmentEachInfo(equipment.id, Enum.EquipmentProperty.Quantity);
         }

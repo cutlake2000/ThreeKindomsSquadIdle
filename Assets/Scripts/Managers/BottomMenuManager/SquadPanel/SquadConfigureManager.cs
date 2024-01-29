@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Creature.CreatureClass.SquadClass;
 using Creature.Data;
+using Managers.BattleManager;
 using Module;
 using ScriptableObjects.Scripts;
 using UnityEngine;
@@ -11,22 +12,19 @@ namespace Managers.BottomMenuManager.SquadPanel
 {
     public class SquadConfigureManager : MonoBehaviour
     {
+        public const int CharacterMaxLevel = 100;
         public static SquadConfigureManager Instance;
+        private static readonly Dictionary<string, Character> AllCharactersDictionary = new();
 
         //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
         [SerializeField] private SquadConfigureSo[] squadConfigureSo;
         [SerializeField] private SquadEffectSo[] squadOwnedEffectValueSoByRarity;
         [SerializeField] private SquadEffectSo[] squadEquippedEffectValueSoByRarity;
-        public const int CharacterMaxLevel = 100;
 
-        [Header("캐릭터 정보 컨테이너")]
-        public List<Character> warriors = new();
+        [Header("캐릭터 정보 컨테이너")] public List<Character> warriors = new();
+
         public List<Character> archers = new();
         public List<Character> wizards = new();
-        private static readonly Dictionary<string, Character> AllCharactersDictionary = new();
-        public readonly Dictionary<string, Character> WarriorDictionary = new();
-        public readonly Dictionary<string, Character> ArchersDictionary = new();
-        public readonly Dictionary<string, Character> WizardsDictionary = new();
 
         [Header("캐릭터 모델 컨테이너")] public List<GameObject> warriorModels = new();
         public List<GameObject> archerModels = new();
@@ -34,6 +32,9 @@ namespace Managers.BottomMenuManager.SquadPanel
 
         [Header("캐릭터 모델 스폰 좌표")] public GameObject[] modelSpawnPoints;
         public GameObject[] skillSpawnPoints;
+        public readonly Dictionary<string, Character> ArchersDictionary = new();
+        public readonly Dictionary<string, Character> WarriorDictionary = new();
+        public readonly Dictionary<string, Character> WizardsDictionary = new();
 
         private void Awake()
         {
@@ -91,39 +92,30 @@ namespace Managers.BottomMenuManager.SquadPanel
                             modelSpawnPoints[(int)characterType].transform);
                         InstantiateSkillUnderParent(characterType, characterSkills,
                             skillSpawnPoints[(int)characterType].transform);
-                        
+
                         foreach (var effect in character.characterEquippedEffects)
-                        {
                             if (effect.increaseStatType == Enum.IncreaseStatValueType.BaseStat)
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(effect.statType, effect.increaseValue);
-                            }
+                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(
+                                    effect.statType, effect.increaseValue);
                             else
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(effect.statType, effect.increaseValue);
-                            }
-                        }
+                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(
+                                    effect.statType, effect.increaseValue);
                     }
-                    
+
                     if (character.isPossessed)
-                    {
                         foreach (var effect in character.characterOwnedEffects)
-                        {
                             if (effect.increaseStatType == Enum.IncreaseStatValueType.BaseStat)
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(effect.statType, effect.increaseValue);
-                            }
+                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(
+                                    effect.statType, effect.increaseValue);
                             else
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(effect.statType, effect.increaseValue);
-                            }
-                        }
-                    }
+                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(
+                                    effect.statType, effect.increaseValue);
 
                     InfiniteLoopDetector.Run();
                 }
 
-                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigureScrollViewItemUI(characterType);
+                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigureScrollViewItemUI(
+                    characterType);
             }
         }
 
@@ -143,7 +135,8 @@ namespace Managers.BottomMenuManager.SquadPanel
                     var isPossessed = characterIndex == 1;
                     var characterLevel = isPossessed ? 1 : 0;
                     var characterIconIndex = characterSo.characterIconIndex;
-                    var characterIcon = SpriteManager.Instance.GetCharacterSprite(characterType, characterSo.characterIconIndex);
+                    var characterIcon =
+                        SpriteManager.Instance.GetCharacterSprite(characterType, characterSo.characterIconIndex);
                     var characterRarity = characterSo.characterRarity;
                     var characterModelIndex = characterSo.characterModelIndex;
                     var characterModel = characterType switch
@@ -170,44 +163,35 @@ namespace Managers.BottomMenuManager.SquadPanel
                             modelSpawnPoints[(int)characterType].transform);
                         InstantiateSkillUnderParent(characterType, characterSkills,
                             skillSpawnPoints[(int)characterType].transform);
-                        
+
                         foreach (var effect in character.characterEquippedEffects)
-                        {
                             if (effect.increaseStatType == Enum.IncreaseStatValueType.BaseStat)
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(effect.statType, effect.increaseValue);
-                            }
+                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(
+                                    effect.statType, effect.increaseValue);
                             else
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(effect.statType, effect.increaseValue);
-                            }
-                        }
+                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(
+                                    effect.statType, effect.increaseValue);
                     }
-                    
+
                     if (character.isPossessed)
-                    {
                         foreach (var effect in character.characterOwnedEffects)
-                        {
                             if (effect.increaseStatType == Enum.IncreaseStatValueType.BaseStat)
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(effect.statType, effect.increaseValue);
-                            }
+                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(
+                                    effect.statType, effect.increaseValue);
                             else
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(effect.statType, effect.increaseValue);
-                            }
-                        }
-                    }
+                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(
+                                    effect.statType, effect.increaseValue);
 
                     InfiniteLoopDetector.Run();
                 }
-                
-                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigureScrollViewItemUI(characterType);
+
+                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigureScrollViewItemUI(
+                    characterType);
             }
         }
 
         /// <summary>
-        /// 캐릭터 선택 시, 해당 캐릭터의 모델을 Instantiate하는 메서드
+        ///     캐릭터 선택 시, 해당 캐릭터의 모델을 Instantiate하는 메서드
         /// </summary>
         /// <param name="type"></param>
         /// <param name="prefab"></param>
@@ -358,9 +342,8 @@ namespace Managers.BottomMenuManager.SquadPanel
             targetCharacter.characterLevel = character.characterLevel;
 
             for (var i = 0; i < targetCharacter.characterOwnedEffects.Count; i++)
-            {
-                targetCharacter.characterOwnedEffects[i].increaseValue = character.characterOwnedEffects[i].increaseValue;   
-            }
+                targetCharacter.characterOwnedEffects[i].increaseValue =
+                    character.characterOwnedEffects[i].increaseValue;
 
             targetCharacter.SaveCharacterAllInfo(targetCharacter.characterId);
         }

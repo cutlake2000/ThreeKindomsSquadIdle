@@ -1,14 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Function;
-using Managers;
-using Managers.BottomMenuManager;
 using Managers.BottomMenuManager.SquadPanel;
 using ScriptableObjects.Scripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Enum = Data.Enum;
-using Image = UnityEngine.UI.Image;
 
 namespace Creature.Data
 {
@@ -19,46 +15,42 @@ namespace Creature.Data
         public Enum.IncreaseStatValueType increaseStatType;
         public int increaseValue;
     }
-    
+
     [Serializable]
     public class Character
     {
-        [Header("ES3 ID")]
-        public string characterId;
-        [Header("이름")]
-        public string characterName;
-        [Header("스프라이트 인덱스")]
-        public int characterIconIndex;
-        [Header("레벨")]
-        public int characterLevel;
-        [Header("요구 경험치")]
-        public BigInteger characterRequiredCurrency; 
-        [Header("클래스 타입")]
-        public Enum.CharacterType characterType;
-        [Header("클래스 등급")]
-        public Enum.CharacterRarity characterRarity;
-        [Header("장착 여부")]
-        public bool isEquipped;
-        [Header("보유 여부")]
-        public bool isPossessed;
-        
-        [field: Space(5)]
-        [field: Header("스킬 효과")]
+        [Header("ES3 ID")] public string characterId;
+
+        [Header("이름")] public string characterName;
+
+        [Header("스프라이트 인덱스")] public int characterIconIndex;
+
+        [Header("레벨")] public int characterLevel;
+
+        [Header("요구 경험치")] public BigInteger characterRequiredCurrency;
+
+        [Header("클래스 타입")] public Enum.CharacterType characterType;
+
+        [Header("클래스 등급")] public Enum.CharacterRarity characterRarity;
+
+        [Header("장착 여부")] public bool isEquipped;
+
+        [Header("보유 여부")] public bool isPossessed;
+
+        [field: Space(5)] [field: Header("스킬 효과")]
         public CharacterSkill[] characterSkills;
-        
-        [field: Space(5)]
-        [field: Header("장착 효과")]
+
+        [field: Space(5)] [field: Header("장착 효과")]
         public List<CharacterEffect> characterEquippedEffects;
-        [field: Header("보유 효과")]
-        public List<CharacterEffect> characterOwnedEffects;
-        
-        [Space(5)]
-        [Header("프리팹 모델")]
-        public int characterModelIndex;
+
+        [field: Header("보유 효과")] public List<CharacterEffect> characterOwnedEffects;
+
+        [Space(5)] [Header("프리팹 모델")] public int characterModelIndex;
+
         public GameObject characterModel;
 
         /// <summary>
-        /// 처음 생성할 때 사용되는 생성자
+        ///     처음 생성할 때 사용되는 생성자
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -75,7 +67,9 @@ namespace Creature.Data
         /// <param name="equippedEffect"></param>
         /// <param name="ownedEffect"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public Character (string id, string name, int level, bool isEquipped, bool isPossessed, Enum.CharacterType type, int iconIndex, Sprite icon, Enum.CharacterRarity rarity, int modelIndex, GameObject model, CharacterSkill[] skills, SquadEffectSo equippedEffect, SquadEffectSo ownedEffect)
+        public Character(string id, string name, int level, bool isEquipped, bool isPossessed, Enum.CharacterType type,
+            int iconIndex, Sprite icon, Enum.CharacterRarity rarity, int modelIndex, GameObject model,
+            CharacterSkill[] skills, SquadEffectSo equippedEffect, SquadEffectSo ownedEffect)
         {
             characterId = id;
             characterName = name;
@@ -88,7 +82,7 @@ namespace Creature.Data
 
             characterModelIndex = modelIndex;
             characterModel = model;
-            
+
             characterSkills = skills;
 
             characterEquippedEffects = new List<CharacterEffect>();
@@ -109,7 +103,7 @@ namespace Creature.Data
                 characterOwnedEffects[i].increaseStatType = ownedEffect.squadEffects[i].increaseStatType;
                 characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue;
             }
-            
+
             characterRequiredCurrency = rarity switch
             {
                 Enum.CharacterRarity.Rare => 10,
@@ -123,7 +117,7 @@ namespace Creature.Data
         }
 
         /// <summary>
-        /// ES3 Load 할 때 사용되는 생성자
+        ///     ES3 Load 할 때 사용되는 생성자
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -137,7 +131,9 @@ namespace Creature.Data
         /// <param name="equippedEffect"></param>
         /// <param name="ownedEffect"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public Character (string id, string name,Enum.CharacterType type, int iconIndex, Sprite icon, Enum.CharacterRarity rarity, int modelIndex, GameObject model, CharacterSkill[] skills, SquadEffectSo equippedEffect, SquadEffectSo ownedEffect)
+        public Character(string id, string name, Enum.CharacterType type, int iconIndex, Sprite icon,
+            Enum.CharacterRarity rarity, int modelIndex, GameObject model, CharacterSkill[] skills,
+            SquadEffectSo equippedEffect, SquadEffectSo ownedEffect)
         {
             characterId = id;
             characterName = name;
@@ -147,7 +143,7 @@ namespace Creature.Data
             characterModelIndex = modelIndex;
             characterModel = model;
             characterSkills = skills;
-            
+
             characterEquippedEffects = new List<CharacterEffect>();
             characterOwnedEffects = new List<CharacterEffect>();
 
@@ -164,7 +160,7 @@ namespace Creature.Data
                 characterOwnedEffects[i].statType = ownedEffect.squadEffects[i].statType;
                 characterOwnedEffects[i].increaseStatType = ownedEffect.squadEffects[i].increaseStatType;
             }
-            
+
             characterRequiredCurrency = rarity switch
             {
                 Enum.CharacterRarity.Rare => 10,
@@ -173,65 +169,58 @@ namespace Creature.Data
                 Enum.CharacterRarity.Legend => 65,
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
-            
+
             LoadCharacterAllInfo();
         }
 
         public void LoadCharacterAllInfo()
         {
             if (!ES3.KeyExists($"{nameof(characterId)}_" + characterId)) return;
-            
+
             characterLevel = ES3.Load<int>($"{nameof(characterLevel)}_" + characterId);
             isEquipped = ES3.Load<bool>($"{nameof(isEquipped)}_" + characterId);
             isPossessed = ES3.Load<bool>($"{nameof(isPossessed)}_" + characterId);
 
             for (var i = 0; i < characterEquippedEffects.Count; i++)
-            {
-                characterEquippedEffects[i].increaseValue = ES3.Load<int>($"characterEquippedEffects[{i}].increaseValue_" + characterId);
-            }
-            
+                characterEquippedEffects[i].increaseValue =
+                    ES3.Load<int>($"characterEquippedEffects[{i}].increaseValue_" + characterId);
+
             for (var i = 0; i < characterOwnedEffects.Count; i++)
-            {
-                characterOwnedEffects[i].increaseValue = ES3.Load<int>($"characterOwnedEffects[{i}].increaseValue_" + characterId);
-            }
+                characterOwnedEffects[i].increaseValue =
+                    ES3.Load<int>($"characterOwnedEffects[{i}].increaseValue_" + characterId);
         }
-        
+
         public void SaveCharacterAllInfo()
         {
             ES3.Save($"{nameof(characterId)}_" + characterId, characterId);
-            
+
             ES3.Save($"{nameof(characterLevel)}_" + characterId, characterLevel);
             ES3.Save($"{nameof(isEquipped)}_" + characterId, isEquipped);
             ES3.Save($"{nameof(isPossessed)}_" + characterId, isPossessed);
-            
+
             for (var i = 0; i < characterEquippedEffects.Count; i++)
-            {
-                ES3.Save($"characterEquippedEffects[{i}].increaseValue_" + characterId, characterEquippedEffects[i].increaseValue);
-            }
-            
+                ES3.Save($"characterEquippedEffects[{i}].increaseValue_" + characterId,
+                    characterEquippedEffects[i].increaseValue);
+
             for (var i = 0; i < characterOwnedEffects.Count; i++)
-            {
-                ES3.Save($"characterOwnedEffects[{i}].increaseValue_" + characterId, characterOwnedEffects[i].increaseValue);
-            }
+                ES3.Save($"characterOwnedEffects[{i}].increaseValue_" + characterId,
+                    characterOwnedEffects[i].increaseValue);
         }
-        
+
         public void SaveCharacterAllInfo(string id)
         {
             ES3.Save($"{nameof(characterId)}_" + id, characterId);
-            
+
             ES3.Save($"{nameof(characterLevel)}_" + id, characterLevel);
             ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
             ES3.Save($"{nameof(isPossessed)}_" + id, isPossessed);
-            
+
             for (var i = 0; i < characterEquippedEffects.Count; i++)
-            {
-                ES3.Save($"characterEquippedEffects[{i}].increaseValue_" + id, characterEquippedEffects[i].increaseValue);
-            }
-            
+                ES3.Save($"characterEquippedEffects[{i}].increaseValue_" + id,
+                    characterEquippedEffects[i].increaseValue);
+
             for (var i = 0; i < characterOwnedEffects.Count; i++)
-            {
                 ES3.Save($"characterOwnedEffects[{i}].increaseValue_" + id, characterOwnedEffects[i].increaseValue);
-            }
         }
 
         // public void SaveCharacterEachInfo(string equipmentID, Enum.CharacterProperty property)
@@ -246,10 +235,10 @@ namespace Creature.Data
         //             break;
         //     }
         // }
-        
+
         public BigInteger RequiredCurrencyForLevelUp()
         {
-            var requiredCurrency = characterRequiredCurrency * (int) Mathf.Pow(1.8f, characterLevel);
+            var requiredCurrency = characterRequiredCurrency * (int)Mathf.Pow(1.8f, characterLevel);
 
             return requiredCurrency;
         }
@@ -259,9 +248,8 @@ namespace Creature.Data
             characterLevel++;
 
             for (var i = 0; i < characterOwnedEffects.Count; i++)
-            {
-                characterOwnedEffects[i].increaseValue += (characterOwnedEffects[i].increaseValue / SquadConfigureManager.CharacterMaxLevel * characterLevel);
-            }
+                characterOwnedEffects[i].increaseValue += characterOwnedEffects[i].increaseValue /
+                    SquadConfigureManager.CharacterMaxLevel * characterLevel;
         }
     }
 }

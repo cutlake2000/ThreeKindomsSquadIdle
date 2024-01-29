@@ -6,10 +6,9 @@ using Controller.UI.BottomMenuUI;
 using Creature.CreatureClass.SquadClass;
 using Creature.Data;
 using Function;
-using Managers.BottomMenuManager;
+using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Enum = Data.Enum;
 
 namespace Managers
@@ -29,52 +28,46 @@ namespace Managers
         public static SquadBattleManager Instance;
         public static Action<Equipment> EquipAction;
 
-        [Header("=== Camera Settings=== ")]
-        [SerializeField] private CameraController cameraController;
+        [Header("=== Camera Settings=== ")] [SerializeField]
+        private CameraController cameraController;
 
-        [Space(5)]
-        [Header("=== Squad Position Info ===")]
+        [Space(5)] [Header("=== Squad Position Info ===")]
         public GameObject[] squads;
 
         [SerializeField] private Vector3[] squadSpawnPosition;
 
-        [Space(5)]
-        [Header("=== Squad Battle Info ===")]
-        [Header("공격 범위")]
-        [SerializeField] private float warriorAttackRange;
+        [Space(5)] [Header("=== Squad Battle Info ===")] [Header("공격 범위")] [SerializeField]
+        private float warriorAttackRange;
+
         [SerializeField] private float archerAttackRange;
         [SerializeField] private float wizardAttackRange;
-        [Header("적 탐지 범위")]
-        [SerializeField] private float followRange;
-        [Header("이동 속도")]
-        [SerializeField] private float moveSpeed;
-        
+
+        [Header("적 탐지 범위")] [SerializeField] private float followRange;
+
+        [Header("이동 속도")] [SerializeField] private float moveSpeed;
+
         [Space(3)]
         [Header("=== 스킬 쿨타임 ===")] //TODO: 스킬 쿨 다운을 ScriptableObject에서 긁어와야 함
         [Header("Auto")]
         public bool autoSkill;
-        
-        [Header("워리어")]
-        public SkillCoolTimer[] warriorSkillCoolTimer;
 
-        [Header("아처")]
-        public SkillCoolTimer[] archerSkillCoolTimer;
+        [Header("워리어")] public SkillCoolTimer[] warriorSkillCoolTimer;
 
-        [Header("위자드")]
-        public SkillCoolTimer[] wizardSkillCoolTimer;
+        [Header("아처")] public SkillCoolTimer[] archerSkillCoolTimer;
 
-        [Space(5)]
-        [Header("=== Squad Stats Info ===")]
-        [Header("스킬 데미지")]
-        [SerializeField] public List<int> warriorSkillDamagePercent;
+        [Header("위자드")] public SkillCoolTimer[] wizardSkillCoolTimer;
+
+        [Space(5)] [Header("=== Squad Stats Info ===")] [Header("스킬 데미지")] [SerializeField]
+        public List<int> warriorSkillDamagePercent;
+
         [SerializeField] public List<int> archerSkillDamagePercent;
         [SerializeField] public List<int> wizardSkillDamagePercent;
-        
-        [Header("Base SquadStats")]
-        [SerializeField] public SquadEntireStat squadEntireStat;
 
-        [Header("Total SquadStats")]
-        public BigInteger totalWarriorAttack;
+        [Header("Base SquadStats")] [SerializeField]
+        public SquadEntireStat squadEntireStat;
+
+        [Header("Total SquadStats")] public BigInteger totalWarriorAttack;
+
         public BigInteger totalArcherAttack;
         public BigInteger totalWizardAttack;
         public BigInteger totalAttack;
@@ -86,7 +79,7 @@ namespace Managers
         public BigInteger totalCriticalDamage;
         public BigInteger totalAcquisitionGold;
         public BigInteger totalAcquisitionExp;
-        
+
         public SquadLevel SquadLevel;
         public SummonLevel SummonLevel;
 
@@ -147,8 +140,9 @@ namespace Managers
         // 이벤트 설정하는 메서드
         private void SetEventListeners()
         {
-            SquadStatManager.Instance.OnUpgradeTotalSquadStatFromSquadStatPanel += squadEntireStat.UpdateBaseStatFromSquadStatPanelBySquadStatFromSquadStatPanelPanel;
-            
+            SquadStatManager.Instance.OnUpgradeTotalSquadStatFromSquadStatPanel += squadEntireStat
+                .UpdateBaseStatFromSquadStatPanelBySquadStatFromSquadStatPanelPanel;
+
             EquipAction += Equip;
         }
 
@@ -260,7 +254,8 @@ namespace Managers
 
             InventoryPanelUI.UpdateEquipmentUIAction?.Invoke(equippedEquipment.isEquipped);
             equippedEquipment.SaveEquipmentAllInfo();
-            InventoryPanelUI.Instance.equipmentButton[(int)equipment.type].GetComponent<Equipment>().SetEquipmentInfo(equipment);
+            InventoryPanelUI.Instance.equipmentButton[(int)equipment.type].GetComponent<Equipment>()
+                .SetEquipmentInfo(equipment);
             InventoryPanelUI.Instance.equipmentButton[(int)equipment.type].GetComponent<Equipment>().SetUI();
 
             Debug.Log("장비 장착" + equippedEquipment.id);
@@ -280,9 +275,8 @@ namespace Managers
         public void DespawnSquad()
         {
             foreach (var squad in squads)
-            {
-                if (squad.activeInHierarchy) squad.SetActive(false);
-            }
+                if (squad.activeInHierarchy)
+                    squad.SetActive(false);
         }
 
         public void SpawnSquad()
@@ -315,69 +309,87 @@ namespace Managers
             switch (type)
             {
                 case Enum.CharacterType.Warrior:
-                    warriorSkillCoolTimer[index].remainedSkillCoolTime = warriorSkillCoolTimer[index].maxSkillCoolTime; 
+                    warriorSkillCoolTimer[index].remainedSkillCoolTime = warriorSkillCoolTimer[index].maxSkillCoolTime;
                     warriorSkillCoolTimer[index].isSkillReady = false;
-                    UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index].ActivateSkillCoolTimer(warriorSkillCoolTimer[index].isSkillReady);
-                    
+                    UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index]
+                        .ActivateSkillCoolTimer(warriorSkillCoolTimer[index].isSkillReady);
+
                     while (true)
                     {
                         warriorSkillCoolTimer[index].remainedSkillCoolTime -= Time.deltaTime;
 
                         if (warriorSkillCoolTimer[index].remainedSkillCoolTime <= 0) break;
-                        UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index].UpdateSkillCoolTimerText(warriorSkillCoolTimer[index].remainedSkillCoolTime, warriorSkillCoolTimer[index].maxSkillCoolTime);
-                        
+                        UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index]
+                            .UpdateSkillCoolTimerText(warriorSkillCoolTimer[index].remainedSkillCoolTime,
+                                warriorSkillCoolTimer[index].maxSkillCoolTime);
+
                         yield return null;
                     }
 
                     warriorSkillCoolTimer[index].remainedSkillCoolTime = 0.0f;
-                    UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index].UpdateSkillCoolTimerText(warriorSkillCoolTimer[index].remainedSkillCoolTime, warriorSkillCoolTimer[index].maxSkillCoolTime);
-                    
+                    UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index].UpdateSkillCoolTimerText(
+                        warriorSkillCoolTimer[index].remainedSkillCoolTime,
+                        warriorSkillCoolTimer[index].maxSkillCoolTime);
+
                     warriorSkillCoolTimer[index].isSkillReady = true;
-                    UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index].ActivateSkillCoolTimer(warriorSkillCoolTimer[index].isSkillReady);
+                    UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index]
+                        .ActivateSkillCoolTimer(warriorSkillCoolTimer[index].isSkillReady);
                     yield break;
-                
+
                 case Enum.CharacterType.Archer:
-                    archerSkillCoolTimer[index].remainedSkillCoolTime = archerSkillCoolTimer[index].maxSkillCoolTime; 
+                    archerSkillCoolTimer[index].remainedSkillCoolTime = archerSkillCoolTimer[index].maxSkillCoolTime;
                     archerSkillCoolTimer[index].isSkillReady = false;
-                    UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index].ActivateSkillCoolTimer(archerSkillCoolTimer[index].isSkillReady);
-                    
+                    UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index]
+                        .ActivateSkillCoolTimer(archerSkillCoolTimer[index].isSkillReady);
+
                     while (true)
                     {
                         archerSkillCoolTimer[index].remainedSkillCoolTime -= Time.deltaTime;
 
                         if (archerSkillCoolTimer[index].remainedSkillCoolTime <= 0) break;
-                        UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index].UpdateSkillCoolTimerText(archerSkillCoolTimer[index].remainedSkillCoolTime, archerSkillCoolTimer[index].maxSkillCoolTime);
-                        
+                        UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index]
+                            .UpdateSkillCoolTimerText(archerSkillCoolTimer[index].remainedSkillCoolTime,
+                                archerSkillCoolTimer[index].maxSkillCoolTime);
+
                         yield return null;
                     }
 
                     archerSkillCoolTimer[index].remainedSkillCoolTime = 0.0f;
-                    UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index].UpdateSkillCoolTimerText(archerSkillCoolTimer[index].remainedSkillCoolTime, archerSkillCoolTimer[index].maxSkillCoolTime);
-                    
+                    UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index].UpdateSkillCoolTimerText(
+                        archerSkillCoolTimer[index].remainedSkillCoolTime,
+                        archerSkillCoolTimer[index].maxSkillCoolTime);
+
                     archerSkillCoolTimer[index].isSkillReady = true;
-                    UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index].ActivateSkillCoolTimer(archerSkillCoolTimer[index].isSkillReady);
+                    UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index]
+                        .ActivateSkillCoolTimer(archerSkillCoolTimer[index].isSkillReady);
                     yield break;
-                
+
                 case Enum.CharacterType.Wizard:
-                    wizardSkillCoolTimer[index].remainedSkillCoolTime = wizardSkillCoolTimer[index].maxSkillCoolTime; 
+                    wizardSkillCoolTimer[index].remainedSkillCoolTime = wizardSkillCoolTimer[index].maxSkillCoolTime;
                     wizardSkillCoolTimer[index].isSkillReady = false;
-                    UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index].ActivateSkillCoolTimer(wizardSkillCoolTimer[index].isSkillReady);
-                    
+                    UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index]
+                        .ActivateSkillCoolTimer(wizardSkillCoolTimer[index].isSkillReady);
+
                     while (true)
                     {
                         wizardSkillCoolTimer[index].remainedSkillCoolTime -= Time.deltaTime;
 
                         if (wizardSkillCoolTimer[index].remainedSkillCoolTime <= 0) break;
-                        UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index].UpdateSkillCoolTimerText(wizardSkillCoolTimer[index].remainedSkillCoolTime, wizardSkillCoolTimer[index].maxSkillCoolTime);
-                        
+                        UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index]
+                            .UpdateSkillCoolTimerText(wizardSkillCoolTimer[index].remainedSkillCoolTime,
+                                wizardSkillCoolTimer[index].maxSkillCoolTime);
+
                         yield return null;
                     }
 
                     wizardSkillCoolTimer[index].remainedSkillCoolTime = 0.0f;
-                    UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index].UpdateSkillCoolTimerText(wizardSkillCoolTimer[index].remainedSkillCoolTime, wizardSkillCoolTimer[index].maxSkillCoolTime);
-                    
+                    UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index].UpdateSkillCoolTimerText(
+                        wizardSkillCoolTimer[index].remainedSkillCoolTime,
+                        wizardSkillCoolTimer[index].maxSkillCoolTime);
+
                     wizardSkillCoolTimer[index].isSkillReady = true;
-                    UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index].ActivateSkillCoolTimer(wizardSkillCoolTimer[index].isSkillReady);
+                    UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index]
+                        .ActivateSkillCoolTimer(wizardSkillCoolTimer[index].isSkillReady);
                     yield break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

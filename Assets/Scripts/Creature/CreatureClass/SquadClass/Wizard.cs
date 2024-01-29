@@ -1,6 +1,6 @@
 using Data;
 using Managers;
-using UnityEngine;
+using Managers.BattleManager;
 
 namespace Creature.CreatureClass.SquadClass
 {
@@ -19,25 +19,29 @@ namespace Creature.CreatureClass.SquadClass
         protected override void OnNormalAttack()
         {
             base.OnNormalAttack();
-            
-            ProjectileManager.Instance.InstantiateBaseAttack(damage, ProjectileSpawnPosition, Direction, Enum.PoolType.ProjectileBaseAttackWizard);
+
+            ProjectileManager.Instance.InstantiateBaseAttack(damage, ProjectileSpawnPosition, Direction,
+                Enum.PoolType.ProjectileBaseAttackWizard);
         }
-        
+
         protected override void OnSkillAttack()
         {
             base.OnSkillAttack();
-            
+
             for (var i = 0; i < SquadBattleManager.Instance.wizardSkillCoolTimer.Length; i++)
             {
                 if (!SquadBattleManager.Instance.wizardSkillCoolTimer[i].isSkillReady) continue;
-                if (!SquadBattleManager.Instance.autoSkill && !SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate) continue;
-                
+                if (!SquadBattleManager.Instance.autoSkill &&
+                    !SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate) continue;
+
                 if (currentTarget == null) return;
-                
+
                 SquadBattleManager.Instance.RunSkillCoolTimer(Enum.CharacterType.Wizard, i);
-                ProjectileManager.Instance.InstantiateSkillAttack(SquadBattleManager.Instance.wizardSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
+                ProjectileManager.Instance.InstantiateSkillAttack(
+                    SquadBattleManager.Instance.wizardSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition,
+                    currentTarget.transform.position);
                 SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate = false;
-                
+
                 break;
             }
         }

@@ -1,6 +1,5 @@
 using System;
-using Managers;
-using Managers.BottomMenuManager;
+using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.TalentPanel;
 using TMPro;
@@ -34,9 +33,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
                     levelUpMagnificationButton[i].GetComponent<Image>().color = color;
                     levelUpMagnificationButton[i].GetComponentInChildren<TextMeshProUGUI>().color = Color.black;
 
-                    SquadTalentManager.Instance.levelUpMagnification = (int)Mathf.Pow(10, i);
-                    
-                    Debug.Log($"{SquadTalentManager.Instance.levelUpMagnification}");
+                    TalentManager.Instance.levelUpMagnification = (int)Mathf.Pow(10, i);
+
+                    Debug.Log($"{TalentManager.Instance.levelUpMagnification}");
 
                     CheckRequiredCurrencyOfMagnificationButton(i);
                 }
@@ -51,11 +50,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
 
         public static void CheckRequiredCurrencyOfMagnificationButton(int index)
         {
-            var levelUpCost = SquadTalentManager.Instance.talentItem[index].levelUpCost;
+            var levelUpCost = TalentManager.Instance.talentItem[index].levelUpCost;
 
             if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.Gold)) <
                 SquadStatManager.Instance.levelUpMagnification * levelUpCost)
-                foreach (var talentItem in SquadTalentManager.Instance.talentItem)
+                foreach (var talentItem in TalentManager.Instance.talentItem)
                 {
                     if (talentItem.maxLevel - talentItem.currentLevel <=
                         Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.Gold))) continue;
@@ -64,7 +63,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
                     talentItem.upgradeBlockButton.gameObject.SetActive(true);
                 }
             else
-                foreach (var talentItem in SquadTalentManager.Instance.talentItem)
+                foreach (var talentItem in TalentManager.Instance.talentItem)
                 {
                     talentItem.upgradeButton.gameObject.SetActive(true);
                     talentItem.upgradeBlockButton.gameObject.SetActive(false);

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Controller.Projectiles.SkillAttack.Archer
 {
     public class BloodRain : SkillAttackController

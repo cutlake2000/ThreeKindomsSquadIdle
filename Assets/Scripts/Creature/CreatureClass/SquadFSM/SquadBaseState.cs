@@ -8,7 +8,7 @@ namespace Creature.CreatureClass.SquadFSM
     {
         protected readonly Squad Squad;
         protected readonly SquadStateMachine SquadStateMachine;
-        
+
         protected SquadBaseState(SquadStateMachine squadStateMachine)
         {
             SquadStateMachine = squadStateMachine;
@@ -17,20 +17,30 @@ namespace Creature.CreatureClass.SquadFSM
             AnimationEventReceiver = Squad.animationEventReceiver;
             AnimationData = Squad.animationData;
             Rigid = Squad.rigid;
-            
+
             MoveSpeed = Squad.moveSpeed;
             OnAttack = false;
         }
 
-        public override void Update() { }
+        public override void Update()
+        {
+        }
 
-        public override void Enter() { }
+        public override void Enter()
+        {
+        }
 
-        public override void Exit() { }
+        public override void Exit()
+        {
+        }
 
-        public override void LogicUpdate() { }
+        public override void LogicUpdate()
+        {
+        }
 
-        public override void PhysicsUpdate() { }
+        public override void PhysicsUpdate()
+        {
+        }
 
         protected override void StartAnimationWithBool(int animationHash)
         {
@@ -54,17 +64,18 @@ namespace Creature.CreatureClass.SquadFSM
 
         protected override bool CheckAttackRange()
         {
-            return Squad.currentTarget != null && Squad.attackRange >= Vector3.Distance(Squad.currentTarget.transform.position, Squad.transform.position);
+            return Squad.currentTarget != null && Squad.attackRange >=
+                Vector3.Distance(Squad.currentTarget.transform.position, Squad.transform.position);
         }
 
         protected override void FlipSprite(float directionX)
         {
             if (Squad.currentTarget == null) return;
-            
+
             var transform = Squad.transform;
             var scale = transform.localScale;
-            var localScale = new Vector3(Mathf.Abs(scale.x),Mathf.Abs(scale.y), Mathf.Abs(scale.z));
-            
+            var localScale = new Vector3(Mathf.Abs(scale.x), Mathf.Abs(scale.y), Mathf.Abs(scale.z));
+
             switch (directionX)
             {
                 case > 0f:
@@ -86,8 +97,8 @@ namespace Creature.CreatureClass.SquadFSM
             var squadTransform = Squad.transform;
             var scale = squadTransform.localScale;
             var direction = (Squad.currentTarget.position - squadTransform.position).normalized;
-            var localScale = new Vector3(Mathf.Abs(scale.x),Mathf.Abs(scale.y), Mathf.Abs(scale.z));
-            
+            var localScale = new Vector3(Mathf.Abs(scale.x), Mathf.Abs(scale.y), Mathf.Abs(scale.z));
+
             switch (direction.x)
             {
                 case > 0.1f:

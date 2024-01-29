@@ -10,24 +10,24 @@ using Random = UnityEngine.Random;
 
 namespace Managers.BottomMenuManager.SummonPanel
 {
-    public class SquadSummonManager : MonoBehaviour
+    public class SummonManager : MonoBehaviour
     {
         public static Action<Enum.SummonEquipmentType, int> OnSummonEquipment;
 
-        public static SquadSummonManager Instance;
+        public static SummonManager Instance;
 
-        private WeightedRandomPicker<string> weaponSummoner;
+        public SummonSo summonProbability;
+        public List<Equipment> summonedEquipmentList = new();
+
+        public readonly Dictionary<string, int> SummonedItemDictionary = new();
         private WeightedRandomPicker<string> armorSummoner;
+        private Enum.EquipmentType[] gearType;
         private WeightedRandomPicker<string> squadSummoner;
 
         private Enum.CharacterType[] squadType;
+
+        private WeightedRandomPicker<string> weaponSummoner;
         private Enum.EquipmentType[] weaponType;
-        private Enum.EquipmentType[] gearType;
-
-        public SummonSo summonProbability;
-
-        public readonly Dictionary<string, int> SummonedItemDictionary = new();
-        public List<Equipment> summonedEquipmentList = new();
 
         private void Awake()
         {
@@ -60,47 +60,43 @@ namespace Managers.BottomMenuManager.SummonPanel
             InitWeaponSummoner();
             InitGearSummoner();
         }
-        
+
         private void InitSquadSummoner()
         {
             var currentSquadLevel = SquadBattleManager.Instance.SummonLevel.CurrentSquadLevel;
+
+                Enum.CharacterType cr = (Enum.CharacterType)System.Enum.Parse(typeof(Enum.CharacterType) , "Warrior");
             
             if (currentSquadLevel == 0) currentSquadLevel = 1;
-            
+
             var squadProbability = summonProbability.GetProbability(currentSquadLevel).SummonProbabilities;
-            
+
             foreach (var probability in squadProbability)
-            {
                 squadSummoner.Add($"{probability.equipmentRarity}", probability.weight);
-            }
         }
 
         private void InitWeaponSummoner()
         {
             var currentWeaponLevel = SquadBattleManager.Instance.SummonLevel.CurrentWeaponLevel;
-            
+
             if (currentWeaponLevel == 0) currentWeaponLevel = 1;
-            
+
             var weaponProbability = summonProbability.GetProbability(currentWeaponLevel).SummonProbabilities;
-            
+
             foreach (var probability in weaponProbability)
-            {
                 weaponSummoner.Add($"{probability.equipmentRarity}", probability.weight);
-            }
         }
 
         private void InitGearSummoner()
         {
             var currentGearLevel = SquadBattleManager.Instance.SummonLevel.CurrentGearLevel;
-            
+
             if (currentGearLevel == 0) currentGearLevel = 1;
-            
+
             var armorProbability = summonProbability.GetProbability(currentGearLevel).SummonProbabilities;
-            
+
             foreach (var probability in armorProbability)
-            {
                 armorSummoner.Add($"{probability.equipmentRarity}", probability.weight);
-            }
         }
 
         private void SetupSummoner(Enum.SummonEquipmentType type)
@@ -126,7 +122,7 @@ namespace Managers.BottomMenuManager.SummonPanel
                 string randomRarity = null;
                 var randomTier = Random.Range(1, 5);
                 var randomType = Enum.EquipmentType.Null;
-            
+
                 switch (type)
                 {
                     case Enum.SummonEquipmentType.Squad:
@@ -142,56 +138,50 @@ namespace Managers.BottomMenuManager.SummonPanel
                         randomType = gearType[Random.Range(0, 3)];
                         break;
                 }
-                
+
                 var targetName = $"{randomRarity}_{randomTier}_{randomType}";
 
                 if (!CheckDictionaryKey(SummonedItemDictionary, targetName))
-                {
                     SummonedItemDictionary.Add(targetName, 1);
-                }
                 else
-                {
                     SummonedItemDictionary[targetName]++;
-                }
-                
+
                 Debug.Log($"가챠! {targetName}");
             }
 
-            const int maxGradeEnumIndex = (int) Enum.EquipmentRarity.Null;
+            const int maxGradeEnumIndex = (int)Enum.EquipmentRarity.Null;
             var typeEnumIndex = 0;
 
             for (var i = 0; i < maxGradeEnumIndex; i++)
+            for (var j = 5; j >= 1; j--)
             {
-                for (var j = 5; j >= 1; j--)
+                switch (type)
                 {
-                    switch (type)
-                    {
-                        case Enum.SummonEquipmentType.Weapon:
-                            typeEnumIndex = (int) Enum.EquipmentType.Sword;
-                            break;
-                        case Enum.SummonEquipmentType.Gear:
-                            typeEnumIndex = (int) Enum.EquipmentType.Helmet;
-                            break;
-                    }
+                    case Enum.SummonEquipmentType.Weapon:
+                        typeEnumIndex = (int)Enum.EquipmentType.Sword;
+                        break;
+                    case Enum.SummonEquipmentType.Gear:
+                        typeEnumIndex = (int)Enum.EquipmentType.Helmet;
+                        break;
+                }
 
-                    for (var k = 0; k < 3; k++)
-                    {
-                        var targetId = $"{(Enum.EquipmentRarity) i}_{j}_{(Enum.EquipmentType) typeEnumIndex + k}";
-                    
-                        if (!SummonedItemDictionary.TryGetValue(targetId, out var summonCount)) continue;
-                    
-                        Debug.Log($"가챠2 {targetId}");
-                        var target = EquipmentManager.GetEquipment(targetId);
-                        target.equipmentRarity = (Enum.EquipmentRarity)i;
-                        target.summonCount = summonCount;
-                        target.quantity += summonCount;
-                        target.SaveEquipmentEachInfo(target.name, Enum.EquipmentProperty.Quantity);
-                        target.SetQuantityText();
-                        summonedEquipmentList.Add(target);
-                    }
+                for (var k = 0; k < 3; k++)
+                {
+                    var targetId = $"{(Enum.EquipmentRarity)i}_{j}_{(Enum.EquipmentType)typeEnumIndex + k}";
+
+                    if (!SummonedItemDictionary.TryGetValue(targetId, out var summonCount)) continue;
+
+                    Debug.Log($"가챠2 {targetId}");
+                    var target = InventoryManager.GetEquipment(targetId);
+                    target.equipmentRarity = (Enum.EquipmentRarity)i;
+                    target.summonCount = summonCount;
+                    target.quantity += summonCount;
+                    target.SaveEquipmentEachInfo(target.name, Enum.EquipmentProperty.Quantity);
+                    target.SetQuantityText();
+                    summonedEquipmentList.Add(target);
                 }
             }
-            
+
             SummonPanelUI.OnSummon?.Invoke(type, SummonedItemDictionary.Count);
         }
 
@@ -199,33 +189,27 @@ namespace Managers.BottomMenuManager.SummonPanel
         {
             var currentWeaponLevel = SquadBattleManager.Instance.SummonLevel.CurrentWeaponLevel;
             var weaponProbability = summonProbability.GetProbability(currentWeaponLevel).SummonProbabilities;
-            
+
             foreach (var probability in weaponProbability)
-            {
                 weaponSummoner.ModifyWeight($"{probability.equipmentRarity}", probability.weight);
-            }
         }
 
         private void SetGearSummoner()
         {
             var currentGearLevel = SquadBattleManager.Instance.SummonLevel.CurrentWeaponLevel;
             var armorProbability = summonProbability.GetProbability(currentGearLevel).SummonProbabilities;
-            
+
             foreach (var probability in armorProbability)
-            {
                 armorSummoner.ModifyWeight($"{probability.equipmentRarity}", probability.weight);
-            }
         }
-        
+
         private void SetSquadSummoner()
         {
             var currentSquadLevel = SquadBattleManager.Instance.SummonLevel.CurrentSquadLevel;
             var squadProbability = summonProbability.GetProbability(currentSquadLevel).SummonProbabilities;
-            
+
             foreach (var probability in squadProbability)
-            {
                 squadSummoner.ModifyWeight($"{probability.equipmentRarity}", probability.weight);
-            }
         }
 
         //TODO : 업적
@@ -233,13 +217,12 @@ namespace Managers.BottomMenuManager.SummonPanel
         {
             // AchievementManager.instance.IncreaseAchievementValue(Data.Enum.AchieveType.Summon, count);
         }
-        
+
         private static bool CheckDictionaryKey<TK, TV>(Dictionary<TK, TV> dict, TK key)
         {
             foreach (var kvp in dict)
-            {
-                if (kvp.Key.Equals(key)) return true;
-            }
+                if (kvp.Key.Equals(key))
+                    return true;
 
             return false;
         }

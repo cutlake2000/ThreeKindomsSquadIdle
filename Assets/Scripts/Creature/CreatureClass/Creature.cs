@@ -1,13 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Creature.CreatureClass.SquadClass;
 using Creature.Data;
 using Function;
-using Managers;
 using Module;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Enum = Data.Enum;
 
@@ -18,8 +14,8 @@ namespace Creature.CreatureClass
         private const float FADE_TIME = 0.8f;
         [SerializeField] protected Enum.CreatureClassType creatureClassType;
 
-        [Header("EnemyFinder")]
-        [SerializeField] protected float followRange;
+        [Header("EnemyFinder")] [SerializeField]
+        protected float followRange;
 
         public Transform currentTarget;
         public Transform projectileSpawn;
@@ -38,14 +34,17 @@ namespace Creature.CreatureClass
         public float attackRange;
         public float moveSpeed;
 
-        [Header("Sprite")]
-        [SerializeField] protected List<SpriteRenderer> allSprites = new();
+        [Header("Sprite")] [SerializeField] protected List<SpriteRenderer> allSprites = new();
 
-        [Header("HpBar")]
-        [SerializeField] protected GameObject hpBar;
+        [Header("HpBar")] [SerializeField] protected GameObject hpBar;
 
         protected TargetFinder TargetFinder;
-        
+
+        protected virtual void Update()
+        {
+            FlipHpBar();
+        }
+
         protected virtual void OnEnable()
         {
             SetCreatureComponent();
@@ -54,16 +53,17 @@ namespace Creature.CreatureClass
             InitCreature();
         }
 
-        protected virtual void Update()
+        protected virtual void SetEventListener()
         {
-            FlipHpBar();
         }
 
-        protected virtual void SetEventListener() { }
-        
-        public virtual void SetAllSpritesList() { }
-        
-        protected virtual void ResetAllSpritesList() { }
+        public virtual void SetAllSpritesList()
+        {
+        }
+
+        protected virtual void ResetAllSpritesList()
+        {
+        }
 
         private void InitCreature()
         {
@@ -73,8 +73,11 @@ namespace Creature.CreatureClass
             SetCreatureStats();
             SetUIHealthBar();
         }
-        protected virtual void SetCreatureStats() { }
-        
+
+        protected virtual void SetCreatureStats()
+        {
+        }
+
         private void SetCreatureComponent()
         {
             animator = GetComponentInChildren<Animator>();
@@ -86,7 +89,9 @@ namespace Creature.CreatureClass
             animationData.InitializeData();
         }
 
-        protected virtual void FindNearbyEnemy() { }
+        protected virtual void FindNearbyEnemy()
+        {
+        }
 
         protected void FlipHpBar()
         {
@@ -143,6 +148,8 @@ namespace Creature.CreatureClass
             gameObject.SetActive(false);
         }
 
-        protected virtual void CreatureDeath() { }
+        protected virtual void CreatureDeath()
+        {
+        }
     }
 }

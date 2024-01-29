@@ -1,6 +1,5 @@
 using System;
-using Managers;
-using Managers.BottomMenuManager;
+using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using TMPro;
 using UnityEngine;

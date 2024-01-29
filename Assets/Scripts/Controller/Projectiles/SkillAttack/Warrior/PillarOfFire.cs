@@ -1,20 +1,11 @@
-using System;
 using UnityEngine;
 
 namespace Controller.Projectiles.SkillAttack.Warrior
 {
     public class PillarOfFire : SkillAttackController
     {
-        [Header("Projectile 발사 여부")]
-        [SerializeField] protected bool readyToLaunch;
-        
-        protected override void ActivateSkill()
-        {
-            particleCurrentTime = 0f;
-            projectileTransform.position = targetPosition;
-            readyToLaunch = true;
-            gameObject.GetComponent<ParticleSystem>().Play(true);
-        }
+        [Header("Projectile 발사 여부")] [SerializeField]
+        protected bool readyToLaunch;
 
         private void Update()
         {
@@ -31,6 +22,14 @@ namespace Controller.Projectiles.SkillAttack.Warrior
                     attackCollider.SetActive(true);
                     break;
             }
+        }
+
+        protected override void ActivateSkill()
+        {
+            particleCurrentTime = 0f;
+            projectileTransform.position = targetPosition;
+            readyToLaunch = true;
+            gameObject.GetComponent<ParticleSystem>().Play(true);
         }
     }
 }

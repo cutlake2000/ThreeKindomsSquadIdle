@@ -3,27 +3,26 @@ using Function;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Creature.Data
 {
     public class Equipment : MonoBehaviour
     {
-        public IObjectPool<Equipment> ManagedPool;
-        
-        public string id;       // 장비의 이름
-        public int quantity;         // 장비의 개수
+        private static readonly int Summon = Animator.StringToHash("Summon");
+
+        public string id; // 장비의 이름
+        public int quantity; // 장비의 개수
         public int tier;
         public bool isEquipped;
-        public Enum.EquipmentType type;   // 장비의 타입 (예: 무기, 방어구 등)
-        public Enum.EquipmentRarity equipmentRarity;        // 장비의 희귀도
+        public Enum.EquipmentType type; // 장비의 타입 (예: 무기, 방어구 등)
+        public Enum.EquipmentRarity equipmentRarity; // 장비의 희귀도
         public int level; // 강화 상태 (예: 0, 1, 2, ...)
         public int basicEquippedEffect;
         public int basicOwnedEffect;
         public Image basicEquipmentBackground;
         public Image basicEquipmentImage;
-        
+
         public Sprite equipmentBackground;
         public Sprite equipmentImage;
         public TMP_Text tierText;
@@ -31,24 +30,24 @@ namespace Creature.Data
         public Slider quantityBar;
         public TMP_Text quantityText;
         public TMP_Text summonCountText;
-        
-        public int equippedEffect;  // 장착효과
-        public int ownedEffect;     // 보유효과
+
+        public int equippedEffect; // 장착효과
+        public int ownedEffect; // 보유효과
 
         public int summonCount; // 소환된 개수
-        
+
         public int maxQuantity = 5;
         public int maxLevel = 250;
-        
+
         [SerializeField] private ParticleSystem[] summonEffects;
         [SerializeField] private Animator summonEffectFrameAnimator;
-        private static readonly int Summon = Animator.StringToHash("Summon");
-        
+        public IObjectPool<Equipment> ManagedPool;
+
         public void SetManagedPool(IObjectPool<Equipment> pool)
         {
             ManagedPool = pool;
         }
-        
+
         // 강화 메서드
         public void Enhance()
         {
@@ -72,10 +71,7 @@ namespace Creature.Data
         // 개수 체크하는 메서드
         public bool CheckQuantity()
         {
-            if (quantity >= 4)
-            {
-                return true;
-            }
+            if (quantity >= 4) return true;
 
             SetQuantityText();
             return false;
@@ -90,14 +86,14 @@ namespace Creature.Data
             ES3.Save("onEquipped_" + id, isEquipped);
             ES3.Save("type_" + id, type);
             ES3.Save("rarity_" + id, equipmentRarity);
-            ES3.Save("level_"+ id, level);
+            ES3.Save("level_" + id, level);
             ES3.Save("basicEquippedEffect_" + id, basicEquippedEffect);
             ES3.Save("basicOwnedEffect_" + id, basicOwnedEffect);
 
             ES3.Save("equippedEffect_" + id, equippedEffect);
             ES3.Save("ownedEffect_" + id, ownedEffect);
         }
-        
+
         public void SaveEquipmentAllInfo(string equipmentID)
         {
             ES3.Save("id_" + equipmentID, id);
@@ -106,13 +102,13 @@ namespace Creature.Data
             ES3.Save("onEquipped_" + equipmentID, isEquipped);
             ES3.Save("type_" + equipmentID, type);
             ES3.Save("rarity_" + equipmentID, equipmentRarity);
-            ES3.Save("level_"+ equipmentID, level);
+            ES3.Save("level_" + equipmentID, level);
             ES3.Save("basicEquippedEffect_" + equipmentID, basicEquippedEffect);
             ES3.Save("basicOwnedEffect_" + equipmentID, basicOwnedEffect);
             ES3.Save("equippedEffect_" + equipmentID, equippedEffect);
             ES3.Save("ownedEffect_" + equipmentID, ownedEffect);
         }
-    
+
         public void SaveEquipmentEachInfo(string equipmentID, Enum.EquipmentProperty property)
         {
             switch (property)
@@ -136,7 +132,7 @@ namespace Creature.Data
                     ES3.Save("rarity_" + equipmentID, equipmentRarity);
                     break;
                 case Enum.EquipmentProperty.EnhancementLevel:
-                    ES3.Save("level_"+ equipmentID, level);
+                    ES3.Save("level_" + equipmentID, level);
                     break;
                 case Enum.EquipmentProperty.BasicEquippedEffect:
                     ES3.Save("basicEquippedEffect_" + equipmentID, basicEquippedEffect);
@@ -170,12 +166,12 @@ namespace Creature.Data
 
             equippedEffect = ES3.Load<int>("equippedEffect_" + id);
             ownedEffect = ES3.Load<int>("ownedEffect_" + id);
-
         }
+
         public void LoadEquipment(string equipmentID)
         {
             if (!ES3.KeyExists("id_" + equipmentID)) return;
-            
+
             id = ES3.Load<string>("id_" + equipmentID);
             quantity = ES3.Load<int>("quantity_" + equipmentID);
             tier = ES3.Load<int>("grade_" + equipmentID);
@@ -204,12 +200,14 @@ namespace Creature.Data
             basicOwnedEffect = equipment.basicOwnedEffect;
             equipmentBackground = equipment.equipmentBackground;
             equipmentImage = equipment.equipmentImage;
-            
-            equippedEffect = this.basicEquippedEffect;
-            ownedEffect = this.basicOwnedEffect;
+
+            equippedEffect = basicEquippedEffect;
+            ownedEffect = basicOwnedEffect;
         }
-        
-        public void SetEquipmentInfo(string id, int quantity,int tier, bool isEquipped, Enum.EquipmentType type, Enum.EquipmentRarity equipmentRarity, int level, int basicEquippedEffect, int basicOwnedEffect, Sprite backgroundEffect, Sprite equipmentImage)
+
+        public void SetEquipmentInfo(string id, int quantity, int tier, bool isEquipped, Enum.EquipmentType type,
+            Enum.EquipmentRarity equipmentRarity, int level, int basicEquippedEffect, int basicOwnedEffect,
+            Sprite backgroundEffect, Sprite equipmentImage)
         {
             this.id = id;
             this.quantity = quantity;
@@ -220,7 +218,7 @@ namespace Creature.Data
             this.level = level;
             this.basicEquippedEffect = basicEquippedEffect;
             this.basicOwnedEffect = basicOwnedEffect;
-            this.equipmentBackground = backgroundEffect;
+            equipmentBackground = backgroundEffect;
             this.equipmentImage = equipmentImage;
 
             equippedEffect = this.basicEquippedEffect;
@@ -228,7 +226,7 @@ namespace Creature.Data
 
             SetUI();
         }
-    
+
         public void SetUI()
         {
             SetEquipmentImage();
@@ -257,10 +255,10 @@ namespace Creature.Data
         public void SetBackgroundEffect()
         {
             if (basicEquipmentBackground == null) return;
-            
+
             basicEquipmentBackground.sprite = equipmentBackground;
         }
-        
+
         public void SetEquipmentImage()
         {
             basicEquipmentImage.sprite = equipmentImage;
@@ -271,7 +269,7 @@ namespace Creature.Data
         {
             tierText.text = $"{tier} 티어";
         }
-        
+
         public void SetLevelText()
         {
             if (levelText == null) return;
@@ -284,8 +282,8 @@ namespace Creature.Data
             basicEquipmentBackground.sprite = equipmentBackground;
             basicEquipmentImage.sprite = equipmentImage;
             summonCountText.text = $"{summonCount}";
-            
-            summonEffects[(int) equipmentRarity].Play();
+
+            summonEffects[(int)equipmentRarity].Play();
             summonEffectFrameAnimator.SetTrigger(Summon);
         }
 

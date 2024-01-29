@@ -1,5 +1,3 @@
-using Function;
-using Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,12 +19,13 @@ namespace Controller.UI.BottomMenuUI.DungeonPanel
         public int clearDungeonLevel;
         public int currentDungeonLevel;
         public int currentDungeonReward; //TODO :BigInteger로 수정
-        
+
         public void SetDungeonUI()
         {
             currentDungeonLevelText.text = $"{currentDungeonLevel} 단계";
             currentDungeonRewardText.text = $"+ <sprite=15> {currentDungeonReward}";
         }
+
         public void UpdateIncreaseDungeonUI()
         {
             currentDungeonLevelText.text = $"{currentDungeonLevel} 단계";
@@ -37,7 +36,7 @@ namespace Controller.UI.BottomMenuUI.DungeonPanel
         {
             currentDungeonLevel = level;
             currentDungeonReward = baseReward * baseReward / 100 * increaseRewardPercent;
-            
+
             ES3.Save($"{nameof(Enum.DungeonType)}/{dungeonType}/currentLevel : ", currentDungeonLevel);
         }
     }

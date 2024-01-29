@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace Managers
+namespace Managers.BattleManager
 {
     public class FunctionManager : MonoBehaviour
     {
@@ -11,7 +10,7 @@ namespace Managers
         {
             Instance = this;
         }
-        
+
         public static Vector2 Vector3ToVector2(Vector3 inputVec3)
         {
             return new Vector2(inputVec3.x, inputVec3.y);

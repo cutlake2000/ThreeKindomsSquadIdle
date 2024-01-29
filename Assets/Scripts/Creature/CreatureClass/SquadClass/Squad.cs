@@ -2,35 +2,24 @@ using Creature.CreatureClass.MonsterClass;
 using Creature.CreatureClass.SquadFSM;
 using Function;
 using Managers;
-using Module;
+using Managers.BattleManager;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Enum = Data.Enum;
 
 namespace Creature.CreatureClass.SquadClass
 {
     public class Squad : Creature
     {
-        [Header("Class")]
-        [SerializeField] public Enum.CharacterType characterType;
+        [Header("Class")] [SerializeField] public Enum.CharacterType characterType;
 
-        [Header("Sprite")]
-        [SerializeField] public SPUM_SpriteList spumSprite;
-        
-        [Header("Projectile")]
-        protected Vector2 ProjectileSpawnPosition;
+        [Header("Sprite")] [SerializeField] public SPUM_SpriteList spumSprite;
+
         protected Vector2 Direction;
 
-        [Header("StateMachine")]
-        private SquadStateMachine squadStateMachine;
+        [Header("Projectile")] protected Vector2 ProjectileSpawnPosition;
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            
-            squadStateMachine?.ChangeState(squadStateMachine.SquadIdleState);
-        }
-        
+        [Header("StateMachine")] private SquadStateMachine squadStateMachine;
+
         protected virtual void Start()
         {
             squadStateMachine = new SquadStateMachine(this);
@@ -40,11 +29,12 @@ namespace Creature.CreatureClass.SquadClass
         protected override void Update()
         {
             base.Update();
-            
+
             squadStateMachine.Update();
             squadStateMachine.LogicUpdate();
-            
-            if (currentTarget != null && currentTarget.gameObject.activeInHierarchy && currentTarget.GetComponent<Monster>().isDead == false) return;
+
+            if (currentTarget != null && currentTarget.gameObject.activeInHierarchy &&
+                currentTarget.GetComponent<Monster>().isDead == false) return;
             FindNearbyEnemy();
         }
 
@@ -52,7 +42,14 @@ namespace Creature.CreatureClass.SquadClass
         {
             squadStateMachine.PhysicsUpdate();
         }
-        
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            squadStateMachine?.ChangeState(squadStateMachine.SquadIdleState);
+        }
+
         protected override void SetEventListener()
         {
             animationEventReceiver.OnNormalAttackEffect += OnNormalAttackEffect;
@@ -72,7 +69,7 @@ namespace Creature.CreatureClass.SquadClass
             allSprites.AddRange(spumSprite._weaponList);
             allSprites.AddRange(spumSprite._backList);
         }
-        
+
         protected override void ResetAllSpritesList()
         {
             spumSprite.ResyncData();
@@ -91,7 +88,7 @@ namespace Creature.CreatureClass.SquadClass
             defence = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Defence);
             moveSpeed = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.MoveSpeed);
             followRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.FollowRange);
-            
+
             currentHealth = maxHealth;
             isDead = false;
             currentTarget = null;
@@ -121,7 +118,7 @@ namespace Creature.CreatureClass.SquadClass
         protected override void FindNearbyEnemy()
         {
             currentTarget = null;
-            
+
             //TODO: 추후에 스테이지가 시작할 때 로직이 돌도록 수정하면 좋을 듯
             if (currentTarget != null && currentTarget.GetComponent<Monster>().isDead == false) return;
 
@@ -136,7 +133,9 @@ namespace Creature.CreatureClass.SquadClass
             Direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
         }
 
-        protected virtual void OnNormalAttackEffect() { }
+        protected virtual void OnNormalAttackEffect()
+        {
+        }
 
         protected virtual void OnSkillAttack()
         {

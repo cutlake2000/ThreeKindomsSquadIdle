@@ -2,6 +2,7 @@ using System;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel;
 using Creature.Data;
 using Function;
+using Managers.BattleManager;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 using Enum = Data.Enum;
@@ -11,9 +12,7 @@ namespace Managers.BottomMenuManager.SquadPanel
     public class SquadStatManager : MonoBehaviour
     {
         public static SquadStatManager Instance;
-        public event Action<Enum.StatTypeBySquadStatPanel, int> OnUpgradeTotalSquadStatFromSquadStatPanel;
-
-        //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
+        
         [SerializeField] private SquadStatSo[] squadStatSo;
         public SquadStatItemUI[] squadStatItem;
         public int levelUpMagnification;
@@ -22,6 +21,8 @@ namespace Managers.BottomMenuManager.SquadPanel
         {
             Instance = this;
         }
+
+        public event Action<Enum.StatTypeBySquadStatPanel, int> OnUpgradeTotalSquadStatFromSquadStatPanel;
 
         // 이벤트 설정하는 메서드
         public void InitSquadStatManager()

@@ -1,30 +1,29 @@
-using System;
-using UnityEngine;
-using Managers;
-using Managers.BottomMenuManager;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.SummonPanel;
 using Managers.BottomMenuManager.TalentPanel;
+using UnityEngine;
 
-namespace Managers
+namespace Managers.BattleManager
 {
     public class GameManager : MonoBehaviour
     {
         private void Start()
         {
-            SquadBattleManager.Instance.InitSquadManager();
             SquadStatManager.Instance.InitSquadStatManager();
-            SquadTalentManager.Instance.InitSquadTalentManager();
             SquadConfigureManager.Instance.InitSquadConfigureManager();
-            SquadSummonManager.Instance.InitSummonManager();
-            
-            AccountManager.Instance.InitAccountManager();
-            EquipmentManager.Instance.InitEquipmentManager();
-            // AchievementManager.instance.InitAchievementManager();
-            StageManager.Instance.InitStageManager();
+            TalentManager.Instance.InitSquadTalentManager();
+            SummonManager.Instance.InitSummonManager();
             DungeonManager.Instance.InitDungeonManager();
-            UIManager.Instance.InitUIManager();
+         
+            SquadBattleManager.Instance.InitSquadManager();
+            AccountManager.Instance.InitAccountManager();
+            InventoryManager.Instance.InitEquipmentManager();
             
+            StageManager.Instance.InitStageManager();
+            QuestManager.Instance.InitQuestManager();
+            
+            UIManager.Instance.InitUIManager();
+
             StageManager.Instance.StartStageRunner();
             ES3.Save("Init_Game", true);
         }

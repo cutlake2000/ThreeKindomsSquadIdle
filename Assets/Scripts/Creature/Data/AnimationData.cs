@@ -14,7 +14,7 @@ namespace Creature.Data
         [SerializeField] private string classTypeParameterName = "ClassType";
         [SerializeField] private string attackStateParameterName = "AttackState";
         [SerializeField] private string editChkParameterName = "EditChk";
-        
+
         public int RunParameterHash { get; private set; }
         public int AttackParameterHash { get; private set; }
         public int DieParameterHash { get; private set; }

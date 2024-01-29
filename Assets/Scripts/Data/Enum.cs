@@ -2,13 +2,6 @@ namespace Data
 {
     public static class Enum
     {
-        public enum SkillType
-        {
-            MoveTo,
-            Spawn,
-            Follow
-        }
-        
         public enum AchievementProperty
         {
             Name,
@@ -38,15 +31,25 @@ namespace Data
             Enhance
         }
 
+        public enum CharacterRarity
+        {
+            Magic,
+            Rare,
+            Unique,
+            Legend
+        }
+
+        public enum CharacterType
+        {
+            Warrior = 0,
+            Archer,
+            Wizard
+        }
+
         public enum CreatureClassType
         {
             Squad,
             Monster
-        }
-        
-        public enum DungeonType
-        {
-            GoldDungeon
         }
 
         public enum CurrencyType
@@ -56,7 +59,37 @@ namespace Data
             StatPoint,
             WeaponEnhanceStone,
             GearEnhanceStone,
-            SquadEnhanceStone
+            SquadEnhanceStone,
+            GoldDungeonTicket,
+            EnhanceDungeonTicket
+        }
+
+        public enum QuestType
+        {
+            AttackTalentLevel,
+            HealthTalentLevel,
+            DefenceTalentLevel,
+            SquadLevel,
+            StageClear
+        }
+        
+        public enum QuestRewardType
+        {
+            Gold,
+            Dia,
+            GoldDungeonTicket,
+            EnhanceDungeonTicket
+        }
+
+        public enum DungeonClearType
+        {
+            KillCount,
+            WaveCount
+        }
+
+        public enum DungeonType
+        {
+            GoldDungeon
         }
 
         // 장비 능력치
@@ -76,7 +109,7 @@ namespace Data
         }
 
         /// <summary>
-        /// 장비 레어도
+        ///     장비 레어도
         /// </summary>
         public enum EquipmentRarity
         {
@@ -94,7 +127,7 @@ namespace Data
         }
 
         /// <summary>
-        /// 장비 종류
+        ///     장비 종류
         /// </summary>
         public enum EquipmentType
         {
@@ -107,10 +140,16 @@ namespace Data
             Null
         }
 
+        public enum IncreaseStatValueType
+        {
+            BaseStat,
+            PercentStat
+        }
+
         public enum LevelType
         {
             CurrentLv,
-            CurrentExp,
+            CurrentExp
         }
 
         public enum MonsterClassType
@@ -132,40 +171,55 @@ namespace Data
             SummonEquipment
         }
 
-        public enum CharacterType
+        public enum SkillType
         {
-            Warrior = 0,
-            Archer,
-            Wizard
+            MoveTo,
+            Spawn,
+            Follow
         }
 
-        public enum CharacterRarity
+        public enum SquadStatType
         {
-            Magic,
-            Rare,
-            Unique,
-            Legend
+            WarriorAtk, // 전사 공격력
+            WizardAtk, // 마법사 공격력
+            ArcherAtk, // 궁수 공격력
+            Health, // 체력 (Health Points)
+            Attack, // 공격력 (Attack)
+            Defence, // 방어력 (Defense)
+            CriticalRate, // 치명타 확률 (Critical Hit Rate)
+            CriticalDamage, // 치명타 피해량 (Critical Hit Damage)
+            Accuracy, // 명중률 (Accuracy)
+            Penetration, // 관통 (Penetration)
+            Evasion, // 회피율 (Evasion
+            MoveSpeed, // 이동 속도 (Movement Speed)
+            AcquisitionGold, // 골드 획득량
+            AcquisitionExp, // 경험치 획득량
+            AmplificationSkillEffects, // 스킬 효과 증폭
+            WarriorAttackRange,
+            ArcherAttackRange,
+            WizardAttackRange,
+            FollowRange
+        }
+
+        public enum StatTypeBySquadConfigurePanel
+        {
+            Attack, // 공격력
+            Health // 체력
         }
 
         public enum StatTypeBySquadStatPanel
         {
-            Attack,                     // 공격력
-            Health,                     // 체력
-            Penetration,                // 관통
-            Accuracy,                   // 명중
-            AcquisitionGold,            // 골드 획득량
-            AcquisitionExp,             // 경험치 증가량
-            CriticalDamage,             // 치명타 피해량
-            AmplificationSkillEffects,  // 스킬 효과 증폭
-            CurrentAtk,                 // 최종 공격력
+            Attack, // 공격력
+            Health, // 체력
+            Penetration, // 관통
+            Accuracy, // 명중
+            AcquisitionGold, // 골드 획득량
+            AcquisitionExp, // 경험치 증가량
+            CriticalDamage, // 치명타 피해량
+            AmplificationSkillEffects, // 스킬 효과 증폭
+            CurrentAtk // 최종 공격력
         }
-        
-        public enum StatTypeBySquadConfigurePanel
-        {
-            Attack,                        // 공격력
-            Health,                         // 체력
-        }
-        
+
         public enum StatTypeBySquadTalentPanel
         {
             Attack,
@@ -185,35 +239,6 @@ namespace Data
             AmplificationHealth
         }
 
-        public enum IncreaseStatValueType
-        {
-            BaseStat,
-            PercentStat
-        }
-
-        public enum SquadStatType
-        {
-            WarriorAtk,                 // 전사 공격력
-            WizardAtk,                  // 마법사 공격력
-            ArcherAtk,                  // 궁수 공격력
-            Health,                         // 체력 (Health Points)
-            Attack,                        // 공격력 (Attack)
-            Defence,                        // 방어력 (Defense)
-            CriticalRate,                        // 치명타 확률 (Critical Hit Rate)
-            CriticalDamage,                     // 치명타 피해량 (Critical Hit Damage)
-            Accuracy,                   // 명중률 (Accuracy)
-            Penetration,                // 관통 (Penetration)
-            Evasion,                    // 회피율 (Evasion
-            MoveSpeed,                  // 이동 속도 (Movement Speed)
-            AcquisitionGold,            // 골드 획득량
-            AcquisitionExp,             // 경험치 획득량
-            AmplificationSkillEffects,  // 스킬 효과 증폭
-            WarriorAttackRange,
-            ArcherAttackRange,
-            WizardAttackRange,
-            FollowRange
-        }
-
         public enum SummonEquipmentType
         {
             Weapon,
@@ -231,12 +256,6 @@ namespace Data
             CurrentStageName,
             CurrentWave,
             Timer
-        }
-
-        public enum DungeonClearType
-        {
-            KillCount,
-            WaveCount
         }
 
         public static readonly EquipmentType[] equipmentTypes =

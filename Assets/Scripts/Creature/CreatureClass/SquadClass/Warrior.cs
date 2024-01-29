@@ -1,5 +1,5 @@
 using Managers;
-using UnityEngine;
+using Managers.BattleManager;
 using Enum = Data.Enum;
 
 namespace Creature.CreatureClass.SquadClass
@@ -9,10 +9,10 @@ namespace Creature.CreatureClass.SquadClass
         protected override void SetCreatureStats()
         {
             base.SetCreatureStats();
-            
+
             damage = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WarriorAtk);
             attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WarriorAttackRange);
-            
+
             animator.SetFloat(animationData.ClassTypeParameterHash, 0);
         }
 
@@ -27,18 +27,21 @@ namespace Creature.CreatureClass.SquadClass
         protected override void OnSkillAttack()
         {
             base.OnSkillAttack();
-            
+
             for (var i = 0; i < SquadBattleManager.Instance.warriorSkillCoolTimer.Length; i++)
             {
                 if (!SquadBattleManager.Instance.warriorSkillCoolTimer[i].isSkillReady) continue;
-                if (!SquadBattleManager.Instance.autoSkill && !SquadBattleManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate) continue;
-                
+                if (!SquadBattleManager.Instance.autoSkill &&
+                    !SquadBattleManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate) continue;
+
                 if (currentTarget == null) return;
-                
+
                 SquadBattleManager.Instance.RunSkillCoolTimer(Enum.CharacterType.Warrior, i);
-                ProjectileManager.Instance.InstantiateSkillAttack(SquadBattleManager.Instance.warriorSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition, currentTarget.transform.position);
+                ProjectileManager.Instance.InstantiateSkillAttack(
+                    SquadBattleManager.Instance.warriorSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition,
+                    currentTarget.transform.position);
                 SquadBattleManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate = false;
-                
+
                 break;
             }
         }

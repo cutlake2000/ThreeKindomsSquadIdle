@@ -1,19 +1,12 @@
+using System;
 using System.Collections.Generic;
-using Data;
 using UnityEngine;
+using Enum = Data.Enum;
 
 namespace Module
 {
     public class ObjectPool : MonoBehaviour
     {
-        [System.Serializable]
-        public struct Pool
-        {
-            public Enum.PoolType tag;
-            public GameObject prefab;
-            public int size;
-        }
-        
         public List<Pool> pools;
         public Dictionary<Enum.PoolType, Queue<GameObject>> PoolDictionary;
 
@@ -23,14 +16,14 @@ namespace Module
             foreach (var pool in pools)
             {
                 var objectPool = new Queue<GameObject>();
-                
+
                 for (var i = 0; i < pool.size; i++)
                 {
                     var obj = Instantiate(pool.prefab, transform, true);
                     obj.SetActive(false);
                     objectPool.Enqueue(obj);
                 }
-                
+
                 PoolDictionary.Add(pool.tag, objectPool);
             }
         }
@@ -44,6 +37,14 @@ namespace Module
             PoolDictionary[objectTag].Enqueue(obj);
 
             return obj;
+        }
+
+        [Serializable]
+        public struct Pool
+        {
+            public Enum.PoolType tag;
+            public GameObject prefab;
+            public int size;
         }
     }
 }
