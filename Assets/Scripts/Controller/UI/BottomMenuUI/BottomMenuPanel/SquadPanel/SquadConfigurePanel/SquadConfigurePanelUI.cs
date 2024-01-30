@@ -44,13 +44,14 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         public Image selectedCharacter2SkillIcon;
         public TMP_Text selectedCharacter2SkillName;
         public TMP_Text selectedCharacter2SkillDescription;
+        public TMP_Text selectedCharacter2SkillCoolTime;
         public Button selectedCharacterLevelUpButton;
         public Button selectedCharacterEquipButton;
 
         [Header("워리어 / 아처 / 위자드 스크롤뷰")] public GameObject[] squadScrollViewPanel;
 
-        [Header("스쿼드 구성 패널 아이템 UI")] public List<GameObject> squadConfigureScrollViewItemWarriors = new();
-
+        [Header("스쿼드 구성 패널 아이템 UI")]
+        public List<GameObject> squadConfigureScrollViewItemWarriors = new();
         public List<GameObject> squadConfigureScrollViewItemArchers = new();
         public List<GameObject> squadConfigureScrollViewItemWizards = new();
 
@@ -75,17 +76,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         {
             currentSelectedSquadConfigurePanelItem = character;
 
-            if (UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.activeInHierarchy == false)
-            {
-                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(false);
-                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(true);
-            }
-            else if (selectedCharacterName.text == character.characterName)
-            {
-                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(true);
-                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(false);
-                return;
-            }
+            var skill1Description = currentSelectedSquadConfigurePanelItem.characterSkills[0].skillDescription;
+            var skill2Description = currentSelectedSquadConfigurePanelItem.characterSkills[1].skillDescription;
+
+            var skill1NewDescription = skill1Description.Split('n', 2);
+            var skill2NewDescription = skill2Description.Split('n', 2);
 
             selectedCharacterIcon.sprite = SpriteManager.Instance.GetCharacterSprite(
                 currentSelectedSquadConfigurePanelItem.characterType,
@@ -107,20 +102,25 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                 currentSelectedSquadConfigurePanelItem.characterSkills[0].skillIconIndex);
             selectedCharacter1SkillName.text = currentSelectedSquadConfigurePanelItem.characterSkills[0].skillName;
             selectedCharacter1SkillDescription.text =
-                currentSelectedSquadConfigurePanelItem.characterSkills[0].skillDescription;
+                $"{skill1NewDescription[0]}{currentSelectedSquadConfigurePanelItem.characterSkills[0].skillDamagePercent}{skill1NewDescription[1]}";
             selectedCharacter1SkillCoolTime.text =
-                $"쿨타임 {currentSelectedSquadConfigurePanelItem.characterSkills[0].maxSkillCoolTime}";
+                $"쿨타임 {currentSelectedSquadConfigurePanelItem.characterSkills[0].maxSkillCoolTime}초";
+            
+            selectedCharacter2SkillIcon.sprite = SpriteManager.Instance.GetSkillSprite(
+                currentSelectedSquadConfigurePanelItem.characterType,
+                currentSelectedSquadConfigurePanelItem.characterSkills[1].skillIconIndex);
+            selectedCharacter2SkillName.text = currentSelectedSquadConfigurePanelItem.characterSkills[1].skillName;
+            
+            // TODO: 두 번째 스킬 프리팹 정해지면 아래 주석처리한 내용만 사용
+            selectedCharacter2SkillDescription.text = $"해금이 필요합니다.";
+            selectedCharacter2SkillCoolTime.text = $"쿨타임 00초";
+            // selectedCharacter2SkillDescription.text =
+            //     $"{skill2NewDescription[0]}{currentSelectedSquadConfigurePanelItem.characterSkills[1].skillDamagePercent}{skill2NewDescription[1]}";
+            // selectedCharacter2SkillCoolTime.text =
+            //     $"쿨타임 {currentSelectedSquadConfigurePanelItem.characterSkills[1].maxSkillCoolTime}초";
 
             selectedCharacterLevelUpButton.gameObject.SetActive(currentSelectedSquadConfigurePanelItem.isPossessed);
             selectedCharacterEquipButton.gameObject.SetActive(currentSelectedSquadConfigurePanelItem.isPossessed);
-
-            // if (character.characterSkills.Length == 2)
-            // {
-            //     selectedCharacter1SkillIcon.sprite = SpriteManager.Instance.GetSkillSprite(character.characterType, character.characterSkills[1].skillIconIndex);
-            //     selectedCharacter2SkillName.text = character.characterSkills[1].skillName;
-            //     selectedCharacter2SkillDescription.text = character.characterSkills[1].skillDescription;
-            //     selectedCharacter2SkillCoolTime.text = character.characterSkills[0].maxSkillCoolTime;
-            // }
         }
 
         private string SetCharacterEffectDescriptionToString(Character character, bool ownedEffect, int index)
@@ -210,7 +210,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         }
 
         /// <summary>
-        ///     선택한 캐릭터 레벨 업하는 메서드
+        /// 선택한 캐릭터 레벨 업하는 메서드
         /// </summary>
         private void OnClickCharacterLevelUp()
         {
@@ -265,9 +265,85 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             }
         }
 
+        /// <summary>
+        /// 선택한 캐릭터를 장착하는 메서드
+        /// </summary>
         private void OnClickCharacterEquip()
         {
-            throw new NotImplementedException();
+            var character = currentSelectedSquadConfigurePanelItem.characterType switch
+            {
+                Enum.CharacterType.Warrior => SquadConfigureManager.Instance.WarriorDictionary[
+                    currentSelectedSquadConfigurePanelItem.characterId],
+                Enum.CharacterType.Archer => SquadConfigureManager.Instance.ArchersDictionary[
+                    currentSelectedSquadConfigurePanelItem.characterId],
+                Enum.CharacterType.Wizard => SquadConfigureManager.Instance.WizardsDictionary[
+                    currentSelectedSquadConfigurePanelItem.characterId],
+                _ => null
+            };
+
+            if (character == null || character.isEquipped) return;
+
+            SquadConfigureManager.Instance.isSquadConfigureChanged = true;
+            
+            switch (character.characterType)
+            {
+                case Enum.CharacterType.Warrior:
+                    foreach (var warrior in SquadConfigureManager.Instance.WarriorDictionary.Where(warrior => warrior.Value.isEquipped))
+                    {
+                        warrior.Value.isEquipped = false;
+                        UpdateCharacterData(warrior.Value);
+                        break;
+                    }
+                    break;
+                case Enum.CharacterType.Archer:
+                    foreach (var archer in SquadConfigureManager.Instance.ArchersDictionary.Where(archer => archer.Value.isEquipped))
+                    {
+                        archer.Value.isEquipped = false;
+                        UpdateCharacterData(archer.Value);
+                        break;
+                    }
+                    break;
+                case Enum.CharacterType.Wizard:
+                    foreach (var wizard in SquadConfigureManager.Instance.WizardsDictionary.Where(wizard => wizard.Value.isEquipped))
+                    {
+                        wizard.Value.isEquipped = false;
+                        UpdateCharacterData(wizard.Value);
+                        break;
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            character.isEquipped = true;
+            
+            UpdateCharacterData(character);
+            UpdateSquadConfigureScrollViewItemUI(character.characterType);
+
+            // switch (character.characterType)
+            // {
+            //     case Enum.CharacterType.Warrior:
+            //         squadConfigureScrollViewItemWarriors[currentSelectedSquadConfigurePanelItemIndex]
+            //             .GetComponent<SquadConfigureItemUI>().UpdateSquadConfigureItemUI(character.characterLevel,
+            //                 character.isEquipped, character.isPossessed, character.characterName,
+            //                 SpriteManager.Instance.GetCharacterSprite(character.characterType,
+            //                     character.characterIconIndex));
+            //         break;
+            //     case Enum.CharacterType.Archer:
+            //         squadConfigureScrollViewItemArchers[currentSelectedSquadConfigurePanelItemIndex]
+            //             .GetComponent<SquadConfigureItemUI>().UpdateSquadConfigureItemUI(character.characterLevel,
+            //                 character.isEquipped, character.isPossessed, character.characterName,
+            //                 SpriteManager.Instance.GetCharacterSprite(character.characterType,
+            //                     character.characterIconIndex));
+            //         break;
+            //     case Enum.CharacterType.Wizard:
+            //         squadConfigureScrollViewItemWizards[currentSelectedSquadConfigurePanelItemIndex]
+            //             .GetComponent<SquadConfigureItemUI>().UpdateSquadConfigureItemUI(character.characterLevel,
+            //                 character.isEquipped, character.isPossessed, character.characterName,
+            //                 SpriteManager.Instance.GetCharacterSprite(character.characterType,
+            //                     character.characterIconIndex));
+            //         break;
+            // }
         }
 
         public void UpdateSquadConfigureScrollViewItemUI(Enum.CharacterType characterType)
@@ -278,17 +354,12 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     SquadConfigureManager.Instance.warriors = SquadConfigureManager.Instance.WarriorDictionary.Values
                         .OrderByDescending(x => x.isEquipped)
                         .ThenBy(x => x.characterRarity).ToList();
+                    
                     for (var i = 0; i < SquadConfigureManager.Instance.warriors.Count; i++)
                     {
                         var index = i;
                         var characterId = SquadConfigureManager.Instance.warriors[index].characterId;
-                        squadConfigureScrollViewItemWarriors[index].GetComponent<Button>().onClick.AddListener(() =>
-                        {
-                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI
-                                .currentSelectedSquadConfigurePanelItemIndex = index;
-                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI.SelectSquadConfigureItem(
-                                characterType, characterId);
-                        });
+                        
                         squadConfigureScrollViewItemWarriors[index].GetComponent<SquadConfigureItemUI>()
                             .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.warriors[index].characterLevel,
                                 SquadConfigureManager.Instance.warriors[index].isEquipped,
@@ -296,6 +367,26 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                                 SquadConfigureManager.Instance.warriors[index].characterName,
                                 SpriteManager.Instance.GetCharacterSprite(characterType,
                                     SquadConfigureManager.Instance.warriors[index].characterIconIndex));
+                        
+                        squadConfigureScrollViewItemWarriors[index].GetComponent<Button>().onClick.RemoveAllListeners();
+                        squadConfigureScrollViewItemWarriors[index].GetComponent<Button>().onClick.AddListener(() =>
+                        {
+                            if (!UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.activeInHierarchy)
+                            {
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(false);
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(true);
+                            }
+                            else if (currentSelectedSquadConfigurePanelItem.characterName == squadConfigureScrollViewItemWarriors[index].GetComponent<SquadConfigureItemUI>().characterName.text)
+                            {
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(true);
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(false);
+                            }
+                            
+                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI
+                                .currentSelectedSquadConfigurePanelItemIndex = index;
+                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI.SelectSquadConfigureItem(
+                                characterType, characterId);
+                        });
                     }
 
                     break;
@@ -303,17 +394,12 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     SquadConfigureManager.Instance.archers = SquadConfigureManager.Instance.ArchersDictionary.Values
                         .OrderByDescending(x => x.isEquipped)
                         .ThenBy(x => x.characterRarity).ToList();
+                    
                     for (var i = 0; i < SquadConfigureManager.Instance.archers.Count; i++)
                     {
                         var index = i;
                         var characterId = SquadConfigureManager.Instance.archers[index].characterId;
-                        squadConfigureScrollViewItemArchers[index].GetComponent<Button>().onClick.AddListener(() =>
-                        {
-                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI
-                                .currentSelectedSquadConfigurePanelItemIndex = index;
-                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI.SelectSquadConfigureItem(
-                                characterType, characterId);
-                        });
+                        
                         squadConfigureScrollViewItemArchers[index].GetComponent<SquadConfigureItemUI>()
                             .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.archers[index].characterLevel,
                                 SquadConfigureManager.Instance.archers[index].isEquipped,
@@ -321,6 +407,28 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                                 SquadConfigureManager.Instance.archers[index].characterName,
                                 SpriteManager.Instance.GetCharacterSprite(characterType,
                                     SquadConfigureManager.Instance.archers[index].characterIconIndex));
+                        
+                        squadConfigureScrollViewItemArchers[index].GetComponent<Button>().onClick.RemoveAllListeners();
+                        squadConfigureScrollViewItemArchers[index].GetComponent<Button>().onClick.AddListener(() =>
+                        {
+                            if (!UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.activeInHierarchy)
+                            {
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(false);
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(true);
+                            }
+                            else if (currentSelectedSquadConfigurePanelItem.characterName == squadConfigureScrollViewItemArchers[index].GetComponent<SquadConfigureItemUI>().characterName.text)
+                            {
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(true);
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(false);
+                                return;
+                            }
+                            
+                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI
+                                .currentSelectedSquadConfigurePanelItemIndex = index;
+                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI.SelectSquadConfigureItem(
+                                characterType, characterId);
+                        });
+                    
                     }
 
                     break;
@@ -328,12 +436,35 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     SquadConfigureManager.Instance.wizards = SquadConfigureManager.Instance.WizardsDictionary.Values
                         .OrderByDescending(x => x.isEquipped)
                         .ThenBy(x => x.characterRarity).ToList();
+                    
                     for (var i = 0; i < SquadConfigureManager.Instance.wizards.Count; i++)
                     {
                         var index = i;
                         var characterId = SquadConfigureManager.Instance.wizards[index].characterId;
+                        
+                        squadConfigureScrollViewItemWizards[index].GetComponent<SquadConfigureItemUI>()
+                            .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.wizards[index].characterLevel,
+                                SquadConfigureManager.Instance.wizards[index].isEquipped,
+                                SquadConfigureManager.Instance.wizards[index].isPossessed,
+                                SquadConfigureManager.Instance.wizards[index].characterName,
+                                SpriteManager.Instance.GetCharacterSprite(characterType,
+                                    SquadConfigureManager.Instance.wizards[index].characterIconIndex));
+                        
+                        squadConfigureScrollViewItemWizards[index].GetComponent<Button>().onClick.RemoveAllListeners();
                         squadConfigureScrollViewItemWizards[index].GetComponent<Button>().onClick.AddListener(() =>
                         {
+                            if (UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.activeInHierarchy == false)
+                            {
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(false);
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(true);
+                            }
+                            else if (currentSelectedSquadConfigurePanelItem.characterName == squadConfigureScrollViewItemWizards[index].GetComponent<SquadConfigureItemUI>().characterName.text)
+                            {
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(true);
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(false);
+                                return;
+                            }
+                            
                             UIManager.Instance.squadPanelUI.squadConfigurePanelUI
                                 .currentSelectedSquadConfigurePanelItemIndex = index;
                             UIManager.Instance.squadPanelUI.squadConfigurePanelUI.SelectSquadConfigureItem(

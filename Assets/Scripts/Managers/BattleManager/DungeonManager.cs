@@ -80,8 +80,7 @@ namespace Managers.BattleManager
 
                     foreach (var stageUI in stageUIs) stageUI.SetActive(false);
 
-                    DespawnSquad();
-                    DespawnMonster();
+
 
                     //TODO: So 등에서 값을 가져오도록
                     currentDungeonName = "황금 미믹 던전";

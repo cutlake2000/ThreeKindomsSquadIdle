@@ -16,6 +16,8 @@ namespace Managers.BottomMenuManager.SquadPanel
         public static SquadConfigureManager Instance;
         private static readonly Dictionary<string, Character> AllCharactersDictionary = new();
 
+        public bool isSquadConfigureChanged;
+
         //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
         [SerializeField] private SquadConfigureSo[] squadConfigureSo;
         [SerializeField] private SquadEffectSo[] squadOwnedEffectValueSoByRarity;
@@ -45,6 +47,7 @@ namespace Managers.BottomMenuManager.SquadPanel
 
         public void InitSquadConfigureManager()
         {
+            isSquadConfigureChanged = false;
             SetAllCharacters();
         }
 
@@ -134,7 +137,6 @@ namespace Managers.BottomMenuManager.SquadPanel
 
                     var characterId = $"{characterSo.characterName}";
                     var characterName = characterSo.characterName;
-                    
        
                     var isEquipped = characterIndex == 0;
                     var isPossessed = characterIndex is 0 or 1; //TODO: 인덱스 0번만 보유하도록
@@ -165,19 +167,7 @@ namespace Managers.BottomMenuManager.SquadPanel
 
                     if (character.isEquipped)
                     {
-                        InstantiateModelOfConfigureUnderParent(characterType, characterModel);
-                        InstantiateModelOfBattleUnderParent(characterType, characterModel, characterIcon,
-                            modelSpawnPoints[(int)characterType].transform);
-                        InstantiateSkillUnderParent(characterType, characterSkills,
-                            skillSpawnPoints[(int)characterType].transform);
-
-                        foreach (var effect in character.characterEquippedEffects)
-                            if (effect.increaseStatType == Enum.IncreaseStatValueType.BaseStat)
-                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(
-                                    effect.statType, effect.increaseValue);
-                            else
-                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(
-                                    effect.statType, effect.increaseValue);
+                        UpdateSquadConfigure(character);
                     }
 
                     if (character.isPossessed)
@@ -198,6 +188,45 @@ namespace Managers.BottomMenuManager.SquadPanel
         }
 
         /// <summary>
+        /// 현재 장착 중인 캐릭터를 찾는 메서드
+        /// </summary>
+        public Character FindEquippedCharacter(Enum.CharacterType characterType)
+        {
+            switch (characterType)
+            {
+                case Enum.CharacterType.Warrior:
+                    return WarriorDictionary[warriors[0].characterId];
+                case Enum.CharacterType.Archer:
+                    return ArchersDictionary[archers[0].characterId];
+                case Enum.CharacterType.Wizard:
+                    return WizardsDictionary[wizards[0].characterId];
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(characterType), characterType, null);
+            }
+        }
+
+        /// <summary>
+        /// 캐릭터 모델과 스킬을 세팅하는 메서드
+        /// </summary>
+        /// <param name="character"></param>
+        public void UpdateSquadConfigure(Character character)
+        {
+            InstantiateModelOfConfigureUnderParent(character.characterType, character.characterModel);
+            InstantiateModelOfBattleUnderParent(character.characterType, character.characterModel, SpriteManager.Instance.GetCharacterSprite(character.characterType, character.characterIconIndex),
+                modelSpawnPoints[(int)character.characterType].transform);
+            InstantiateSkillUnderParent(character.characterType, character.characterSkills,
+                skillSpawnPoints[(int)character.characterType].transform);
+
+            foreach (var effect in character.characterEquippedEffects)
+                if (effect.increaseStatType == Enum.IncreaseStatValueType.BaseStat)
+                    SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(
+                        effect.statType, effect.increaseValue);
+                else
+                    SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(
+                        effect.statType, effect.increaseValue);
+        }
+
+        /// <summary>
         /// 캐릭터 선택 시, 해당 캐릭터의 모델을 씬 위로 Instantiate하는 메서드
         /// </summary>
         /// <param name="type"></param>
@@ -207,6 +236,8 @@ namespace Managers.BottomMenuManager.SquadPanel
         private void InstantiateModelOfBattleUnderParent(Enum.CharacterType type, GameObject prefab, Sprite characterIcon,
             Transform parentTransform)
         {
+            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0));
+            
             var character = Instantiate(prefab, parentTransform);
             character.transform.SetParent(parentTransform);
 
@@ -238,6 +269,8 @@ namespace Managers.BottomMenuManager.SquadPanel
         private void InstantiateModelOfConfigureUnderParent(Enum.CharacterType type, GameObject prefab)
         {
             var parentTransform = UIManager.Instance.squadPanelUI.squadConfigurePanelUI.characterSpawnPosition[(int) type].transform;
+            
+            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0));
             var character = Instantiate(prefab, parentTransform);
             character.transform.SetParent(parentTransform);
             ChangeLayerRecursively(character, 5);
@@ -274,21 +307,30 @@ namespace Managers.BottomMenuManager.SquadPanel
                     SquadBattleManager.Instance.warriorSkillDamagePercent.Clear();
                     for (var i = 0; i < prefab.Count; i++)
                     {
-                        var characterSkill = Instantiate(prefab[i].skillObject, parentTransform);
-                        characterSkill.transform.SetParent(parentTransform);
+                        if (i != 0) // TODO : 두 번째 스킬 프리팹 추가되면 아래 else 구문만 사용
+                        {
+                            UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[i].skillIcon.sprite =
+                                SpriteManager.Instance.GetSkillSprite(type, prefab[i].skillIconIndex);
+                        }
+                        else
+                        {
+                            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0));
+                            var characterSkill = Instantiate(prefab[i].skillObject, parentTransform);
+                            characterSkill.transform.SetParent(parentTransform);
+                            
+                            SquadBattleManager.Instance.warriorSkillCoolTimer[i].skill = characterSkill;
+                            SquadBattleManager.Instance.warriorSkillCoolTimer[i].isSkillReady = true;
+                            SquadBattleManager.Instance.warriorSkillCoolTimer[i].maxSkillCoolTime =
+                                prefab[i].maxSkillCoolTime;
+                            SquadBattleManager.Instance.warriorSkillCoolTimer[i].remainedSkillCoolTime =
+                                prefab[i].maxSkillCoolTime;
+                            SquadBattleManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate = false;
 
-                        SquadBattleManager.Instance.warriorSkillCoolTimer[i].skill = characterSkill;
-                        SquadBattleManager.Instance.warriorSkillCoolTimer[i].isSkillReady = true;
-                        SquadBattleManager.Instance.warriorSkillCoolTimer[i].maxSkillCoolTime =
-                            prefab[i].maxSkillCoolTime;
-                        SquadBattleManager.Instance.warriorSkillCoolTimer[i].remainedSkillCoolTime =
-                            prefab[i].maxSkillCoolTime;
-                        SquadBattleManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate = false;
+                            UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[i].skillIcon.sprite =
+                                SpriteManager.Instance.GetSkillSprite(type, prefab[i].skillIconIndex);
 
-                        UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[i].skillIcon.sprite =
-                            SpriteManager.Instance.GetSkillSprite(type, prefab[i].skillIconIndex);
-
-                        SquadBattleManager.Instance.warriorSkillDamagePercent.Add(prefab[i].skillDamagePercent);
+                            SquadBattleManager.Instance.warriorSkillDamagePercent.Add(prefab[i].skillDamagePercent);
+                        }
                     }
 
                     break;
@@ -296,21 +338,30 @@ namespace Managers.BottomMenuManager.SquadPanel
                     SquadBattleManager.Instance.archerSkillDamagePercent.Clear();
                     for (var i = 0; i < prefab.Count; i++)
                     {
-                        var characterSkill = Instantiate(prefab[i].skillObject, parentTransform);
-                        characterSkill.transform.SetParent(parentTransform);
+                        if (i != 0) // TODO : 두 번째 스킬 프리팹 추가되면 아래 else 구문만 사용
+                        {
+                            UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[i].skillIcon.sprite =
+                                SpriteManager.Instance.GetSkillSprite(type, prefab[i].skillIconIndex);
+                        }
+                        else
+                        {
+                            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0));
+                            var characterSkill = Instantiate(prefab[i].skillObject, parentTransform);
+                            characterSkill.transform.SetParent(parentTransform);
+                            
+                            SquadBattleManager.Instance.archerSkillCoolTimer[i].skill = characterSkill;
+                            SquadBattleManager.Instance.archerSkillCoolTimer[i].isSkillReady = true;
+                            SquadBattleManager.Instance.archerSkillCoolTimer[i].maxSkillCoolTime =
+                                prefab[i].maxSkillCoolTime;
+                            SquadBattleManager.Instance.archerSkillCoolTimer[i].remainedSkillCoolTime =
+                                prefab[i].maxSkillCoolTime;
+                            SquadBattleManager.Instance.archerSkillCoolTimer[i].orderToInstantiate = false;
 
-                        SquadBattleManager.Instance.archerSkillCoolTimer[i].skill = characterSkill;
-                        SquadBattleManager.Instance.archerSkillCoolTimer[i].isSkillReady = true;
-                        SquadBattleManager.Instance.archerSkillCoolTimer[i].maxSkillCoolTime =
-                            prefab[i].maxSkillCoolTime;
-                        SquadBattleManager.Instance.archerSkillCoolTimer[i].remainedSkillCoolTime =
-                            prefab[i].maxSkillCoolTime;
-                        SquadBattleManager.Instance.archerSkillCoolTimer[i].orderToInstantiate = false;
+                            UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[i].skillIcon.sprite =
+                                SpriteManager.Instance.GetSkillSprite(type, prefab[i].skillIconIndex);
 
-                        UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[i].skillIcon.sprite =
-                            SpriteManager.Instance.GetSkillSprite(type, prefab[i].skillIconIndex);
-
-                        SquadBattleManager.Instance.archerSkillDamagePercent.Add(prefab[i].skillDamagePercent);
+                            SquadBattleManager.Instance.archerSkillDamagePercent.Add(prefab[i].skillDamagePercent);
+                        }
                     }
 
                     break;
@@ -318,21 +369,30 @@ namespace Managers.BottomMenuManager.SquadPanel
                     SquadBattleManager.Instance.wizardSkillDamagePercent.Clear();
                     for (var i = 0; i < prefab.Count; i++)
                     {
-                        var characterSkill = Instantiate(prefab[i].skillObject, parentTransform);
-                        characterSkill.transform.SetParent(parentTransform);
+                        if (i != 0) // TODO : 두 번째 스킬 프리팹 추가되면 아래 else 구문만 사용
+                        {                     
+                            UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[i].skillIcon.sprite =
+                                SpriteManager.Instance.GetSkillSprite(type, prefab[i].skillIconIndex);
+                        }
+                        else
+                        {
+                            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0));
+                            var characterSkill = Instantiate(prefab[i].skillObject, parentTransform);
+                            characterSkill.transform.SetParent(parentTransform);
+                                                    
+                            SquadBattleManager.Instance.wizardSkillCoolTimer[i].skill = characterSkill;
+                            SquadBattleManager.Instance.wizardSkillCoolTimer[i].isSkillReady = true;
+                            SquadBattleManager.Instance.wizardSkillCoolTimer[i].maxSkillCoolTime =
+                                prefab[i].maxSkillCoolTime;
+                            SquadBattleManager.Instance.wizardSkillCoolTimer[i].remainedSkillCoolTime =
+                                prefab[i].maxSkillCoolTime;
+                            SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate = false;
 
-                        SquadBattleManager.Instance.wizardSkillCoolTimer[i].skill = characterSkill;
-                        SquadBattleManager.Instance.wizardSkillCoolTimer[i].isSkillReady = true;
-                        SquadBattleManager.Instance.wizardSkillCoolTimer[i].maxSkillCoolTime =
-                            prefab[i].maxSkillCoolTime;
-                        SquadBattleManager.Instance.wizardSkillCoolTimer[i].remainedSkillCoolTime =
-                            prefab[i].maxSkillCoolTime;
-                        SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate = false;
+                            UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[i].skillIcon.sprite =
+                                SpriteManager.Instance.GetSkillSprite(type, prefab[i].skillIconIndex);
 
-                        UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[i].skillIcon.sprite =
-                            SpriteManager.Instance.GetSkillSprite(type, prefab[i].skillIconIndex);
-
-                        SquadBattleManager.Instance.wizardSkillDamagePercent.Add(prefab[i].skillDamagePercent);
+                            SquadBattleManager.Instance.wizardSkillDamagePercent.Add(prefab[i].skillDamagePercent);
+                        }
                     }
 
                     break;

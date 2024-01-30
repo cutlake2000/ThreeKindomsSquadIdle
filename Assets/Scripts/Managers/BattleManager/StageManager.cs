@@ -45,6 +45,7 @@ namespace Managers.BattleManager
         [SerializeField] public bool goToNextSubStage;
         [SerializeField] public bool isWaveTimerRunning;
         [SerializeField] private bool stopWaveTimer;
+        public bool initStageResult;
 
         private void Awake()
         {
@@ -65,7 +66,8 @@ namespace Managers.BattleManager
             nextStageChallenge = true;
             goToNextSubStage = true;
             stopWaveTimer = false;
-
+            initStageResult = true;
+            
             //TODO: Easy 뭐시깽이에서 불러와야 합미둥둥
             maxSquadCount = 3;
             currentSquadCount = 3;
@@ -177,15 +179,22 @@ namespace Managers.BattleManager
             {
                 currentWave = 1;
                 SetUI();
-                stageResultUI.SetActive(true);
-                Debug.Log("패널 온!");
-                stageResultUI.GetComponent<StageResultPanelUI>().PopUpStageClearMessage(isClear);
+                
+                if (initStageResult == false)
+                {
+                    stageResultUI.SetActive(true);
+                    stageResultUI.GetComponent<StageResultPanelUI>().PopUpStageClearMessage(isClear);
+                }
+
                 DespawnSquad();
                 DespawnMonster();
                 yield return new WaitForSeconds(2f);
 
-                stageResultUI.GetComponent<StageResultPanelUI>().PopUnderStageClearMessage();
-                stageResultUI.SetActive(false);
+                if (initStageResult == false)
+                {
+                    stageResultUI.GetComponent<StageResultPanelUI>().PopUnderStageClearMessage();
+                    stageResultUI.SetActive(false);
+                }
 
                 yield return new WaitForSeconds(1.0f);
                 
@@ -268,6 +277,9 @@ namespace Managers.BattleManager
         public void StopStageRunner()
         {
             StopAllCoroutines();
+            
+            DespawnSquad();
+            DespawnMonster();
         }
     }
 }

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Controller.UI.BottomMenuUI.BottomMenuPanel
+namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel
 {
     public class SquadPanelUI : MonoBehaviour
     {

@@ -19,7 +19,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         public void UpdateSquadConfigureItemUI(int level, bool isEquipped, bool isPossessed, string name, Sprite icon)
         {
             characterLevel.text = $"Lv. {level}";
-            characterName.text = $"Lv. {name}";
+            characterName.text = $"{name}";
             characterIcon.sprite = icon;
             equipMark.SetActive(isEquipped);
             possessMark.SetActive(!isPossessed);

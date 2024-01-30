@@ -96,7 +96,7 @@ namespace Managers.BattleManager
 
             if (quests[(int)questType].progress < quests[(int)questType].targetProgress) return;
             quests[(int)questType].isCompleted = true;
-            UIManager.Instance.QuestPanelUI.completedMark.SetActive(true);
+            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
         }
 
         private void SetAllQuests()
@@ -179,7 +179,7 @@ namespace Managers.BattleManager
                 (Enum.CurrencyType)System.Enum.Parse(typeof(Enum.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"));
             var targetQuestRewardText = $"{quests[targetQuestIndex].reward}";
             var targetQuestDescriptionText = $"{quests[targetQuestIndex].name}";
-            UIManager.Instance.QuestPanelUI.UpdateQuestPanelUI(targetQuestRewardSprite, targetQuestRewardText,
+            UIManager.Instance.questPanelUI.UpdateQuestPanelUI(targetQuestRewardSprite, targetQuestRewardText,
                 targetQuestDescriptionText);
         }
         
@@ -193,7 +193,7 @@ namespace Managers.BattleManager
             ES3.Save($"{nameof(questLevel)}", questLevel);
 
             quests[targetQuestIndex].isCompleted = false;
-            UIManager.Instance.QuestPanelUI.completedMark.SetActive(false);
+            UIManager.Instance.questPanelUI.completedMark.SetActive(false);
 
             if (questLevel % 5 == 0)
             {

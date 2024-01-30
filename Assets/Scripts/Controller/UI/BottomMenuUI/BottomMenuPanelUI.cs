@@ -1,18 +1,20 @@
+using Data;
 using Managers;
 using Managers.BattleManager;
+using Managers.BottomMenuManager.SquadPanel;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Controller.UI.BottomMenuUI
 {
-    public class BottomMenuUIController : MonoBehaviour
+    public class BottomMenuPanelUI : MonoBehaviour
     {
-        [Header("버튼과 패널")] [SerializeField] private Button[] openButtons;
-
+        [Header("버튼과 패널")]
+        [SerializeField] private Button[] openButtons;
         [SerializeField] private Button[] closeButtons;
         [SerializeField] private GameObject[] panels;
 
-        private void Start()
+        public void InitializeEventListeners()
         {
             // 각 버튼에 이벤트 리스너 할당
             for (var i = 0; i < openButtons.Length; i++)
@@ -59,6 +61,20 @@ namespace Controller.UI.BottomMenuUI
             closeButtons[index].gameObject.SetActive(false);
             panels[index].SetActive(false);
             openButtons[index].gameObject.SetActive(true);
+
+            if (SquadConfigureManager.Instance.isSquadConfigureChanged)
+            {
+                StageManager.Instance.StopStageRunner();
+                
+                SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Warrior));
+                SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Archer));
+                SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Wizard));
+
+                StageManager.Instance.initStageResult = false;
+                StageManager.Instance.goToNextSubStage = true;
+                
+                StageManager.Instance.StartStageRunner();
+            }
         }
     }
 }
