@@ -9,6 +9,7 @@ using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Enum = Data.Enum;
 
@@ -16,12 +17,20 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
 {
     public class SquadConfigurePanelUI : MonoBehaviour
     {
-        [Header("선택 영웅")] public Character currentSelectedSquadConfigurePanelItem;
-
+        public static event Action<Character> OnClickSquadConfigureItem;
+        
+        [Header("ConfiguredSquadPanel")] public GameObject configuredSquadPanel;
+        [Header("SelectedSquadPanel")] public GameObject selectedSquadPanel;
+        [Header("구성 중인 스쿼드 패널의 캐릭터 스폰 좌표")]public GameObject[] characterSpawnPosition;
+        [Header("캐릭터 선택 마크")] public GameObject[] characterSelectMark; 
+        
+        [Header("선택 영웅")]
+        public Character currentSelectedSquadConfigurePanelItem;
+        [Header("선택 영웅 인덱스")]
         public int currentSelectedSquadConfigurePanelItemIndex;
 
-        [Header("선택 영웅 정보")] public Image selectedCharacterIcon;
-
+        [Header("선택 영웅 정보")]
+        public Image selectedCharacterIcon;
         public TMP_Text selectedCharacterName;
         public TMP_Text selectedCharacterLevel;
         public TMP_Text selectedCharacterOwnedEffect1;
@@ -62,11 +71,21 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             OnClickSquadConfigureItem -= UpdateSquadConfigurePanelSelectedCharacterInfoUI;
         }
 
-        public static event Action<Character> OnClickSquadConfigureItem;
-
         public void UpdateSquadConfigurePanelSelectedCharacterInfoUI(Character character)
         {
             currentSelectedSquadConfigurePanelItem = character;
+
+            if (UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.activeInHierarchy == false)
+            {
+                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(false);
+                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(true);
+            }
+            else if (selectedCharacterName.text == character.characterName)
+            {
+                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(true);
+                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(false);
+                return;
+            }
 
             selectedCharacterIcon.sprite = SpriteManager.Instance.GetCharacterSprite(
                 currentSelectedSquadConfigurePanelItem.characterType,
@@ -82,6 +101,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                 SetCharacterEffectDescriptionToString(currentSelectedSquadConfigurePanelItem, false, 0);
             selectedCharacterEquippedEffect2.text =
                 SetCharacterEffectDescriptionToString(currentSelectedSquadConfigurePanelItem, false, 1);
+            
             selectedCharacter1SkillIcon.sprite = SpriteManager.Instance.GetSkillSprite(
                 currentSelectedSquadConfigurePanelItem.characterType,
                 currentSelectedSquadConfigurePanelItem.characterSkills[0].skillIconIndex);
@@ -173,6 +193,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             for (var i = 0; i < squadScrollViewPanel.Length; i++)
                 if (i == index)
                 {
+                    characterSelectMark[i].SetActive(true);
                     squadScrollViewPanel[i].SetActive(true);
                     squadScrollViewPanelButtons[i].image.color = squadScrollViewPanelButtonsColors[0];
                     squadScrollViewPanelButtonIcons[i].color = Color.black;
@@ -180,6 +201,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                 }
                 else
                 {
+                    characterSelectMark[i].SetActive(false);
                     squadScrollViewPanel[i].SetActive(false);
                     squadScrollViewPanelButtons[i].image.color = squadScrollViewPanelButtonsColors[1];
                     squadScrollViewPanelButtonIcons[i].color = Color.white;

@@ -73,7 +73,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9004348529333143446}
-  - component: {fileID: 2868141146832858644}
   - component: {fileID: 2088139021531230558}
   - component: {fileID: 10913230156436548}
   m_Layer: 0
@@ -100,18 +99,6 @@ Transform:
   m_Father: {fileID: 6635145133620226264}
   m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &2868141146832858644
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 548454567490352646}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_SortAtRoot: 0
 --- !u!95 &2088139021531230558
 Animator:
   serializedVersion: 5
@@ -2259,7 +2246,7 @@ GameObject:
   - component: {fileID: 6635145133620226264}
   - component: {fileID: 1338444218935846003}
   - component: {fileID: 7059855131609219307}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: wizard_09
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2280,7 +2267,7 @@ RectTransform:
   m_Children:
   - {fileID: 9004348529333143446}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 35
   m_LocalEulerAnglesHint: {x: 0, y: 1, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

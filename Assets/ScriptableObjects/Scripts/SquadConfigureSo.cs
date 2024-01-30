@@ -32,7 +32,6 @@ namespace ScriptableObjects.Scripts
     {
         [Header("스킬 아이콘 인덱스")]
         public int skillIconIndex;
-        public Image skillIcon;
         public GameObject skillObject;
         public string skillName;
         public string skillDescription;

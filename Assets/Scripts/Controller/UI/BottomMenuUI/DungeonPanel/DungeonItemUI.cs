@@ -11,8 +11,8 @@ namespace Controller.UI.BottomMenuUI.DungeonPanel
         public Button clearDungeonButton;
         public Button enterDungeonButton;
         public Toggle autoChallengeButton;
-        public Button previousStageButton;
-        public Button nextStageButton;
+        // public Button previousStageButton;
+        // public Button nextStageButton;
         public TMP_Text currentDungeonLevelText;
         public TMP_Text currentDungeonRewardText;
 

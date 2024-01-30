@@ -749,7 +749,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4273184453555662818}
-  - component: {fileID: 5892726069226825058}
   - component: {fileID: 4781442044327934114}
   - component: {fileID: 5391696592955831023}
   m_Layer: 0
@@ -777,18 +776,6 @@ Transform:
   m_Father: {fileID: 4801937936857209924}
   m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &5892726069226825058
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2000160476920576731}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_SortAtRoot: 0
 --- !u!95 &4781442044327934114
 Animator:
   serializedVersion: 5
@@ -2383,7 +2370,8 @@ GameObject:
   - component: {fileID: 4801937936857209924}
   - component: {fileID: 6900810213649483152}
   - component: {fileID: 8883984420829702202}
-  m_Layer: 5
+  - component: {fileID: 2938264449914594222}
+  m_Layer: 0
   m_Name: knight_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2404,7 +2392,7 @@ RectTransform:
   m_Children:
   - {fileID: 4273184453555662818}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 1, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2447,6 +2435,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectileSpawnPosition: {fileID: 7499977634796148543}
   spumSpriteList: {fileID: 7811412322263372997}
+--- !u!210 &2938264449914594222
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5427226391166715541}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &5484376035424331690
 GameObject:
   m_ObjectHideFlags: 0

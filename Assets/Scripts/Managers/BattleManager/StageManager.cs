@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using Controller.UI;
+using Controller.UI.BottomMenuUI;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 using Enum = Data.Enum;
 
-namespace Managers
+namespace Managers.BattleManager
 {
     public class StageManager : MonoBehaviour
     {
@@ -17,11 +18,14 @@ namespace Managers
 
         [SerializeField] private StageUI stageUIController;
         [SerializeField] private StageSo stageSo;
+        
+        [Header("=== 전투 결과창 UI ===")] [SerializeField]
+        private GameObject stageResultUI;
 
         [Header("=== 스테이지 정보 ===")]
         [SerializeField] private string currentMainStageName;
         public int currentStageIndex; // 누적 스테이지 정보
-
+        [SerializeField] private bool isClear;
         [SerializeField] private int currentMainStage;
         [SerializeField] private int currentSubStage;
         [SerializeField] public int currentWave;
@@ -87,11 +91,13 @@ namespace Managers
             currentRemainedMonsterCount--;
 
             if (currentRemainedMonsterCount > 0) return;
-
+            
             currentWave++;
 
             if (currentWave > waveCountsPerSubStage)
             {
+                isClear = true;
+                
                 if (nextStageChallenge)
                 {
                     currentWave -= waveCountsPerSubStage;
@@ -117,7 +123,7 @@ namespace Managers
                 else
                 {
                     goToNextSubStage = true;
-                    currentWave = 1;
+                    currentWave = 0;
                 }
             }
 
@@ -130,9 +136,10 @@ namespace Managers
             currentSquadCount--;
 
             if (currentSquadCount > 0) return;
+            isClear = false;
             stopWaveTimer = true;
             goToNextSubStage = true;
-            currentWave = 1;
+            currentWave = 0;
             currentSquadCount = maxSquadCount;
 
             DespawnSquad();
@@ -144,9 +151,10 @@ namespace Managers
         private void CalculateRemainedTime()
         {
             if (waveTime > 0) return;
+            isClear = false;
             stopWaveTimer = true;
             goToNextSubStage = true;
-            currentWave = 1;
+            currentWave = 0;
 
             DespawnSquad();
 
@@ -167,8 +175,20 @@ namespace Managers
 
             if (goToNextSubStage)
             {
+                currentWave = 1;
+                SetUI();
+                stageResultUI.SetActive(true);
+                Debug.Log("패널 온!");
+                stageResultUI.GetComponent<StageResultPanelUI>().PopUpStageClearMessage(isClear);
                 DespawnSquad();
                 DespawnMonster();
+                yield return new WaitForSeconds(2f);
+
+                stageResultUI.GetComponent<StageResultPanelUI>().PopUnderStageClearMessage();
+                stageResultUI.SetActive(false);
+
+                yield return new WaitForSeconds(1.0f);
+                
                 SpawnSquad();
                 goToNextSubStage = false;
 

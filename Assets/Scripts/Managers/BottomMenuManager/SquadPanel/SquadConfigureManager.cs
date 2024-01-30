@@ -35,6 +35,8 @@ namespace Managers.BottomMenuManager.SquadPanel
         public readonly Dictionary<string, Character> ArchersDictionary = new();
         public readonly Dictionary<string, Character> WarriorDictionary = new();
         public readonly Dictionary<string, Character> WizardsDictionary = new();
+        
+        private static readonly int RunState = Animator.StringToHash("RunState");
 
         private void Awake()
         {
@@ -88,7 +90,8 @@ namespace Managers.BottomMenuManager.SquadPanel
 
                     if (character.isEquipped)
                     {
-                        InstantiateModelUnderParent(characterType, characterModel, characterIcon,
+                        InstantiateModelOfConfigureUnderParent(characterType, characterModel);
+                        InstantiateModelOfBattleUnderParent(characterType, characterModel, characterIcon,
                             modelSpawnPoints[(int)characterType].transform);
                         InstantiateSkillUnderParent(characterType, characterSkills,
                             skillSpawnPoints[(int)characterType].transform);
@@ -131,8 +134,11 @@ namespace Managers.BottomMenuManager.SquadPanel
 
                     var characterId = $"{characterSo.characterName}";
                     var characterName = characterSo.characterName;
-                    var isEquipped = characterIndex == 1;
-                    var isPossessed = characterIndex == 1;
+                    
+       
+                    var isEquipped = characterIndex == 0;
+                    var isPossessed = characterIndex is 0 or 1; //TODO: 인덱스 0번만 보유하도록
+                    
                     var characterLevel = isPossessed ? 1 : 0;
                     var characterIconIndex = characterSo.characterIconIndex;
                     var characterIcon =
@@ -159,7 +165,8 @@ namespace Managers.BottomMenuManager.SquadPanel
 
                     if (character.isEquipped)
                     {
-                        InstantiateModelUnderParent(characterType, characterModel, characterIcon,
+                        InstantiateModelOfConfigureUnderParent(characterType, characterModel);
+                        InstantiateModelOfBattleUnderParent(characterType, characterModel, characterIcon,
                             modelSpawnPoints[(int)characterType].transform);
                         InstantiateSkillUnderParent(characterType, characterSkills,
                             skillSpawnPoints[(int)characterType].transform);
@@ -191,13 +198,13 @@ namespace Managers.BottomMenuManager.SquadPanel
         }
 
         /// <summary>
-        ///     캐릭터 선택 시, 해당 캐릭터의 모델을 Instantiate하는 메서드
+        /// 캐릭터 선택 시, 해당 캐릭터의 모델을 씬 위로 Instantiate하는 메서드
         /// </summary>
         /// <param name="type"></param>
         /// <param name="prefab"></param>
         /// <param name="characterIcon"></param>
         /// <param name="parentTransform"></param>
-        private void InstantiateModelUnderParent(Enum.CharacterType type, GameObject prefab, Sprite characterIcon,
+        private void InstantiateModelOfBattleUnderParent(Enum.CharacterType type, GameObject prefab, Sprite characterIcon,
             Transform parentTransform)
         {
             var character = Instantiate(prefab, parentTransform);
@@ -224,7 +231,36 @@ namespace Managers.BottomMenuManager.SquadPanel
         }
 
         /// <summary>
-        ///     캐릭터 선택 시, 해당 캐릭터의 스킬을 Instantiate하는 메서드
+        /// 캐릭터 선택 시, 해당 캐릭터의 모델을 스쿼드 구성 UI 위로 Instantiate하는 메서드
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="prefab"></param>
+        private void InstantiateModelOfConfigureUnderParent(Enum.CharacterType type, GameObject prefab)
+        {
+            var parentTransform = UIManager.Instance.squadPanelUI.squadConfigurePanelUI.characterSpawnPosition[(int) type].transform;
+            var character = Instantiate(prefab, parentTransform);
+            character.transform.SetParent(parentTransform);
+            ChangeLayerRecursively(character, 5);
+        }
+
+        /// <summary>
+        /// 하위 객체들의 레이어를 전부 변경하는 메서드
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="layer"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void ChangeLayerRecursively(GameObject obj, int layer)
+        {
+            obj.layer = layer;
+
+            foreach (Transform child in obj.transform)
+            {
+                ChangeLayerRecursively(child.gameObject, layer);
+            }
+        }
+
+        /// <summary>
+        /// 캐릭터 선택 시, 해당 캐릭터의 스킬을 Instantiate하는 메서드
         /// </summary>
         /// <param name="type"></param>
         /// <param name="prefab"></param>

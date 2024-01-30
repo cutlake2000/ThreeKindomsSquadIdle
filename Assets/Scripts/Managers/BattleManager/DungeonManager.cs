@@ -94,8 +94,8 @@ namespace Managers.BattleManager
                     StartCoroutine(KillCountDungeonRunner());
                 });
 
-                dungeonItems[index].previousStageButton.onClick.AddListener(() => ChooseStage(index, -1));
-                dungeonItems[index].nextStageButton.onClick.AddListener(() => ChooseStage(index, 1));
+                // dungeonItems[index].previousStageButton.onClick.AddListener(() => ChooseStage(index, -1));
+                // dungeonItems[index].nextStageButton.onClick.AddListener(() => ChooseStage(index, 1));
             }
         }
 

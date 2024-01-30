@@ -7,6 +7,7 @@ namespace Controller.UI.TopMenuUI.QuestPanel
 {
     public class QuestPanelUI : MonoBehaviour
     {
+        public GameObject completedMark;
         public Image questRewardImage;
         public TMP_Text questRewardText;
         public TMP_Text questDescription;

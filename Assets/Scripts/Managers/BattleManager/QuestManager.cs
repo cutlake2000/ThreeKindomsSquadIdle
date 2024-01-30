@@ -94,11 +94,9 @@ namespace Managers.BattleManager
         {
             quests[(int)questType].progress = currentValue;
 
-            if (quests[(int)questType].progress >= quests[(int)questType].targetProgress)
-            {
-                
-                quests[(int)questType].isCompleted = true;
-            }
+            if (quests[(int)questType].progress < quests[(int)questType].targetProgress) return;
+            quests[(int)questType].isCompleted = true;
+            UIManager.Instance.QuestPanelUI.completedMark.SetActive(true);
         }
 
         private void SetAllQuests()
@@ -195,6 +193,7 @@ namespace Managers.BattleManager
             ES3.Save($"{nameof(questLevel)}", questLevel);
 
             quests[targetQuestIndex].isCompleted = false;
+            UIManager.Instance.QuestPanelUI.completedMark.SetActive(false);
 
             if (questLevel % 5 == 0)
             {

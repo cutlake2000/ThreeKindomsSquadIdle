@@ -971,7 +971,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7981263913327639104}
-  - component: {fileID: 7078923320950210929}
   - component: {fileID: 5110029442095288723}
   - component: {fileID: 3776515622666048516}
   m_Layer: 0
@@ -999,18 +998,6 @@ Transform:
   m_Father: {fileID: 5006710730319576838}
   m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &7078923320950210929
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3083435228499748816}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_SortAtRoot: 0
 --- !u!95 &5110029442095288723
 Animator:
   serializedVersion: 5
@@ -2134,7 +2121,7 @@ GameObject:
   - component: {fileID: 5006710730319576838}
   - component: {fileID: 5934292151246047756}
   - component: {fileID: 8654849897769618712}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: knight_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2155,7 +2142,7 @@ RectTransform:
   m_Children:
   - {fileID: 7981263913327639104}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 1, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

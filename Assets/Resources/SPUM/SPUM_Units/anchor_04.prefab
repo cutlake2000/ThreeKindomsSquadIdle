@@ -249,7 +249,7 @@ GameObject:
   - component: {fileID: 3303592013963293074}
   - component: {fileID: 6821715163117791408}
   - component: {fileID: 8790659550974405597}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: anchor_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -270,7 +270,7 @@ RectTransform:
   m_Children:
   - {fileID: 1891910253714148362}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 1, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1709,7 +1709,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1891910253714148362}
-  - component: {fileID: 3394281141857438994}
   - component: {fileID: 1241556389867050884}
   - component: {fileID: 67864974517705158}
   - component: {fileID: 4481390796296747703}
@@ -1737,18 +1736,6 @@ Transform:
   m_Father: {fileID: 3303592013963293074}
   m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &3394281141857438994
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2883293358902928763}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_SortAtRoot: 0
 --- !u!95 &1241556389867050884
 Animator:
   serializedVersion: 5
