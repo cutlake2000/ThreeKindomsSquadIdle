@@ -8,14 +8,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using Enum = Data.Enum;
 
-namespace Managers
+namespace Managers.BottomMenuManager.InventoryPanel
 {
     public class InventoryManager : MonoBehaviour
     {
-        private const int MaxLevel = 1;
+        private const int MAX_LEVEL = 1;
         public static InventoryManager Instance;
 
-        private static readonly Dictionary<string, Equipment> allEquipments = new();
+        private static readonly Dictionary<string, Equipment> AllEquipments = new();
 
         [Header("장비 리스트")] public List<Equipment> swords = new();
 
@@ -65,7 +65,7 @@ namespace Managers
                 {
                     var rarityIntValue = Convert.ToInt32(rarity);
 
-                    for (var tier = 5; tier >= MaxLevel; tier--)
+                    for (var tier = 5; tier >= MAX_LEVEL; tier--)
                     {
                         var equipmentId = $"{rarity}_{tier}_{equipmentType}";
 
@@ -132,7 +132,7 @@ namespace Managers
                 {
                     var rarityIntValue = Convert.ToInt32(rarity);
 
-                    for (var tier = 5; tier >= MaxLevel; tier--)
+                    for (var tier = 5; tier >= MAX_LEVEL; tier--)
                     {
                         int initQuantity;
                         bool isEquipped;
@@ -221,14 +221,14 @@ namespace Managers
         // AllEquipment에 Equipment 더하는 메서드
         private static void AddEquipment(string equipmentId, Equipment equipment)
         {
-            if (!allEquipments.TryAdd(equipmentId, equipment))
+            if (!AllEquipments.TryAdd(equipmentId, equipment))
                 Debug.LogWarning($"Weapon already exists in the dictionary: {equipmentId}");
         }
 
         // AllEquipment에서 매개변수로 받은 string을 key로 사용해 Equipment 찾는 매서드
         public static Equipment GetEquipment(string equipmentId)
         {
-            if (allEquipments.TryGetValue(equipmentId, out var equipment)) return equipment;
+            if (AllEquipments.TryGetValue(equipmentId, out var equipment)) return equipment;
 
             Debug.LogError($"Equipment not found: {equipmentId}");
             return null;
@@ -237,7 +237,7 @@ namespace Managers
         // AllEquipment에서 매개변수로 받은 key을 사용하는 Equipment 업데이트 하는 메서드
         public static void SetEquipment(string equipmentId, Equipment equipment)
         {
-            var targetEquipment = allEquipments[equipmentId];
+            var targetEquipment = AllEquipments[equipmentId];
 
             if (targetEquipment == null) return;
             Debug.Log("이름 : " + targetEquipment.gameObject.name);
@@ -272,14 +272,14 @@ namespace Managers
 
             var nextKey = string.Empty;
 
-            if (currentLevel < MaxLevel)
+            if (currentLevel < MAX_LEVEL)
                 // 같은 희귀도 내에서 다음 레벨 찾기
                 nextKey = Enum.equipmentRarities[currentRarityIndex] + "_" + (currentLevel + 1) + "_" + $"{type}";
             else if (currentRarityIndex < Enum.equipmentRarities.Length - 1)
                 // 희귀도를 증가시키고 첫 번째 레벨의 장비 찾기
                 nextKey = Enum.equipmentRarities[currentRarityIndex + 1] + "_1" + "_" + $"{type}";
 
-            return allEquipments.GetValueOrDefault(nextKey);
+            return AllEquipments.GetValueOrDefault(nextKey);
         }
 
         // // 매개변수로 받은 key값을 사용하는 장비의 이전레벨 장비를 불러오는 메서드

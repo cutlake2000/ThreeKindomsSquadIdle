@@ -1,3 +1,4 @@
+using System;
 using Creature.CreatureClass.MonsterClass;
 using Creature.CreatureClass.SquadFSM;
 using Function;
@@ -20,8 +21,10 @@ namespace Creature.CreatureClass.SquadClass
 
         [Header("StateMachine")] private SquadStateMachine squadStateMachine;
 
-        protected virtual void Start()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+            
             squadStateMachine = new SquadStateMachine(this);
             squadStateMachine.ChangeState(squadStateMachine.SquadIdleState);
         }
@@ -42,14 +45,7 @@ namespace Creature.CreatureClass.SquadClass
         {
             squadStateMachine.PhysicsUpdate();
         }
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-
-            squadStateMachine?.ChangeState(squadStateMachine.SquadIdleState);
-        }
-
+        
         protected override void SetEventListener()
         {
             animationEventReceiver.OnNormalAttackEffect += OnNormalAttackEffect;

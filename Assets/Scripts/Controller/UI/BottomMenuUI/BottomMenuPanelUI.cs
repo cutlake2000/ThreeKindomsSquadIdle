@@ -62,19 +62,18 @@ namespace Controller.UI.BottomMenuUI
             panels[index].SetActive(false);
             openButtons[index].gameObject.SetActive(true);
 
-            if (SquadConfigureManager.Instance.isSquadConfigureChanged)
-            {
-                StageManager.Instance.StopStageRunner();
-                
-                SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Warrior));
-                SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Archer));
-                SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Wizard));
+            if (!SquadConfigureManager.Instance.isSquadConfigureChanged) return;
 
-                StageManager.Instance.initStageResult = false;
-                StageManager.Instance.goToNextSubStage = true;
+            if (StageManager.Instance.initStageResult) StageManager.Instance.initStageResult = false;
+            StageManager.Instance.StopStageRunner();
                 
-                StageManager.Instance.StartStageRunner();
-            }
+            SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Warrior));
+            SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Archer));
+            SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Wizard));
+                
+            StageManager.Instance.goToNextSubStage = true;
+                
+            StageManager.Instance.StartStageRunner();
         }
     }
 }

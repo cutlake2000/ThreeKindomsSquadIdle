@@ -8,7 +8,7 @@ namespace Creature.Data
 {
     public class SquadLevel
     {
-        [Header("[Level]")] [Header("[초기 레벨, 초기 경험치, 레벨 당 경험치 증가율]")] [SerializeField]
+        [Header("[Level]")] [Header("[초기 레벨, 초기 경험치, 레벨 당 경험치 증가율]")]
         private const int LevelFirstValue = 1;
 
         private const int MaxLevelFirstValue = 1000;

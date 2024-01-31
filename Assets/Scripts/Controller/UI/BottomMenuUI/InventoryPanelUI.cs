@@ -3,6 +3,7 @@ using Creature.Data;
 using Function;
 using Managers;
 using Managers.BattleManager;
+using Managers.BottomMenuManager.InventoryPanel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;

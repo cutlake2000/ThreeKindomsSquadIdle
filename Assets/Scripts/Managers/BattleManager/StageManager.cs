@@ -180,7 +180,7 @@ namespace Managers.BattleManager
                 currentWave = 1;
                 SetUI();
                 
-                if (initStageResult == false)
+                if (!initStageResult)
                 {
                     stageResultUI.SetActive(true);
                     stageResultUI.GetComponent<StageResultPanelUI>().PopUpStageClearMessage(isClear);
@@ -190,7 +190,7 @@ namespace Managers.BattleManager
                 DespawnMonster();
                 yield return new WaitForSeconds(2f);
 
-                if (initStageResult == false)
+                if (!initStageResult)
                 {
                     stageResultUI.GetComponent<StageResultPanelUI>().PopUnderStageClearMessage();
                     stageResultUI.SetActive(false);
@@ -200,7 +200,8 @@ namespace Managers.BattleManager
                 
                 SpawnSquad();
                 goToNextSubStage = false;
-
+                initStageResult = false;
+                
                 yield return new WaitForSeconds(1.0f);
             }
 

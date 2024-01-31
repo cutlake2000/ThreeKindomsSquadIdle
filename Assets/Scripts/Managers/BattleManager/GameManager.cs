@@ -1,3 +1,4 @@
+using Managers.BottomMenuManager.InventoryPanel;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.SummonPanel;
 using Managers.BottomMenuManager.TalentPanel;

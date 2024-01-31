@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Controller.UI.BottomMenuUI;
 using Creature.Data;
 using Function;
+using Managers.BottomMenuManager.InventoryPanel;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 using Enum = Data.Enum;

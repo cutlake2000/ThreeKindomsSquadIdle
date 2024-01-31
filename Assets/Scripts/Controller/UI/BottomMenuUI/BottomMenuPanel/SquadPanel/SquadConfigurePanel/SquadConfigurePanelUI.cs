@@ -355,6 +355,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                         .OrderByDescending(x => x.isEquipped)
                         .ThenBy(x => x.characterRarity).ToList();
                     
+                    // TODO : 장착 시에 렉 걸리는 문제 => 기존 List를 재정렬 후에 AddListener로 다시 버튼을 연결하는 과정에서 렉이 걸린 것으로 추정, 
+                    
                     for (var i = 0; i < SquadConfigureManager.Instance.warriors.Count; i++)
                     {
                         var index = i;
@@ -384,8 +386,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                             
                             UIManager.Instance.squadPanelUI.squadConfigurePanelUI
                                 .currentSelectedSquadConfigurePanelItemIndex = index;
-                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI.SelectSquadConfigureItem(
-                                characterType, characterId);
+                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI.SelectSquadConfigureItem(characterType, characterId);
                         });
                     }
 

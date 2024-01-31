@@ -24,7 +24,6 @@ namespace Managers.BottomMenuManager.SquadPanel
         [SerializeField] private SquadEffectSo[] squadEquippedEffectValueSoByRarity;
 
         [Header("캐릭터 정보 컨테이너")] public List<Character> warriors = new();
-
         public List<Character> archers = new();
         public List<Character> wizards = new();
 
@@ -236,16 +235,18 @@ namespace Managers.BottomMenuManager.SquadPanel
         private void InstantiateModelOfBattleUnderParent(Enum.CharacterType type, GameObject prefab, Sprite characterIcon,
             Transform parentTransform)
         {
-            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0));
+            if (parentTransform.childCount >= 2) Destroy(parentTransform.GetChild(1).gameObject);
             
             var character = Instantiate(prefab, parentTransform);
             character.transform.SetParent(parentTransform);
 
+            SquadBattleManager.Instance.squads[(int)type].GetComponent<Squad>().animator =
+                character.gameObject.GetComponentInChildren<Animator>();
             SquadBattleManager.Instance.squads[(int)type].GetComponent<Squad>().projectileSpawn =
                 character.GetComponent<CharacterModelInfo>().projectileSpawnPosition.transform;
+            SquadBattleManager.Instance.squads[(int)type].GetComponent<Squad>().allSprites.Clear();
             SquadBattleManager.Instance.squads[(int)type].GetComponent<Squad>().spumSprite =
                 character.GetComponent<CharacterModelInfo>().spumSpriteList;
-            SquadBattleManager.Instance.squads[(int)type].GetComponent<Squad>().SetAllSpritesList();
 
             switch (type)
             {
@@ -270,7 +271,7 @@ namespace Managers.BottomMenuManager.SquadPanel
         {
             var parentTransform = UIManager.Instance.squadPanelUI.squadConfigurePanelUI.characterSpawnPosition[(int) type].transform;
             
-            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0));
+            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0).gameObject);
             var character = Instantiate(prefab, parentTransform);
             character.transform.SetParent(parentTransform);
             ChangeLayerRecursively(character, 5);
@@ -301,6 +302,8 @@ namespace Managers.BottomMenuManager.SquadPanel
         private void InstantiateSkillUnderParent(Enum.CharacterType type, IList<CharacterSkill> prefab,
             Transform parentTransform)
         {
+            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0).gameObject);
+            
             switch (type)
             {
                 case Enum.CharacterType.Warrior:
@@ -314,7 +317,6 @@ namespace Managers.BottomMenuManager.SquadPanel
                         }
                         else
                         {
-                            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0));
                             var characterSkill = Instantiate(prefab[i].skillObject, parentTransform);
                             characterSkill.transform.SetParent(parentTransform);
                             
@@ -345,7 +347,6 @@ namespace Managers.BottomMenuManager.SquadPanel
                         }
                         else
                         {
-                            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0));
                             var characterSkill = Instantiate(prefab[i].skillObject, parentTransform);
                             characterSkill.transform.SetParent(parentTransform);
                             
@@ -376,7 +377,6 @@ namespace Managers.BottomMenuManager.SquadPanel
                         }
                         else
                         {
-                            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0));
                             var characterSkill = Instantiate(prefab[i].skillObject, parentTransform);
                             characterSkill.transform.SetParent(parentTransform);
                                                     
@@ -441,7 +441,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                 targetCharacter.characterOwnedEffects[i].increaseValue =
                     character.characterOwnedEffects[i].increaseValue;
 
-            targetCharacter.SaveCharacterAllInfo(targetCharacter.characterId);
+            targetCharacter.SaveCharacterEquippedInfo(targetCharacter.characterId);
         }
     }
 }

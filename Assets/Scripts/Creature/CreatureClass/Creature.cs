@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Creature.Data;
@@ -34,7 +35,7 @@ namespace Creature.CreatureClass
         public float attackRange;
         public float moveSpeed;
 
-        [Header("Sprite")] [SerializeField] protected List<SpriteRenderer> allSprites = new();
+        [Header("Sprite")] [SerializeField] public List<SpriteRenderer> allSprites = new();
 
         [Header("HpBar")] [SerializeField] protected GameObject hpBar;
 

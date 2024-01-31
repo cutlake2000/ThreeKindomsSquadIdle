@@ -210,19 +210,25 @@ namespace Creature.Data
         public void SaveCharacterAllInfo(string id)
         {
             ES3.Save($"{nameof(characterId)}_" + id, characterId);
-
+            
             ES3.Save($"{nameof(characterLevel)}_" + id, characterLevel);
             ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
             ES3.Save($"{nameof(isPossessed)}_" + id, isPossessed);
-
+            
             for (var i = 0; i < characterEquippedEffects.Count; i++)
                 ES3.Save($"characterEquippedEffects[{i}].increaseValue_" + id,
                     characterEquippedEffects[i].increaseValue);
-
+            
             for (var i = 0; i < characterOwnedEffects.Count; i++)
                 ES3.Save($"characterOwnedEffects[{i}].increaseValue_" + id, characterOwnedEffects[i].increaseValue);
         }
 
+        public void SaveCharacterEquippedInfo(string id)
+        {
+            ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
+        }
+        
+        
         // public void SaveCharacterEachInfo(string equipmentID, Enum.CharacterProperty property)
         // {
         //     switch (property)
