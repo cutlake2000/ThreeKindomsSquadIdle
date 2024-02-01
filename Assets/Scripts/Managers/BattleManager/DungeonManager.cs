@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using Controller.UI;
 using Controller.UI.BottomMenuUI;
-using Controller.UI.BottomMenuUI.DungeonPanel;
+using Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel;
+using Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Enum = Data.Enum;
 
 namespace Managers.BattleManager
 {
@@ -25,7 +25,7 @@ namespace Managers.BattleManager
         private GameObject stageResultUI;
 
         [Header("=== 던전 정보 ===")] [SerializeField]
-        private Enum.DungeonClearType dungeonClearType;
+        private Enums.DungeonClearType dungeonClearType;
 
         [SerializeField] private string currentDungeonName;
         [SerializeField] private int currentDungeonLevel;
@@ -128,9 +128,9 @@ namespace Managers.BattleManager
         {
             for (var i = 0; i < dungeonItems.Length; i++)
             {
-                dungeonItems[i].dungeonType = (Enum.DungeonType)i;
+                dungeonItems[i].dungeonType = (Enums.DungeonType)i;
                 dungeonItems[i].clearDungeonLevel =
-                    ES3.Load($"{nameof(Enum.DungeonType)}/{(Enum.DungeonType)i}/clearDungeonLevel : ", 1);
+                    ES3.Load($"{nameof(Enums.DungeonType)}/{(Enums.DungeonType)i}/clearDungeonLevel : ", 1);
                 dungeonItems[i].currentDungeonLevel = dungeonItems[i].clearDungeonLevel;
                 dungeonItems[i].currentDungeonReward = baseClearReward;
 
@@ -229,9 +229,9 @@ namespace Managers.BattleManager
 
         private void SetUI()
         {
-            stageUIController.SetUIText(Enum.UITextType.CurrentStageName, $"{currentDungeonName}{currentDungeonLevel}");
-            stageUIController.SetUIText(Enum.UITextType.CurrentWave, $"{currentScore} / {targetScore}");
-            stageUIController.SetUISlider(Enum.UISliderType.CurrentWaveSlider, 1.0f * currentScore / targetScore);
+            stageUIController.SetUIText(Enums.UITextType.CurrentStageName, $"{currentDungeonName}{currentDungeonLevel}");
+            stageUIController.SetUIText(Enums.UITextType.CurrentWave, $"{currentScore} / {targetScore}");
+            stageUIController.SetUISlider(Enums.UISliderType.CurrentWaveSlider, 1.0f * currentScore / targetScore);
         }
 
         private void SpawnSquad()
@@ -249,7 +249,7 @@ namespace Managers.BattleManager
         {
             currentRemainedMonsterCount = monsterSpawnCountsPerSubStage;
             //TODO: So로 빼서 몬스터 타입 지정해줄 것
-            MonsterManager.Instance.SpawnMonsters(Enum.MonsterClassType.Human,
+            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human,
                 monsterSpawnCountsPerSubStage);
         }
 
@@ -290,7 +290,7 @@ namespace Managers.BattleManager
 
         private void SetTimerUI(int currentTime)
         {
-            stageUIController.SetUIText(Enum.UITextType.Timer, $"{currentTime}");
+            stageUIController.SetUIText(Enums.UITextType.Timer, $"{currentTime}");
         }
     }
 }

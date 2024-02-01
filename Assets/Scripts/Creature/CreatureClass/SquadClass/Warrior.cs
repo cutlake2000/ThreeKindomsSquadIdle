@@ -1,6 +1,6 @@
+using Data;
 using Managers;
 using Managers.BattleManager;
-using Enum = Data.Enum;
 
 namespace Creature.CreatureClass.SquadClass
 {
@@ -10,8 +10,8 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.SetCreatureStats();
 
-            damage = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.WarriorAtk);
-            attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.WarriorAttackRange);
+            damage = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorAtk);
+            attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.WarriorAttackRange);
 
             animator.SetFloat(animationData.ClassTypeParameterHash, 0);
         }
@@ -21,7 +21,7 @@ namespace Creature.CreatureClass.SquadClass
             base.OnNormalAttack();
 
             ProjectileManager.Instance.InstantiateBaseAttack(damage, ProjectileSpawnPosition, Direction,
-                Enum.PoolType.ProjectileBaseAttackWarrior);
+                Enums.PoolType.ProjectileBaseAttackWarrior);
         }
 
         protected override void OnSkillAttack()
@@ -36,7 +36,7 @@ namespace Creature.CreatureClass.SquadClass
 
                 if (currentTarget == null) return;
 
-                SquadBattleManager.Instance.RunSkillCoolTimer(Enum.CharacterType.Warrior, i);
+                SquadBattleManager.Instance.RunSkillCoolTimer(Enums.CharacterType.Warrior, i);
                 ProjectileManager.Instance.InstantiateSkillAttack(
                     SquadBattleManager.Instance.warriorSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition,
                     currentTarget.transform.position);

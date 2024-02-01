@@ -1,298 +1,247 @@
+using System;
+using System.Collections.Generic;
 using Data;
 using Function;
-using TMPro;
+using Managers.BottomMenuManager.InventoryPanel;
 using UnityEngine;
-using UnityEngine.Pool;
-using UnityEngine.UI;
 
 namespace Creature.Data
 {
-    public class Equipment : MonoBehaviour
+    [Serializable]
+    public class EquipmentEffect
     {
-        private static readonly int Summon = Animator.StringToHash("Summon");
-
-        public string id; // 장비의 이름
-        public int quantity; // 장비의 개수
-        public int tier;
-        public bool isEquipped;
-        public Enum.EquipmentType type; // 장비의 타입 (예: 무기, 방어구 등)
-        public Enum.EquipmentRarity equipmentRarity; // 장비의 희귀도
-        public int level; // 강화 상태 (예: 0, 1, 2, ...)
-        public int basicEquippedEffect;
-        public int basicOwnedEffect;
-        public Image basicEquipmentBackground;
-        public Image basicEquipmentImage;
-
-        public Sprite equipmentBackground;
-        public Sprite equipmentImage;
-        public TMP_Text tierText;
-        public TMP_Text levelText;
-        public Slider quantityBar;
-        public TMP_Text quantityText;
-        public TMP_Text summonCountText;
-
-        public int equippedEffect; // 장착효과
-        public int ownedEffect; // 보유효과
-
-        public int summonCount; // 소환된 개수
-
-        public int maxQuantity = 5;
-        public int maxLevel = 250;
-
-        [SerializeField] private ParticleSystem[] summonEffects;
-        [SerializeField] private Animator summonEffectFrameAnimator;
-        public IObjectPool<Equipment> ManagedPool;
-
-        public void SetManagedPool(IObjectPool<Equipment> pool)
+        public Enums.StatTypeFromInventoryPanel statType;
+        public Enums.IncreaseStatValueType increaseStatType;
+        public int increaseValue;
+    }
+    
+    [Serializable]
+    public class Equipment
+    {
+        [Header("ES3 ID")] public string equipmentId;
+        [Header("이름")] public string equipmentName;
+        [Header("스프라이트 인덱스")] public int equipmentIconIndex;
+        [Header("레벨")] public int equipmentLevel;
+        [Header("요구 강화석")] public BigInteger equipmentRequiredCurrency;
+        [Header("장비 타입")] public Enums.EquipmentType equipmentType;
+        [Header("장비 등급")] public Enums.EquipmentRarity equipmentRarity;
+        [Header("장비 티어")] public int equipmentTier;
+        [Header("보유 수량")] public int equipmentQuantity; // 장비의 개수
+        [Header("장착 여부")] public bool isEquipped;
+        [Header("보유 여부")] public bool isPossessed;
+        [Space(5)]
+        [Header("장착 효과 타입")] public List<EquipmentEffect> equippedEffects;
+        [Header("보유 효과 타입")] public List<EquipmentEffect> ownedEffects;
+        
+        /// <summary>
+        /// 처음 생성할 때 사용되는 생성자
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="iconIndex"></param>
+        /// <param name="level"></param>
+        /// <param name="type"></param>
+        /// <param name="rarity"></param>
+        /// <param name="tier"></param>
+        /// <param name="quantity"></param>
+        /// <param name="isEquipped"></param>
+        /// <param name="isPossessed"></param>
+        /// <param name="equippedEffects"></param>
+        /// <param name="ownedEffects"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public Equipment(string id, string name, int iconIndex, int level, Enums.EquipmentType type,
+            Enums.EquipmentRarity rarity, int tier, int quantity, bool isEquipped, bool isPossessed,
+            List<EquipmentEffect> equippedEffects, List<EquipmentEffect> ownedEffects)
         {
-            ManagedPool = pool;
+            equipmentId = id;
+            equipmentName = name;
+            equipmentIconIndex = iconIndex;
+            equipmentLevel = level;
+            equipmentType = type;
+            equipmentRarity = rarity;
+            equipmentTier = tier;
+            equipmentQuantity = quantity;
+            this.isEquipped = isEquipped;
+            this.isPossessed = isPossessed;
+
+            this.equippedEffects = equippedEffects;
+            this.ownedEffects = ownedEffects;
+
+            equipmentRequiredCurrency = rarity switch
+            {
+                Enums.EquipmentRarity.Common => 10,
+                Enums.EquipmentRarity.Uncommon => 20,
+                Enums.EquipmentRarity.Magic => 80,
+                Enums.EquipmentRarity.Rare => 160,
+                Enums.EquipmentRarity.Unique => 320,
+                Enums.EquipmentRarity.Legend => 640,
+                Enums.EquipmentRarity.Epic => 1280,
+                Enums.EquipmentRarity.Ancient => 2560,
+                Enums.EquipmentRarity.Legendary => 5120,
+                Enums.EquipmentRarity.Mythology => 10240,
+                Enums.EquipmentRarity.Null => 0,
+                _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
+            };
+            
+            SaveEquipmentAllInfo();
         }
 
+        /// <summary>
+        /// 로드할 때 사용되는 생성자
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="iconIndex"></param>
+        /// <param name="icon"></param>
+        /// <param name="rarity"></param>
+        public Equipment(string id, string name, int iconIndex, Sprite icon, Enums.EquipmentType type, Enums.EquipmentRarity rarity, int tier,
+            List<EquipmentEffect> equippedEffects, List<EquipmentEffect> ownedEffects)
+        {
+            equipmentId = id;
+            equipmentName = name;
+            equipmentIconIndex = iconIndex;
+            equipmentType = type;
+            equipmentRarity = rarity;
+            equipmentTier = tier;
+            this.equippedEffects = equippedEffects;
+            this.ownedEffects = ownedEffects;
+
+            LoadEquipmentAllInfo();
+        }
+        
         // 강화 메서드
         public void Enhance()
         {
             // 강화 로직...
-            equippedEffect += basicEquippedEffect;
-            ownedEffect += basicOwnedEffect;
+            foreach (var t in equippedEffects)
+            {
+                t.increaseValue += t.increaseValue;
+            }
+            
+            foreach (var t in ownedEffects)
+            {
+                t.increaseValue += t.increaseValue;
+            }
 
-            level++;
-            // 강화효과 업데이트...
+            equipmentLevel = Mathf.Max(equipmentLevel++, InventoryManager.EquipmentMaxLevel);
         }
 
         // 강화할 때 필요한 강화석 return 시키는 메서드
         public BigInteger GetEnhanceStone()
         {
-            Debug.Log($"{ownedEffect}  {basicOwnedEffect}");
-            var requiredEnhanceStone = equippedEffect - basicOwnedEffect;
+            // var requiredEnhanceStone = equippedEffect - basicOwnedEffect;
 
-            return requiredEnhanceStone;
-        }
-
-        // 개수 체크하는 메서드
-        public bool CheckQuantity()
-        {
-            if (quantity >= 4) return true;
-
-            SetQuantityText();
-            return false;
+            return 100;
         }
 
         // 장비 데이터를 ES3 파일에 저장
         public void SaveEquipmentAllInfo()
         {
-            ES3.Save("id_" + id, id);
-            ES3.Save("quantity_" + id, quantity);
-            ES3.Save("grade_" + id, tier);
-            ES3.Save("onEquipped_" + id, isEquipped);
-            ES3.Save("type_" + id, type);
-            ES3.Save("rarity_" + id, equipmentRarity);
-            ES3.Save("level_" + id, level);
-            ES3.Save("basicEquippedEffect_" + id, basicEquippedEffect);
-            ES3.Save("basicOwnedEffect_" + id, basicOwnedEffect);
+            ES3.Save($"{nameof(equipmentId)}_" + equipmentId, equipmentId);
+            ES3.Save($"{nameof(equipmentLevel)}_" + equipmentId, equipmentLevel);
+            ES3.Save($"{nameof(equipmentQuantity)}_" + equipmentId, equipmentQuantity);
+            ES3.Save($"{nameof(isEquipped)}_" + equipmentId, isEquipped);
+            ES3.Save($"{nameof(isPossessed)}_" + equipmentId, isPossessed);
 
-            ES3.Save("equippedEffect_" + id, equippedEffect);
-            ES3.Save("ownedEffect_" + id, ownedEffect);
+            for (var i = 0; i < equippedEffects.Count; i++)
+            {
+                ES3.Save($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId, equippedEffects[i].increaseValue);   
+            }
+            
+            for (var i = 0; i < ownedEffects.Count; i++)
+            {
+                ES3.Save($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId, ownedEffects[i].increaseValue);   
+            }
         }
-
-        public void SaveEquipmentAllInfo(string equipmentID)
+        
+        public void SaveEquipmentAllInfo(string id)
         {
-            ES3.Save("id_" + equipmentID, id);
-            ES3.Save("quantity_" + equipmentID, quantity);
-            ES3.Save("grade_" + equipmentID, tier);
-            ES3.Save("onEquipped_" + equipmentID, isEquipped);
-            ES3.Save("type_" + equipmentID, type);
-            ES3.Save("rarity_" + equipmentID, equipmentRarity);
-            ES3.Save("level_" + equipmentID, level);
-            ES3.Save("basicEquippedEffect_" + equipmentID, basicEquippedEffect);
-            ES3.Save("basicOwnedEffect_" + equipmentID, basicOwnedEffect);
-            ES3.Save("equippedEffect_" + equipmentID, equippedEffect);
-            ES3.Save("ownedEffect_" + equipmentID, ownedEffect);
+            ES3.Save($"{nameof(equipmentId)}_" + id, equipmentId);
+            ES3.Save($"{nameof(equipmentLevel)}_" + id, equipmentLevel);
+            ES3.Save($"{nameof(equipmentQuantity)}_" + id, equipmentQuantity);
+            ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
+            ES3.Save($"{nameof(isPossessed)}_" + id, isPossessed);
+
+            for (var i = 0; i < equippedEffects.Count; i++)
+            {
+                ES3.Save($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId, equippedEffects[i].increaseValue);   
+            }
+            
+            for (var i = 0; i < ownedEffects.Count; i++)
+            {
+                ES3.Save($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId, ownedEffects[i].increaseValue);   
+            }
         }
 
-        public void SaveEquipmentEachInfo(string equipmentID, Enum.EquipmentProperty property)
+        public void SaveEquipmentEachInfo(string equipmentID, Enums.EquipmentProperty property)
         {
             switch (property)
             {
-                case Enum.EquipmentProperty.Name:
-                    ES3.Save("id_" + equipmentID, id);
+                case Enums.EquipmentProperty.Quantity:
+                    ES3.Save($"{nameof(equipmentQuantity)}_" + equipmentID, equipmentQuantity);
                     break;
-                case Enum.EquipmentProperty.Quantity:
-                    ES3.Save("quantity_" + equipmentID, quantity);
+                case Enums.EquipmentProperty.Level:
+                    ES3.Save($"{nameof(equipmentTier)}_" + equipmentID, equipmentTier);
                     break;
-                case Enum.EquipmentProperty.Level:
-                    ES3.Save("grade_" + equipmentID, tier);
+                case Enums.EquipmentProperty.IsEquipped:
+                    ES3.Save($"{nameof(isEquipped)}_" + equipmentID, isEquipped);
                     break;
-                case Enum.EquipmentProperty.Equipped:
+                case Enums.EquipmentProperty.IsPossessed:
                     ES3.Save("onEquipped_" + equipmentID, isEquipped);
-                    break;
-                case Enum.EquipmentProperty.Type:
-                    ES3.Save("type_" + equipmentID, type);
-                    break;
-                case Enum.EquipmentProperty.Rarity:
-                    ES3.Save("rarity_" + equipmentID, equipmentRarity);
-                    break;
-                case Enum.EquipmentProperty.EnhancementLevel:
-                    ES3.Save("level_" + equipmentID, level);
-                    break;
-                case Enum.EquipmentProperty.BasicEquippedEffect:
-                    ES3.Save("basicEquippedEffect_" + equipmentID, basicEquippedEffect);
-                    break;
-                case Enum.EquipmentProperty.BasicOwnedEffect:
-                    ES3.Save("basicOwnedEffect_" + equipmentID, basicOwnedEffect);
-                    break;
-                case Enum.EquipmentProperty.EquippedEffect:
-                    ES3.Save("equippedEffect_" + equipmentID, equippedEffect);
-                    break;
-                case Enum.EquipmentProperty.OwnedEffect:
-                    ES3.Save("ownedEffect_" + equipmentID, ownedEffect);
                     break;
             }
         }
 
         // 장비 데이터를 ES3 파일에서 불러오기
-        public void LoadEquipment()
+        public void LoadEquipmentAllInfo()
         {
-            if (!ES3.KeyExists("id_" + id)) return;
+            if (!ES3.KeyExists($"{nameof(equipmentId)}_" + equipmentId)) return;
+            
+            equipmentLevel = ES3.Load<int>($"{nameof(equipmentLevel)}_" +equipmentId);
+            equipmentQuantity = ES3.Load<int>($"{nameof(equipmentQuantity)}_" +equipmentId);
+            isEquipped = ES3.Load<bool>($"{nameof(isEquipped)}_" + equipmentId);
+            isPossessed = ES3.Load<bool>($"{nameof(isPossessed)}_" + equipmentId);
 
-            id = ES3.Load<string>("id_" + id);
-            quantity = ES3.Load<int>("quantity_" + id);
-            tier = ES3.Load<int>("grade_" + id);
-            isEquipped = ES3.Load<bool>("onEquipped_" + id);
-            type = ES3.Load<Enum.EquipmentType>("type_" + id);
-            equipmentRarity = ES3.Load<Enum.EquipmentRarity>("rarity_" + id);
-            level = ES3.Load<int>("level_" + id);
-            basicEquippedEffect = ES3.Load<int>("basicEquippedEffect_" + id);
-            basicOwnedEffect = ES3.Load<int>("basicOwnedEffect_" + id);
-
-            equippedEffect = ES3.Load<int>("equippedEffect_" + id);
-            ownedEffect = ES3.Load<int>("ownedEffect_" + id);
+            for (var i = 0; i < equippedEffects.Count; i++)
+            {
+                equippedEffects[i].increaseValue = ES3.Load<int>($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId);   
+            }
+            
+            for (var i = 0; i < ownedEffects.Count; i++)
+            {
+                ownedEffects[i].increaseValue = ES3.Load<int>($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId);
+            }
         }
 
-        public void LoadEquipment(string equipmentID)
+        public void LoadEquipmentAllInfo(string id)
         {
-            if (!ES3.KeyExists("id_" + equipmentID)) return;
+            if (!ES3.KeyExists($"{nameof(equipmentId)}_" + id)) return;
+            
+            equipmentLevel = ES3.Load<int>($"{nameof(equipmentLevel)}_" +id);
+            equipmentQuantity = ES3.Load<int>($"{nameof(equipmentQuantity)}_" +id);
+            isEquipped = ES3.Load<bool>($"{nameof(isEquipped)}_" + id);
+            isPossessed = ES3.Load<bool>($"{nameof(isPossessed)}_" + id);
 
-            id = ES3.Load<string>("id_" + equipmentID);
-            quantity = ES3.Load<int>("quantity_" + equipmentID);
-            tier = ES3.Load<int>("grade_" + equipmentID);
-            isEquipped = ES3.Load<bool>("onEquipped_" + equipmentID);
-            type = ES3.Load<Enum.EquipmentType>("type_" + equipmentID);
-            equipmentRarity = ES3.Load<Enum.EquipmentRarity>("rarity_" + equipmentID);
-            level = ES3.Load<int>("level_" + equipmentID);
-            basicEquippedEffect = ES3.Load<int>("basicEquippedEffect_" + equipmentID);
-            basicOwnedEffect = ES3.Load<int>("basicOwnedEffect_" + equipmentID);
-
-            equippedEffect = ES3.Load<int>("equippedEffect_" + equipmentID);
-            ownedEffect = ES3.Load<int>("ownedEffect_" + equipmentID);
+            for (var i = 0; i < equippedEffects.Count; i++)
+            {
+                equippedEffects[i].increaseValue = ES3.Load<int>($"equipmentEquippedEffects[{i}]).increaseValue_" + id);   
+            }
+            
+            for (var i = 0; i < ownedEffects.Count; i++)
+            {
+                ownedEffects[i].increaseValue = ES3.Load<int>($"equipmentOwnedEffects[{i}]).increaseValue_" + id);
+            }
         }
 
         // 매개변수로 받은 WeaponInfo 의 정보 복사
         public void SetEquipmentInfo(Equipment equipment)
         {
-            id = equipment.id;
-            quantity = equipment.quantity;
-            tier = equipment.tier;
+            equipmentId = equipment.equipmentId;
+            equipmentQuantity = equipment.equipmentQuantity;
+            equipmentTier = equipment.equipmentTier;
             isEquipped = equipment.isEquipped;
-            type = equipment.type;
+            equipmentType = equipment.equipmentType;
             equipmentRarity = equipment.equipmentRarity;
-            level = equipment.level;
-            basicEquippedEffect = equipment.basicEquippedEffect;
-            basicOwnedEffect = equipment.basicOwnedEffect;
-            equipmentBackground = equipment.equipmentBackground;
-            equipmentImage = equipment.equipmentImage;
-
-            equippedEffect = basicEquippedEffect;
-            ownedEffect = basicOwnedEffect;
-        }
-
-        public void SetEquipmentInfo(string id, int quantity, int tier, bool isEquipped, Enum.EquipmentType type,
-            Enum.EquipmentRarity equipmentRarity, int level, int basicEquippedEffect, int basicOwnedEffect,
-            Sprite backgroundEffect, Sprite equipmentImage)
-        {
-            this.id = id;
-            this.quantity = quantity;
-            this.tier = tier;
-            this.isEquipped = isEquipped;
-            this.type = type;
-            this.equipmentRarity = equipmentRarity;
-            this.level = level;
-            this.basicEquippedEffect = basicEquippedEffect;
-            this.basicOwnedEffect = basicOwnedEffect;
-            equipmentBackground = backgroundEffect;
-            this.equipmentImage = equipmentImage;
-
-            equippedEffect = this.basicEquippedEffect;
-            ownedEffect = this.basicOwnedEffect;
-
-            SetUI();
-        }
-
-        public void SetUI()
-        {
-            SetEquipmentImage();
-            SetBackgroundEffect();
-            SetTierText();
-            SetQuantityText();
-            SetLevelText();
-            SetCountText();
-        }
-
-        private void SetCountText()
-        {
-            if (summonCountText == null) return;
-            summonCountText.text = $"{summonCount}";
-        }
-
-        // 장비 개수 보여주는 UI 업데이트 하는 메서드
-        public void SetQuantityText()
-        {
-            if (quantityBar == null) return;
-            quantityBar.value = quantity;
-            quantityText.text = $"{quantity}/{maxQuantity}";
-        }
-
-        // 배경색 바꾸는 메서드 (Sprite로 변경해야함)
-        public void SetBackgroundEffect()
-        {
-            if (basicEquipmentBackground == null) return;
-
-            basicEquipmentBackground.sprite = equipmentBackground;
-        }
-
-        public void SetEquipmentImage()
-        {
-            basicEquipmentImage.sprite = equipmentImage;
-        }
-
-        // 레벨 보여주는 UI 업데이트 하는 메서드
-        public void SetTierText()
-        {
-            tierText.text = $"{tier} 티어";
-        }
-
-        public void SetLevelText()
-        {
-            if (levelText == null) return;
-            levelText.text = $"Lv.{level}/{maxLevel}";
-        }
-
-        public void SetSummonUI()
-        {
-            tierText.text = $"{tier} 티어";
-            basicEquipmentBackground.sprite = equipmentBackground;
-            basicEquipmentImage.sprite = equipmentImage;
-            summonCountText.text = $"{summonCount}";
-
-            summonEffects[(int)equipmentRarity].Play();
-            summonEffectFrameAnimator.SetTrigger(Summon);
-        }
-
-        public void ResetEquipment()
-        {
-            basicEquipmentBackground.sprite = null;
-            basicEquipmentImage.sprite = null;
-            tierText.text = "";
-            summonCountText.text = "";
         }
     }
 }

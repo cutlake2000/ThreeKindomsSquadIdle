@@ -1,36 +1,39 @@
 using System;
+using Data;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Enum = Data.Enum;
 
 namespace ScriptableObjects.Scripts
 {
     [CreateAssetMenu(fileName = "Summon", menuName = "ScriptableObjects/Summon")]
     public class SummonSo : ScriptableObject
     {
-        [field:SerializeField] public SummonEquipments[] SummonEquipments { get; private set; }
+        [field:SerializeField] public int[] SummonRequiredCount { get; private set; }
+        [field:SerializeField] public SummonProbability[] SummonWeapons { get; private set; }
+        [field:SerializeField] public SummonProbability[] SummonGears { get; private set; }
+        [field:SerializeField] public SummonProbability[] SummonSquads { get; private set; }
 
-        public SummonEquipments GetProbability(int level)
+        public int GetRequiredExp(Enums.SummonType summonType, int level)
         {
-            return SummonEquipments[level - 1];
+            return SummonRequiredCount[level - 1];
         }
-    }
-
-    [Serializable]
-    public class SummonEquipments
-    {
-        [field: Header("[소환 레벨]")]
-        [field: SerializeField] public int SummonLevel { get; private set; }
-        [field: Header("[레벨 당 소환 확률]")]
-        [field: SerializeField] public SummonProbability[] SummonProbabilities { get; private set; }
+        
+        public SummonProbability GetProbability(Enums.SummonType summonType, int level)
+        {
+            return summonType switch
+            {
+                Enums.SummonType.Weapon => SummonWeapons[level - 1],
+                Enums.SummonType.Gear => SummonGears[level - 1],
+                Enums.SummonType.Squad => SummonSquads[level - 1],
+                _ => throw new ArgumentOutOfRangeException(nameof(summonType), summonType, null)
+            };
+        }
     }
 
     [Serializable]
     public class SummonProbability
     {
-        [FormerlySerializedAs("rarity")]
-        [field: Header("--- 레어도 / 가중치 ---")]
-        [field: SerializeField] public Enum.EquipmentRarity equipmentRarity;
-        [field: SerializeField] public float weight;
+        [field: Header("[레벨 당 소환 확률]")]
+        [field: SerializeField] public float[] SummonProbabilities { get; private set; }
     }
 }

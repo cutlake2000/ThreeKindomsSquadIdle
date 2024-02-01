@@ -1,8 +1,8 @@
 using System;
+using Data;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Enum = Data.Enum;
 
 namespace ScriptableObjects.Scripts
 {
@@ -14,9 +14,9 @@ namespace ScriptableObjects.Scripts
         [Header("캐릭터 아이콘 인덱스")]
         public int characterIconIndex;
         [Header("캐릭터 타입")]
-        public Enum.CharacterType characterType;
+        public Enums.CharacterType characterType;
         [Header("캐릭터 등급")]
-        public Enum.CharacterRarity characterRarity;
+        public Enums.CharacterRarity characterRarity;
 
         [Space(5)]
         [Header("캐릭터 모델")]

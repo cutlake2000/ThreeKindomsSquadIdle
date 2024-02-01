@@ -35,27 +35,27 @@ namespace Controller.UI
             challengeButton.gameObject.SetActive(challenge);
         }
 
-        public void SetUIText(Enum.UITextType textType, string value)
+        public void SetUIText(Enums.UITextType textType, string value)
         {
             switch (textType)
             {
-                case Enum.UITextType.CurrentStageName:
+                case Enums.UITextType.CurrentStageName:
                     currentStageNameText.text = value;
                     break;
-                case Enum.UITextType.CurrentWave:
+                case Enums.UITextType.CurrentWave:
                     currentWaveText.text = value;
                     break;
-                case Enum.UITextType.Timer:
+                case Enums.UITextType.Timer:
                     timerText.text = value;
                     break;
             }
         }
 
-        public void SetUISlider(Enum.UISliderType sliderType, float value)
+        public void SetUISlider(Enums.UISliderType sliderType, float value)
         {
             switch (sliderType)
             {
-                case Enum.UISliderType.CurrentWaveSlider:
+                case Enums.UISliderType.CurrentWaveSlider:
                     currentWaveSlider.value = value;
                     break;
             }

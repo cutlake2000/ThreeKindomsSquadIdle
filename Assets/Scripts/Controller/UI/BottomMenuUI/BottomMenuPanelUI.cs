@@ -61,16 +61,17 @@ namespace Controller.UI.BottomMenuUI
             closeButtons[index].gameObject.SetActive(false);
             panels[index].SetActive(false);
             openButtons[index].gameObject.SetActive(true);
-
-            if (!SquadConfigureManager.Instance.isSquadConfigureChanged) return;
-
+            
             if (StageManager.Instance.initStageResult) StageManager.Instance.initStageResult = false;
+            if (StageManager.Instance.stageResultUI.activeInHierarchy) StageManager.Instance.stageResultUI.SetActive(false);
+            
+            if (!SquadConfigureManager.Instance.isSquadConfigureChanged) return;
+            
             StageManager.Instance.StopStageRunner();
-                
-            SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Warrior));
-            SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Archer));
-            SquadConfigureManager.Instance.UpdateSquadConfigure(SquadConfigureManager.Instance.FindEquippedCharacter(Enum.CharacterType.Wizard));
-                
+            SquadConfigureManager.Instance.UpdateSquadConfigureModelOnBattle(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Warrior));
+            SquadConfigureManager.Instance.UpdateSquadConfigureModelOnBattle(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Archer));
+            SquadConfigureManager.Instance.UpdateSquadConfigureModelOnBattle(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Wizard));
+            StageManager.Instance.initStageResult = true;
             StageManager.Instance.goToNextSubStage = true;
                 
             StageManager.Instance.StartStageRunner();

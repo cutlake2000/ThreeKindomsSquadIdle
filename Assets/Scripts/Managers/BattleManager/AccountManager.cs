@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Creature.Data;
+using Data;
 using Function;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace Managers.BattleManager
 {
@@ -21,7 +21,7 @@ namespace Managers.BattleManager
             Instance = this;
         }
 
-        public event Action<Enum.CurrencyType, string> OnCurrencyChanged;
+        public event Action<Enums.CurrencyType, string> OnCurrencyChanged;
 
         // 재화 매니저 초기화 메서드
         public void InitAccountManager()
@@ -43,7 +43,7 @@ namespace Managers.BattleManager
         }
 
         // 특정 통화를 증가시키는 메서드
-        public void AddCurrency(Enum.CurrencyType currencyType, BigInteger value)
+        public void AddCurrency(Enums.CurrencyType currencyType, BigInteger value)
         {
             var currency = currencies.Find(c => c.currencyType == currencyType);
             if (currency != null)
@@ -55,7 +55,7 @@ namespace Managers.BattleManager
         }
 
         // 특정 통화를 감소시키는 메서드
-        public bool SubtractCurrency(Enum.CurrencyType currencyType, BigInteger value)
+        public bool SubtractCurrency(Enums.CurrencyType currencyType, BigInteger value)
         {
             // 모든 통화중 매개변수로 받은 이름이 있나 체크
             var currency = currencies.Find(c => c.currencyType == currencyType);
@@ -69,7 +69,7 @@ namespace Managers.BattleManager
         }
 
         // 특정 통화의 현재 양을 반환하는 메서드
-        public string GetCurrencyAmount(Enum.CurrencyType currencyType)
+        public string GetCurrencyAmount(Enums.CurrencyType currencyType)
         {
             var currency = currencies.Find(c => c.currencyType == currencyType);
             return currency?.amount ?? "0";
@@ -96,23 +96,27 @@ namespace Managers.BattleManager
         }
 
         // 통화의 UI를 업데이트 시키는 메서드
-        private void UpdateCurrencyUI(Enum.CurrencyType currencyType, string amount)
+        private void UpdateCurrencyUI(Enums.CurrencyType currencyType, string amount)
         {
             Currency currency;
 
             switch (currencyType)
             {
-                case Enum.CurrencyType.StatPoint:
-                    currency = currencies.Find(c => c.currencyType == Enum.CurrencyType.StatPoint);
+                case Enums.CurrencyType.StatPoint:
+                    currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.StatPoint);
                     currency.currencyUI.text = $"스탯 포인트 : {BigInteger.ChangeMoney(amount)}";
                     break;
-                case Enum.CurrencyType.Gold:
-                    currency = currencies.Find(c => c.currencyType == Enum.CurrencyType.Gold);
-                    currency.currencyUI.text = $"<sprite=15> {BigInteger.ChangeMoney(amount)}";
+                case Enums.CurrencyType.Gold:
+                    currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.Gold);
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.Gold}> {BigInteger.ChangeMoney(amount)}";
                     break;
-                case Enum.CurrencyType.Dia:
-                    currency = currencies.Find(c => c.currencyType == Enum.CurrencyType.Dia);
-                    currency.currencyUI.text = $"<sprite=16> {BigInteger.ChangeMoney(amount)}";
+                case Enums.CurrencyType.Dia:
+                    currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.Dia);
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.Dia}> {BigInteger.ChangeMoney(amount)}";
+                    break;
+                case Enums.CurrencyType.SquadEnhanceStone:
+                    currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.SquadEnhanceStone);
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.EnhanceStoneSquad}> {BigInteger.ChangeMoney(amount)}";
                     break;
             }
         }

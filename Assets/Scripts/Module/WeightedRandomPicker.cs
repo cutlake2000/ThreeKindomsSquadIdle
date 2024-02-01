@@ -119,7 +119,7 @@ namespace Function
         #region .
 
         /// <summary> 목록에서 대상 아이템 제거 </summary>
-        public void RemoveAll(T item)
+        public void Remove(T item)
         {
             CheckNotExistedItem(item);
 

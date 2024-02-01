@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Creature.CreatureClass.MonsterClass;
+using Data;
 using UnityEngine;
-using Enum = Data.Enum;
 using Random = UnityEngine.Random;
 
 namespace Managers
@@ -19,7 +19,7 @@ namespace Managers
 
         private readonly Dictionary<string, float> animationLengths = new();
         private readonly int[] spawnXs = { -10, 10, 0 };
-        private Dictionary<Enum.MonsterClassType, Queue<Monster>> monsterNewPools;
+        private Dictionary<Enums.MonsterClassType, Queue<Monster>> monsterNewPools;
         private int spawnCount;
 
         private void Awake()
@@ -31,8 +31,8 @@ namespace Managers
 
         private void InitializeMonsterPools()
         {
-            monsterNewPools = new Dictionary<Enum.MonsterClassType, Queue<Monster>>();
-            foreach (Enum.MonsterClassType type in System.Enum.GetValues(typeof(Enum.MonsterClassType)))
+            monsterNewPools = new Dictionary<Enums.MonsterClassType, Queue<Monster>>();
+            foreach (Enums.MonsterClassType type in System.Enum.GetValues(typeof(Enums.MonsterClassType)))
             {
                 var pool = new Queue<Monster>();
                 var prefab = monsterNewTypePrefabs[(int)type];
@@ -52,7 +52,7 @@ namespace Managers
             }
         }
 
-        public void SpawnMonsters(Enum.MonsterClassType[] monsterNewTypes, int totalCount)
+        public void SpawnMonsters(Enums.MonsterClassType[] monsterNewTypes, int totalCount)
         {
             var remainingCount = totalCount;
             var typesCount = monsterNewTypes.Length;
@@ -80,7 +80,7 @@ namespace Managers
         }
 
 
-        public void SpawnMonsters(Enum.MonsterClassType monsterNewClassType, int count)
+        public void SpawnMonsters(Enums.MonsterClassType monsterNewClassType, int count)
         {
             for (var i = 0; i < count; i++)
             {
@@ -89,7 +89,7 @@ namespace Managers
             }
         }
 
-        private Monster GetMonster(Enum.MonsterClassType classType)
+        private Monster GetMonster(Enums.MonsterClassType classType)
         {
             Monster monster;
             if (monsterNewPools[classType].Count > 0)
@@ -112,7 +112,7 @@ namespace Managers
             foreach (var monster in activeMonsters.ToList()) ReturnMonster(monster.monsterClassType, monster);
         }
 
-        public void ReturnMonster(Enum.MonsterClassType classType, Monster monster)
+        public void ReturnMonster(Enums.MonsterClassType classType, Monster monster)
         {
             monster.gameObject.SetActive(false);
             monsterNewPools[classType].Enqueue(monster);

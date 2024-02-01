@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using Controller.UI;
 using Controller.UI.BottomMenuUI;
+using Data;
 using ScriptableObjects.Scripts;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace Managers.BattleManager
 {
@@ -19,8 +19,8 @@ namespace Managers.BattleManager
         [SerializeField] private StageUI stageUIController;
         [SerializeField] private StageSo stageSo;
         
-        [Header("=== 전투 결과창 UI ===")] [SerializeField]
-        private GameObject stageResultUI;
+        [Header("=== 전투 결과창 UI ===")]
+        public GameObject stageResultUI;
 
         [Header("=== 스테이지 정보 ===")]
         [SerializeField] private string currentMainStageName;
@@ -184,11 +184,12 @@ namespace Managers.BattleManager
                 {
                     stageResultUI.SetActive(true);
                     stageResultUI.GetComponent<StageResultPanelUI>().PopUpStageClearMessage(isClear);
+                    
+                    yield return new WaitForSeconds(2f);
                 }
-
+                
                 DespawnSquad();
                 DespawnMonster();
-                yield return new WaitForSeconds(2f);
 
                 if (!initStageResult)
                 {
@@ -211,9 +212,9 @@ namespace Managers.BattleManager
 
         private void SetUI()
         {
-            stageUIController.SetUIText(Enum.UITextType.CurrentStageName, $"{currentMainStageName}{currentSubStage}");
-            stageUIController.SetUIText(Enum.UITextType.CurrentWave, $"{currentWave} / {waveCountsPerSubStage}");
-            stageUIController.SetUISlider(Enum.UISliderType.CurrentWaveSlider,
+            stageUIController.SetUIText(Enums.UITextType.CurrentStageName, $"{currentMainStageName}{currentSubStage}");
+            stageUIController.SetUIText(Enums.UITextType.CurrentWave, $"{currentWave} / {waveCountsPerSubStage}");
+            stageUIController.SetUISlider(Enums.UISliderType.CurrentWaveSlider,
                 1.0f * currentWave / waveCountsPerSubStage);
         }
 
@@ -272,7 +273,7 @@ namespace Managers.BattleManager
 
         private void SetTimerUI(int currentTime)
         {
-            stageUIController.SetUIText(Enum.UITextType.Timer, $"{currentTime}");
+            stageUIController.SetUIText(Enums.UITextType.Timer, $"{currentTime}");
         }
 
         public void StopStageRunner()

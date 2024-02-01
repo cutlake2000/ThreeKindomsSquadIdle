@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ScriptableObjects.Scripts
 {
@@ -18,10 +19,10 @@ namespace ScriptableObjects.Scripts
         [Header("레벨 업 비용")]
         public int levelUpCost = 1;
 
-        [Header("스탯 증가 타입")]
-        public Data.Enum.StatTypeBySquadTalentPanel statTypeBySquadTalentPanel;
+        [FormerlySerializedAs("statTypeBySquadTalentPanel")] [Header("스탯 증가 타입")]
+        public Data.Enums.StatTypeFromSquadTalentPanel statTypeFromSquadTalentPanel;
         [Header("스탯 증가량 타입")]
-        public Data.Enum.IncreaseStatValueType increaseTalentValueType;
+        public Data.Enums.IncreaseStatValueType increaseTalentValueType;
         [Header("스탯 증가량")]
         public int increaseTalentValue = 1;
     }

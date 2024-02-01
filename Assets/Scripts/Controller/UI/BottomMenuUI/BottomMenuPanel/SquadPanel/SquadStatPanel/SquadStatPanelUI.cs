@@ -1,10 +1,10 @@
 using System;
+using Data;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Enum = Data.Enum;
 
 namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 {
@@ -56,12 +56,12 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         {
             var levelUpCost = SquadStatManager.Instance.squadStatItem[index].levelUpCost;
 
-            if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.StatPoint)) <
+            if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.StatPoint)) <
                 SquadStatManager.Instance.levelUpMagnification * levelUpCost)
                 foreach (var squadStat in SquadStatManager.Instance.squadStatItem)
                 {
                     if (squadStat.maxLevel - squadStat.currentLevel <=
-                        Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.StatPoint)))
+                        Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.StatPoint)))
                         continue;
 
                     squadStat.upgradeButton.gameObject.SetActive(false);

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Data;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.TalentPanel;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Enum = Data.Enum;
 
 namespace Managers.BattleManager
 {
@@ -14,11 +14,11 @@ namespace Managers.BattleManager
         public string questID; // 유니크한 퀘스트 식별자
         public string name;
         public string description;
-        public Enum.QuestType questType; // 퀘스트 타입
+        public Enums.QuestType questType; // 퀘스트 타입
         public int progress; // 현재 진행량
         public int increaseProgress;
         public int targetProgress; // 목표 진행량
-        public Enum.QuestRewardType questRewardType;
+        public Enums.QuestRewardType questRewardType;
         public int reward; // 보상
         public bool isCompleted; // 완료 여부
 
@@ -31,7 +31,7 @@ namespace Managers.BattleManager
     
     public class QuestManager : MonoBehaviour
     {
-        public Action<Enum.QuestType> UpdateTargetQuestProgressAction;
+        public Action<Enums.QuestType> UpdateTargetQuestProgressAction;
         
         public static QuestManager Instance;
         public TextAsset questCsv;
@@ -61,23 +61,23 @@ namespace Managers.BattleManager
 
                 switch (quest.questType)
                 {
-                    case Enum.QuestType.AttackTalentLevel:
+                    case Enums.QuestType.AttackTalentLevel:
                         quest.targetProgress = quest.increaseProgress * ((questLevel + 5) / 5);
                         quest.name = $"{quest.description}{quest.targetProgress} 달성";
                         break;
-                    case Enum.QuestType.HealthTalentLevel:
+                    case Enums.QuestType.HealthTalentLevel:
                         quest.targetProgress = quest.increaseProgress * ((questLevel + 5) / 5);
                         quest.name = $"{quest.description}{quest.targetProgress} 달성";
                         break;
-                    case Enum.QuestType.DefenceTalentLevel:
+                    case Enums.QuestType.DefenceTalentLevel:
                         quest.targetProgress = quest.increaseProgress * ((questLevel + 5) / 5);
                         quest.name = $"{quest.description}{quest.targetProgress} 달성";
                         break;
-                    case Enum.QuestType.SquadLevel:
+                    case Enums.QuestType.SquadLevel:
                         quest.targetProgress = quest.increaseProgress * ((questLevel + 5) / 5);
                         quest.name = $"{quest.description}{quest.targetProgress} 달성";
                         break;
-                    case Enum.QuestType.StageClear:
+                    case Enums.QuestType.StageClear:
                         quest.targetProgress = questLevel > 50 ? 5 : questLevel + 5;
                         quest.name =
                             $"{quest.description} {quest.targetProgress / 50 + 1}-{quest.targetProgress} 클리어";
@@ -90,7 +90,7 @@ namespace Managers.BattleManager
             UpdateQuestPanelUI();
         }
 
-        public void IncreaseQuestProgress(Enum.QuestType questType, int currentValue)
+        public void IncreaseQuestProgress(Enums.QuestType questType, int currentValue)
         {
             quests[(int)questType].progress = currentValue;
 
@@ -114,11 +114,11 @@ namespace Managers.BattleManager
                 {
                     quest.progress = quest.questType switch
                     {
-                        Enum.QuestType.AttackTalentLevel => TalentManager.Instance.talentItem[0].currentLevel,
-                        Enum.QuestType.HealthTalentLevel => TalentManager.Instance.talentItem[1].currentLevel,
-                        Enum.QuestType.DefenceTalentLevel => TalentManager.Instance.talentItem[2].currentLevel,
-                        Enum.QuestType.SquadLevel => AccountManager.Instance.accountLevel, //TODO : 캐릭터 레벨 기능 / 스테이지 저장 기능 구현 후 완성
-                        Enum.QuestType.StageClear => StageManager.Instance.currentStageIndex,
+                        Enums.QuestType.AttackTalentLevel => TalentManager.Instance.talentItem[0].currentLevel,
+                        Enums.QuestType.HealthTalentLevel => TalentManager.Instance.talentItem[1].currentLevel,
+                        Enums.QuestType.DefenceTalentLevel => TalentManager.Instance.talentItem[2].currentLevel,
+                        Enums.QuestType.SquadLevel => AccountManager.Instance.accountLevel, //TODO : 캐릭터 레벨 기능 / 스테이지 저장 기능 구현 후 완성
+                        Enums.QuestType.StageClear => StageManager.Instance.currentStageIndex,
                         _ => throw new ArgumentOutOfRangeException()
                     };
                 }
@@ -148,9 +148,9 @@ namespace Managers.BattleManager
                             description = fields[1].Trim(), // CSV에 설명이 없으므로 빈 문자열 할당
                             increaseProgress = int.Parse(fields[2].Trim()),
                             questRewardType =
-                                (Enum.QuestRewardType)System.Enum.Parse(typeof(Enum.QuestRewardType), fields[3].Trim()),
+                                (Enums.QuestRewardType)System.Enum.Parse(typeof(Enums.QuestRewardType), fields[3].Trim()),
                             reward = int.Parse(fields[4].Trim()),
-                            questType = (Enum.QuestType)System.Enum.Parse(typeof(Enum.QuestType), fields[5].Trim()),
+                            questType = (Enums.QuestType)System.Enum.Parse(typeof(Enums.QuestType), fields[5].Trim()),
                             progress = 0, // 초기 진행량은 0
                             isCompleted = false // 초기 상태는 미완료
                         };
@@ -176,7 +176,7 @@ namespace Managers.BattleManager
             var targetQuestIndex = questLevel % 5;
             
             var targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite(
-                (Enum.CurrencyType)System.Enum.Parse(typeof(Enum.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"));
+                (Enums.CurrencyType)System.Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"));
             var targetQuestRewardText = $"{quests[targetQuestIndex].reward}";
             var targetQuestDescriptionText = $"{quests[targetQuestIndex].name}";
             UIManager.Instance.questPanelUI.UpdateQuestPanelUI(targetQuestRewardSprite, targetQuestRewardText,
@@ -187,7 +187,7 @@ namespace Managers.BattleManager
         {
             var targetQuestIndex = questLevel % 5;
             
-            AccountManager.Instance.AddCurrency((Enum.CurrencyType)System.Enum.Parse(typeof(Enum.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"), quests[targetQuestIndex].reward);
+            AccountManager.Instance.AddCurrency((Enums.CurrencyType)System.Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"), quests[targetQuestIndex].reward);
 
             questLevel++;
             ES3.Save($"{nameof(questLevel)}", questLevel);

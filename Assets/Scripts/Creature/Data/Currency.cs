@@ -1,18 +1,18 @@
 using System;
+using Data;
 using Function;
 using TMPro;
-using Enum = Data.Enum;
 
 namespace Creature.Data
 {
     [Serializable]
     public class Currency
     {
-        public Enum.CurrencyType currencyType;
+        public Enums.CurrencyType currencyType;
         public string amount;
         public TMP_Text currencyUI;
 
-        public Currency(Enum.CurrencyType currencyType, string initialAmount)
+        public Currency(Enums.CurrencyType currencyType, string initialAmount)
         {
             this.currencyType = currencyType;
             amount = initialAmount;

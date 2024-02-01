@@ -1,9 +1,10 @@
 using System;
+using Data;
 using Managers;
+using Managers.BattleManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Enum = Data.Enum;
 
 namespace Controller.UI
 {
@@ -88,27 +89,27 @@ namespace Controller.UI
             {
                 var index = i;
                 warriorSkillCoolTimerUI[i].skillButton.onClick
-                    .AddListener(() => ActivateSkill(Enum.CharacterType.Warrior, index));
+                    .AddListener(() => ActivateSkill(Enums.CharacterType.Warrior, index));
                 archerSkillCoolTimerUI[i].skillButton.onClick
-                    .AddListener(() => ActivateSkill(Enum.CharacterType.Archer, index));
+                    .AddListener(() => ActivateSkill(Enums.CharacterType.Archer, index));
                 wizardSkillCoolTimerUI[i].skillButton.onClick
-                    .AddListener(() => ActivateSkill(Enum.CharacterType.Wizard, index));
+                    .AddListener(() => ActivateSkill(Enums.CharacterType.Wizard, index));
             }
         }
 
-        private static void ActivateSkill(Enum.CharacterType characterType, int index)
+        private static void ActivateSkill(Enums.CharacterType characterType, int index)
         {
             switch (characterType)
             {
-                case Enum.CharacterType.Warrior:
+                case Enums.CharacterType.Warrior:
                     if (!SquadBattleManager.Instance.warriorSkillCoolTimer[index].isSkillReady) return;
                     SquadBattleManager.Instance.warriorSkillCoolTimer[index].orderToInstantiate = true;
                     break;
-                case Enum.CharacterType.Archer:
+                case Enums.CharacterType.Archer:
                     if (!SquadBattleManager.Instance.archerSkillCoolTimer[index].isSkillReady) return;
                     SquadBattleManager.Instance.archerSkillCoolTimer[index].orderToInstantiate = true;
                     break;
-                case Enum.CharacterType.Wizard:
+                case Enums.CharacterType.Wizard:
                     if (!SquadBattleManager.Instance.wizardSkillCoolTimer[index].isSkillReady) return;
                     SquadBattleManager.Instance.wizardSkillCoolTimer[index].orderToInstantiate = true;
                     break;
@@ -117,17 +118,17 @@ namespace Controller.UI
             }
         }
 
-        public void SetSkillCoolTimerUIIcon(Enum.CharacterType characterType, Sprite currentCharacterSprite)
+        public void SetSkillCoolTimerUIIcon(Enums.CharacterType characterType, Sprite currentCharacterSprite)
         {
             switch (characterType)
             {
-                case Enum.CharacterType.Warrior:
+                case Enums.CharacterType.Warrior:
                     warriorIcon.sprite = currentCharacterSprite;
                     break;
-                case Enum.CharacterType.Archer:
+                case Enums.CharacterType.Archer:
                     archerIcon.sprite = currentCharacterSprite;
                     break;
-                case Enum.CharacterType.Wizard:
+                case Enums.CharacterType.Wizard:
                     wizardIcon.sprite = currentCharacterSprite;
                     break;
             }

@@ -23,26 +23,26 @@ namespace Managers.BattleManager
         }
 
         public void InstantiateBaseAttack(BigInteger damage, Vector2 startPosition, Vector2 direction,
-            Enum.PoolType poolType)
+            Enums.PoolType poolType)
         {
             var obj = objectPool.SpawnFromPool(poolType);
             obj.transform.position = startPosition;
 
             switch (poolType)
             {
-                case Enum.PoolType.ProjectileBaseAttackWarrior:
+                case Enums.PoolType.ProjectileBaseAttackWarrior:
                     var warriorBaseAttackController = obj.GetComponent<ProjectileBaseAttackWarriorController>();
                     warriorBaseAttackController.InitializeWarriorBaseAttack(damage, direction);
                     break;
-                case Enum.PoolType.ProjectileBaseAttackArcher:
+                case Enums.PoolType.ProjectileBaseAttackArcher:
                     var archerBaseAttackController = obj.GetComponent<ProjectileBaseAttackArcherController>();
                     archerBaseAttackController.InitializeArcherBaseAttack(damage, direction);
                     break;
-                case Enum.PoolType.ProjectileBaseAttackWizard:
+                case Enums.PoolType.ProjectileBaseAttackWizard:
                     var wizardBaseAttackController = obj.GetComponent<ProjectileBaseAttackWizardController>();
                     wizardBaseAttackController.InitializeWizardBaseAttack(damage, direction);
                     break;
-                case Enum.PoolType.ProjectileBaseAttackMonster:
+                case Enums.PoolType.ProjectileBaseAttackMonster:
                     var monsterBaseAttackController = obj.GetComponent<ProjectileBaseAttackMonsterController>();
                     monsterBaseAttackController.InitializeMonsterBaseAttack(damage, direction);
                     break;

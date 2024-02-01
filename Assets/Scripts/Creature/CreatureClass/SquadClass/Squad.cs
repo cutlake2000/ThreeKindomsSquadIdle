@@ -1,17 +1,17 @@
 using System;
 using Creature.CreatureClass.MonsterClass;
 using Creature.CreatureClass.SquadFSM;
+using Data;
 using Function;
 using Managers;
 using Managers.BattleManager;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace Creature.CreatureClass.SquadClass
 {
     public class Squad : Creature
     {
-        [Header("Class")] [SerializeField] public Enum.CharacterType characterType;
+        [Header("Class")] [SerializeField] public Enums.CharacterType characterType;
 
         [Header("Sprite")] [SerializeField] public SPUM_SpriteList spumSprite;
 
@@ -80,10 +80,10 @@ namespace Creature.CreatureClass.SquadClass
 
         protected override void SetCreatureStats()
         {
-            maxHealth = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Health);
-            defence = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Defence);
-            moveSpeed = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.MoveSpeed);
-            followRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.FollowRange);
+            maxHealth = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Health);
+            defence = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Defence);
+            moveSpeed = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.MoveSpeed);
+            followRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.FollowRange);
 
             currentHealth = maxHealth;
             isDead = false;

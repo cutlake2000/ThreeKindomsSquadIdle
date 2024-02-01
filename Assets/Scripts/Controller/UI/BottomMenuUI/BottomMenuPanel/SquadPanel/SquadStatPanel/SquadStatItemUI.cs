@@ -1,9 +1,10 @@
 using System;
 using Creature.Data;
+using Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Enum = Data.Enum;
 
 namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 {
@@ -17,9 +18,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 
         [Header("레벨 업 비용")] public int levelUpCost = 1;
 
-        [Space(5)] [Header("스탯 증가 타입")] public Enum.StatTypeBySquadStatPanel statTypeBySquadStatPanel;
+        [FormerlySerializedAs("statTypeBySquadStatPanel")] [Space(5)] [Header("스탯 증가 타입")] public Enums.StatTypeFromSquadStatPanel statTypeFromSquadStatPanel;
 
-        [Header("스탯 증가량 타입")] public Enum.IncreaseStatValueType increaseStatValueType;
+        [Header("스탯 증가량 타입")] public Enums.IncreaseStatValueType increaseStatValueType;
 
         [Header("스탯 증가량")] public int increaseStatValue;
 
@@ -40,7 +41,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         public Button resetButton;
         public Button upgradeButton;
         public Button upgradeBlockButton;
-        public Action<Enum.StatTypeBySquadStatPanel, int> UpgradeTotalSquadStatBySquadStatItem;
+        public Action<Enums.StatTypeFromSquadStatPanel, int> UpgradeTotalSquadStatBySquadStatItem;
 
         public void InitSquadStatUI()
         {
@@ -56,10 +57,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 
             switch (increaseStatValueType)
             {
-                case Enum.IncreaseStatValueType.BaseStat:
+                case Enums.IncreaseStatValueType.BaseStat:
                     squadCurrentIncreasedStatText.text = currentIncreasedStat == 0 ? "0" : $"{currentIncreasedStat}";
                     break;
-                case Enum.IncreaseStatValueType.PercentStat:
+                case Enums.IncreaseStatValueType.PercentStat:
                     squadCurrentIncreasedStatText.text =
                         currentIncreasedStat == 0 ? "0%" : $"{(double)currentIncreasedStat / 100}%";
                     break;
@@ -72,8 +73,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
             currentLevel += count;
             currentIncreasedStat += increaseStatValue * count;
 
-            ES3.Save($"{nameof(SquadEntireStat)}/{statTypeBySquadStatPanel}/currentLevel : ", currentLevel);
-            UpgradeTotalSquadStatBySquadStatItem?.Invoke(statTypeBySquadStatPanel, increaseStatValue * count);
+            ES3.Save($"{nameof(SquadEntireStat)}/{statTypeFromSquadStatPanel}/currentLevel : ", currentLevel);
+            UpgradeTotalSquadStatBySquadStatItem?.Invoke(statTypeFromSquadStatPanel, increaseStatValue * count);
         }
 
         // 스텟 로드할 때 부르는 메서드
@@ -83,7 +84,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
             {
                 currentIncreasedStat += increaseStatValue;
 
-                UpgradeTotalSquadStatBySquadStatItem?.Invoke(statTypeBySquadStatPanel, increaseStatValue);
+                UpgradeTotalSquadStatBySquadStatItem?.Invoke(statTypeFromSquadStatPanel, increaseStatValue);
             }
         }
     }

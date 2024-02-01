@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace ScriptableObjects.Scripts
 {
@@ -26,6 +26,6 @@ namespace ScriptableObjects.Scripts
         [field: Header("메인 스테이지 이름")]
         [field: SerializeField] public string MainStageName { get; private set; }
         [field: Header("메인 스테이지 몬스터 타입")]
-        [field: SerializeField] public Enum.MonsterClassType[] MainStageMonsterTypes { get; private set; }
+        [field: SerializeField] public Enums.MonsterClassType[] MainStageMonsterTypes { get; private set; }
     }
 }

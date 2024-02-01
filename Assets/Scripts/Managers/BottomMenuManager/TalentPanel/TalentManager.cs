@@ -1,11 +1,11 @@
 using System;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel;
 using Creature.Data;
+using Data;
 using Function;
 using Managers.BattleManager;
 using ScriptableObjects.Scripts;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace Managers.BottomMenuManager.TalentPanel
 {
@@ -22,7 +22,7 @@ namespace Managers.BottomMenuManager.TalentPanel
             Instance = this;
         }
 
-        public event Action<Enum.StatTypeBySquadTalentPanel, int> OnUpgradeTotalSquadStatFromSquadTalentPanel;
+        public event Action<Enums.StatTypeFromSquadTalentPanel, int> OnUpgradeTotalSquadStatFromSquadTalentPanel;
 
         public void InitSquadTalentManager()
         {
@@ -38,9 +38,9 @@ namespace Managers.BottomMenuManager.TalentPanel
             {
                 var index = i;
                 talentItem[i].GetComponent<TalentItemUI>().upgradeButton.onClick.AddListener(() =>
-                    UpgradeSquadTalentPanelStat((Enum.StatTypeBySquadTalentPanel)index));
+                    UpgradeSquadTalentPanelStat((Enums.StatTypeFromSquadTalentPanel)index));
                 talentItem[i].GetComponent<TalentItemUI>().upgradeButton.GetComponent<HoldButton>().onHold
-                    .AddListener(() => UpgradeSquadTalentPanelStat((Enum.StatTypeBySquadTalentPanel)index));
+                    .AddListener(() => UpgradeSquadTalentPanelStat((Enums.StatTypeFromSquadTalentPanel)index));
             }
         }
 
@@ -50,11 +50,11 @@ namespace Managers.BottomMenuManager.TalentPanel
             for (var i = 0; i < squadTalentSo.Length; i++)
             {
                 talentItem[i].squadTalentName = squadTalentSo[i].squadTalentName;
-                talentItem[i].statTypeBySquadTalentPanel = squadTalentSo[i].statTypeBySquadTalentPanel;
+                talentItem[i].statTypeFromSquadTalentPanel = squadTalentSo[i].statTypeFromSquadTalentPanel;
                 talentItem[i].increaseTalentValueType = squadTalentSo[i].increaseTalentValueType;
                 talentItem[i].increaseTalentValue = squadTalentSo[i].increaseTalentValue;
                 talentItem[i].currentLevel =
-                    ES3.Load($"{nameof(SquadEntireStat)}/{(Enum.StatTypeBySquadTalentPanel)i}/currentLevel : ",
+                    ES3.Load($"{nameof(SquadEntireStat)}/{(Enums.StatTypeFromSquadTalentPanel)i}/currentLevel : ",
                         0);
                 talentItem[i].currentLevelUpCost = squadTalentSo[i].levelUpCost;
                 talentItem[i].currentIncreasedStat =
@@ -72,9 +72,9 @@ namespace Managers.BottomMenuManager.TalentPanel
             foreach (var squadTalent in talentItem) squadTalent.UpdateSquadTalentUI();
         }
 
-        public void UpgradeSquadTalentPanelStat(Enum.StatTypeBySquadTalentPanel type)
+        public void UpgradeSquadTalentPanelStat(Enums.StatTypeFromSquadTalentPanel type)
         {
-            if (!AccountManager.Instance.SubtractCurrency(Enum.CurrencyType.Gold,
+            if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.Gold,
                     talentItem[(int)type].levelUpCost * levelUpMagnification)) return;
             if (talentItem[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
 

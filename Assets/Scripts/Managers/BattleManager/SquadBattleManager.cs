@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Controller.UI;
 using Controller.UI.BottomMenuUI;
+using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
 using Creature.CreatureClass.SquadClass;
 using Creature.Data;
+using Data;
 using Function;
-using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using UnityEngine;
-using Enum = Data.Enum;
 
-namespace Managers
+namespace Managers.BattleManager
 {
     [Serializable]
     public struct SkillCoolTimer
@@ -81,13 +81,11 @@ namespace Managers
         public BigInteger totalAcquisitionExp;
 
         public SquadLevel SquadLevel;
-        public SummonLevel SummonLevel;
 
         private void Awake()
         {
             Instance = this;
-
-            SummonLevel = new SummonLevel();
+            
             SquadLevel = new SquadLevel();
 
             cameraController.InitCameraTarget(squads[0].transform);
@@ -97,11 +95,10 @@ namespace Managers
 
         public void InitSquadManager()
         {
-            SetEventListeners();
+            InitializeEventListeners();
             SetSquadStatsFromBaseStats();
             SetSkillCoolTimer();
             // SetupPlayerLevel();
-            SetupSummonLevel();
         }
 
         private void SetSkillCoolTimer()
@@ -111,12 +108,6 @@ namespace Managers
                 warriorSkillCoolTimer[i].isSkillReady = true;
                 warriorSkillCoolTimer[i].remainedSkillCoolTime = warriorSkillCoolTimer[i].maxSkillCoolTime;
             }
-        }
-
-        private void SetupSummonLevel()
-        {
-            SummonLevel.InitializeData();
-            SummonLevel.SetupEventListeners();
         }
 
 
@@ -138,39 +129,39 @@ namespace Managers
         }
 
         // 이벤트 설정하는 메서드
-        private void SetEventListeners()
+        private void InitializeEventListeners()
         {
             SquadStatManager.Instance.OnUpgradeTotalSquadStatFromSquadStatPanel += squadEntireStat
-                .UpdateBaseStatFromSquadStatPanelBySquadStatFromSquadStatPanelPanel;
+                .UpdateBaseStatFromSquadStatPanel;
 
             EquipAction += Equip;
         }
 
-        public BigInteger GetTotalSquadStat(Enum.SquadStatType statusType)
+        public BigInteger GetTotalSquadStat(Enums.SquadStatType statusType)
         {
             switch (statusType)
             {
-                case Enum.SquadStatType.WarriorAtk:
+                case Enums.SquadStatType.WarriorAtk:
                     return totalWarriorAttack;
-                case Enum.SquadStatType.ArcherAtk:
+                case Enums.SquadStatType.ArcherAtk:
                     return totalArcherAttack;
-                case Enum.SquadStatType.WizardAtk:
+                case Enums.SquadStatType.WizardAtk:
                     return totalWizardAttack;
-                case Enum.SquadStatType.Health:
+                case Enums.SquadStatType.Health:
                     return totalMaxHealth;
-                case Enum.SquadStatType.Defence:
+                case Enums.SquadStatType.Defence:
                     return totalDefence;
-                case Enum.SquadStatType.Penetration:
+                case Enums.SquadStatType.Penetration:
                     return totalPenetration;
-                case Enum.SquadStatType.Accuracy:
+                case Enums.SquadStatType.Accuracy:
                     return totalAccuracy;
-                case Enum.SquadStatType.CriticalRate:
+                case Enums.SquadStatType.CriticalRate:
                     return totalCriticalRate;
-                case Enum.SquadStatType.CriticalDamage:
+                case Enums.SquadStatType.CriticalDamage:
                     return totalCriticalDamage;
-                case Enum.SquadStatType.AcquisitionGold:
+                case Enums.SquadStatType.AcquisitionGold:
                     return totalAcquisitionGold;
-                case Enum.SquadStatType.AcquisitionExp:
+                case Enums.SquadStatType.AcquisitionExp:
                     return totalAcquisitionExp;
                 default:
                     Debug.Log("에러에러!!");
@@ -180,19 +171,19 @@ namespace Managers
             return 0;
         }
 
-        public float GetTotalSubSquadStat(Enum.SquadStatType statusType)
+        public float GetTotalSubSquadStat(Enums.SquadStatType statusType)
         {
             switch (statusType)
             {
-                case Enum.SquadStatType.WarriorAttackRange:
+                case Enums.SquadStatType.WarriorAttackRange:
                     return warriorAttackRange;
-                case Enum.SquadStatType.ArcherAttackRange:
+                case Enums.SquadStatType.ArcherAttackRange:
                     return archerAttackRange;
-                case Enum.SquadStatType.WizardAttackRange:
+                case Enums.SquadStatType.WizardAttackRange:
                     return wizardAttackRange;
-                case Enum.SquadStatType.MoveSpeed:
+                case Enums.SquadStatType.MoveSpeed:
                     return moveSpeed;
-                case Enum.SquadStatType.FollowRange:
+                case Enums.SquadStatType.FollowRange:
                     return followRange;
                 default:
                     Debug.Log("에러에러!!");
@@ -202,12 +193,12 @@ namespace Managers
             return 0;
         }
 
-        public void SetTotalSquadStat(Enum.SquadStatType squadStatType, BigInteger statValue)
+        public void SetTotalSquadStat(Enums.SquadStatType squadStatType, BigInteger statValue)
         {
             switch (squadStatType)
             {
                 //TODO : 워리어, 아처, 마법사 공격력을 따로 계산하는 산식 작성 요망
-                case Enum.SquadStatType.Attack:
+                case Enums.SquadStatType.Attack:
                     totalAttack = statValue;
                     totalWarriorAttack = statValue;
                     totalArcherAttack = statValue;
@@ -216,28 +207,28 @@ namespace Managers
                     foreach (var squad in squads) squad.GetComponent<Squad>().damage = statValue;
 
                     break;
-                case Enum.SquadStatType.Health:
+                case Enums.SquadStatType.Health:
                     totalMaxHealth = statValue;
                     break;
-                case Enum.SquadStatType.Defence:
+                case Enums.SquadStatType.Defence:
                     totalDefence = statValue;
                     break;
-                case Enum.SquadStatType.Penetration:
+                case Enums.SquadStatType.Penetration:
                     totalPenetration = statValue;
                     break;
-                case Enum.SquadStatType.Accuracy:
+                case Enums.SquadStatType.Accuracy:
                     totalAccuracy = statValue;
                     break;
-                case Enum.SquadStatType.CriticalRate:
+                case Enums.SquadStatType.CriticalRate:
                     totalCriticalRate = statValue;
                     break;
-                case Enum.SquadStatType.CriticalDamage:
+                case Enums.SquadStatType.CriticalDamage:
                     totalCriticalDamage = statValue;
                     break;
-                case Enum.SquadStatType.AcquisitionGold:
+                case Enums.SquadStatType.AcquisitionGold:
                     totalAcquisitionGold = statValue;
                     break;
-                case Enum.SquadStatType.AcquisitionExp:
+                case Enums.SquadStatType.AcquisitionExp:
                     totalAcquisitionExp = statValue;
                     break;
             }
@@ -247,27 +238,27 @@ namespace Managers
         {
             UnEquip(equipment);
 
-            var equippedEquipment = equipment.GetComponent<Equipment>();
-            equippedEquipment.isEquipped = true;
-
-            squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, equippedEquipment.equippedEffect);
-
-            InventoryPanelUI.UpdateEquipmentUIAction?.Invoke(equippedEquipment.isEquipped);
-            equippedEquipment.SaveEquipmentAllInfo();
-            InventoryPanelUI.Instance.equipmentButton[(int)equipment.type].GetComponent<Equipment>()
-                .SetEquipmentInfo(equipment);
-            InventoryPanelUI.Instance.equipmentButton[(int)equipment.type].GetComponent<Equipment>().SetUI();
-
-            Debug.Log("장비 장착" + equippedEquipment.id);
+            // var equippedEquipment = equipment.GetComponent<Equipment>();
+            // equippedEquipment.isEquipped = true;
+            //
+            // squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, equippedEquipment.equippedEffect);
+            //
+            // InventoryPanelUI.UpdateEquipmentUIAction?.Invoke(equippedEquipment.isEquipped);
+            // equippedEquipment.SaveEquipmentAllInfo();
+            // UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipment.equipmentType].GetComponent<Equipment>()
+            //     .SetEquipmentInfo(equipment);
+            // UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipment.equipmentType].GetComponent<Equipment>().SetUI();
+            //
+            // Debug.Log("장비 장착" + equippedEquipment.id);
         }
 
         private void UnEquip(Equipment equipment)
         {
             equipment.isEquipped = false;
             InventoryPanelUI.UpdateEquipmentUIAction?.Invoke(equipment.isEquipped);
-            squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, -1 * equipment.equippedEffect);
-            equipment.SaveEquipmentAllInfo();
-            Debug.Log("장비 장착 해제" + equipment.id);
+            // squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, -1 * equipment.equippedEffect);
+            // equipment.SaveEquipmentAllInfo();
+            // Debug.Log("장비 장착 해제" + equipment.id);
         }
 
         #region Battle
@@ -299,16 +290,16 @@ namespace Managers
 
         #region SkillCoolTimer
 
-        public void RunSkillCoolTimer(Enum.CharacterType type, int index)
+        public void RunSkillCoolTimer(Enums.CharacterType type, int index)
         {
             StartCoroutine(CoolTimer(type, index));
         }
 
-        private IEnumerator CoolTimer(Enum.CharacterType type, int index)
+        private IEnumerator CoolTimer(Enums.CharacterType type, int index)
         {
             switch (type)
             {
-                case Enum.CharacterType.Warrior:
+                case Enums.CharacterType.Warrior:
                     warriorSkillCoolTimer[index].remainedSkillCoolTime = warriorSkillCoolTimer[index].maxSkillCoolTime;
                     warriorSkillCoolTimer[index].isSkillReady = false;
                     UIManager.Instance.squadSkillCoolTimerUI.warriorSkillCoolTimerUI[index]
@@ -336,7 +327,7 @@ namespace Managers
                         .ActivateSkillCoolTimer(warriorSkillCoolTimer[index].isSkillReady);
                     yield break;
 
-                case Enum.CharacterType.Archer:
+                case Enums.CharacterType.Archer:
                     archerSkillCoolTimer[index].remainedSkillCoolTime = archerSkillCoolTimer[index].maxSkillCoolTime;
                     archerSkillCoolTimer[index].isSkillReady = false;
                     UIManager.Instance.squadSkillCoolTimerUI.archerSkillCoolTimerUI[index]
@@ -364,7 +355,7 @@ namespace Managers
                         .ActivateSkillCoolTimer(archerSkillCoolTimer[index].isSkillReady);
                     yield break;
 
-                case Enum.CharacterType.Wizard:
+                case Enums.CharacterType.Wizard:
                     wizardSkillCoolTimer[index].remainedSkillCoolTime = wizardSkillCoolTimer[index].maxSkillCoolTime;
                     wizardSkillCoolTimer[index].isSkillReady = false;
                     UIManager.Instance.squadSkillCoolTimerUI.wizardSkillCoolTimerUI[index]

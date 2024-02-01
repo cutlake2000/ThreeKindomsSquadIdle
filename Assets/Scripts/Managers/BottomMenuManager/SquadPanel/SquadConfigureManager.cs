@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using Creature.CreatureClass.SquadClass;
 using Creature.Data;
+using Data;
 using Managers.BattleManager;
+using Managers.BottomMenuManager.InventoryPanel;
 using Module;
 using ScriptableObjects.Scripts;
+using Unity.VisualScripting;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace Managers.BottomMenuManager.SquadPanel
 {
@@ -32,12 +34,10 @@ namespace Managers.BottomMenuManager.SquadPanel
         public List<GameObject> wizardModels = new();
 
         [Header("캐릭터 모델 스폰 좌표")] public GameObject[] modelSpawnPoints;
-        public GameObject[] skillSpawnPoints;
+        [Header("캐릭터 스킬 스폰 좌표")] public GameObject[] skillSpawnPoints;
         public readonly Dictionary<string, Character> ArchersDictionary = new();
         public readonly Dictionary<string, Character> WarriorDictionary = new();
         public readonly Dictionary<string, Character> WizardsDictionary = new();
-        
-        private static readonly int RunState = Animator.StringToHash("RunState");
 
         private void Awake()
         {
@@ -60,7 +60,7 @@ namespace Managers.BottomMenuManager.SquadPanel
 
         private void LoadAllCharacters()
         {
-            foreach (var characterType in Enum.characterTypes)
+            foreach (var characterType in Enums.characterTypes)
             {
                 foreach (var characterSo in squadConfigureSo)
                 {
@@ -75,9 +75,9 @@ namespace Managers.BottomMenuManager.SquadPanel
                     var characterModelIndex = characterSo.characterModelIndex;
                     var characterModel = characterType switch
                     {
-                        Enum.CharacterType.Warrior => warriorModels[characterModelIndex],
-                        Enum.CharacterType.Archer => archerModels[characterModelIndex],
-                        Enum.CharacterType.Wizard => wizardModels[characterModelIndex],
+                        Enums.CharacterType.Warrior => warriorModels[characterModelIndex],
+                        Enums.CharacterType.Archer => archerModels[characterModelIndex],
+                        Enums.CharacterType.Wizard => wizardModels[characterModelIndex],
                         _ => throw new ArgumentOutOfRangeException()
                     };
 
@@ -92,41 +92,30 @@ namespace Managers.BottomMenuManager.SquadPanel
 
                     if (character.isEquipped)
                     {
-                        InstantiateModelOfConfigureUnderParent(characterType, characterModel);
-                        InstantiateModelOfBattleUnderParent(characterType, characterModel, characterIcon,
-                            modelSpawnPoints[(int)characterType].transform);
-                        InstantiateSkillUnderParent(characterType, characterSkills,
-                            skillSpawnPoints[(int)characterType].transform);
-
-                        foreach (var effect in character.characterEquippedEffects)
-                            if (effect.increaseStatType == Enum.IncreaseStatValueType.BaseStat)
-                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(
-                                    effect.statType, effect.increaseValue);
-                            else
-                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(
-                                    effect.statType, effect.increaseValue);
+                        UpdateSquadConfigureModelOnMenu(character);
+                        UpdateSquadConfigureModelOnBattle(character);
                     }
 
                     if (character.isPossessed)
                         foreach (var effect in character.characterOwnedEffects)
-                            if (effect.increaseStatType == Enum.IncreaseStatValueType.BaseStat)
-                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(
+                            if (effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
+                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatFromSquadConfigurePanel(
                                     effect.statType, effect.increaseValue);
                             else
-                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(
+                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatFromSquadConfigurePanel(
                                     effect.statType, effect.increaseValue);
 
                     InfiniteLoopDetector.Run();
                 }
 
                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigureScrollViewItemUI(
-                    characterType);
+                    characterType, true);
             }
         }
 
         private void CreateAllCharacters()
         {
-            foreach (var characterType in Enum.characterTypes)
+            foreach (var characterType in Enums.characterTypes)
             {
                 var characterIndex = 0;
 
@@ -138,9 +127,8 @@ namespace Managers.BottomMenuManager.SquadPanel
                     var characterName = characterSo.characterName;
        
                     var isEquipped = characterIndex == 0;
-                    var isPossessed = characterIndex is 0 or 1; //TODO: 인덱스 0번만 보유하도록
-                    
-                    var characterLevel = isPossessed ? 1 : 0;
+
+                    var characterLevel = isEquipped ? 1 : 0;
                     var characterIconIndex = characterSo.characterIconIndex;
                     var characterIcon =
                         SpriteManager.Instance.GetCharacterSprite(characterType, characterSo.characterIconIndex);
@@ -148,9 +136,9 @@ namespace Managers.BottomMenuManager.SquadPanel
                     var characterModelIndex = characterSo.characterModelIndex;
                     var characterModel = characterType switch
                     {
-                        Enum.CharacterType.Warrior => warriorModels[characterModelIndex],
-                        Enum.CharacterType.Archer => archerModels[characterModelIndex],
-                        Enum.CharacterType.Wizard => wizardModels[characterModelIndex],
+                        Enums.CharacterType.Warrior => warriorModels[characterModelIndex],
+                        Enums.CharacterType.Archer => archerModels[characterModelIndex],
+                        Enums.CharacterType.Wizard => wizardModels[characterModelIndex],
                         _ => throw new ArgumentOutOfRangeException()
                     };
 
@@ -158,7 +146,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                     var equippedEffect = squadEquippedEffectValueSoByRarity[(int)characterSo.characterRarity];
                     var ownedEffect = squadOwnedEffectValueSoByRarity[(int)characterSo.characterRarity];
 
-                    var character = new Character(characterId, characterName, characterLevel, isEquipped, isPossessed,
+                    var character = new Character(characterId, characterName, characterLevel, isEquipped, isEquipped,
                         characterType, characterIconIndex, characterIcon, characterRarity, characterModelIndex,
                         characterModel, characterSkills, equippedEffect, ownedEffect);
                     AddCharacter(characterId, character);
@@ -166,38 +154,39 @@ namespace Managers.BottomMenuManager.SquadPanel
 
                     if (character.isEquipped)
                     {
-                        UpdateSquadConfigure(character);
+                        UpdateSquadConfigureModelOnMenu(character);
+                        UpdateSquadConfigureModelOnBattle(character);
                     }
 
                     if (character.isPossessed)
                         foreach (var effect in character.characterOwnedEffects)
-                            if (effect.increaseStatType == Enum.IncreaseStatValueType.BaseStat)
-                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(
+                            if (effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
+                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatFromSquadConfigurePanel(
                                     effect.statType, effect.increaseValue);
                             else
-                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(
+                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatFromSquadConfigurePanel(
                                     effect.statType, effect.increaseValue);
 
                     InfiniteLoopDetector.Run();
                 }
 
                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigureScrollViewItemUI(
-                    characterType);
+                    characterType, true);
             }
         }
 
         /// <summary>
         /// 현재 장착 중인 캐릭터를 찾는 메서드
         /// </summary>
-        public Character FindEquippedCharacter(Enum.CharacterType characterType)
+        public Character FindEquippedCharacter(Enums.CharacterType characterType)
         {
             switch (characterType)
             {
-                case Enum.CharacterType.Warrior:
+                case Enums.CharacterType.Warrior:
                     return WarriorDictionary[warriors[0].characterId];
-                case Enum.CharacterType.Archer:
+                case Enums.CharacterType.Archer:
                     return ArchersDictionary[archers[0].characterId];
-                case Enum.CharacterType.Wizard:
+                case Enums.CharacterType.Wizard:
                     return WizardsDictionary[wizards[0].characterId];
                 default:
                     throw new ArgumentOutOfRangeException(nameof(characterType), characterType, null);
@@ -205,24 +194,48 @@ namespace Managers.BottomMenuManager.SquadPanel
         }
 
         /// <summary>
-        /// 캐릭터 모델과 스킬을 세팅하는 메서드
+        /// 캐릭터 모델을 UI에 세팅하는 메서드
         /// </summary>
         /// <param name="character"></param>
-        public void UpdateSquadConfigure(Character character)
+        public void UpdateSquadConfigureModelOnMenu(Character character)
         {
+            InstantiateModelOfInventoryUnderParent(character.characterType, character.characterModel);
             InstantiateModelOfConfigureUnderParent(character.characterType, character.characterModel);
+        }
+
+        /// <summary>
+        /// 캐릭터 모델을 전투씬에 세팅하는 메서드
+        /// </summary>
+        /// <param name="character"></param>
+        public void UpdateSquadConfigureModelOnBattle(Character character)
+        {
             InstantiateModelOfBattleUnderParent(character.characterType, character.characterModel, SpriteManager.Instance.GetCharacterSprite(character.characterType, character.characterIconIndex),
                 modelSpawnPoints[(int)character.characterType].transform);
             InstantiateSkillUnderParent(character.characterType, character.characterSkills,
                 skillSpawnPoints[(int)character.characterType].transform);
 
             foreach (var effect in character.characterEquippedEffects)
-                if (effect.increaseStatType == Enum.IncreaseStatValueType.BaseStat)
-                    SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatBySquadConfigurePanel(
+                if (effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
+                    SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatFromSquadConfigurePanel(
                         effect.statType, effect.increaseValue);
                 else
-                    SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatBySquadConfigurePanel(
+                    SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatFromSquadConfigurePanel(
                         effect.statType, effect.increaseValue);
+        }
+
+        /// <summary>
+        /// 인벤토리 패널에 Instantiate하는 메서드
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="prefab"></param>
+        private void InstantiateModelOfInventoryUnderParent(Enums.CharacterType type, GameObject prefab)
+        {
+            var parentTransform = UIManager.Instance.inventoryPanelUI.spawnTargetPosition[(int) type].transform;
+            
+            if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0).gameObject);
+            var character = Instantiate(prefab, parentTransform);
+            character.transform.SetParent(parentTransform);
+            ChangeLayerRecursively(character, 5);
         }
 
         /// <summary>
@@ -232,7 +245,7 @@ namespace Managers.BottomMenuManager.SquadPanel
         /// <param name="prefab"></param>
         /// <param name="characterIcon"></param>
         /// <param name="parentTransform"></param>
-        private void InstantiateModelOfBattleUnderParent(Enum.CharacterType type, GameObject prefab, Sprite characterIcon,
+        private void InstantiateModelOfBattleUnderParent(Enums.CharacterType type, GameObject prefab, Sprite characterIcon,
             Transform parentTransform)
         {
             if (parentTransform.childCount >= 2) Destroy(parentTransform.GetChild(1).gameObject);
@@ -250,13 +263,13 @@ namespace Managers.BottomMenuManager.SquadPanel
 
             switch (type)
             {
-                case Enum.CharacterType.Warrior:
+                case Enums.CharacterType.Warrior:
                     UIManager.Instance.squadSkillCoolTimerUI.warriorIcon.sprite = characterIcon;
                     break;
-                case Enum.CharacterType.Archer:
+                case Enums.CharacterType.Archer:
                     UIManager.Instance.squadSkillCoolTimerUI.archerIcon.sprite = characterIcon;
                     break;
-                case Enum.CharacterType.Wizard:
+                case Enums.CharacterType.Wizard:
                     UIManager.Instance.squadSkillCoolTimerUI.wizardIcon.sprite = characterIcon;
                     break;
             }
@@ -267,7 +280,7 @@ namespace Managers.BottomMenuManager.SquadPanel
         /// </summary>
         /// <param name="type"></param>
         /// <param name="prefab"></param>
-        private void InstantiateModelOfConfigureUnderParent(Enum.CharacterType type, GameObject prefab)
+        public void InstantiateModelOfConfigureUnderParent(Enums.CharacterType type, GameObject prefab)
         {
             var parentTransform = UIManager.Instance.squadPanelUI.squadConfigurePanelUI.characterSpawnPosition[(int) type].transform;
             
@@ -299,14 +312,14 @@ namespace Managers.BottomMenuManager.SquadPanel
         /// <param name="type"></param>
         /// <param name="prefab"></param>
         /// <param name="parentTransform"></param>
-        private void InstantiateSkillUnderParent(Enum.CharacterType type, IList<CharacterSkill> prefab,
+        private void InstantiateSkillUnderParent(Enums.CharacterType type, IList<CharacterSkill> prefab,
             Transform parentTransform)
         {
             if (parentTransform.childCount != 0) Destroy(parentTransform.GetChild(0).gameObject);
             
             switch (type)
             {
-                case Enum.CharacterType.Warrior:
+                case Enums.CharacterType.Warrior:
                     SquadBattleManager.Instance.warriorSkillDamagePercent.Clear();
                     for (var i = 0; i < prefab.Count; i++)
                     {
@@ -336,7 +349,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                     }
 
                     break;
-                case Enum.CharacterType.Archer:
+                case Enums.CharacterType.Archer:
                     SquadBattleManager.Instance.archerSkillDamagePercent.Clear();
                     for (var i = 0; i < prefab.Count; i++)
                     {
@@ -366,7 +379,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                     }
 
                     break;
-                case Enum.CharacterType.Wizard:
+                case Enums.CharacterType.Wizard:
                     SquadBattleManager.Instance.wizardSkillDamagePercent.Clear();
                     for (var i = 0; i < prefab.Count; i++)
                     {
@@ -403,17 +416,17 @@ namespace Managers.BottomMenuManager.SquadPanel
         {
             switch (character.characterType)
             {
-                case Enum.CharacterType.Warrior:
+                case Enums.CharacterType.Warrior:
                     if (!WarriorDictionary.TryAdd(characterID, character))
                         Debug.LogWarning($"Character already exists in the dictionary: {character}");
 
                     break;
-                case Enum.CharacterType.Archer:
+                case Enums.CharacterType.Archer:
                     if (!ArchersDictionary.TryAdd(characterID, character))
                         Debug.LogWarning($"Character already exists in the dictionary: {character}");
 
                     break;
-                case Enum.CharacterType.Wizard:
+                case Enums.CharacterType.Wizard:
                     if (!WizardsDictionary.TryAdd(characterID, character))
                         Debug.LogWarning($"Character already exists in the dictionary: {character}");
 
@@ -427,9 +440,9 @@ namespace Managers.BottomMenuManager.SquadPanel
         {
             var targetCharacter = character.characterType switch
             {
-                Enum.CharacterType.Warrior => WarriorDictionary[characterId],
-                Enum.CharacterType.Archer => ArchersDictionary[characterId],
-                Enum.CharacterType.Wizard => WizardsDictionary[characterId],
+                Enums.CharacterType.Warrior => WarriorDictionary[characterId],
+                Enums.CharacterType.Archer => ArchersDictionary[characterId],
+                Enums.CharacterType.Wizard => WizardsDictionary[characterId],
                 _ => throw new ArgumentOutOfRangeException()
             };
 

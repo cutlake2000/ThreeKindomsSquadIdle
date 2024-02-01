@@ -8,7 +8,7 @@ namespace Controller.Projectiles.SkillAttack
 {
     public class SkillAttackController : MonoBehaviour
     {
-        [Header("스킬 타입")] public Enum.SkillType skillType;
+        [Header("스킬 타입")] public Enums.SkillType skillType;
 
         [Header("파티클 Direction")] [SerializeField]
         protected Vector3 direction;
@@ -28,7 +28,7 @@ namespace Controller.Projectiles.SkillAttack
         protected Vector3 startPosition;
 
         [SerializeField] protected Vector3 targetPosition;
-        private BigInteger skillDamage;
+        protected BigInteger skillDamage;
 
         public void InitializeSkillAttack(BigInteger damage, Vector3 start, Vector3 target)
         {

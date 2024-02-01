@@ -1,8 +1,9 @@
 using System;
 using Controller.UI;
+using Data;
 using Managers;
+using Managers.BattleManager;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace Creature.Data
 {
@@ -33,8 +34,8 @@ namespace Creature.Data
 
         public void InitializeData()
         {
-            CurrentLevel = ES3.Load($"{Enum.LevelType.CurrentLv}CurrentLevel", LevelFirstValue);
-            CurrentExp = ES3.Load($"{Enum.LevelType.CurrentExp}CurrentExp", ExpFirstValue);
+            CurrentLevel = ES3.Load($"{Enums.LevelType.CurrentLv}CurrentLevel", LevelFirstValue);
+            CurrentExp = ES3.Load($"{Enums.LevelType.CurrentExp}CurrentExp", ExpFirstValue);
 
             SetMaxExp();
             SetBaseStats();
@@ -56,7 +57,7 @@ namespace Creature.Data
 
             if (CurrentExp >= MaxExp && CurrentLevel < MaxLevelFirstValue) OnLevelUpgrade?.Invoke();
 
-            ES3.Save($"{Enum.LevelType.CurrentExp}CurrentExp", CurrentExp);
+            ES3.Save($"{Enums.LevelType.CurrentExp}CurrentExp", CurrentExp);
 
             LevelUI.Instance.SetUI();
         }
@@ -66,7 +67,7 @@ namespace Creature.Data
             CurrentLevel++;
             CurrentExp -= MaxExp;
 
-            ES3.Save($"{Enum.LevelType.CurrentLv}CurrentLevel", CurrentLevel);
+            ES3.Save($"{Enums.LevelType.CurrentLv}CurrentLevel", CurrentLevel);
 
             UpdateMaxExp();
 
@@ -80,11 +81,11 @@ namespace Creature.Data
 
         private void SetBaseStats()
         {
-            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack,
+            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enums.SquadStatType.Attack,
                 IncreaseAttack * (CurrentLevel - 1));
-            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Health,
+            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enums.SquadStatType.Health,
                 IncreaseHealth * (CurrentLevel - 1));
-            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Defence,
+            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enums.SquadStatType.Defence,
                 IncreaseDefence * (CurrentLevel - 1));
         }
 
@@ -95,9 +96,9 @@ namespace Creature.Data
 
         private void UpdateBaseStats()
         {
-            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, IncreaseAttack);
-            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Health, IncreaseHealth);
-            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Defence, IncreaseDefence);
+            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enums.SquadStatType.Attack, IncreaseAttack);
+            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enums.SquadStatType.Health, IncreaseHealth);
+            SquadBattleManager.Instance.squadEntireStat.UpdateTotalStat(Enums.SquadStatType.Defence, IncreaseDefence);
         }
     }
 }

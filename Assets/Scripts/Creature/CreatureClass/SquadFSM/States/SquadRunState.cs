@@ -1,7 +1,8 @@
 using System;
+using Data;
 using Managers;
+using Managers.BattleManager;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace Creature.CreatureClass.SquadFSM.States
 {
@@ -35,21 +36,21 @@ namespace Creature.CreatureClass.SquadFSM.States
 
                 switch (Squad.characterType)
                 {
-                    case Enum.CharacterType.Warrior:
+                    case Enums.CharacterType.Warrior:
 
                         if (!CheckWarriorSkill())
                             SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
 
                         break;
 
-                    case Enum.CharacterType.Archer:
+                    case Enums.CharacterType.Archer:
 
                         if (!CheckArcherSkill())
                             SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);
 
                         break;
 
-                    case Enum.CharacterType.Wizard:
+                    case Enums.CharacterType.Wizard:
 
                         if (!CheckWizardSkill())
                             SquadStateMachine.ChangeState(SquadStateMachine.SquadNormalAttackState);

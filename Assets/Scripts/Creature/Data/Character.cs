@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
+using Data;
 using Function;
 using Managers.BottomMenuManager.SquadPanel;
 using ScriptableObjects.Scripts;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace Creature.Data
 {
     [Serializable]
     public class CharacterEffect
     {
-        public Enum.StatTypeBySquadConfigurePanel statType;
-        public Enum.IncreaseStatValueType increaseStatType;
+        public Enums.StatTypeFromSquadConfigurePanel statType;
+        public Enums.IncreaseStatValueType increaseStatType;
         public int increaseValue;
     }
 
@@ -20,21 +20,13 @@ namespace Creature.Data
     public class Character
     {
         [Header("ES3 ID")] public string characterId;
-
         [Header("이름")] public string characterName;
-
         [Header("스프라이트 인덱스")] public int characterIconIndex;
-
         [Header("레벨")] public int characterLevel;
-
         [Header("요구 경험치")] public BigInteger characterRequiredCurrency;
-
-        [Header("클래스 타입")] public Enum.CharacterType characterType;
-
-        [Header("클래스 등급")] public Enum.CharacterRarity characterRarity;
-
+        [Header("클래스 타입")] public Enums.CharacterType characterType;
+        [Header("클래스 등급")] public Enums.CharacterRarity characterRarity;
         [Header("장착 여부")] public bool isEquipped;
-
         [Header("보유 여부")] public bool isPossessed;
 
         [field: Space(5)] [field: Header("스킬 효과")]
@@ -67,8 +59,8 @@ namespace Creature.Data
         /// <param name="equippedEffect"></param>
         /// <param name="ownedEffect"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public Character(string id, string name, int level, bool isEquipped, bool isPossessed, Enum.CharacterType type,
-            int iconIndex, Sprite icon, Enum.CharacterRarity rarity, int modelIndex, GameObject model,
+        public Character(string id, string name, int level, bool isEquipped, bool isPossessed, Enums.CharacterType type,
+            int iconIndex, Sprite icon, Enums.CharacterRarity rarity, int modelIndex, GameObject model,
             CharacterSkill[] skills, SquadEffectSo equippedEffect, SquadEffectSo ownedEffect)
         {
             characterId = id;
@@ -106,10 +98,10 @@ namespace Creature.Data
 
             characterRequiredCurrency = rarity switch
             {
-                Enum.CharacterRarity.Rare => 10,
-                Enum.CharacterRarity.Magic => 15,
-                Enum.CharacterRarity.Unique => 50,
-                Enum.CharacterRarity.Legend => 65,
+                Enums.CharacterRarity.Rare => 10,
+                Enums.CharacterRarity.Magic => 15,
+                Enums.CharacterRarity.Unique => 50,
+                Enums.CharacterRarity.Legend => 65,
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
 
@@ -131,8 +123,8 @@ namespace Creature.Data
         /// <param name="equippedEffect"></param>
         /// <param name="ownedEffect"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public Character(string id, string name, Enum.CharacterType type, int iconIndex, Sprite icon,
-            Enum.CharacterRarity rarity, int modelIndex, GameObject model, CharacterSkill[] skills,
+        public Character(string id, string name, Enums.CharacterType type, int iconIndex, Sprite icon,
+            Enums.CharacterRarity rarity, int modelIndex, GameObject model, CharacterSkill[] skills,
             SquadEffectSo equippedEffect, SquadEffectSo ownedEffect)
         {
             characterId = id;
@@ -163,10 +155,10 @@ namespace Creature.Data
 
             characterRequiredCurrency = rarity switch
             {
-                Enum.CharacterRarity.Rare => 10,
-                Enum.CharacterRarity.Magic => 15,
-                Enum.CharacterRarity.Unique => 50,
-                Enum.CharacterRarity.Legend => 65,
+                Enums.CharacterRarity.Rare => 10,
+                Enums.CharacterRarity.Magic => 15,
+                Enums.CharacterRarity.Unique => 50,
+                Enums.CharacterRarity.Legend => 65,
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
 
@@ -207,22 +199,6 @@ namespace Creature.Data
                     characterOwnedEffects[i].increaseValue);
         }
 
-        public void SaveCharacterAllInfo(string id)
-        {
-            ES3.Save($"{nameof(characterId)}_" + id, characterId);
-            
-            ES3.Save($"{nameof(characterLevel)}_" + id, characterLevel);
-            ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
-            ES3.Save($"{nameof(isPossessed)}_" + id, isPossessed);
-            
-            for (var i = 0; i < characterEquippedEffects.Count; i++)
-                ES3.Save($"characterEquippedEffects[{i}].increaseValue_" + id,
-                    characterEquippedEffects[i].increaseValue);
-            
-            for (var i = 0; i < characterOwnedEffects.Count; i++)
-                ES3.Save($"characterOwnedEffects[{i}].increaseValue_" + id, characterOwnedEffects[i].increaseValue);
-        }
-
         public void SaveCharacterEquippedInfo(string id)
         {
             ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
@@ -251,7 +227,7 @@ namespace Creature.Data
 
         public void CharacterLevelUp()
         {
-            characterLevel++;
+            characterLevel = Mathf.Min(characterLevel + 1, SquadConfigureManager.CharacterMaxLevel);
 
             for (var i = 0; i < characterOwnedEffects.Count; i++)
                 characterOwnedEffects[i].increaseValue += characterOwnedEffects[i].increaseValue /

@@ -1,5 +1,6 @@
 using System;
 using Managers;
+using Managers.BattleManager;
 using UnityEngine;
 using UnityEngine.UI;
 

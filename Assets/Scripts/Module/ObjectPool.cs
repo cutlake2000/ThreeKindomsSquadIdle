@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace Module
 {
     public class ObjectPool : MonoBehaviour
     {
         public List<Pool> pools;
-        public Dictionary<Enum.PoolType, Queue<GameObject>> PoolDictionary;
+        public Dictionary<Enums.PoolType, Queue<GameObject>> PoolDictionary;
 
         private void Awake()
         {
-            PoolDictionary = new Dictionary<Enum.PoolType, Queue<GameObject>>();
+            PoolDictionary = new Dictionary<Enums.PoolType, Queue<GameObject>>();
             foreach (var pool in pools)
             {
                 var objectPool = new Queue<GameObject>();
@@ -28,7 +28,7 @@ namespace Module
             }
         }
 
-        public GameObject SpawnFromPool(Enum.PoolType objectTag)
+        public GameObject SpawnFromPool(Enums.PoolType objectTag)
         {
             if (!PoolDictionary.ContainsKey(objectTag))
                 return null;
@@ -42,7 +42,7 @@ namespace Module
         [Serializable]
         public struct Pool
         {
-            public Enum.PoolType tag;
+            public Enums.PoolType tag;
             public GameObject prefab;
             public int size;
         }

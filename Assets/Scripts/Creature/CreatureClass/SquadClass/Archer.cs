@@ -10,8 +10,8 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.SetCreatureStats();
 
-            damage = SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.ArcherAtk);
-            attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enum.SquadStatType.ArcherAttackRange);
+            damage = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherAtk);
+            attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.ArcherAttackRange);
 
             animator.SetFloat(animationData.ClassTypeParameterHash, 1);
         }
@@ -21,12 +21,12 @@ namespace Creature.CreatureClass.SquadClass
             base.OnNormalAttack();
 
             ProjectileManager.Instance.InstantiateBaseAttack(damage, ProjectileSpawnPosition, Direction,
-                Enum.PoolType.ProjectileBaseAttackArcher);
+                Enums.PoolType.ProjectileBaseAttackArcher);
         }
 
         protected override void OnNormalAttackEffect()
         {
-            EffectManager.Instance.CreateParticlesAtPosition(projectileSpawn.position, Enum.CharacterType.Archer,
+            EffectManager.Instance.CreateParticlesAtPosition(projectileSpawn.position, Enums.CharacterType.Archer,
                 false);
         }
 
@@ -42,7 +42,7 @@ namespace Creature.CreatureClass.SquadClass
 
                 if (currentTarget == null) return;
 
-                SquadBattleManager.Instance.RunSkillCoolTimer(Enum.CharacterType.Archer, i);
+                SquadBattleManager.Instance.RunSkillCoolTimer(Enums.CharacterType.Archer, i);
                 ProjectileManager.Instance.InstantiateSkillAttack(
                     SquadBattleManager.Instance.archerSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition,
                     currentTarget.transform.position);

@@ -87,7 +87,7 @@ namespace Controller.Projectiles.BaseAttack
 
         private void DestroyProjectile(Vector3 position)
         {
-            EffectManager.Instance.CreateParticlesAtPosition(position, Enum.CharacterType.Wizard, true);
+            EffectManager.Instance.CreateParticlesAtPosition(position, Enums.CharacterType.Wizard, true);
             gameObject.SetActive(false);
         }
     }

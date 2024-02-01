@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace ScriptableObjects.Scripts
 {
@@ -14,8 +14,8 @@ namespace ScriptableObjects.Scripts
     [Serializable]
     public class SquadEffect
     {
-        public Enum.StatTypeBySquadConfigurePanel statType;
-        public Enum.IncreaseStatValueType increaseStatType;
+        public Enums.StatTypeFromSquadConfigurePanel statType;
+        public Enums.IncreaseStatValueType increaseStatType;
         public int increaseValue;
     }
 }

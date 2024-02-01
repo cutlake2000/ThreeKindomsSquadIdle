@@ -1,11 +1,11 @@
 using System;
+using Data;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.TalentPanel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Enum = Data.Enum;
 
 namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
 {
@@ -52,12 +52,12 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         {
             var levelUpCost = TalentManager.Instance.talentItem[index].levelUpCost;
 
-            if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.Gold)) <
+            if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Gold)) <
                 SquadStatManager.Instance.levelUpMagnification * levelUpCost)
                 foreach (var talentItem in TalentManager.Instance.talentItem)
                 {
                     if (talentItem.maxLevel - talentItem.currentLevel <=
-                        Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enum.CurrencyType.Gold))) continue;
+                        Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Gold))) continue;
 
                     talentItem.upgradeButton.gameObject.SetActive(false);
                     talentItem.upgradeBlockButton.gameObject.SetActive(true);

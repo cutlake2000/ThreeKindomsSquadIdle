@@ -4,6 +4,7 @@ using Managers.BattleManager;
 using Managers.BottomMenuManager.TalentPanel;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
@@ -14,8 +15,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         [Header("스탯 이름")] public string squadTalentName;
         [Header("초기값")] public int initTalentValue;
         [Header("레벨 업 비용")] public int levelUpCost = 1;
-        [Header("스탯 증가 타입")] public Enum.StatTypeBySquadTalentPanel statTypeBySquadTalentPanel;
-        [Header("스탯 증가량 타입")] public Enum.IncreaseStatValueType increaseTalentValueType;
+        [FormerlySerializedAs("statTypeBySquadTalentPanel")] [Header("스탯 증가 타입")] public Enums.StatTypeFromSquadTalentPanel statTypeFromSquadTalentPanel;
+        [Header("스탯 증가량 타입")] public Enums.IncreaseStatValueType increaseTalentValueType;
         [Header("스탯 증가량")] public int increaseTalentValue;
         [Header("현재 스탯 레벨")] public int currentLevel;
         [Header("최대 스탯 레벨")] public int maxLevel = 10000;
@@ -30,12 +31,12 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         public TMP_Text squadTalentRequiredCurrencyText;
         public Button upgradeButton;
         public Button upgradeBlockButton;
-        public System.Action<Enum.StatTypeBySquadTalentPanel, int> UpgradeTotalSquadStatBySquadTalentItem;
+        public System.Action<Enums.StatTypeFromSquadTalentPanel, int> UpgradeTotalSquadStatBySquadTalentItem;
 
         public void InitSquadTalentUI()
         {
             squadTalentImage.sprite = squadTalentSprite;
-            squadTalentMaxLevelText.text = $"최대 레벨 | {maxLevel}";
+            squadTalentMaxLevelText.text = $"Max. {maxLevel}";
             squadTalentNameText.text = $"{squadTalentName}";
         }
 
@@ -46,16 +47,16 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
 
             switch (increaseTalentValueType)
             {
-                case Enum.IncreaseStatValueType.BaseStat:
+                case Enums.IncreaseStatValueType.BaseStat:
                     squadCurrentIncreasedStatText.text = currentIncreasedStat == 0 ? "0" : $"{currentIncreasedStat}";
                     break;
-                case Enum.IncreaseStatValueType.PercentStat:
+                case Enums.IncreaseStatValueType.PercentStat:
                     squadCurrentIncreasedStatText.text =
                         currentIncreasedStat == 0 ? "0%" : $"{(double)currentIncreasedStat / 100}%";
                     break;
             }
 
-            squadTalentRequiredCurrencyText.text = $"<sprite=15> {currentLevelUpCost}";
+            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.Gold}> {currentLevelUpCost}";
         }
 
         // 스텟 업데이트 하는 메서드
@@ -64,18 +65,18 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
             currentLevel += count;
             currentIncreasedStat += increaseTalentValue * count;
 
-            ES3.Save($"{nameof(SquadEntireStat)}/{statTypeBySquadTalentPanel}/currentLevel : ", currentLevel);
-            UpgradeTotalSquadStatBySquadTalentItem?.Invoke(statTypeBySquadTalentPanel, increaseTalentValue * count);
+            ES3.Save($"{nameof(SquadEntireStat)}/{statTypeFromSquadTalentPanel}/currentLevel : ", currentLevel);
+            UpgradeTotalSquadStatBySquadTalentItem?.Invoke(statTypeFromSquadTalentPanel, increaseTalentValue * count);
 
-            switch (statTypeBySquadTalentPanel)
+            switch (statTypeFromSquadTalentPanel)
             {
-                case Enum.StatTypeBySquadTalentPanel.Attack:
+                case Enums.StatTypeFromSquadTalentPanel.Attack:
                     QuestManager.Instance.IncreaseQuestProgress(QuestManager.Instance.quests[0].questType, currentIncreasedStat);
                     break;
-                case Enum.StatTypeBySquadTalentPanel.Health:
+                case Enums.StatTypeFromSquadTalentPanel.Health:
                     QuestManager.Instance.IncreaseQuestProgress(QuestManager.Instance.quests[1].questType, currentIncreasedStat);
                     break;
-                case Enum.StatTypeBySquadTalentPanel.Defence:
+                case Enums.StatTypeFromSquadTalentPanel.Defence:
                     QuestManager.Instance.IncreaseQuestProgress(QuestManager.Instance.quests[2].questType, currentIncreasedStat);
                     break;
             }
@@ -88,7 +89,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
             {
                 currentIncreasedStat += increaseTalentValue;
 
-                UpgradeTotalSquadStatBySquadTalentItem?.Invoke(statTypeBySquadTalentPanel, increaseTalentValue);
+                UpgradeTotalSquadStatBySquadTalentItem?.Invoke(statTypeFromSquadTalentPanel, increaseTalentValue);
             }
         }
     }

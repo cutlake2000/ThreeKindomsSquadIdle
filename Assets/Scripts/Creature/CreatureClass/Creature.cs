@@ -2,18 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Creature.Data;
+using Data;
 using Function;
 using Module;
 using UnityEngine;
 using UnityEngine.UI;
-using Enum = Data.Enum;
 
 namespace Creature.CreatureClass
 {
     public class Creature : MonoBehaviour
     {
         private const float FADE_TIME = 0.8f;
-        [SerializeField] protected Enum.CreatureClassType creatureClassType;
+        [SerializeField] protected Enums.CreatureClassType creatureClassType;
 
         [Header("EnemyFinder")] [SerializeField]
         protected float followRange;

@@ -10,13 +10,13 @@ namespace Managers.BattleManager
     {
         private void Start()
         {
+            SquadBattleManager.Instance.InitSquadManager();
+            
             SquadStatManager.Instance.InitSquadStatManager();
             SquadConfigureManager.Instance.InitSquadConfigureManager();
             TalentManager.Instance.InitSquadTalentManager();
             SummonManager.Instance.InitSummonManager();
             DungeonManager.Instance.InitDungeonManager();
-         
-            SquadBattleManager.Instance.InitSquadManager();
             AccountManager.Instance.InitAccountManager();
             InventoryManager.Instance.InitEquipmentManager();
             

@@ -1,7 +1,8 @@
 using Controller.UI;
 using Controller.UI.BottomMenuUI;
-using Controller.UI.BottomMenuUI.BottomMenuPanel;
+using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel;
+using Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel;
 using Controller.UI.TopMenuUI.QuestPanel;
 using UnityEngine;
@@ -18,9 +19,13 @@ namespace Managers.BattleManager
         
         [Space(5)] [Header("=== 스쿼드 패널 ===")] public SquadPanelUI squadPanelUI;
 
+        [Space(5)] [Header("=== 인벤토리 패널 ===")] public InventoryPanelUI inventoryPanelUI;
+        
         [Space(5)] [Header("=== 재능 패널 ===")] public TalentPanelUI talentPanelUI;
         
         [Space(5)] [Header("=== 퀘스트 패널 ===")] public QuestPanelUI questPanelUI;
+        
+        [Space(5)] [Header("=== 소환 패널 ===")] public SummonPanelUI summonPanelUI;
 
         private void Awake()
         {
@@ -37,8 +42,10 @@ namespace Managers.BattleManager
             bottomMenuPanelUI.InitializeEventListeners();
             squadSkillCoolTimerUI.InitializeEventListeners();
             squadPanelUI.InitializeEventListeners();
+            inventoryPanelUI.InitializeEventListener();
             talentPanelUI.InitializeEventListeners();
             questPanelUI.InitializeEventListeners();
+            summonPanelUI.InitializeEventListeners();
         }
     }
 }

@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Creature.CreatureClass.MonsterFSM;
 using Creature.CreatureClass.SquadClass;
+using Data;
 using Function;
 using Managers;
 using Managers.BattleManager;
 using UnityEngine;
-using Enum = Data.Enum;
 
 namespace Creature.CreatureClass.MonsterClass
 {
     public class Monster : Creature
     {
-        [Header("Class")] [SerializeField] public Enum.MonsterClassType monsterClassType;
+        [Header("Class")] [SerializeField] public Enums.MonsterClassType monsterClassType;
 
         [Header("Sprites")] [SerializeField] private List<Sprite> monsterSprites;
 
@@ -115,7 +115,7 @@ namespace Creature.CreatureClass.MonsterClass
             var damageEffectSpawnPosition = bounds.center + new Vector3(0.0f, bounds.extents.y + 1f, 0.0f);
 
             EffectManager.Instance.CreateEffectsAtPosition(FunctionManager.Vector3ToVector2(damageEffectSpawnPosition),
-                damage.ToString(), Enum.PoolType.EffectDamage);
+                damage.ToString(), Enums.PoolType.EffectDamage);
 
             if (isEventHitRunning == false && !isDead) StartCoroutine(EventHit());
 
@@ -151,7 +151,7 @@ namespace Creature.CreatureClass.MonsterClass
             direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
 
             ProjectileManager.Instance.InstantiateBaseAttack(damage, projectileSpawnPosition, direction,
-                Enum.PoolType.ProjectileBaseAttackMonster);
+                Enums.PoolType.ProjectileBaseAttackMonster);
         }
 
         private IEnumerator EventHit()

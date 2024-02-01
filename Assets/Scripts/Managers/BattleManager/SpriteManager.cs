@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
-using Enum = Data.Enum;
+using UnityEngine.Serialization;
 
 namespace Managers.BattleManager
 {
@@ -16,6 +17,10 @@ namespace Managers.BattleManager
         [Tooltip("방어구 - 헬멧")] [SerializeField] private List<Sprite> helmetGearSprite;
         [Tooltip("방어구 - 갑옷")] [SerializeField] private List<Sprite> armorGearSprite;
         [Tooltip("방어구 - 장갑")] [SerializeField] private List<Sprite> gauntletGearSprite;
+        [FormerlySerializedAs("equipmentBackground")]
+        [Space(5)]
+        [Tooltip("장비 배경")] [SerializeField] private List<Sprite> equipmentBackgrounds;
+        [Tooltip("장비 배경 효과")] [SerializeField] private List<Sprite> equipmentBackgroundEffects;
 
         [Space(5)]
         [Header("캐릭터 스프라이트")]
@@ -37,53 +42,63 @@ namespace Managers.BattleManager
             Instance = this;
         }
 
-        public Sprite GetEquipmentSprite(Enum.EquipmentType equipmentType, int spriteIndex)
+        public Sprite GetEquipmentBackground(int spriteIndex)
+        {
+            return equipmentBackgrounds[spriteIndex];
+        }
+        
+        public Sprite GetEquipmentBackgroundEffect(int spriteIndex)
+        {
+            return equipmentBackgroundEffects[spriteIndex];
+        }
+
+        public Sprite GetEquipmentSprite(Enums.EquipmentType equipmentType, int spriteIndex)
         {
             return equipmentType switch
             {
-                Enum.EquipmentType.Sword => swordWeaponSprite[spriteIndex],
-                Enum.EquipmentType.Bow => bowWeaponSprite[spriteIndex],
-                Enum.EquipmentType.Staff => staffWeaponSprite[spriteIndex],
-                Enum.EquipmentType.Helmet => helmetGearSprite[spriteIndex],
-                Enum.EquipmentType.Armor => armorGearSprite[spriteIndex],
-                Enum.EquipmentType.Gauntlet => gauntletGearSprite[spriteIndex],
+                Enums.EquipmentType.Sword => swordWeaponSprite[spriteIndex],
+                Enums.EquipmentType.Bow => bowWeaponSprite[spriteIndex],
+                Enums.EquipmentType.Staff => staffWeaponSprite[spriteIndex],
+                Enums.EquipmentType.Helmet => helmetGearSprite[spriteIndex],
+                Enums.EquipmentType.Armor => armorGearSprite[spriteIndex],
+                Enums.EquipmentType.Gauntlet => gauntletGearSprite[spriteIndex],
                 _ => null
             };
         }
 
-        public Sprite GetCharacterSprite(Enum.CharacterType characterType, int spriteIndex)
+        public Sprite GetCharacterSprite(Enums.CharacterType characterType, int spriteIndex)
         {
             return characterType switch
             {
-                Enum.CharacterType.Warrior => warriorSprite[spriteIndex],
-                Enum.CharacterType.Archer => archerSprite[spriteIndex],
-                Enum.CharacterType.Wizard => wizardSprite[spriteIndex],
+                Enums.CharacterType.Warrior => warriorSprite[spriteIndex],
+                Enums.CharacterType.Archer => archerSprite[spriteIndex],
+                Enums.CharacterType.Wizard => wizardSprite[spriteIndex],
                 _ => null
             };
         }
 
-        public Sprite GetSkillSprite(Enum.CharacterType characterType, int spriteIndex)
+        public Sprite GetSkillSprite(Enums.CharacterType characterType, int spriteIndex)
         {
             return characterType switch
             {
-                Enum.CharacterType.Warrior => warriorSkillSprite[spriteIndex],
-                Enum.CharacterType.Archer => archerSkillSprite[spriteIndex],
-                Enum.CharacterType.Wizard => wizardSkillSprite[spriteIndex],
+                Enums.CharacterType.Warrior => warriorSkillSprite[spriteIndex],
+                Enums.CharacterType.Archer => archerSkillSprite[spriteIndex],
+                Enums.CharacterType.Wizard => wizardSkillSprite[spriteIndex],
                 _ => null
             };
         }
 
-        public Sprite GetCurrencySprite(Enum.CurrencyType currencyType)
+        public Sprite GetCurrencySprite(Enums.CurrencyType currencyType)
         {
             return currencyType switch
             {
-                Enum.CurrencyType.Gold => currencySprite[0],
-                Enum.CurrencyType.Dia => currencySprite[1],
-                Enum.CurrencyType.WeaponEnhanceStone => currencySprite[2],
-                Enum.CurrencyType.GearEnhanceStone => currencySprite[3],
-                Enum.CurrencyType.SquadEnhanceStone => currencySprite[4],
-                Enum.CurrencyType.GoldDungeonTicket => currencySprite[5],
-                Enum.CurrencyType.EnhanceDungeonTicket => currencySprite[6],
+                Enums.CurrencyType.Gold => currencySprite[0],
+                Enums.CurrencyType.Dia => currencySprite[1],
+                Enums.CurrencyType.WeaponEnhanceStone => currencySprite[2],
+                Enums.CurrencyType.GearEnhanceStone => currencySprite[3],
+                Enums.CurrencyType.SquadEnhanceStone => currencySprite[4],
+                Enums.CurrencyType.GoldDungeonTicket => currencySprite[5],
+                Enums.CurrencyType.EnhanceDungeonTicket => currencySprite[6],
                 _ => throw new ArgumentOutOfRangeException(nameof(currencyType), currencyType, null)
             };
         }

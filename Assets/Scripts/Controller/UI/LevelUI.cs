@@ -1,5 +1,6 @@
 using Data;
 using Managers;
+using Managers.BattleManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,13 +48,13 @@ namespace Controller.UI
             currentLevelText.text = $"레벨 : {SquadBattleManager.Instance.SquadLevel.CurrentLevel}";
             currentExpText.text =
                 $"경험치 : {SquadBattleManager.Instance.SquadLevel.CurrentExp} / {SquadBattleManager.Instance.SquadLevel.MaxExp}";
-            currentAttack.text = $"공격력 : {SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Attack)}";
-            currentHealth.text = $"체력 : {SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Health)}";
-            currentDefence.text = $"방어력 : {SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.Defence)}";
+            currentAttack.text = $"공격력 : {SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Attack)}";
+            currentHealth.text = $"체력 : {SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Health)}";
+            currentDefence.text = $"방어력 : {SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Defence)}";
             currentCriticalRate.text =
-                $"치명타 확률 : {SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.CriticalRate)}";
+                $"치명타 확률 : {SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.CriticalRate)}";
             currentCriticalDamage.text =
-                $"치명타 데미지 : {SquadBattleManager.Instance.GetTotalSquadStat(Enum.SquadStatType.CriticalDamage)}";
+                $"치명타 데미지 : {SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.CriticalDamage)}";
         }
     }
 }
