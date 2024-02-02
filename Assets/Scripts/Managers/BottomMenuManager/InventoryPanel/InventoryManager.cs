@@ -19,14 +19,6 @@ namespace Managers.BottomMenuManager.InventoryPanel
         public static InventoryManager Instance;
         public static Dictionary<string, Equipment> AllEquipments = new();
 
-        [Header("장비 정보 컨테이너")]
-        public List<Equipment> swords = new();
-        public List<Equipment> bows = new();
-        public List<Equipment> staffs = new();
-        public List<Equipment> helmets = new();
-        public List<Equipment> armors = new();
-        public List<Equipment> gauntlets = new();
-
         [Header("임시 장비 이름")] public List<string> swordNames = new();
         public List<string> bowNames = new();
         public List<string> staffNames = new();
@@ -117,41 +109,21 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             equipmentType, equipmentRarity, equipmentTier, equippedEffects, ownedEffects);
                         AddEquipment(equipmentId, equipment);
 
-                        List<GameObject> targetScrollViewItem;
-                        switch (equipmentType)
+                        var targetScrollViewItem = equipmentType switch
                         {
-                            case Enums.EquipmentType.Sword:
-                                swords.Add(equipment);
-                                targetScrollViewItem =
-                                    UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords;
-                                break;
-                            case Enums.EquipmentType.Bow:
-                                bows.Add(equipment);
-                                targetScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows;
-                                break;
-                            case Enums.EquipmentType.Staff:
-                                staffs.Add(equipment);
-                                targetScrollViewItem =
-                                    UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemStaffs;
-                                break;
-                            case Enums.EquipmentType.Helmet:
-                                helmets.Add(equipment);
-                                targetScrollViewItem =
-                                    UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemHelmets;
-                                break;
-                            case Enums.EquipmentType.Armor:
-                                armors.Add(equipment);
-                                targetScrollViewItem =
-                                    UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemArmors;
-                                break;
-                            case Enums.EquipmentType.Gauntlet:
-                                gauntlets.Add(equipment);
-                                targetScrollViewItem =
-                                    UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
+                            Enums.EquipmentType.Sword => UIManager.Instance.inventoryPanelUI
+                                .inventoryScrollViewItemSwords,
+                            Enums.EquipmentType.Bow => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows,
+                            Enums.EquipmentType.Staff => UIManager.Instance.inventoryPanelUI
+                                .inventoryScrollViewItemStaffs,
+                            Enums.EquipmentType.Helmet => UIManager.Instance.inventoryPanelUI
+                                .inventoryScrollViewItemHelmets,
+                            Enums.EquipmentType.Armor => UIManager.Instance.inventoryPanelUI
+                                .inventoryScrollViewItemArmors,
+                            Enums.EquipmentType.Gauntlet => UIManager.Instance.inventoryPanelUI
+                                .inventoryScrollViewItemGauntlets,
+                            _ => throw new ArgumentOutOfRangeException()
+                        };
 
                         targetScrollViewItem[equipmentIndex]
                             .GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemUI(
@@ -160,9 +132,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                 equipment.equipmentQuantity,
                                 MaxQuantity,
                                 equipment.isEquipped,
-                                equipment.isEquipped,
+                                equipment.isPossessed,
                                 equipmentTier,
-                                equipmentName,
                                 SpriteManager.Instance.GetEquipmentSprite(
                                     equipmentType,
                                     equipmentIconIndex),
@@ -212,11 +183,13 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             Enums.EquipmentType.Gauntlet => $"{gauntletNames[rarityIntValue]} {6 - equipmentTier}",
                             _ => null
                         };
+                        var equipmentLevel = 1;
                         var isEquipped = rarityIntValue == 0 && equipmentTier == 5;
+                        var isPossessed = rarityIntValue == 0 && equipmentTier == 5;
                         var equipmentIconIndex = equipmentIndex;
                         var equipmentIcon = SpriteManager.Instance.GetEquipmentSprite(equipmentType, equipmentIndex);
                         var equipmentRarity = rarity;
-                        var equipmentQuantity = isEquipped ? 1 : 0;
+                        var equipmentQuantity = isPossessed ? 1 : 0;
                         var equipmentBackground = SpriteManager.Instance.GetEquipmentBackground(rarityIntValue);
                         var equipmentBackgroundEffect =
                             SpriteManager.Instance.GetEquipmentBackgroundEffect(rarityIntValue);
@@ -246,46 +219,27 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             ownedEffects.Add(ownedEffect);
                         }
 
-                        var equipment = new Equipment(equipmentId, equipmentName, equipmentIconIndex, 1,
-                            equipmentType, equipmentRarity, equipmentTier, equipmentQuantity, isEquipped, isEquipped,
+                        var equipment = new Equipment(equipmentId, equipmentName, equipmentIconIndex, equipmentLevel,
+                            equipmentType, equipmentRarity, equipmentTier, equipmentQuantity, isEquipped, isPossessed,
                             equippedEffects, ownedEffects);
                         
                         AddEquipment(equipmentId, equipment);
 
-                        List<GameObject> targetScrollViewItem;
-                        switch (equipmentType)
+                        var targetScrollViewItem = equipmentType switch
                         {
-                            case Enums.EquipmentType.Sword:
-                                swords.Add(equipment);
-                                targetScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords;
-                                break;
-                            case Enums.EquipmentType.Bow:
-                                bows.Add(equipment);
-                                targetScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows;
-                                break;
-                            case Enums.EquipmentType.Staff:
-                                staffs.Add(equipment);
-                                targetScrollViewItem =
-                                    UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemStaffs;
-                                break;
-                            case Enums.EquipmentType.Helmet:
-                                helmets.Add(equipment);
-                                targetScrollViewItem =
-                                    UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemHelmets;
-                                break;
-                            case Enums.EquipmentType.Armor:
-                                armors.Add(equipment);
-                                targetScrollViewItem =
-                                    UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemArmors;
-                                break;
-                            case Enums.EquipmentType.Gauntlet:
-                                gauntlets.Add(equipment);
-                                targetScrollViewItem =
-                                    UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
+                            Enums.EquipmentType.Sword => UIManager.Instance.inventoryPanelUI
+                                .inventoryScrollViewItemSwords,
+                            Enums.EquipmentType.Bow => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows,
+                            Enums.EquipmentType.Staff => UIManager.Instance.inventoryPanelUI
+                                .inventoryScrollViewItemStaffs,
+                            Enums.EquipmentType.Helmet => UIManager.Instance.inventoryPanelUI
+                                .inventoryScrollViewItemHelmets,
+                            Enums.EquipmentType.Armor => UIManager.Instance.inventoryPanelUI
+                                .inventoryScrollViewItemArmors,
+                            Enums.EquipmentType.Gauntlet => UIManager.Instance.inventoryPanelUI
+                                .inventoryScrollViewItemGauntlets,
+                            _ => throw new ArgumentOutOfRangeException()
+                        };
 
                         targetScrollViewItem[equipmentIndex]
                             .GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemUI(
@@ -296,7 +250,6 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                 isEquipped,
                                 isEquipped,
                                 equipmentTier,
-                                equipmentName,
                                 SpriteManager.Instance.GetEquipmentSprite(
                                     equipmentType,
                                     equipmentIconIndex),
@@ -493,36 +446,37 @@ namespace Managers.BottomMenuManager.InventoryPanel
 
         public void AutoEquip(Enums.EquipmentType currentEquipmentType)
         {
-            var highValueEquipment = new List<Equipment>();
-
             var equipments = currentEquipmentType switch
             {
-                Enums.EquipmentType.Sword => swords,
-                Enums.EquipmentType.Bow => bows,
-                Enums.EquipmentType.Staff => staffs,
-                Enums.EquipmentType.Helmet => helmets,
-                Enums.EquipmentType.Armor => armors,
-                Enums.EquipmentType.Gauntlet => gauntlets,
+                Enums.EquipmentType.Sword => SwordsDictionary,
+                Enums.EquipmentType.Bow => BowsDictionary,
+                Enums.EquipmentType.Staff => StaffsDictionary,
+                Enums.EquipmentType.Helmet => HelmetsDictionary,
+                Enums.EquipmentType.Armor => ArmorsDictionary,
+                Enums.EquipmentType.Gauntlet => GauntletsDictionary,
                 _ => null
             };
 
-            if (equipments != null)
-                highValueEquipment = equipments.OrderBy(equipment => equipment.equipmentRarity).ToList();
+            if (equipments == null) return;
 
-            SquadBattleManager.EquipAction?.Invoke(highValueEquipment[0]);
-            UIManager.Instance.inventoryPanelUI.SelectEquipment(highValueEquipment[0]);
+            var highValueEquipment = equipments.OrderByDescending(equipment => equipment.Value.isPossessed).ThenByDescending(equipment => equipment.Value.equipmentRarity).ThenBy(equipment => equipment.Value.equipmentTier).ToList()[0].Value;
+            highValueEquipment.isEquipped = true;
+            highValueEquipment.SaveEquipmentEachInfo(highValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
+
+            SquadBattleManager.EquipAction?.Invoke(highValueEquipment);
+            UIManager.Instance.inventoryPanelUI.SelectEquipment(highValueEquipment);
         }
 
         public void AllComposite(Enums.EquipmentType currentEquipmentType)
         {
             var equipments = currentEquipmentType switch
             {
-                Enums.EquipmentType.Sword => swords,
-                Enums.EquipmentType.Bow => bows,
-                Enums.EquipmentType.Staff => staffs,
-                Enums.EquipmentType.Helmet => helmets,
-                Enums.EquipmentType.Armor => armors,
-                Enums.EquipmentType.Gauntlet => gauntlets,
+                Enums.EquipmentType.Sword => SwordsDictionary,
+                Enums.EquipmentType.Bow => BowsDictionary,
+                Enums.EquipmentType.Staff => StaffsDictionary,
+                Enums.EquipmentType.Helmet => HelmetsDictionary,
+                Enums.EquipmentType.Armor => ArmorsDictionary,
+                Enums.EquipmentType.Gauntlet => GauntletsDictionary,
                 _ => null
             };
 
@@ -533,11 +487,11 @@ namespace Managers.BottomMenuManager.InventoryPanel
                 if (index == equipments.Count - 1)
                 {
                     // equipment.SetQuantityText();
-                    equipment.SaveEquipmentEachInfo(equipment.equipmentId, Enums.EquipmentProperty.Quantity);
+                    equipment.Value.SaveEquipmentEachInfo(equipment.Value.equipmentId, Enums.EquipmentProperty.Quantity);
                 }
                 else
                 {
-                    CompositeAllEquipment(equipment);
+                    CompositeAllEquipment(equipment.Value);
                     index++;
                 }
         }

@@ -6,19 +6,19 @@ namespace Creature.CreatureClass.MonsterFSM
 {
     public class MonsterBaseState : CreatureBaseState
     {
-        protected readonly Monster Monster;
+        protected readonly NormalMonster NormalMonster;
         protected readonly MonsterStateMachine MonsterStateMachine;
 
         protected MonsterBaseState(MonsterStateMachine monsterStateMachine)
         {
             MonsterStateMachine = monsterStateMachine;
-            Monster = MonsterStateMachine.Monster;
-            Animator = Monster.animator;
-            AnimationEventReceiver = Monster.animationEventReceiver;
-            AnimationData = Monster.animationData;
-            Rigid = Monster.rigid;
+            NormalMonster = MonsterStateMachine.NormalMonster;
+            Animator = NormalMonster.animator;
+            AnimationEventReceiver = NormalMonster.animationEventReceiver;
+            AnimationData = NormalMonster.animationData;
+            Rigid = NormalMonster.rigid;
 
-            MoveSpeed = Monster.moveSpeed;
+            MoveSpeed = NormalMonster.moveSpeed;
             OnAttack = false;
         }
 
@@ -44,35 +44,35 @@ namespace Creature.CreatureClass.MonsterFSM
 
         protected override void StartAnimationWithBool(int animationHash)
         {
-            Monster.animator.SetBool(animationHash, true);
+            NormalMonster.animator.SetBool(animationHash, true);
         }
 
         protected override void StopAnimationWithBool(int animationHash)
         {
-            Monster.animator.SetBool(animationHash, false);
+            NormalMonster.animator.SetBool(animationHash, false);
         }
 
         protected override void StartAnimationWithFloat(int animationHash, int parameterValue)
         {
-            Monster.animator.SetFloat(animationHash, parameterValue);
+            NormalMonster.animator.SetFloat(animationHash, parameterValue);
         }
 
         protected override void StartAnimationWithTrigger(int animationHash)
         {
-            Monster.animator.SetTrigger(animationHash);
+            NormalMonster.animator.SetTrigger(animationHash);
         }
 
         protected override bool CheckAttackRange()
         {
-            return Monster.currentTarget != null && Monster.attackRange >=
-                Vector3.Distance(Monster.currentTarget.transform.position, Monster.transform.position);
+            return NormalMonster.currentTarget != null && NormalMonster.attackRange >=
+                Vector3.Distance(NormalMonster.currentTarget.transform.position, NormalMonster.transform.position);
         }
 
         protected override void FlipSprite(float directionX)
         {
-            if (Monster.currentTarget == null) return;
+            if (NormalMonster.currentTarget == null) return;
 
-            var monsterNewTransform = Monster.transform;
+            var monsterNewTransform = NormalMonster.transform;
             var scale = monsterNewTransform.localScale;
             var localScale = new Vector3(Mathf.Abs(scale.x), Mathf.Abs(scale.y), Mathf.Abs(scale.z));
 
@@ -80,11 +80,11 @@ namespace Creature.CreatureClass.MonsterFSM
             {
                 case > 0.1f:
                     localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
-                    Monster.transform.localScale = localScale;
+                    NormalMonster.transform.localScale = localScale;
                     break;
                 case < -0.1f:
                     localScale = new Vector3(localScale.x, localScale.y, localScale.z);
-                    Monster.transform.localScale = localScale;
+                    NormalMonster.transform.localScale = localScale;
                     break;
             }
         }
@@ -92,22 +92,22 @@ namespace Creature.CreatureClass.MonsterFSM
 
         protected override void FlipSprite()
         {
-            if (Monster.currentTarget == null) return;
+            if (NormalMonster.currentTarget == null) return;
 
-            var transform = Monster.transform;
+            var transform = NormalMonster.transform;
             var scale = transform.localScale;
-            var direction = (Monster.currentTarget.position - transform.position).normalized;
+            var direction = (NormalMonster.currentTarget.position - transform.position).normalized;
             var localScale = new Vector3(Mathf.Abs(scale.x), Mathf.Abs(scale.y), Mathf.Abs(scale.z));
 
             switch (direction.x)
             {
                 case > 0.1f:
                     localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
-                    Monster.transform.localScale = localScale;
+                    NormalMonster.transform.localScale = localScale;
                     break;
                 case < -0.1f:
                     localScale = new Vector3(localScale.x, localScale.y, localScale.z);
-                    Monster.transform.localScale = localScale;
+                    NormalMonster.transform.localScale = localScale;
                     break;
             }
         }

@@ -18,7 +18,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         [Header("장비 장착 여부")] public GameObject equipMark;
         [Header("장비 보유 여부")] public GameObject possessMark;
 
-        public void UpdateInventoryPanelItemUI(int level, int maxLevel, int quantity, int maxQuantity, bool isEquipped, bool isPossessed, int tier, string name, Sprite icon,
+        public void UpdateInventoryPanelItemUI(int level, int maxLevel, int quantity, int maxQuantity, bool isEquipped, bool isPossessed, int tier, Sprite icon,
             Sprite backgroundEffect, Sprite background)
         {
             equipmentTier.text = $"{tier}티어";
@@ -43,7 +43,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
 
         public void UpdateInventoryPanelItemPossessMark()
         {
-            possessMark.SetActive(true);
+            possessMark.SetActive(false);
         }
     }
 }

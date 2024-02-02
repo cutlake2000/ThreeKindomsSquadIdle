@@ -36,7 +36,7 @@ namespace Creature.CreatureClass.MonsterFSM.States
             {
                 if (OnAttack) OnAttack = false;
 
-                if (Monster.currentTarget == null)
+                if (NormalMonster.currentTarget == null)
                     MonsterStateMachine.ChangeState(MonsterStateMachine.MonsterIdleState);
             }
         }
@@ -52,13 +52,13 @@ namespace Creature.CreatureClass.MonsterFSM.States
 
         private void MoveCharacter()
         {
-            if (Monster.currentTarget == null) return;
+            if (NormalMonster.currentTarget == null) return;
 
-            var monsterNewTransform = Monster.transform;
+            var monsterNewTransform = NormalMonster.transform;
             var position = Rigid.transform.position;
-            var direction = (Monster.currentTarget.position - position).normalized;
+            var direction = (NormalMonster.currentTarget.position - position).normalized;
 
-            position += direction * (Monster.moveSpeed * Time.deltaTime);
+            position += direction * (NormalMonster.moveSpeed * Time.deltaTime);
 
             monsterNewTransform.position = position;
 

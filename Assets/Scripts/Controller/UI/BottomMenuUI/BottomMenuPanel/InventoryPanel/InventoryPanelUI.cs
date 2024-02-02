@@ -55,6 +55,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         private void OnEnable()
         {
             OnClickSelectEquipment += SelectEquipment;
+            // UpdateEquipmentUIAction += UpdateSelectedEquipmentUI;
             UpdateEquipmentUIAction += SetOnEquippedBtnUI;
         }
 
@@ -87,7 +88,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         private void OnClickEquipment(int index)
         {
             for (var i = 0; i < scrollViewEquipmentPanel.Length; i++) scrollViewEquipmentPanel[i].SetActive(i == index);
-            for (var i = 0; i < spawnTargetPosition.Count; i++) spawnTargetPosition[i].SetActive(i == index);
         }
         
         private void OnClickWeapon(int index)
@@ -197,7 +197,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             selectEquipment.Enhance();
             UpdateSelectedEquipmentUI(selectEquipment);
 
-
             if (selectEquipment.isEquipped) OnClickEquip();
 
             UpdateSelectEquipmentData();
@@ -222,8 +221,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
 
         private void OnClickAutoEquip()
         {
-            InventoryManager.Instance.AutoEquip(selectEquipment.equipmentType);
+            selectEquipment.isEquipped = false;
+            selectEquipment.SaveEquipmentEachInfo(selectEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
             SquadBattleManager.EquipAction?.Invoke(InventoryManager.GetEquipment(selectEquipment.equipmentId));
+            
+            InventoryManager.Instance.AutoEquip(selectEquipment.equipmentType);
         }
 
         // 선택한 장비 데이터 업데이트 (저장한다고 생각하면 편함)

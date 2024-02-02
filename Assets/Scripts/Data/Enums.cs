@@ -111,7 +111,8 @@ namespace Data
 
         public enum DungeonType
         {
-            GoldDungeon
+            GoldDungeon,
+            SquadEnhanceStoneDungeon
         }
 
         // 장비 능력치

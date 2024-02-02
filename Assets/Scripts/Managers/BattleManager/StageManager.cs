@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Controller.UI;
+using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI;
 using Data;
 using ScriptableObjects.Scripts;
@@ -12,6 +13,7 @@ namespace Managers.BattleManager
     {
         public static StageManager Instance;
 
+        public static Action<float> CheckRemainedBossHealth;
         public static Action CheckRemainedMonsterAction;
         public static Action CheckRemainedSquadAction;
         public static Action<bool> CheckStageProgressType;

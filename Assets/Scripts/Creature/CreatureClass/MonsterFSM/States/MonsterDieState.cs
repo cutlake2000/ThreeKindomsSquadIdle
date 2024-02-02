@@ -26,7 +26,7 @@ namespace Creature.CreatureClass.MonsterFSM.States
 
             if (!(normalizedTime >= 1.0f)) return;
 
-            Monster.StartCoroutine(Monster.Fade(1, 0));
+            NormalMonster.StartCoroutine(NormalMonster.Fade(1, 0));
         }
     }
 }

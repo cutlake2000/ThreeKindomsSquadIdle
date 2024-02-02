@@ -123,7 +123,7 @@ namespace Creature.Data
                 t.increaseValue += t.increaseValue;
             }
 
-            equipmentLevel = Mathf.Max(equipmentLevel++, InventoryManager.EquipmentMaxLevel);
+            equipmentLevel = Mathf.Min(equipmentLevel++, InventoryManager.EquipmentMaxLevel);
         }
 
         // 강화할 때 필요한 강화석 return 시키는 메서드
@@ -187,7 +187,7 @@ namespace Creature.Data
                     ES3.Save($"{nameof(isEquipped)}_" + equipmentID, isEquipped);
                     break;
                 case Enums.EquipmentProperty.IsPossessed:
-                    ES3.Save("onEquipped_" + equipmentID, isEquipped);
+                    ES3.Save($"{nameof(isPossessed)}_" + equipmentID, isPossessed);
                     break;
             }
         }

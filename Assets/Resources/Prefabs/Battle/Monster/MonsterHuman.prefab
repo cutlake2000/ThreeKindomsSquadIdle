@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6272459504870884609}
   - component: {fileID: 2094543062704596300}
   - component: {fileID: 6491756350337931618}
-  - component: {fileID: 8087760993362703560}
   - component: {fileID: 1193017164611367188}
   - component: {fileID: 132333577598549784}
   m_Layer: 7
@@ -38,7 +37,7 @@ Transform:
   - {fileID: 8662027970606567908}
   - {fileID: 4378133337534499760}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &6272459504870884609
 Rigidbody2D:
@@ -129,7 +128,7 @@ MonoBehaviour:
     classTypeParameterName: ClassType
     attackStateParameterName: AttackState
     editChkParameterName: EditChk
-  animationEventReceiver: {fileID: 8087760993362703560}
+  animationEventReceiver: {fileID: 0}
   rigid: {fileID: 6272459504870884609}
   isDead: 0
   attackSpeed: 0
@@ -147,19 +146,6 @@ MonoBehaviour:
   monsterSprites: []
   isEventHitRunning: 0
   effectHit: {fileID: 408973250710952138}
-  detector: {fileID: 0}
---- !u!114 &8087760993362703560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5607999651028477310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd630860892945c7b15cead9013a4f76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1193017164611367188
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,11 +1,10 @@
 using Data;
-using Managers;
 using Managers.BattleManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Controller.UI
+namespace Controller.UI.BattleMenuUI
 {
     public class StageUI : MonoBehaviour
     {

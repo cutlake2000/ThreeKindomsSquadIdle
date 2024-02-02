@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: -9051281041999868218}
   - component: {fileID: 493673675646060068}
   - component: {fileID: 223545294698579267}
-  - component: {fileID: 3481409434506136069}
   - component: {fileID: 6913551343158196833}
   - component: {fileID: 8009931010734453203}
   m_Layer: 7
@@ -129,7 +128,7 @@ MonoBehaviour:
     classTypeParameterName: ClassType
     attackStateParameterName: AttackState
     editChkParameterName: EditChk
-  animationEventReceiver: {fileID: 3481409434506136069}
+  animationEventReceiver: {fileID: 0}
   rigid: {fileID: -9051281041999868218}
   isDead: 0
   attackSpeed: 0
@@ -147,19 +146,6 @@ MonoBehaviour:
   monsterSprites: []
   isEventHitRunning: 0
   effectHit: {fileID: 1213231560465682008}
-  detector: {fileID: 0}
---- !u!114 &3481409434506136069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2668682695348446543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd630860892945c7b15cead9013a4f76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6913551343158196833
 MonoBehaviour:
   m_ObjectHideFlags: 0

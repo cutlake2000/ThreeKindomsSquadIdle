@@ -6,9 +6,9 @@ namespace Creature.CreatureClass.MonsterFSM
 {
     public class MonsterStateMachine : CreatureStateMachine
     {
-        public MonsterStateMachine(Monster monster)
+        public MonsterStateMachine(NormalMonster normalMonster)
         {
-            Monster = monster;
+            NormalMonster = normalMonster;
 
             MonsterIdleState = new MonsterIdleState(this);
             MonsterRunState = new MonsterRunState(this);
@@ -18,7 +18,7 @@ namespace Creature.CreatureClass.MonsterFSM
             MonsterSkillAttackState = new MonsterSkillAttackState(this);
         }
 
-        public Monster Monster { get; }
+        public NormalMonster NormalMonster { get; }
 
         public MonsterIdleState MonsterIdleState { get; }
         public MonsterRunState MonsterRunState { get; }

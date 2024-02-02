@@ -51,7 +51,7 @@ namespace Controller.Projectiles.BaseAttack
         protected override void AttackEnemy(Collider2D collision)
         {
             base.AttackEnemy(collision);
-
+            
             collision.GetComponent<Monster>().TakeDamage(Damage);
         }
 

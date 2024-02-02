@@ -14,9 +14,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
 {
     public class SummonPanelUI : MonoBehaviour
     {
-        private readonly Vector3 initScale = new(1, 1, 1);
-        
-        
         [Header("소환 패널 구성 아이템 목록 UI")] public List<GameObject> summonPanelScrollViewItems = new();
         [Header("소환 결과창 UI")] public SummonResultPanelUI summonResultPanelUI;
         
@@ -29,16 +26,5 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
             
             summonResultPanelUI.InitializeEventListener();
         }
-
-
-        // private IEnumerator SetSummonedEquipmentOnPanel()
-        // {
-        //     for (var i = summonLists.Count - 1; i >= 0; i--)
-        //     {
-        //         // summonLists[i].gameObject.SetActive(true);
-        //         // summonLists[i].SetSummonUI();
-        //         yield return summonWaitForSeconds;
-        //     }
-        // }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Creature.CreatureClass.MonsterClass;
@@ -5,7 +6,7 @@ using Data;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Managers
+namespace Managers.BattleManager
 {
     public class MonsterManager : MonoBehaviour
     {
@@ -13,13 +14,13 @@ namespace Managers
 
         public GameObject[] monsterNewTypePrefabs;
         public BoxCollider2D[] spawnPosition;
-        [SerializeField] private List<Monster> activeMonsters = new();
+        [SerializeField] private List<NormalMonster> activeMonsters = new();
 
         public int monsterNewCount = 20;
 
         private readonly Dictionary<string, float> animationLengths = new();
         private readonly int[] spawnXs = { -10, 10, 0 };
-        private Dictionary<Enums.MonsterClassType, Queue<Monster>> monsterNewPools;
+        private Dictionary<Enums.MonsterClassType, Queue<NormalMonster>> monsterNewPools;
         private int spawnCount;
 
         private void Awake()
@@ -31,22 +32,22 @@ namespace Managers
 
         private void InitializeMonsterPools()
         {
-            monsterNewPools = new Dictionary<Enums.MonsterClassType, Queue<Monster>>();
+            monsterNewPools = new Dictionary<Enums.MonsterClassType, Queue<NormalMonster>>();
             foreach (Enums.MonsterClassType type in System.Enum.GetValues(typeof(Enums.MonsterClassType)))
             {
-                var pool = new Queue<Monster>();
+                var pool = new Queue<NormalMonster>();
                 var prefab = monsterNewTypePrefabs[(int)type];
                 FillMonsterPool(prefab, pool);
                 monsterNewPools[type] = pool;
             }
         }
 
-        private void FillMonsterPool(GameObject prefab, Queue<Monster> pool)
+        private void FillMonsterPool(GameObject prefab, Queue<NormalMonster> pool)
         {
             for (var i = 0; i < monsterNewCount; i++)
             {
                 var newMonsterObj = Instantiate(prefab);
-                var monsterNew = newMonsterObj.GetComponent<Monster>();
+                var monsterNew = newMonsterObj.GetComponent<NormalMonster>();
                 monsterNew.gameObject.SetActive(false);
                 pool.Enqueue(monsterNew);
             }
@@ -79,7 +80,6 @@ namespace Managers
             spawnCount = (spawnCount + 1) % spawnXs.Length;
         }
 
-
         public void SpawnMonsters(Enums.MonsterClassType monsterNewClassType, int count)
         {
             for (var i = 0; i < count; i++)
@@ -89,21 +89,21 @@ namespace Managers
             }
         }
 
-        private Monster GetMonster(Enums.MonsterClassType classType)
+        private NormalMonster GetMonster(Enums.MonsterClassType classType)
         {
-            Monster monster;
+            NormalMonster normalMonster;
             if (monsterNewPools[classType].Count > 0)
             {
-                monster = monsterNewPools[classType].Dequeue();
+                normalMonster = monsterNewPools[classType].Dequeue();
             }
             else
             {
                 var newMonsterObj = Instantiate(monsterNewTypePrefabs[(int)classType]);
-                monster = newMonsterObj.GetComponent<Monster>();
+                normalMonster = newMonsterObj.GetComponent<NormalMonster>();
             }
 
-            activeMonsters.Add(monster);
-            return monster;
+            activeMonsters.Add(normalMonster);
+            return normalMonster;
         }
 
         public void DespawnAllMonster()
@@ -112,11 +112,11 @@ namespace Managers
             foreach (var monster in activeMonsters.ToList()) ReturnMonster(monster.monsterClassType, monster);
         }
 
-        public void ReturnMonster(Enums.MonsterClassType classType, Monster monster)
+        public void ReturnMonster(Enums.MonsterClassType classType, NormalMonster normalMonster)
         {
-            monster.gameObject.SetActive(false);
-            monsterNewPools[classType].Enqueue(monster);
-            activeMonsters.Remove(monster);
+            normalMonster.gameObject.SetActive(false);
+            monsterNewPools[classType].Enqueue(normalMonster);
+            activeMonsters.Remove(normalMonster);
         }
 
         private void PositionMonster(Component monsterNew)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Controller.UI;
+using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel;
 using Data;
@@ -12,9 +13,6 @@ namespace Managers.BattleManager
     public class DungeonManager : MonoBehaviour
     {
         public static DungeonManager Instance;
-
-        public static Action CheckRemainedMonster;
-        public static Action CheckRemainedSquad;
 
         [SerializeField] private StageUI stageUIController;
 
@@ -161,7 +159,7 @@ namespace Managers.BattleManager
 
         private void CalculateRemainedSquad()
         {
-            currentSquadCount--;
+            --currentSquadCount;
 
             if (currentSquadCount > 0) return;
 

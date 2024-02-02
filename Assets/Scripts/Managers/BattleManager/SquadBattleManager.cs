@@ -236,19 +236,14 @@ namespace Managers.BattleManager
 
         private void Equip(Equipment equipment)
         {
-            UnEquip(equipment);
-
-            // var equippedEquipment = equipment.GetComponent<Equipment>();
-            // equippedEquipment.isEquipped = true;
-            //
+            equipment.isEquipped = true;
+            equipment.SaveEquipmentAllInfo();
+            
+            // TODO: 장착 시 스탯 증가 반영해야 함
             // squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, equippedEquipment.equippedEffect);
-            //
-            // InventoryPanelUI.UpdateEquipmentUIAction?.Invoke(equippedEquipment.isEquipped);
-            // equippedEquipment.SaveEquipmentAllInfo();
-            // UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipment.equipmentType].GetComponent<Equipment>()
-            //     .SetEquipmentInfo(equipment);
-            // UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipment.equipmentType].GetComponent<Equipment>().SetUI();
-            //
+            
+            UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipment.equipmentType].GetComponent<InventoryPanelSelectedItemUI>().UpdateInventoryPanelSelectedItem(equipment.equipmentTier, SpriteManager.Instance.GetEquipmentSprite(equipment.equipmentType, equipment.equipmentIconIndex), SpriteManager.Instance.GetEquipmentBackground((int) equipment.equipmentRarity), SpriteManager.Instance.GetEquipmentBackgroundEffect((int) equipment.equipmentRarity));
+            
             // Debug.Log("장비 장착" + equippedEquipment.id);
         }
 
