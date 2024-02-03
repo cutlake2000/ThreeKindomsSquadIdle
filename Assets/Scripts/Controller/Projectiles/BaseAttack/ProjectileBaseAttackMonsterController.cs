@@ -10,7 +10,10 @@ namespace Controller.Projectiles.BaseAttack
         {
             if (collision.gameObject.layer != LayerMask.NameToLayer("Player")) return;
 
-            collision.GetComponent<Squad>().TakeDamage(Damage);
+            if (collision.GetComponent<Squad>().isDead == false)
+            {
+                collision.GetComponent<Squad>().TakeDamage(Damage);
+            }
             gameObject.SetActive(false);
         }
 

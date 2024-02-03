@@ -20,7 +20,7 @@ MonoBehaviour:
   - <MainStageName>k__BackingField: "\uB369\uAE30\uB7EC\uB7EC\uCFF5\uB354\uB7EC\uB7EC
       3-"
     <MainStageMonsterTypes>k__BackingField: 00000000
-  <SubStageCountsPerMainStage>k__BackingField: 2
-  <WaveCountsPerSubStage>k__BackingField: 2
+  <SubStageCountsPerMainStage>k__BackingField: 50
+  <WaveCountsPerSubStage>k__BackingField: 5
   <MonsterSpawnCountsPerSubStage>k__BackingField: 10
   <StageLimitedTime>k__BackingField: 60

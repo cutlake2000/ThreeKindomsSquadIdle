@@ -34,8 +34,8 @@ namespace Managers.BattleManager
         [SerializeField] private float currentSquadCount;
         [SerializeField] private float currentRemainedMonsterCount;
 
-        [Header("--- 던전 러너 상태 ---")] [SerializeField]
-        private bool nextStageChallenge;
+        [Header("--- 던전 러너 상태 ---")]
+        [SerializeField] private bool nextStageChallenge;
 
         [SerializeField] private int maxSquadCount;
         [SerializeField] private bool isWaveTimerRunning;
@@ -161,9 +161,10 @@ namespace Managers.BattleManager
         {
             --currentSquadCount;
 
-            if (currentSquadCount > 0) return;
-
-            StartCoroutine(RunStageRunner(false));
+            if (currentSquadCount <= 0)
+            {
+                StartCoroutine(RunStageRunner(false));   
+            }
         }
 
         private void CalculateRemainedTime()
@@ -175,11 +176,13 @@ namespace Managers.BattleManager
 
         private IEnumerator RunStageRunner(bool isClear)
         {
-            StageManager.CheckRemainedMonsterAction += StageManager.Instance.CalculateRemainedMonster;
-            StageManager.CheckRemainedSquadAction += StageManager.Instance.CalculateRemainedSquad;
-
+            currentSquadCount = 3;
+            
             StageManager.CheckRemainedMonsterAction -= CalculateRemainedMonster;
             StageManager.CheckRemainedSquadAction -= CalculateRemainedSquad;
+            
+            StageManager.CheckRemainedMonsterAction += StageManager.Instance.CalculateRemainedMonster;
+            StageManager.CheckRemainedSquadAction += StageManager.Instance.CalculateRemainedSquad;
 
             stopWaveTimer = true;
             currentSquadCount = maxSquadCount;

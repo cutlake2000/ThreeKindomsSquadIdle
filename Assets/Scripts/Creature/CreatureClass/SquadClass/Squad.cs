@@ -98,7 +98,7 @@ namespace Creature.CreatureClass.SquadClass
 
             Debug.Log($"{gameObject.name} {damage} 데미지!");
 
-            if (currentHealth > 0) return;
+            if (currentHealth > 0 && !isDead) return;
             isDead = true;
             hpBar.gameObject.SetActive(false);
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
