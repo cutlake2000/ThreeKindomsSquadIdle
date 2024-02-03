@@ -17,9 +17,17 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
         [Header("소환 이펙트 애니메이션")] public Animator summonEffectsAnimator;
         [Header("소환 이펙트 파티클")] public List<ParticleSystem> summonEffectsParticle;
 
-        public void UpdateSummonResultPanelItemUI(int tier, Sprite image, int grade, int count)
+        public void UpdateSummonResultPanelEquipmentItemUI(int tier, Sprite image, int grade, int count)
         {
             itemTier.text = $"{tier} 티어";
+            itemImage.sprite = image;
+            itemBackgroundEffect.sprite = SpriteManager.Instance.GetEquipmentBackgroundEffect(grade);
+            itemCount.text = $"{count}";
+            itemRarity = grade;
+        }
+        
+        public void UpdateSummonResultPanelCharacterItemUI(Sprite image, int grade, int count)
+        {
             itemImage.sprite = image;
             itemBackgroundEffect.sprite = SpriteManager.Instance.GetEquipmentBackgroundEffect(grade);
             itemCount.text = $"{count}";

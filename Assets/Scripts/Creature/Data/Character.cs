@@ -26,6 +26,7 @@ namespace Creature.Data
         [Header("요구 경험치")] public BigInteger characterRequiredCurrency;
         [Header("클래스 타입")] public Enums.CharacterType characterType;
         [Header("클래스 등급")] public Enums.CharacterRarity characterRarity;
+        [Header("조각 개수")] public int characterQuantity;
         [Header("장착 여부")] public bool isEquipped;
         [Header("보유 여부")] public bool isPossessed;
 
@@ -61,7 +62,7 @@ namespace Creature.Data
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public Character(string id, string name, int level, bool isEquipped, bool isPossessed, Enums.CharacterType type,
             int iconIndex, Sprite icon, Enums.CharacterRarity rarity, int modelIndex, GameObject model,
-            CharacterSkill[] skills, SquadEffectSo equippedEffect, SquadEffectSo ownedEffect)
+            CharacterSkill[] skills, SquadEffectSo equippedEffect, SquadEffectSo ownedEffect, int quantity)
         {
             characterId = id;
             characterName = name;
@@ -71,7 +72,7 @@ namespace Creature.Data
             characterType = type;
             characterIconIndex = iconIndex;
             characterRarity = rarity;
-
+            characterQuantity = quantity;
             characterModelIndex = modelIndex;
             characterModel = model;
 
@@ -172,6 +173,7 @@ namespace Creature.Data
             characterLevel = ES3.Load<int>($"{nameof(characterLevel)}_" + characterId);
             isEquipped = ES3.Load<bool>($"{nameof(isEquipped)}_" + characterId);
             isPossessed = ES3.Load<bool>($"{nameof(isPossessed)}_" + characterId);
+            characterQuantity = ES3.Load<int>($"{nameof(characterQuantity)}_" + characterId);
 
             for (var i = 0; i < characterEquippedEffects.Count; i++)
                 characterEquippedEffects[i].increaseValue =
@@ -189,6 +191,7 @@ namespace Creature.Data
             ES3.Save($"{nameof(characterLevel)}_" + characterId, characterLevel);
             ES3.Save($"{nameof(isEquipped)}_" + characterId, isEquipped);
             ES3.Save($"{nameof(isPossessed)}_" + characterId, isPossessed);
+            ES3.Save($"{nameof(characterQuantity)}_" + characterId, characterQuantity);
 
             for (var i = 0; i < characterEquippedEffects.Count; i++)
                 ES3.Save($"characterEquippedEffects[{i}].increaseValue_" + characterId,
@@ -197,6 +200,11 @@ namespace Creature.Data
             for (var i = 0; i < characterOwnedEffects.Count; i++)
                 ES3.Save($"characterOwnedEffects[{i}].increaseValue_" + characterId,
                     characterOwnedEffects[i].increaseValue);
+        }
+
+        public void SaveCharacterQuantityInfo(string id)
+        {
+            ES3.Save($"{nameof(characterQuantity)}_" + id, characterQuantity);
         }
 
         public void SaveCharacterEquippedInfo(string id)

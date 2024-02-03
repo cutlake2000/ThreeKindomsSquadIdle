@@ -66,7 +66,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                 {
                     if (characterType != characterSo.characterType) continue;
 
-                    var characterId = $"{characterSo.characterName}";
+                    var characterId = $"{characterSo.characterRarity}_{characterSo.characterType}";
                     var characterName = characterSo.characterName;
                     var characterIconIndex = characterSo.characterIconIndex;
                     var characterIcon =
@@ -123,7 +123,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                 {
                     if (characterType != characterSo.characterType) continue;
 
-                    var characterId = $"{characterSo.characterName}";
+                    var characterId = $"{characterSo.characterRarity}_{characterSo.characterType}";
                     var characterName = characterSo.characterName;
        
                     var isEquipped = characterIndex == 0;
@@ -148,7 +148,7 @@ namespace Managers.BottomMenuManager.SquadPanel
 
                     var character = new Character(characterId, characterName, characterLevel, isEquipped, isEquipped,
                         characterType, characterIconIndex, characterIcon, characterRarity, characterModelIndex,
-                        characterModel, characterSkills, equippedEffect, ownedEffect);
+                        characterModel, characterSkills, equippedEffect, ownedEffect, 0);
                     AddCharacter(characterId, character);
                     characterIndex++;
 

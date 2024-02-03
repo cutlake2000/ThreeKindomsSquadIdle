@@ -336,8 +336,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                         var index = i;
                         var characterId = SquadConfigureManager.Instance.warriors[index].characterId;
                         
-                        squadConfigureScrollViewItemWarriors[index].GetComponent<SquadConfigureItemUI>()
-                            .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.warriors[index].characterLevel,
+                        squadConfigureScrollViewItemWarriors[index].GetComponent<SquadConfigurePanelItemUI>()
+                            .UpdateSquadConfigureAllItemUI(SquadConfigureManager.Instance.warriors[index].characterLevel,
                                 SquadConfigureManager.Instance.warriors[index].isEquipped,
                                 SquadConfigureManager.Instance.warriors[index].isPossessed,
                                 SquadConfigureManager.Instance.warriors[index].characterName,
@@ -352,7 +352,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(false);
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(true);
                             }
-                            else if (currentSelectedSquadConfigurePanelItem.characterName == squadConfigureScrollViewItemWarriors[index].GetComponent<SquadConfigureItemUI>().characterName.text)
+                            else if (currentSelectedSquadConfigurePanelItem.characterName == squadConfigureScrollViewItemWarriors[index].GetComponent<SquadConfigurePanelItemUI>().characterName.text)
                             {
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(true);
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(false);
@@ -378,8 +378,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                         var index = i;
                         var characterId = SquadConfigureManager.Instance.archers[index].characterId;
                         
-                        squadConfigureScrollViewItemArchers[index].GetComponent<SquadConfigureItemUI>()
-                            .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.archers[index].characterLevel,
+                        squadConfigureScrollViewItemArchers[index].GetComponent<SquadConfigurePanelItemUI>()
+                            .UpdateSquadConfigureAllItemUI(SquadConfigureManager.Instance.archers[index].characterLevel,
                                 SquadConfigureManager.Instance.archers[index].isEquipped,
                                 SquadConfigureManager.Instance.archers[index].isPossessed,
                                 SquadConfigureManager.Instance.archers[index].characterName,
@@ -394,7 +394,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(false);
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(true);
                             }
-                            else if (currentSelectedSquadConfigurePanelItem.characterName == squadConfigureScrollViewItemArchers[index].GetComponent<SquadConfigureItemUI>().characterName.text)
+                            else if (currentSelectedSquadConfigurePanelItem.characterName == squadConfigureScrollViewItemArchers[index].GetComponent<SquadConfigurePanelItemUI>().characterName.text)
                             {
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(true);
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(false);
@@ -423,8 +423,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                         var index = i;
                         var characterId = SquadConfigureManager.Instance.wizards[index].characterId;
                         
-                        squadConfigureScrollViewItemWizards[index].GetComponent<SquadConfigureItemUI>()
-                            .UpdateSquadConfigureItemUI(SquadConfigureManager.Instance.wizards[index].characterLevel,
+                        squadConfigureScrollViewItemWizards[index].GetComponent<SquadConfigurePanelItemUI>()
+                            .UpdateSquadConfigureAllItemUI(SquadConfigureManager.Instance.wizards[index].characterLevel,
                                 SquadConfigureManager.Instance.wizards[index].isEquipped,
                                 SquadConfigureManager.Instance.wizards[index].isPossessed,
                                 SquadConfigureManager.Instance.wizards[index].characterName,
@@ -439,7 +439,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(false);
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(true);
                             }
-                            else if (currentSelectedSquadConfigurePanelItem.characterName == squadConfigureScrollViewItemWizards[index].GetComponent<SquadConfigureItemUI>().characterName.text)
+                            else if (currentSelectedSquadConfigurePanelItem.characterName == squadConfigureScrollViewItemWizards[index].GetComponent<SquadConfigurePanelItemUI>().characterName.text)
                             {
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.configuredSquadPanel.SetActive(true);
                                 UIManager.Instance.squadPanelUI.squadConfigurePanelUI.selectedSquadPanel.SetActive(false);

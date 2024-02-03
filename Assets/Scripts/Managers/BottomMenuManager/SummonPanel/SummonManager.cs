@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Controller.UI.BottomMenuUI;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
+using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel;
 using Creature.Data;
 using Data;
 using Function;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.InventoryPanel;
+using Managers.BottomMenuManager.SquadPanel;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -112,7 +114,7 @@ namespace Managers.BottomMenuManager.SummonPanel
                 var targetName = type switch
                 {
                     Enums.SummonType.Squad =>
-                        $"{squadSummoner?.GetRandomPick()}_{randomTier}_{squadType[Random.Range(0, 3)]}",
+                        $"{squadSummoner?.GetRandomPick()}_{squadType[Random.Range(0, 3)]}",
                     Enums.SummonType.Weapon =>
                         $"{weaponSummoner?.GetRandomPick()}_{randomTier}_{weaponType[Random.Range(0, 3)]}",
                     Enums.SummonType.Gear =>
@@ -140,63 +142,121 @@ namespace Managers.BottomMenuManager.SummonPanel
 
             for (var i = 0; i < summonLists.Count; i++)
             {
-                Equipment targetEquipment;
-                InventoryPanelItemUI inventoryScrollViewItem;
                 var target = summonLists[i];
                 var splitString = target.Key.Split('_');
                 
-                var targetRarityIndex = (int)Enum.Parse(typeof(Enums.EquipmentRarity), splitString[0]) * 5;
-                var targetType = (Enums.EquipmentType)Enum.Parse(typeof(Enums.EquipmentType), splitString[2]);
-                var targetTierIndex = 5 - Convert.ToInt32(splitString[1]);
-                var targetIndex = targetRarityIndex + targetTierIndex;
+                if (type == Enums.SummonType.Squad)
+                {
+                    Character targetCharacter;
+                    SquadConfigurePanelItemUI squadConfigurePanelScrollViewItem;
                     
-                switch (targetType)
-                {
-                    case Enums.EquipmentType.Sword:
-                        targetEquipment = InventoryManager.Instance.SwordsDictionary[target.Key];
-                        inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords[targetIndex].GetComponent<InventoryPanelItemUI>();
-                        break;
-                    case Enums.EquipmentType.Bow:
-                        targetEquipment = InventoryManager.Instance.BowsDictionary[target.Key];
-                        inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows[targetIndex].GetComponent<InventoryPanelItemUI>();
-                        break;
-                    case Enums.EquipmentType.Staff:
-                        targetEquipment = InventoryManager.Instance.StaffsDictionary[target.Key];
-                        inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemStaffs[targetIndex].GetComponent<InventoryPanelItemUI>();
-                        break;
-                    case Enums.EquipmentType.Helmet:
-                        targetEquipment = InventoryManager.Instance.HelmetsDictionary[target.Key];
-                        inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemHelmets[targetIndex].GetComponent<InventoryPanelItemUI>();
-                        break;
-                    case Enums.EquipmentType.Armor:
-                        targetEquipment = InventoryManager.Instance.ArmorsDictionary[target.Key];
-                        inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemArmors[targetIndex].GetComponent<InventoryPanelItemUI>();
-                        break;
-                    case Enums.EquipmentType.Gauntlet:
-                        targetEquipment = InventoryManager.Instance.GauntletsDictionary[target.Key];
-                        inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets[targetIndex].GetComponent<InventoryPanelItemUI>();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-                
-                targetEquipment.equipmentQuantity += target.Value;
-                targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.Quantity);
-                
-                if (targetEquipment.isPossessed == false)
-                {
-                    targetEquipment.isPossessed = true;
-                    targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.IsPossessed);
-                }
+                    var targetRarityIndex = (int)Enum.Parse(typeof(Enums.CharacterRarity), splitString[0]);
+                    var targetType = (Enums.CharacterType)Enum.Parse(typeof(Enums.CharacterType), splitString[1]);
 
-                inventoryScrollViewItem.UpdateInventoryPanelItemQuantityUI(targetEquipment.equipmentQuantity);
-                inventoryScrollViewItem.UpdateInventoryPanelItemPossessMark();
+                    switch (targetType)
+                    {
+                        case Enums.CharacterType.Warrior:
+                            targetCharacter = SquadConfigureManager.Instance.WarriorDictionary[target.Key];
+                            squadConfigurePanelScrollViewItem =
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI
+                                    .squadConfigureScrollViewItemWarriors.Find(character =>
+                                        character.GetComponent<SquadConfigurePanelItemUI>().characterName.text ==
+                                        targetCharacter.characterName).GetComponent<SquadConfigurePanelItemUI>();
+                            break;
+                        case Enums.CharacterType.Archer:
+                            targetCharacter = SquadConfigureManager.Instance.ArchersDictionary[target.Key];
+                            squadConfigurePanelScrollViewItem =
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI
+                                    .squadConfigureScrollViewItemArchers.Find(character =>
+                                        character.GetComponent<SquadConfigurePanelItemUI>().characterName.text ==
+                                        targetCharacter.characterName).GetComponent<SquadConfigurePanelItemUI>();
+                            break;
+                        case Enums.CharacterType.Wizard:
+                            targetCharacter = SquadConfigureManager.Instance.WizardsDictionary[target.Key];
+                            squadConfigurePanelScrollViewItem =
+                                UIManager.Instance.squadPanelUI.squadConfigurePanelUI
+                                    .squadConfigureScrollViewItemWizards.Find(character =>
+                                        character.GetComponent<SquadConfigurePanelItemUI>().characterName.text ==
+                                        targetCharacter.characterName).GetComponent<SquadConfigurePanelItemUI>();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    targetCharacter.characterQuantity++;
+                    targetCharacter.SaveCharacterEquippedInfo(targetCharacter.characterId);
+                    
+                    if (targetCharacter.isPossessed == false)
+                    {
+                        targetCharacter.isPossessed = true;
+                        targetCharacter.characterLevel = 1;
+                    }
+                    
+                    squadConfigurePanelScrollViewItem.UpdateSquadConfigureAllItemUI(targetCharacter.characterLevel, targetCharacter.isEquipped, targetCharacter.isPossessed, targetCharacter.characterName, SpriteManager.Instance.GetCharacterSprite(targetCharacter.characterType, targetCharacter.characterIconIndex));
+                    
+                    UIManager.Instance.summonPanelUI.summonResultPanelUI.summonResultPanelItems[i]
+                        .GetComponent<SummonResultPanelItemUI>().UpdateSummonResultPanelCharacterItemUI(
+                            SpriteManager.Instance.GetCharacterSprite(targetCharacter.characterType,
+                                targetCharacter.characterIconIndex), (int)targetCharacter.characterRarity, target.Value);
+                }
+                else
+                {
+                    Equipment targetEquipment;
+                    InventoryPanelItemUI inventoryScrollViewItem;
+                    
+                    var targetRarityIndex = (int)Enum.Parse(typeof(Enums.EquipmentRarity), splitString[0]) * 5;
+                    var targetType = (Enums.EquipmentType)Enum.Parse(typeof(Enums.EquipmentType), splitString[2]);
+                    var targetTierIndex = 5 - Convert.ToInt32(splitString[1]);
+                    var targetIndex = targetRarityIndex + targetTierIndex;
+                        
+                    switch (targetType)
+                    {
+                        case Enums.EquipmentType.Sword:
+                            targetEquipment = InventoryManager.Instance.SwordsDictionary[target.Key];
+                            inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords[targetIndex].GetComponent<InventoryPanelItemUI>();
+                            break;
+                        case Enums.EquipmentType.Bow:
+                            targetEquipment = InventoryManager.Instance.BowsDictionary[target.Key];
+                            inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows[targetIndex].GetComponent<InventoryPanelItemUI>();
+                            break;
+                        case Enums.EquipmentType.Staff:
+                            targetEquipment = InventoryManager.Instance.StaffsDictionary[target.Key];
+                            inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemStaffs[targetIndex].GetComponent<InventoryPanelItemUI>();
+                            break;
+                        case Enums.EquipmentType.Helmet:
+                            targetEquipment = InventoryManager.Instance.HelmetsDictionary[target.Key];
+                            inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemHelmets[targetIndex].GetComponent<InventoryPanelItemUI>();
+                            break;
+                        case Enums.EquipmentType.Armor:
+                            targetEquipment = InventoryManager.Instance.ArmorsDictionary[target.Key];
+                            inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemArmors[targetIndex].GetComponent<InventoryPanelItemUI>();
+                            break;
+                        case Enums.EquipmentType.Gauntlet:
+                            targetEquipment = InventoryManager.Instance.GauntletsDictionary[target.Key];
+                            inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets[targetIndex].GetComponent<InventoryPanelItemUI>();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 
-                UIManager.Instance.summonPanelUI.summonResultPanelUI.summonResultPanelItems[i]
-                    .GetComponent<SummonResultPanelItemUI>().UpdateSummonResultPanelItemUI(
-                        targetEquipment.equipmentTier,
-                        SpriteManager.Instance.GetEquipmentSprite(targetEquipment.equipmentType,
-                            targetEquipment.equipmentIconIndex), (int)targetEquipment.equipmentRarity, target.Value);
+                    targetEquipment.equipmentQuantity += target.Value;
+                    targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.Quantity);
+                    
+                    if (targetEquipment.isPossessed == false)
+                    {
+                        targetEquipment.isPossessed = true;
+                        targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.IsPossessed);
+                    }
+
+                    inventoryScrollViewItem.UpdateInventoryPanelItemQuantityUI(targetEquipment.equipmentQuantity);
+                    inventoryScrollViewItem.UpdateInventoryPanelItemPossessMark();
+                    
+                    UIManager.Instance.summonPanelUI.summonResultPanelUI.summonResultPanelItems[i]
+                        .GetComponent<SummonResultPanelItemUI>().UpdateSummonResultPanelEquipmentItemUI(
+                            targetEquipment.equipmentTier,
+                            SpriteManager.Instance.GetEquipmentSprite(targetEquipment.equipmentType,
+                                targetEquipment.equipmentIconIndex), (int)targetEquipment.equipmentRarity, target.Value);
+                }
             }
 
             IncreaseSummonExp(type, count);

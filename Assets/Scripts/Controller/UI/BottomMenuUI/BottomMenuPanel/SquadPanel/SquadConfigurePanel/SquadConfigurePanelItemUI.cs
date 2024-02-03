@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePanel
 {
-    public class SquadConfigureItemUI : MonoBehaviour
+    public class SquadConfigurePanelItemUI : MonoBehaviour
     {
         [Header("캐릭터 레벨")] public TMP_Text characterLevel;
 
@@ -16,7 +16,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
 
         [Header("보유 여부")] public GameObject possessMark;
 
-        public void UpdateSquadConfigureItemUI(int level, bool isEquipped, bool isPossessed, string name, Sprite icon)
+        public void UpdateSquadConfigureAllItemUI(int level, bool isEquipped, bool isPossessed, string name, Sprite icon)
         {
             characterLevel.text = $"Lv. {level}";
             characterName.text = $"{name}";
