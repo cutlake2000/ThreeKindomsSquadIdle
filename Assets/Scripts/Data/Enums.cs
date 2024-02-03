@@ -106,7 +106,7 @@ namespace Data
         public enum DungeonClearType
         {
             KillCount,
-            WaveCount
+            BossKill
         }
 
         public enum DungeonType

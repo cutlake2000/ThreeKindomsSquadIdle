@@ -129,21 +129,28 @@ namespace Managers.BottomMenuManager.SummonPanel
                 {
                     SummonedItemDictionary[targetName]++;
                 }
-                
-                Debug.Log($"가챠! {targetName} {SummonedItemDictionary[targetName]}개");
+            }
+
+            foreach (var item in SummonedItemDictionary)
+            {
+                Debug.Log($"가챠! {item.Key} {item.Value}개");
             }
             
             var summonLists = SummonedItemDictionary.ToList();
 
-            for (var i = 0; i < dictionaryCount; i++)
+            for (var i = 0; i < summonLists.Count; i++)
             {
                 Equipment targetEquipment;
                 InventoryPanelItemUI inventoryScrollViewItem;
                 var target = summonLists[i];
                 var splitString = target.Key.Split('_');
-                var targetIndex = (int)Enum.Parse(typeof(Enums.EquipmentRarity), splitString[0]) * 5 + Convert.ToInt32(splitString[1]);
+                
+                var targetRarityIndex = (int)Enum.Parse(typeof(Enums.EquipmentRarity), splitString[0]) * 5;
+                var targetType = (Enums.EquipmentType)Enum.Parse(typeof(Enums.EquipmentType), splitString[2]);
+                var targetTierIndex = 5 - Convert.ToInt32(splitString[1]);
+                var targetIndex = targetRarityIndex + targetTierIndex;
                     
-                switch ((Enums.EquipmentType)Enum.Parse(typeof(Enums.EquipmentType), splitString[2]))
+                switch (targetType)
                 {
                     case Enums.EquipmentType.Sword:
                         targetEquipment = InventoryManager.Instance.SwordsDictionary[target.Key];

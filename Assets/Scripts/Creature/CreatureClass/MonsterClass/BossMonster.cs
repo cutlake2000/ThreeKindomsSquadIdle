@@ -1,17 +1,20 @@
 using System.Collections;
+using Data;
 using Function;
 using Managers.BattleManager;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Creature.CreatureClass.MonsterClass
 {
     
     public class BossMonster : Monster
     {
-        [Header("HitEffects")] [SerializeField] private bool isEventHitRunning;
+        [SerializeField] private bool isEventHitRunning;
 
-        public int initialBossMonsterHealth;
-        public int initialBossMonsterDefence;
+        public BigInteger currentBossHealth;
+        public BigInteger currentBossDefence;
+        public BigInteger maxBossHealth;
         
         public SpriteRenderer spriteRenderer;
         
@@ -23,24 +26,34 @@ namespace Creature.CreatureClass.MonsterClass
         
         public void InitializeBossMonsterData(int dungeonLevel)
         {
-            spriteRenderer = GetComponent<SpriteRenderer>();
-            currentHealth = initialBossMonsterHealth * dungeonLevel;
-            maxHealth = currentHealth;
-            defence = initialBossMonsterDefence * dungeonLevel;
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            maxBossHealth = MonsterManager.Instance.bossMonsterBaseStats.maxHealth * dungeonLevel;
+            currentBossHealth = maxBossHealth;
+            currentBossDefence = MonsterManager.Instance.bossMonsterBaseStats.defence * dungeonLevel;
         }
-        
+
         public override void TakeDamage(BigInteger damage)
         {
-            currentHealth -= (damage - defence);
-            currentHealth = currentHealth < 0 ? 0 : currentHealth;
-            
-            if (isEventHitRunning == false && !isDead) StartCoroutine(EventHit());
-            
-            StageManager.CheckRemainedBossHealth?.Invoke(BigInteger.ToInt32(currentHealth * 100 / maxHealth));
+            Debug.Log($"아야! {damage}");
+            currentBossHealth -= (damage - currentBossDefence);
+            currentBossHealth = currentBossHealth < 0 ? 0 : currentBossHealth;
 
-            if (currentHealth > 0 || isDead) return;
+            if (isEventHitRunning == false && !isDead)
+            {
+                StartCoroutine(EventHit());
+            }
+            
+            var bounds = GetComponent<Collider2D>().bounds;
+            var damageEffectSpawnPosition = bounds.center + new Vector3(0.0f, bounds.extents.y + 1f, 0.0f);
+            EffectManager.Instance.CreateEffectsAtPosition(FunctionManager.Vector3ToVector2(damageEffectSpawnPosition),
+                damage.ChangeMoney(), Enums.PoolType.EffectDamage);
+            
+            DungeonManager.CheckRemainedBossHealth?.Invoke(currentBossHealth, maxBossHealth);
+
+            if (currentBossHealth > 0 || isDead) return;
             isDead = true;
-            gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+            gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            StageManager.CheckRemainedMonsterAction?.Invoke();
         }
 
         private IEnumerator EventHit()

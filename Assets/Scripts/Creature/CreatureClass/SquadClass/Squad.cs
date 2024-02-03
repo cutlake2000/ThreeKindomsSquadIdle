@@ -116,7 +116,7 @@ namespace Creature.CreatureClass.SquadClass
             currentTarget = null;
 
             //TODO: 추후에 스테이지가 시작할 때 로직이 돌도록 수정하면 좋을 듯
-            if (currentTarget != null && currentTarget.GetComponent<NormalMonster>().isDead == false) return;
+            if (currentTarget != null && currentTarget.GetComponent<Monster>().isDead == false) return;
 
             currentTarget = TargetFinder.ScanNearestEnemy(followRange);
         }

@@ -8,9 +8,23 @@ using Random = UnityEngine.Random;
 
 namespace Managers.BattleManager
 {
+    [Serializable]
+    public class MonsterBaseStat
+    {
+        public int maxHealth = 3000;
+        public int defence = 1000;
+        public int moveSpeed = 3;
+        public int damage = 1500;
+        public int followRange = 15;
+    }
+    
     public class MonsterManager : MonoBehaviour
     {
         public static MonsterManager Instance;
+
+        [Header("몬스터 임시 스탯")] public MonsterBaseStat normalMonsterBaseStats;
+        [Header("보스 임시 스탯")] public MonsterBaseStat bossMonsterBaseStats;
+        [Header("스테이지 레벨 당 스탯 증가량 (단위 : %)")] public int increaseMonsterStatValue = 50;
 
         public GameObject[] monsterNewTypePrefabs;
         public BoxCollider2D[] spawnPosition;
@@ -53,7 +67,7 @@ namespace Managers.BattleManager
             }
         }
 
-        public void SpawnMonsters(Enums.MonsterClassType[] monsterNewTypes, int totalCount)
+        public void SpawnMonsters(Enums.MonsterClassType[] monsterNewTypes, int stageLevel, int totalCount)
         {
             var remainingCount = totalCount;
             var typesCount = monsterNewTypes.Length;
@@ -74,17 +88,18 @@ namespace Managers.BattleManager
                     remainingCount -= countForType;
                 }
 
-                SpawnMonsters(monsterNewTypes[i], countForType);
+                SpawnMonsters(monsterNewTypes[i], stageLevel, countForType);
             }
 
             spawnCount = (spawnCount + 1) % spawnXs.Length;
         }
 
-        public void SpawnMonsters(Enums.MonsterClassType monsterNewClassType, int count)
+        public void SpawnMonsters(Enums.MonsterClassType monsterNewClassType, int stageLevel, int count)
         {
             for (var i = 0; i < count; i++)
             {
                 var monsterNew = GetMonster(monsterNewClassType);
+                monsterNew.GetComponent<NormalMonster>().MultiplyNormalMonsterStats(stageLevel);
                 PositionMonster(monsterNew);
             }
         }

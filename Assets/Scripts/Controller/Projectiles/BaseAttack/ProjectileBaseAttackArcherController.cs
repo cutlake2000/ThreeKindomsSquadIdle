@@ -33,7 +33,7 @@ namespace Controller.Projectiles.BaseAttack
         {
             if (collision.gameObject.layer != LayerMask.NameToLayer("Enemy")) return;
 
-            AttackEnemy(collision);
+            collision.GetComponent<Monster>().TakeDamage(Damage);
             DestroyProjectile(collision.transform.position);
         }
 
@@ -46,13 +46,6 @@ namespace Controller.Projectiles.BaseAttack
             currentDuration = 0;
             transform.right = Direction;
             readyToLaunch = true;
-        }
-
-        protected override void AttackEnemy(Collider2D collision)
-        {
-            base.AttackEnemy(collision);
-            
-            collision.GetComponent<Monster>().TakeDamage(Damage);
         }
 
         private void DestroyProjectile(Vector3 position)

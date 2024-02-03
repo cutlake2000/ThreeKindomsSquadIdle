@@ -162,7 +162,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_SortAtRoot: 0
 --- !u!1001 &4913838302955587757
 PrefabInstance:
@@ -183,6 +183,18 @@ PrefabInstance:
     - target: {fileID: 2083014679897353014, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4055308191516985552, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
+      propertyPath: m_Color.b
+      value: 0.19997612
+      objectReference: {fileID: 0}
+    - target: {fileID: 4055308191516985552, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9245283
+      objectReference: {fileID: 0}
+    - target: {fileID: 4055308191516985552, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
+      propertyPath: m_Color.r
+      value: 0.18752226
       objectReference: {fileID: 0}
     - target: {fileID: 4348132969128671925, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_Name

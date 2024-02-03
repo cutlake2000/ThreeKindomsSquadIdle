@@ -4,16 +4,17 @@ using Controller.UI;
 using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI;
 using Data;
+using Function;
 using ScriptableObjects.Scripts;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Managers.BattleManager
 {
     public class StageManager : MonoBehaviour
     {
         public static StageManager Instance;
-
-        public static Action<float> CheckRemainedBossHealth;
+        
         public static Action CheckRemainedMonsterAction;
         public static Action CheckRemainedSquadAction;
         public static Action<bool> CheckStageProgressType;
@@ -28,6 +29,7 @@ namespace Managers.BattleManager
         [SerializeField] private string currentMainStageName;
         public int currentStageIndex; // 누적 스테이지 정보
         [SerializeField] private bool isClear;
+        [SerializeField] private int currentAccumulatedStage;
         [SerializeField] private int currentMainStage;
         [SerializeField] private int currentSubStage;
         [SerializeField] public int currentWave;
@@ -73,6 +75,7 @@ namespace Managers.BattleManager
             //TODO: Easy 뭐시깽이에서 불러와야 합미둥둥
             maxSquadCount = 3;
             currentSquadCount = 3;
+            currentAccumulatedStage = ES3.Load($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", 1);
             currentMainStage = ES3.Load($"{nameof(StageManager)}/{nameof(currentMainStage)}", 1);
             currentSubStage = ES3.Load($"{nameof(StageManager)}/{nameof(currentSubStage)}", 1);
             currentWave = 1;
@@ -234,8 +237,7 @@ namespace Managers.BattleManager
         private void SpawnMonster()
         {
             currentRemainedMonsterCount = monsterSpawnCountsPerSubStage;
-            MonsterManager.Instance.SpawnMonsters(stageSo.MainStageInfos[currentMainStage - 1].MainStageMonsterTypes,
-                monsterSpawnCountsPerSubStage);
+            MonsterManager.Instance.SpawnMonsters(stageSo.MainStageInfos[currentMainStage - 1].MainStageMonsterTypes, currentAccumulatedStage, monsterSpawnCountsPerSubStage);
         }
 
         private void DespawnMonster()

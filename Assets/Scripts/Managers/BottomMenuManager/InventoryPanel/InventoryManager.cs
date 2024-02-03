@@ -483,6 +483,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
             if (equipments == null) return;
 
             var index = 0;
+            
             foreach (var equipment in equipments)
                 if (index == equipments.Count - 1)
                 {

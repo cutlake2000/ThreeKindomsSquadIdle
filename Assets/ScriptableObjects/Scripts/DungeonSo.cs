@@ -12,5 +12,7 @@ namespace ScriptableObjects.Scripts
         public int targetScore;
         public int monsterSpawnCountsPerSubStage;
         public int waveTime;
+        public Enums.CurrencyType rewardType;
+        public int reward;
     }
 }

@@ -88,17 +88,25 @@ namespace Creature.CreatureClass.MonsterClass
         protected override void SetCreatureStats()
         {
             //TODO: 추후에 MonsterManager에서 가지고 오도록
-            maxHealth = 500000;
+            maxHealth = MonsterManager.Instance.normalMonsterBaseStats.maxHealth;
             currentHealth = maxHealth;
-            defence = 1000;
-            moveSpeed = 3;
-            followRange = 15;
-            damage = 1000;
-
-            currentHealth = maxHealth;
+            defence = MonsterManager.Instance.normalMonsterBaseStats.defence;
+            moveSpeed = MonsterManager.Instance.normalMonsterBaseStats.moveSpeed;
+            damage = MonsterManager.Instance.normalMonsterBaseStats.damage;
+            followRange = MonsterManager.Instance.normalMonsterBaseStats.followRange;
+            
             isDead = false;
             isEventHitRunning = false;
             currentTarget = null;
+        }
+
+        public void MultiplyNormalMonsterStats(int stageLevel)
+        {
+            var increaseValue = MonsterManager.Instance.increaseMonsterStatValue;
+            maxHealth *= stageLevel * increaseValue / 100;
+            currentHealth = maxHealth;
+            defence *= stageLevel * increaseValue / 100;
+            damage *= stageLevel * increaseValue / 100;
         }
 
         public override void TakeDamage(BigInteger damage)
@@ -113,7 +121,7 @@ namespace Creature.CreatureClass.MonsterClass
             var damageEffectSpawnPosition = bounds.center + new Vector3(0.0f, bounds.extents.y + 1f, 0.0f);
 
             EffectManager.Instance.CreateEffectsAtPosition(FunctionManager.Vector3ToVector2(damageEffectSpawnPosition),
-                damage.ToString(), Enums.PoolType.EffectDamage);
+                damage.ChangeMoney(), Enums.PoolType.EffectDamage);
 
             if (isEventHitRunning == false && !isDead) StartCoroutine(EventHit());
 

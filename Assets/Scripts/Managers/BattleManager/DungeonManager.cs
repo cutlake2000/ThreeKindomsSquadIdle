@@ -4,35 +4,57 @@ using Controller.UI;
 using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel;
+using Creature.CreatureClass.MonsterClass;
 using Data;
+using Function;
+using ScriptableObjects.Scripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace Managers.BattleManager
 {
     public class DungeonManager : MonoBehaviour
     {
         public static DungeonManager Instance;
+        
+        public static Action<BigInteger, BigInteger> CheckRemainedBossHealth;
 
+        [SerializeField] private DungeonSo[] dungeonSo;
         [SerializeField] private StageUI stageUIController;
 
-        [Header("=== UI On/Off 패널 목록 ===")] [SerializeField]
+        [Header("=== 스테이지 UI 목록 ===")] [SerializeField]
         private GameObject[] stageUIs;
+        
+        [Header("=== 던전 UI 목록 ===")] [SerializeField]
+        private GameObject[] dungeonUIs;
+
+        [Header("=== 스테이지 맵 ===")] [SerializeField]
+        private GameObject stageMap;
+        
+        [Header("=== 던전 맵 목록 ===")] [SerializeField]
+        private GameObject[] dungeonMap;
 
         [Header("=== 전투 결과창 UI ===")] [SerializeField]
         private GameObject stageResultUI;
 
-        [Header("=== 던전 정보 ===")] [SerializeField]
-        private Enums.DungeonClearType dungeonClearType;
-
+        [Header("보스 몬스터 스폰 포지션")] [SerializeField] private Transform bossMonsterSpawnPosition;
+        [Header("보스 몬스터 프리팹")] [SerializeField] private GameObject bossMonsterPrefab;
+        [Header("보스 몬스터")] [SerializeField] private GameObject bossMonster;
+        
+        [Header("=== 던전 정보 ===")]
+        [SerializeField] private Enums.DungeonClearType dungeonClearType;
         [SerializeField] private string currentDungeonName;
         [SerializeField] private int currentDungeonLevel;
+        [SerializeField] private Enums.DungeonType currentDungeonType;
+        [SerializeField] private Enums.CurrencyType currentDungeonRewardType;
         [SerializeField] private int currentScore;
         [SerializeField] private int targetScore;
         [SerializeField] private float waveTime;
         [SerializeField] private float stageLimitedTime = 60.0f;
         [SerializeField] private float currentSquadCount;
         [SerializeField] private float currentRemainedMonsterCount;
+        [SerializeField] private BigInteger currentDungeonReward;
 
         [Header("--- 던전 러너 상태 ---")]
         [SerializeField] private bool nextStageChallenge;
@@ -41,13 +63,12 @@ namespace Managers.BattleManager
         [SerializeField] private bool isWaveTimerRunning;
         [SerializeField] private bool stopWaveTimer;
         [SerializeField] private int monsterSpawnCountsPerSubStage;
+        [SerializeField] private bool isClear;
 
         [Header("=== 던전 보상 증가량 (%) ===")] public int increaseRewardPercent = 20;
 
         public int baseClearReward = 2000;
-        public int maxDungeonLevel = 10;
         public DungeonItemUI[] dungeonItems;
-        public Scene goldDungeonScene;
 
         private void Awake()
         {
@@ -57,8 +78,7 @@ namespace Managers.BattleManager
         public void InitDungeonManager()
         {
             InitializeEventListeners();
-            InitiateDungeonData();
-            UpdateAllDungeonUI();
+            UpdateDungeonPanelScrollViewAllItemUI();
         }
 
         private void InitializeEventListeners()
@@ -66,7 +86,7 @@ namespace Managers.BattleManager
             for (var i = 0; i < dungeonItems.Length; i++)
             {
                 var index = i;
-                dungeonItems[i].enterDungeonButton.onClick.AddListener(() =>
+                dungeonItems[index].enterDungeonButton.onClick.AddListener(() =>
                 {
                     StageManager.Instance.StopStageRunner();
 
@@ -78,67 +98,67 @@ namespace Managers.BattleManager
 
                     foreach (var stageUI in stageUIs) stageUI.SetActive(false);
 
+                    isClear = false;
 
-
-                    //TODO: So 등에서 값을 가져오도록
-                    currentDungeonName = "황금 미믹 던전";
-                    currentDungeonLevel = 1;
+                    currentDungeonName = dungeonSo[index].dungeonName;
+                    currentDungeonLevel = ES3.Load($"{dungeonSo[index].dungeonType}/{nameof(currentDungeonLevel)}", 1);
+                    currentDungeonType = dungeonSo[index].dungeonType;
+                    currentDungeonRewardType = dungeonSo[index].rewardType;
                     currentScore = 0;
-                    targetScore = 100;
-                    waveTime = 60.0f;
-                    monsterSpawnCountsPerSubStage = 10;
+                    currentDungeonReward = dungeonSo[index].reward * (int) Mathf.Pow(increaseRewardPercent + 100, currentDungeonLevel - 1);
+                    waveTime = dungeonSo[index].waveTime;
+                    stageMap.SetActive(false);
+                    
+                    dungeonUIs[index].SetActive(true);
+                    dungeonMap[index].SetActive(true);
 
-                    StartCoroutine(KillCountDungeonRunner());
+                    if (dungeonItems[index].dungeonType == Enums.DungeonType.SquadEnhanceStoneDungeon)
+                    {
+                        CheckRemainedBossHealth += UpdateBossKillUI;
+                        bossMonster = Instantiate(bossMonsterPrefab, bossMonsterSpawnPosition);
+                        bossMonster.GetComponent<BossMonster>().InitializeBossMonsterData(currentDungeonLevel);
+
+                        targetScore = 1;
+                    }
+                    else
+                    {
+                        monsterSpawnCountsPerSubStage = dungeonSo[index].monsterSpawnCountsPerSubStage;
+                        targetScore = dungeonSo[index].targetScore;
+                    }
+
+                    StartDungeonRunner(index);
                 });
-
-                // dungeonItems[index].previousStageButton.onClick.AddListener(() => ChooseStage(index, -1));
-                // dungeonItems[index].nextStageButton.onClick.AddListener(() => ChooseStage(index, 1));
             }
         }
 
-        private void ChooseStage(int index, int levelIndex)
+        private void StartDungeonRunner(int index)
         {
-            Debug.Log($"{levelIndex} levelIndex");
-
-            dungeonItems[index].currentDungeonLevel += levelIndex;
-
-            if (dungeonItems[index].currentDungeonLevel == 0)
-                dungeonItems[index].currentDungeonLevel = 1;
-            else if (dungeonItems[index].currentDungeonLevel > maxDungeonLevel)
-                dungeonItems[index].currentDungeonLevel = maxDungeonLevel;
-            else
-                switch (levelIndex)
-                {
-                    case -1:
-                        dungeonItems[index].currentDungeonReward = dungeonItems[index].currentDungeonReward * 100 /
-                                                                   (100 + increaseRewardPercent);
-                        break;
-                    case 1:
-                        dungeonItems[index].currentDungeonReward = dungeonItems[index].currentDungeonReward *
-                            (100 + increaseRewardPercent) / 100;
-                        break;
-                }
-
-            dungeonItems[index].SetDungeonUI();
+            switch (index)
+            {
+                case 0:
+                    StartCoroutine(KillCountDungeonRunner());
+                    break;
+                case 1:
+                    StartCoroutine(BossKillDungeonRunner());
+                    break;
+            }
         }
 
-        private void InitiateDungeonData()
+        private void UpdateDungeonPanelScrollViewAllItemUI()
         {
             for (var i = 0; i < dungeonItems.Length; i++)
             {
-                dungeonItems[i].dungeonType = (Enums.DungeonType)i;
-                dungeonItems[i].clearDungeonLevel =
-                    ES3.Load($"{nameof(Enums.DungeonType)}/{(Enums.DungeonType)i}/clearDungeonLevel : ", 1);
-                dungeonItems[i].currentDungeonLevel = dungeonItems[i].clearDungeonLevel;
-                dungeonItems[i].currentDungeonReward = baseClearReward;
-
-                dungeonItems[i].SetDungeonUI();
+                var level = ES3.Load($"{dungeonSo[i].dungeonType}/{nameof(currentDungeonLevel)}", 1);
+                BigInteger rewardCal = (int)(dungeonSo[i].reward * Mathf.Pow(increaseRewardPercent + 100, level - 1));
+                dungeonItems[i].UpdateDungeonItemUI(level, $"{rewardCal.ChangeMoney()}");
             }
         }
-
-        private void UpdateAllDungeonUI()
+        
+        private void UpdateDungeonPanelScrollViewItemUI()
         {
-            foreach (var dungeonItem in dungeonItems) dungeonItem.UpdateIncreaseDungeonUI();
+            var level = ES3.Load($"{dungeonSo[(int) currentDungeonType].dungeonType}/{nameof(currentDungeonLevel)}", 1);
+            BigInteger rewardCal = (int)(dungeonSo[(int) currentDungeonType].reward * Mathf.Pow(increaseRewardPercent + 100, level - 1));
+            dungeonItems[(int) currentDungeonType].UpdateDungeonItemUI(level, $"{rewardCal.ChangeMoney()}");
         }
 
         private void CalculateRemainedMonster()
@@ -146,14 +166,17 @@ namespace Managers.BattleManager
             currentRemainedMonsterCount--;
             currentScore++;
 
-            SetUI();
+            UpdateKillCountUI();
 
             if (currentRemainedMonsterCount <= 0)
             {
                 if (currentScore < targetScore)
-                    SpawnMonster();
+                    SpawnMonster(currentDungeonLevel);
                 else
+                {
+                    isClear = true;
                     StartCoroutine(RunStageRunner(true));
+                }
             }
         }
 
@@ -177,6 +200,11 @@ namespace Managers.BattleManager
         private IEnumerator RunStageRunner(bool isClear)
         {
             currentSquadCount = 3;
+
+            foreach (var dungeonUI in dungeonUIs)
+            {
+                dungeonUI.SetActive(false);
+            }
             
             StageManager.CheckRemainedMonsterAction -= CalculateRemainedMonster;
             StageManager.CheckRemainedSquadAction -= CalculateRemainedSquad;
@@ -191,17 +219,24 @@ namespace Managers.BattleManager
             Debug.Log("패널 온!");
             stageResultUI.GetComponent<StageResultPanelUI>().PopUpStageClearMessage(isClear);
 
+            if (isClear)
+            {
+                currentDungeonLevel++;
+                AccountManager.Instance.AddCurrency(currentDungeonRewardType, currentDungeonReward);
+                UpdateDungeonPanelScrollViewItemUI();
+                ES3.Save($"{currentDungeonType}/{nameof(currentDungeonLevel)}", currentDungeonLevel);
+            }
+
             yield return new WaitForSeconds(1.5f);
 
             stageResultUI.GetComponent<StageResultPanelUI>().PopUnderStageClearMessage();
-            stageResultUI.SetActive(false);
 
             yield return new WaitForSeconds(1.0f);
 
             DespawnSquad();
             DespawnMonster();
-
-            SetTimerUI((int)waveTime);
+            
+            SetTimerUI(60);
 
             StageManager.Instance.currentWave = 1;
             StageManager.Instance.isWaveTimerRunning = false;
@@ -209,12 +244,15 @@ namespace Managers.BattleManager
             StageManager.Instance.SetCurrentMainStageInfo();
             StageManager.Instance.StartStageRunner();
 
+            stageMap.SetActive(true);
+            Destroy(bossMonster);
+            foreach (var map in dungeonMap) map.SetActive(false);
             foreach (var stageUI in stageUIs) stageUI.SetActive(true);
         }
 
         private IEnumerator KillCountDungeonRunner()
         {
-            SetUI();
+            UpdateKillCountUI();
 
             yield return new WaitForSeconds(1.0f);
 
@@ -224,17 +262,33 @@ namespace Managers.BattleManager
 
             yield return new WaitForSeconds(1.0f);
 
-            SpawnMonster();
+            SpawnMonster(currentDungeonLevel);
+            if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
+        }
+        
+        private IEnumerator BossKillDungeonRunner()
+        {
+            UpdateBossKillUI(bossMonster.GetComponent<BossMonster>().currentBossHealth, bossMonster.GetComponent<BossMonster>().maxBossHealth);
+
+            yield return new WaitForSeconds(1.0f);
+            
+            DespawnSquad();
+            DespawnMonster();
+            SpawnSquad();
+            
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
         }
 
-        private void SetUI()
+        private void UpdateKillCountUI()
         {
-            stageUIController.SetUIText(Enums.UITextType.CurrentStageName, $"{currentDungeonName}{currentDungeonLevel}");
-            stageUIController.SetUIText(Enums.UITextType.CurrentWave, $"{currentScore} / {targetScore}");
-            stageUIController.SetUISlider(Enums.UISliderType.CurrentWaveSlider, 1.0f * currentScore / targetScore);
+            dungeonUIs[0].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[0].dungeonName, $"{currentScore} / {targetScore}", 1.0f * currentScore / targetScore);
         }
 
+        private void UpdateBossKillUI(BigInteger currentHealth, BigInteger maxHealth)
+        {
+            dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{currentHealth.ChangeMoney()} / {maxHealth.ChangeMoney()}", int.Parse((currentHealth * 100 / maxHealth).ToString()));
+        }
+        
         private void SpawnSquad()
         {
             currentSquadCount = maxSquadCount;
@@ -246,12 +300,11 @@ namespace Managers.BattleManager
             SquadBattleManager.Instance.DespawnSquad();
         }
 
-        private void SpawnMonster()
+        private void SpawnMonster(int level)
         {
             currentRemainedMonsterCount = monsterSpawnCountsPerSubStage;
             //TODO: So로 빼서 몬스터 타입 지정해줄 것
-            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human,
-                monsterSpawnCountsPerSubStage);
+            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human, level, monsterSpawnCountsPerSubStage);
         }
 
         private void DespawnMonster()
@@ -264,11 +317,12 @@ namespace Managers.BattleManager
             isWaveTimerRunning = true;
 
             InitWaveTimer();
-            SetTimerUI((int)waveTime);
+
+            dungeonUIs[(int) currentDungeonType].GetComponent<DungeonUI>().UpdateDungeonTimerUI($"{(int)waveTime}");
 
             while (true)
             {
-                SetTimerUI((int)waveTime);
+                dungeonUIs[(int) currentDungeonType].GetComponent<DungeonUI>().UpdateDungeonTimerUI($"{(int)waveTime}");
                 waveTime -= Time.deltaTime;
                 CalculateRemainedTime();
 
