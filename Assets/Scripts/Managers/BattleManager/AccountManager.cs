@@ -36,9 +36,16 @@ namespace Managers.BattleManager
         {
             accountLevel = ES3.Load($"{nameof(accountLevel)}", 1);
             statPoint = ES3.Load($"{nameof(statPoint)}", 0);
-            currentAccountExp = ES3.Load<BigInteger>($"{nameof(currentAccountExp)}", 0);
+
+            currentAccountExp = ES3.KeyExists(nameof(currentAccountExp)) switch
+            {
+                true => new BigInteger(ES3.Load<string>($"{nameof(currentAccountExp)}")),
+                false => 0
+            };
+            
             currentAccountMaxExp = accountLevel == 1 ? baseAccountExp : baseAccountExp * (int)Mathf.Pow(accountLevel - 1, 2) + extraAccountExp * (accountLevel - 1);
-            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoAllUI($"{accountLevel}", currentAccountExp, currentAccountMaxExp, $"{statPoint}");
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoAllUI(accountLevel, currentAccountExp, currentAccountMaxExp, statPoint);
+            UIManager.Instance.playerInfoPanelUI.UpdateLevelPanelUI(accountLevel);
             SetEventListener();
             SetCurrencies();
         }
@@ -59,7 +66,7 @@ namespace Managers.BattleManager
         public void AddExp(BigInteger value)
         {
             currentAccountExp += value;
-            ES3.Save($"{nameof(currentAccountExp)}", currentAccountExp);
+            ES3.Save($"{nameof(currentAccountExp)}", currentAccountExp.ToString());
 
             if (currentAccountExp >= currentAccountMaxExp && accountLevel < accountMaxLevel)
             {
@@ -67,7 +74,7 @@ namespace Managers.BattleManager
             }
             
             var sliderValue = currentAccountExp == 0 ? 0 : int.Parse((currentAccountExp * 100/ currentAccountMaxExp).ToString());
-            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoExpUI($"{currentAccountExp}", $"{currentAccountMaxExp}", sliderValue);
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoExpUI(currentAccountExp, currentAccountMaxExp);
         }
         
         private void UpdateLevel()
@@ -85,11 +92,10 @@ namespace Managers.BattleManager
             QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.SquadLevel, accountLevel);
             UIManager.Instance.squadPanelUI.squadStatPanelUI.CheckRequiredCurrencyOfMagnificationButton(SquadStatManager.Instance.levelUpMagnification);
             UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoLevelUpButton(false);
-            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoLevelUI($"{accountLevel}");
-            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoExpUI($"{currentAccountExp}", $"{currentAccountMaxExp}", sliderValue);
-            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoStatPointUI($"{statPoint}");
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoAllUI(accountLevel, currentAccountExp, currentAccountMaxExp, statPoint);
+            UIManager.Instance.playerInfoPanelUI.UpdateLevelPanelUI(accountLevel);
             
-            ES3.Save($"{nameof(currentAccountExp)}", currentAccountExp);
+            ES3.Save($"{nameof(currentAccountExp)}", currentAccountExp.ToString());
             ES3.Save($"{nameof(accountLevel)}", accountLevel);
             ES3.Save($"{nameof(statPoint)}", statPoint);
         }
@@ -138,13 +144,7 @@ namespace Managers.BattleManager
         {
             currencies = ES3.Load<List<Currency>>("currencies");
 
-            foreach (var currency in
-                     currencies) OnCurrencyChanged?.Invoke(currency.currencyType, currency.amount); // 로딩 후 이벤트 발생
-        }
-
-        private void CreateCurrencies()
-        {
-            throw new NotImplementedException();
+            foreach (var currency in currencies) OnCurrencyChanged?.Invoke(currency.currencyType, currency.amount); // 로딩 후 이벤트 발생
         }
 
         // 통화의 UI를 업데이트 시키는 메서드

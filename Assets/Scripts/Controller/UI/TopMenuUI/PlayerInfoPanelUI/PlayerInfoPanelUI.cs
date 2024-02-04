@@ -11,9 +11,9 @@ namespace Controller.UI.TopMenuUI.PlayerInfoPanelUI
         [SerializeField] private TMP_Text accountName;
         [SerializeField] private TMP_Text accountLevel;
 
-        public void UpdateLevelPanelUI()
+        public void UpdateLevelPanelUI(int level)
         {
-            accountLevel.text = $"Lv. {accountLevel}";
+            accountLevel.text = $"Lv. {level}";
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using Creature.Data;
 using Data;
 using Managers.BattleManager;
@@ -31,7 +32,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         public TMP_Text squadTalentRequiredCurrencyText;
         public Button upgradeButton;
         public Button upgradeBlockButton;
-        public System.Action<Enums.StatTypeFromSquadTalentPanel, int> UpgradeTotalSquadStatBySquadTalentItem;
+        public System.Action<Enums.SquadStatType, int, bool> UpgradeTotalSquadStatBySquadTalentItem;
 
         public void InitSquadTalentUI()
         {
@@ -66,7 +67,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
             currentIncreasedStat += increaseTalentValue * count;
 
             ES3.Save($"{nameof(SquadEntireStat)}/{statTypeFromSquadTalentPanel}/currentLevel : ", currentLevel);
-            UpgradeTotalSquadStatBySquadTalentItem?.Invoke(statTypeFromSquadTalentPanel, increaseTalentValue * count);
+            var isBaseStat = increaseTalentValueType == Enums.IncreaseStatValueType.BaseStat;
+            UpgradeTotalSquadStatBySquadTalentItem?.Invoke((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), statTypeFromSquadTalentPanel.ToString()), increaseTalentValue * count, isBaseStat);
 
             switch (statTypeFromSquadTalentPanel)
             {
@@ -79,17 +81,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
                 case Enums.StatTypeFromSquadTalentPanel.Defence:
                     QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.DefenceTalentLevel, currentLevel);
                     break;
-            }
-        }
-
-        // 스텟 로드할 때 부르는 메서드
-        public void LoadSquadStatLevel()
-        {
-            for (var i = 0; i < currentLevel; i++)
-            {
-                currentIncreasedStat += increaseTalentValue;
-
-                UpgradeTotalSquadStatBySquadTalentItem?.Invoke(statTypeFromSquadTalentPanel, increaseTalentValue);
             }
         }
     }

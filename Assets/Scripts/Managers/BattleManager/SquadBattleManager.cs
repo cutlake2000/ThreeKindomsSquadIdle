@@ -9,6 +9,7 @@ using Creature.Data;
 using Data;
 using Function;
 using Managers.BottomMenuManager.SquadPanel;
+using Managers.BottomMenuManager.TalentPanel;
 using UnityEngine;
 
 namespace Managers.BattleManager
@@ -132,7 +133,9 @@ namespace Managers.BattleManager
         private void InitializeEventListeners()
         {
             SquadStatManager.Instance.OnUpgradeTotalSquadStatFromSquadStatPanel += squadEntireStat
-                .UpdateBaseStatFromSquadStatPanel;
+                .UpdateStat;
+            TalentManager.Instance.OnUpgradeTotalSquadStatFromSquadTalentPanel +=
+                squadEntireStat.UpdateStat; //TODO : 재능 스탯 증가
 
             EquipAction += Equip;
         }
@@ -236,6 +239,7 @@ namespace Managers.BattleManager
 
         private void Equip(Equipment equipment)
         {
+            // TODO : 이전 장비 장착 해제
             equipment.isEquipped = true;
             equipment.SaveEquipmentAllInfo();
             

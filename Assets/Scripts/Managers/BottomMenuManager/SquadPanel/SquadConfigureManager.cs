@@ -99,11 +99,11 @@ namespace Managers.BottomMenuManager.SquadPanel
                     if (character.isPossessed)
                         foreach (var effect in character.characterOwnedEffects)
                             if (effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
-                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatFromSquadConfigurePanel(
-                                    effect.statType, effect.increaseValue);
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(
+                                    (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, true);
                             else
-                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatFromSquadConfigurePanel(
-                                    effect.statType, effect.increaseValue);
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(
+                                    (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, false);
 
                     InfiniteLoopDetector.Run();
                 }
@@ -161,11 +161,11 @@ namespace Managers.BottomMenuManager.SquadPanel
                     if (character.isPossessed)
                         foreach (var effect in character.characterOwnedEffects)
                             if (effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
-                                SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatFromSquadConfigurePanel(
-                                    effect.statType, effect.increaseValue);
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(
+                                    (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, true);
                             else
-                                SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatFromSquadConfigurePanel(
-                                    effect.statType, effect.increaseValue);
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(
+                                    (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, false);
 
                     InfiniteLoopDetector.Run();
                 }
@@ -216,11 +216,11 @@ namespace Managers.BottomMenuManager.SquadPanel
 
             foreach (var effect in character.characterEquippedEffects)
                 if (effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
-                    SquadBattleManager.Instance.squadEntireStat.UpdateBaseStatFromSquadConfigurePanel(
-                        effect.statType, effect.increaseValue);
+                    SquadBattleManager.Instance.squadEntireStat.UpdateStat(
+                        (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, true);
                 else
-                    SquadBattleManager.Instance.squadEntireStat.UpdatePercentStatFromSquadConfigurePanel(
-                        effect.statType, effect.increaseValue);
+                    SquadBattleManager.Instance.squadEntireStat.UpdateStat(
+                        (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, false);
         }
 
         /// <summary>

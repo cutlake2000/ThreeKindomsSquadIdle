@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Data;
 using Function;
+using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using ScriptableObjects.Scripts;
 using UnityEngine;
@@ -238,8 +239,11 @@ namespace Creature.Data
             characterLevel = Mathf.Min(characterLevel + 1, SquadConfigureManager.CharacterMaxLevel);
 
             for (var i = 0; i < characterOwnedEffects.Count; i++)
-                characterOwnedEffects[i].increaseValue += characterOwnedEffects[i].increaseValue /
-                    SquadConfigureManager.CharacterMaxLevel * characterLevel;
+            {
+                characterOwnedEffects[i].increaseValue += characterOwnedEffects[i].increaseValue / SquadConfigureManager.CharacterMaxLevel * characterLevel;
+                var isBaseStat = characterOwnedEffects[i].increaseStatType == Enums.IncreaseStatValueType.BaseStat;
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), characterOwnedEffects[i].statType.ToString()), characterOwnedEffects[i].increaseValue, isBaseStat);
+            }
         }
     }
 }

@@ -21,28 +21,27 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
             levelUpButton.onClick.AddListener(() => AccountManager.LevelUpAction?.Invoke());
         }
         
-        public void UpdateSquadStatPanelSquadInfoAllUI(string level, BigInteger currentExp, BigInteger maxExp, string statPoint)
+        public void UpdateSquadStatPanelSquadInfoAllUI(int level, BigInteger currentExp, BigInteger maxExp, int statPoint)
         {
             //TODO : 닉네임 기능은 나중에
-            accountLevel.text = $"Lv. {level}";
-            accountExp.text = $"{currentExp.ChangeMoney()} / {maxExp.ChangeMoney()}";
-            accountStatPoint.text = $"스탯 포인트 : {statPoint}";
-            accountExpSlider.value = currentExp == 0 ? 0 : int.Parse((currentExp / maxExp).ToString());
-            accountExpSlider.maxValue = 100;
+            UpdateSquadStatPanelSquadInfoLevelUI(level);
+            UpdateSquadStatPanelSquadInfoStatPointUI(statPoint);
+            UpdateSquadStatPanelSquadInfoExpUI(currentExp, maxExp);
         }
 
-        public void UpdateSquadStatPanelSquadInfoLevelUI(string level)
+        public void UpdateSquadStatPanelSquadInfoLevelUI(int level)
         {
             accountLevel.text = $"Lv.{level}";
         }
         
-        public void UpdateSquadStatPanelSquadInfoExpUI(string currentExp, string maxExp, float value)
+        public void UpdateSquadStatPanelSquadInfoExpUI(BigInteger currentExp, BigInteger maxExp)
         {
-            accountExp.text = $"{currentExp} / {maxExp}";
-            accountExpSlider.value = value;
+            accountExp.text = $"{currentExp.ChangeMoney()} / {maxExp.ChangeMoney()}";
+            var sliderValue = currentExp == 0 ? 0 : int.Parse((currentExp * 100/ maxExp).ToString());
+            accountExpSlider.value = sliderValue;
         }
         
-        public void UpdateSquadStatPanelSquadInfoStatPointUI(string statPoint)
+        public void UpdateSquadStatPanelSquadInfoStatPointUI(int statPoint)
         {
             accountStatPoint.text = $"스탯 포인트 : {statPoint}";
         }

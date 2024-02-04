@@ -12,7 +12,7 @@ namespace Managers.BottomMenuManager.SquadPanel
     public class SquadStatManager : MonoBehaviour
     {
         public static SquadStatManager Instance;
-        public event Action<Enums.StatTypeFromSquadStatPanel, int> OnUpgradeTotalSquadStatFromSquadStatPanel;
+        public event Action<Enums.SquadStatType, int, bool> OnUpgradeTotalSquadStatFromSquadStatPanel;
         
         [SerializeField] private SquadStatSo[] squadStatSo;
         public SquadStatPanelItemUI[] squadStatItem;
@@ -53,16 +53,17 @@ namespace Managers.BottomMenuManager.SquadPanel
                 squadStatItem[i].statTypeFromSquadStatPanel = squadStatSo[i].statTypeFromSquadStatPanel;
                 squadStatItem[i].increaseStatValueType = squadStatSo[i].increaseStatValueType;
                 squadStatItem[i].increaseStatValue = squadStatSo[i].increaseStatValue;
-                squadStatItem[i].currentLevel =
-                    ES3.Load($"{nameof(SquadEntireStat)}/{(Enums.StatTypeFromSquadStatPanel)i}/currentLevel : ",
-                        0);
+                squadStatItem[i].currentLevel = ES3.Load($"{nameof(SquadEntireStat)}/{(Enums.StatTypeFromSquadStatPanel)i}/currentLevel : ", 0);
+                squadStatItem[i].currentLevel = ES3.Load($"{nameof(SquadEntireStat)}/{(Enums.StatTypeFromSquadStatPanel)i}/currentLevel : ", 0);
                 squadStatItem[i].currentLevelUpCost = squadStatSo[i].levelUpCost;
-                squadStatItem[i].currentIncreasedStat =
-                    squadStatItem[i].currentLevel * squadStatItem[i].increaseStatValue;
+                squadStatItem[i].currentIncreasedStat = squadStatItem[i].currentLevel * squadStatItem[i].increaseStatValue;
                 squadStatItem[i].squadStatSprite = squadStatSo[i].squadStatImage;
                 squadStatItem[i].UpgradeTotalSquadStatBySquadStatItem = OnUpgradeTotalSquadStatFromSquadStatPanel;
 
                 squadStatItem[i].InitSquadStatUI();
+                
+                var isBaseStat = squadStatItem[i].increaseStatValueType == Enums.IncreaseStatValueType.BaseStat;
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), squadStatItem[i].statTypeFromSquadStatPanel.ToString()), squadStatItem[i].currentIncreasedStat, isBaseStat);
             }
         }
 
@@ -74,9 +75,10 @@ namespace Managers.BottomMenuManager.SquadPanel
 
         public void UpgradeSquadStatPanelStat(Enums.StatTypeFromSquadStatPanel type)
         {
-            if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.StatPoint,
-                    squadStatItem[(int)type].levelUpCost * levelUpMagnification)) return;
+            if (AccountManager.Instance.statPoint < squadStatItem[(int)type].levelUpCost * levelUpMagnification) return;
             if (squadStatItem[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
+
+            AccountManager.Instance.statPoint -= squadStatItem[(int)type].levelUpCost * levelUpMagnification;
 
             Debug.Log($"levelUpCost {squadStatItem[(int)type].levelUpCost}");
             Debug.Log($"levelUpMagnification {levelUpMagnification}");

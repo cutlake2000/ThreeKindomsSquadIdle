@@ -80,13 +80,11 @@ namespace Managers.BattleManager
             subStageCountsPerMainStage = stageSo.SubStageCountsPerMainStage;
             waveCountsPerSubStage = stageSo.WaveCountsPerSubStage;
             monsterSpawnCountsPerSubStage = stageSo.MonsterSpawnCountsPerSubStage;
-            // stageLimitedTime = stageSo.StageLimitedTime; //TODO : SO에서 제한 시간 받아오도록 추후 수정, 테스트 목적으로 인스펙터에서 임시 시간값 지정했음
             nextStageChallenge = true;
             goToNextSubStage = true;
             stopWaveTimer = false;
             initStageResult = true;
             
-            //TODO: Easy 뭐시깽이에서 불러와야 합미둥둥
             maxSquadCount = 3;
             currentSquadCount = 3;
             currentAccumulatedStage = ES3.Load($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", 1);

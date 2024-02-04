@@ -124,7 +124,7 @@ namespace Managers.BattleManager
                         Enums.QuestType.AttackTalentLevel => TalentManager.Instance.talentItem[0].currentLevel,
                         Enums.QuestType.HealthTalentLevel => TalentManager.Instance.talentItem[1].currentLevel,
                         Enums.QuestType.DefenceTalentLevel => TalentManager.Instance.talentItem[2].currentLevel,
-                        Enums.QuestType.SquadLevel => AccountManager.Instance.accountLevel, //TODO : 캐릭터 레벨 기능 / 스테이지 저장 기능 구현 후 완성
+                        Enums.QuestType.SquadLevel => AccountManager.Instance.accountLevel,
                         Enums.QuestType.StageClear => StageManager.Instance.currentStageIndex,
                         _ => throw new ArgumentOutOfRangeException()
                     };
@@ -199,6 +199,10 @@ namespace Managers.BattleManager
                 }
                 
                 questTargets[questLevel % 5].TargetMark.SetActive(true);
+            }
+            else if (questLevel == 5)
+            {
+                questMark.SetActive(false);
             }
         }
         

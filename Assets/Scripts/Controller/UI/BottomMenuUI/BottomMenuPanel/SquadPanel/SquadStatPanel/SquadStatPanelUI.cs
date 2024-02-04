@@ -14,11 +14,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         [Header("--- 플레이어 정보 패널 UI ---")]
         public SquadStatPanelPlayerInfoUI squadStatPanelPlayerInfoUI;
         [Header("--- 스쿼드 스탯 패널 UI ---")]
-        public TMP_Text squadLevelText;
-        public TMP_Text squadStatPointText;
-        public Slider squadExpSlider;
-        public TMP_Text squadExpText;
-        public Button levelUpButton;
         public Button[] levelUpMagnificationButton;
 
         public void InitializeEventListeners()

@@ -22,7 +22,7 @@ namespace Managers.BottomMenuManager.TalentPanel
             Instance = this;
         }
 
-        public event Action<Enums.StatTypeFromSquadTalentPanel, int> OnUpgradeTotalSquadStatFromSquadTalentPanel;
+        public event Action<Enums.SquadStatType, int, bool> OnUpgradeTotalSquadStatFromSquadTalentPanel;
 
         public void InitSquadTalentManager()
         {

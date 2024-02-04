@@ -41,7 +41,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         public Button resetButton;
         public Button upgradeButton;
         public Button upgradeBlockButton;
-        public Action<Enums.StatTypeFromSquadStatPanel, int> UpgradeTotalSquadStatBySquadStatItem;
+        public Action<Enums.SquadStatType, int, bool> UpgradeTotalSquadStatBySquadStatItem;
 
         public void InitSquadStatUI()
         {
@@ -74,18 +74,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
             currentIncreasedStat += increaseStatValue * count;
 
             ES3.Save($"{nameof(SquadEntireStat)}/{statTypeFromSquadStatPanel}/currentLevel : ", currentLevel);
-            UpgradeTotalSquadStatBySquadStatItem?.Invoke(statTypeFromSquadStatPanel, increaseStatValue * count);
-        }
-
-        // 스텟 로드할 때 부르는 메서드
-        public void LoadSquadStatLevel()
-        {
-            for (var i = 0; i < currentLevel; i++)
-            {
-                currentIncreasedStat += increaseStatValue;
-
-                UpgradeTotalSquadStatBySquadStatItem?.Invoke(statTypeFromSquadStatPanel, increaseStatValue);
-            }
+            var isBaseStat = increaseStatValueType == Enums.IncreaseStatValueType.BaseStat;
+            UpgradeTotalSquadStatBySquadStatItem?.Invoke((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), statTypeFromSquadStatPanel.ToString()), increaseStatValue * count, isBaseStat);
         }
     }
 }
