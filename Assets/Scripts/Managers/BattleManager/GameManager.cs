@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Managers.BattleManager
 {
     public class GameManager : MonoBehaviour
-    {
+    { 
         private void Start()
         {
             SquadBattleManager.Instance.InitSquadManager();

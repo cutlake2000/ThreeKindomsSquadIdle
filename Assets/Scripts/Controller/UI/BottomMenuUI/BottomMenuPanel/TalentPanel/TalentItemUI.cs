@@ -15,7 +15,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         [Header("스탯 이름")] public string squadTalentName;
         [Header("초기값")] public int initTalentValue;
         [Header("레벨 업 비용")] public int levelUpCost = 1;
-        [FormerlySerializedAs("statTypeBySquadTalentPanel")] [Header("스탯 증가 타입")] public Enums.StatTypeFromSquadTalentPanel statTypeFromSquadTalentPanel;
+        [Header("스탯 증가 타입")] public Enums.StatTypeFromSquadTalentPanel statTypeFromSquadTalentPanel;
         [Header("스탯 증가량 타입")] public Enums.IncreaseStatValueType increaseTalentValueType;
         [Header("스탯 증가량")] public int increaseTalentValue;
         [Header("현재 스탯 레벨")] public int currentLevel;
@@ -71,13 +71,13 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
             switch (statTypeFromSquadTalentPanel)
             {
                 case Enums.StatTypeFromSquadTalentPanel.Attack:
-                    QuestManager.Instance.IncreaseQuestProgress(QuestManager.Instance.quests[0].questType, currentIncreasedStat);
+                    QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.AttackTalentLevel, currentLevel);
                     break;
                 case Enums.StatTypeFromSquadTalentPanel.Health:
-                    QuestManager.Instance.IncreaseQuestProgress(QuestManager.Instance.quests[1].questType, currentIncreasedStat);
+                    QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.HealthTalentLevel, currentLevel);
                     break;
                 case Enums.StatTypeFromSquadTalentPanel.Defence:
-                    QuestManager.Instance.IncreaseQuestProgress(QuestManager.Instance.quests[2].questType, currentIncreasedStat);
+                    QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.DefenceTalentLevel, currentLevel);
                     break;
             }
         }

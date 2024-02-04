@@ -184,13 +184,14 @@ namespace Managers.BottomMenuManager.SummonPanel
                     }
 
                     targetCharacter.characterQuantity++;
-                    targetCharacter.SaveCharacterEquippedInfo(targetCharacter.characterId);
                     
                     if (targetCharacter.isPossessed == false)
                     {
                         targetCharacter.isPossessed = true;
                         targetCharacter.characterLevel = 1;
                     }
+                    
+                    targetCharacter.SaveCharacterEquippedInfo(targetCharacter.characterId);
                     
                     squadConfigurePanelScrollViewItem.UpdateSquadConfigureAllItemUI(targetCharacter.characterLevel, targetCharacter.isEquipped, targetCharacter.isPossessed, targetCharacter.characterName, SpriteManager.Instance.GetCharacterSprite(targetCharacter.characterType, targetCharacter.characterIconIndex));
                     
@@ -240,13 +241,14 @@ namespace Managers.BottomMenuManager.SummonPanel
                     }
                 
                     targetEquipment.equipmentQuantity += target.Value;
-                    targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.Quantity);
                     
                     if (targetEquipment.isPossessed == false)
                     {
                         targetEquipment.isPossessed = true;
                         targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.IsPossessed);
                     }
+                    
+                    targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.Quantity);
 
                     inventoryScrollViewItem.UpdateInventoryPanelItemQuantityUI(targetEquipment.equipmentQuantity);
                     inventoryScrollViewItem.UpdateInventoryPanelItemPossessMark();

@@ -11,6 +11,19 @@ using UnityEngine.Serialization;
 
 namespace Managers.BattleManager
 {
+    [Serializable]
+    public class StageReward
+    {
+        public Enums.CurrencyType rewardType;
+        public int baseReward;
+        public int increaseValue;
+
+        public BigInteger GetStageReward(int level)
+        {
+            return baseReward + increaseValue * (level - 1);
+        }
+    }
+    
     public class StageManager : MonoBehaviour
     {
         public static StageManager Instance;
@@ -21,6 +34,8 @@ namespace Managers.BattleManager
 
         [SerializeField] private StageUI stageUIController;
         [SerializeField] private StageSo stageSo;
+
+        public StageReward[] stageRewards;
         
         [Header("=== 전투 결과창 UI ===")]
         public GameObject stageResultUI;
@@ -38,9 +53,8 @@ namespace Managers.BattleManager
         [SerializeField] private float stageLimitedTime = 60.0f;
         [SerializeField] private int currentSquadCount;
 
-        [Header("--- 스테이지 러너 상태 ---")] [SerializeField]
-        private bool nextStageChallenge;
-
+        [Header("--- 스테이지 러너 상태 ---")]
+        [SerializeField] private bool nextStageChallenge;
         [SerializeField] private int maxSquadCount;
         [SerializeField] private int maxMainStageCounts;
         [SerializeField] private int subStageCountsPerMainStage;
@@ -109,6 +123,7 @@ namespace Managers.BattleManager
                 {
                     currentWave -= waveCountsPerSubStage;
                     currentSubStage++;
+                    currentAccumulatedStage++;
 
                     stopWaveTimer = true;
                     goToNextSubStage = true;
@@ -123,14 +138,22 @@ namespace Managers.BattleManager
                             currentMainStage = maxMainStageCounts;
                             currentSubStage = subStageCountsPerMainStage;
                         }
+                        
+                        ES3.Save($"{nameof(StageManager)}/{nameof(currentMainStage)}", currentMainStage);
 
                         SetCurrentMainStageInfo();
                     }
+                    
+                    QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.StageClear, currentAccumulatedStage);
+                    ES3.Save($"{nameof(StageManager)}/{nameof(currentSubStage)}", currentSubStage);
+                    ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
                 }
                 else
                 {
                     goToNextSubStage = true;
                     currentWave = 0;
+
+                    ES3.Save($"{nameof(StageManager)}/{nameof(currentStageIndex)}", currentSubStage);
                 }
             }
 
@@ -198,6 +221,18 @@ namespace Managers.BattleManager
 
                 if (!initStageResult)
                 {
+                    foreach (var reward in stageRewards)
+                    {
+                        if (reward.rewardType != Enums.CurrencyType.Exp)
+                        {
+                            AccountManager.Instance.AddCurrency(reward.rewardType, reward.GetStageReward(currentAccumulatedStage));   
+                        }
+                        else
+                        {
+                            AccountManager.Instance.AddExp(reward.GetStageReward(currentAccumulatedStage));
+                        }
+                    }
+                    
                     stageResultUI.GetComponent<StageResultPanelUI>().PopUnderStageClearMessage();
                     stageResultUI.SetActive(false);
                 }

@@ -83,7 +83,8 @@ namespace Data
             GearEnhanceStone,
             SquadEnhanceStone,
             GoldDungeonTicket,
-            EnhanceDungeonTicket
+            EnhanceDungeonTicket,
+            Exp
         }
 
         public enum QuestType

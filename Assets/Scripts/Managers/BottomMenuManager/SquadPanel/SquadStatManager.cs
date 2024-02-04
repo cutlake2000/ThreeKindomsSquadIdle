@@ -15,7 +15,7 @@ namespace Managers.BottomMenuManager.SquadPanel
         public event Action<Enums.StatTypeFromSquadStatPanel, int> OnUpgradeTotalSquadStatFromSquadStatPanel;
         
         [SerializeField] private SquadStatSo[] squadStatSo;
-        public SquadStatItemUI[] squadStatItem;
+        public SquadStatPanelItemUI[] squadStatItem;
         public int levelUpMagnification;
 
         private void Awake()
@@ -37,9 +37,9 @@ namespace Managers.BottomMenuManager.SquadPanel
             for (var i = 0; i < squadStatItem.Length; i++)
             {
                 var index = i;
-                squadStatItem[i].GetComponent<SquadStatItemUI>().upgradeButton.onClick.AddListener(() =>
+                squadStatItem[i].GetComponent<SquadStatPanelItemUI>().upgradeButton.onClick.AddListener(() =>
                     UpgradeSquadStatPanelStat((Enums.StatTypeFromSquadStatPanel)index));
-                squadStatItem[i].GetComponent<SquadStatItemUI>().upgradeButton.GetComponent<HoldButton>().onHold
+                squadStatItem[i].GetComponent<SquadStatPanelItemUI>().upgradeButton.GetComponent<HoldButton>().onHold
                     .AddListener(() => UpgradeSquadStatPanelStat((Enums.StatTypeFromSquadStatPanel)index));
             }
         }
@@ -84,15 +84,15 @@ namespace Managers.BottomMenuManager.SquadPanel
 
             squadStatItem[(int)type].UpdateSquadStat(levelUpMagnification);
             SetUpgradeUI(squadStatItem[(int)type]);
-            SquadStatPanelUI.CheckRequiredCurrencyOfMagnificationButton((int)type);
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.CheckRequiredCurrencyOfMagnificationButton((int)type);
 
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }
 
         // 스텟 UI 업데이트
-        private static void SetUpgradeUI(SquadStatItemUI squadStatItemUI)
+        private static void SetUpgradeUI(SquadStatPanelItemUI squadStatPanelItemUI)
         {
-            squadStatItemUI.UpdateSquadStatUI();
+            squadStatPanelItemUI.UpdateSquadStatUI();
         }
     }
 }

@@ -2,10 +2,14 @@ using Controller.UI;
 using Controller.UI.BottomMenuUI;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel;
+using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel;
+using Controller.UI.TopMenuUI.PlayerInfoPanelUI;
 using Controller.UI.TopMenuUI.QuestPanel;
+using Controller.UI.TopMenuUI.SkillPanel;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Managers.BattleManager
 {
@@ -13,7 +17,9 @@ namespace Managers.BattleManager
     {
         public static UIManager Instance;
 
-        [Header("=== 스킬 쿨타임 ===")] public SquadSkillCoolTimerUI squadSkillCoolTimerUI;
+        [Space(5)] [Header("=== 탑 메뉴 패널 ===")]
+        [Header("--- 스쿼드 아이콘 패널 ---")] public PlayerInfoPanelUI playerInfoPanelUI;
+        [Header("--- 스킬 쿨타임 ---")] public SquadSkillCoolTimerUI squadSkillCoolTimerUI;
 
         [Space(5)] [Header("=== 바텀 메뉴 패널 ===")] public BottomMenuPanelUI bottomMenuPanelUI;
         

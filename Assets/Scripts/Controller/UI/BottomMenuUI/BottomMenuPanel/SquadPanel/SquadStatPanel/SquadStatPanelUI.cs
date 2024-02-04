@@ -10,9 +10,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 {
     public class SquadStatPanelUI : MonoBehaviour
     {
-        [Header("=== 스쿼드 스탯 패널 ===")] [Header("--- 스쿼드 스탯 패널 UI ---")]
+        [Header("=== 스쿼드 스탯 패널 ===")]
+        [Header("--- 플레이어 정보 패널 UI ---")]
+        public SquadStatPanelPlayerInfoUI squadStatPanelPlayerInfoUI;
+        [Header("--- 스쿼드 스탯 패널 UI ---")]
         public TMP_Text squadLevelText;
-
         public TMP_Text squadStatPointText;
         public Slider squadExpSlider;
         public TMP_Text squadExpText;
@@ -21,6 +23,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 
         public void InitializeEventListeners()
         {
+            squadStatPanelPlayerInfoUI.InitializeEventListeners();
+            
             for (var i = 0; i < levelUpMagnificationButton.Length; i++)
             {
                 var index = i;
@@ -52,16 +56,14 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
                 }
         }
 
-        public static void CheckRequiredCurrencyOfMagnificationButton(int index)
+        public void CheckRequiredCurrencyOfMagnificationButton(int index)
         {
             var levelUpCost = SquadStatManager.Instance.squadStatItem[index].levelUpCost;
 
-            if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.StatPoint)) <
-                SquadStatManager.Instance.levelUpMagnification * levelUpCost)
+            if (AccountManager.Instance.statPoint < SquadStatManager.Instance.levelUpMagnification * levelUpCost)
                 foreach (var squadStat in SquadStatManager.Instance.squadStatItem)
                 {
-                    if (squadStat.maxLevel - squadStat.currentLevel <=
-                        Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.StatPoint)))
+                    if (squadStat.maxLevel - squadStat.currentLevel <= AccountManager.Instance.statPoint)
                         continue;
 
                     squadStat.upgradeButton.gameObject.SetActive(false);

@@ -104,6 +104,13 @@ namespace Creature.CreatureClass.SquadClass
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
             StageManager.CheckRemainedSquadAction?.Invoke();
             squadStateMachine.ChangeState(squadStateMachine.SquadDieState);
+
+            if (SquadBattleManager.Instance.cameraController.currentCameraTarget != gameObject.transform) return;
+            foreach (var squad in SquadBattleManager.Instance.squads)
+            {
+                if (!squad.GetComponent<Squad>().isDead)
+                    SquadBattleManager.Instance.cameraController.SetCameraTarget(squad.transform);
+            }
         }
 
         protected override void CreatureDeath()

@@ -41,7 +41,7 @@ namespace Controller.UI
             wizardButton.onClick.AddListener(() => SetCameraTarget(SquadBattleManager.Instance.squads[2].transform));
         }
 
-        private void SetCameraTarget(Component target)
+        public void SetCameraTarget(Component target)
         {
             if (currentCameraTarget == target || target.gameObject.activeInHierarchy == false) return;
 

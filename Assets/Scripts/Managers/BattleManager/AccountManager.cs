@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Creature.Data;
 using Data;
 using Function;
+using Managers.BottomMenuManager.SquadPanel;
 using UnityEngine;
 
 namespace Managers.BattleManager
@@ -10,8 +11,17 @@ namespace Managers.BattleManager
     public class AccountManager : MonoBehaviour
     {
         public static AccountManager Instance;
-
-        public int accountLevel;
+        public event Action<Enums.CurrencyType, string> OnCurrencyChanged;
+        public event Action<BigInteger> ChangedExpAction;
+        public static Action LevelUpAction;
+        
+        [Header("레벨 초기값")] public int accountLevel;
+        [Header("레벨 최대값")] public int accountMaxLevel;
+        [Header("스탯 포인트")] public int statPoint;
+        [Header("경험치 기본값")] [SerializeField] private int baseAccountExp;
+        [Header("경험치 추가값")] [SerializeField] private int extraAccountExp;
+        [Header("현재 경험치")] public BigInteger currentAccountExp;
+        [Header("최대 경험치")] public BigInteger currentAccountMaxExp;
         
         // 모든 통화의 목록 
         public List<Currency> currencies = new();
@@ -21,11 +31,14 @@ namespace Managers.BattleManager
             Instance = this;
         }
 
-        public event Action<Enums.CurrencyType, string> OnCurrencyChanged;
-
         // 재화 매니저 초기화 메서드
         public void InitAccountManager()
         {
+            accountLevel = ES3.Load($"{nameof(accountLevel)}", 1);
+            statPoint = ES3.Load($"{nameof(statPoint)}", 0);
+            currentAccountExp = ES3.Load<BigInteger>($"{nameof(currentAccountExp)}", 0);
+            currentAccountMaxExp = accountLevel == 1 ? baseAccountExp : baseAccountExp * (int)Mathf.Pow(accountLevel - 1, 2) + extraAccountExp * (accountLevel - 1);
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoAllUI($"{accountLevel}", currentAccountExp, currentAccountMaxExp, $"{statPoint}");
             SetEventListener();
             SetCurrencies();
         }
@@ -33,6 +46,7 @@ namespace Managers.BattleManager
         private void SetEventListener()
         {
             OnCurrencyChanged += UpdateCurrencyUI;
+            LevelUpAction += UpdateLevel;
         }
 
         private void SetCurrencies()
@@ -40,6 +54,44 @@ namespace Managers.BattleManager
             if (ES3.KeyExists("currencies")) LoadCurrencies();
 
             foreach (var currency in currencies) UpdateCurrencyUI(currency.currencyType, currency.amount);
+        }
+
+        public void AddExp(BigInteger value)
+        {
+            currentAccountExp += value;
+            ES3.Save($"{nameof(currentAccountExp)}", currentAccountExp);
+
+            if (currentAccountExp >= currentAccountMaxExp && accountLevel < accountMaxLevel)
+            {
+                UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoLevelUpButton(true);
+            }
+            
+            var sliderValue = currentAccountExp == 0 ? 0 : int.Parse((currentAccountExp * 100/ currentAccountMaxExp).ToString());
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoExpUI($"{currentAccountExp}", $"{currentAccountMaxExp}", sliderValue);
+        }
+        
+        private void UpdateLevel()
+        {
+            while (currentAccountExp >= currentAccountMaxExp)
+            {
+                currentAccountExp -= currentAccountMaxExp;
+                accountLevel++;
+                statPoint++;
+                currentAccountMaxExp = baseAccountExp * (int)Mathf.Pow(accountLevel - 1, 2) + extraAccountExp * (accountLevel - 1);
+            }
+            
+            var sliderValue = currentAccountExp == 0 ? 0 : int.Parse((currentAccountExp * 100 / currentAccountMaxExp).ToString());
+            
+            QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.SquadLevel, accountLevel);
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.CheckRequiredCurrencyOfMagnificationButton(SquadStatManager.Instance.levelUpMagnification);
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoLevelUpButton(false);
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoLevelUI($"{accountLevel}");
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoExpUI($"{currentAccountExp}", $"{currentAccountMaxExp}", sliderValue);
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoStatPointUI($"{statPoint}");
+            
+            ES3.Save($"{nameof(currentAccountExp)}", currentAccountExp);
+            ES3.Save($"{nameof(accountLevel)}", accountLevel);
+            ES3.Save($"{nameof(statPoint)}", statPoint);
         }
 
         // 특정 통화를 증가시키는 메서드

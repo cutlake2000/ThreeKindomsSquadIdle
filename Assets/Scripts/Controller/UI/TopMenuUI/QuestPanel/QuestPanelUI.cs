@@ -1,3 +1,5 @@
+using System;
+using Data;
 using Managers.BattleManager;
 using TMPro;
 using UnityEngine;
@@ -19,9 +21,22 @@ namespace Controller.UI.TopMenuUI.QuestPanel
 
         private void CheckQuestClear()
         {
-            if (QuestManager.Instance.quests[QuestManager.Instance.questLevel % 5].isCompleted)
+            if (QuestManager.Instance.quests[QuestManager.Instance.questLevel % 5].progress >= QuestManager.Instance.quests[QuestManager.Instance.questLevel % 5].targetProgress)
             {
                 QuestManager.Instance.TargetQuestClear();
+            }
+            else
+            {
+                if (QuestManager.Instance.questLevel % 5 == 4) return;
+                
+                foreach (var target in QuestManager.Instance.questTargets[QuestManager.Instance.questLevel % 5].activeTarget)
+                {
+                    target.SetActive(true);
+                }
+                foreach (var target in QuestManager.Instance.questTargets[QuestManager.Instance.questLevel % 5].inactiveTarget)
+                {
+                    target.SetActive(false);
+                }
             }
         }
 

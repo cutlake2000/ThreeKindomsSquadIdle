@@ -29,7 +29,7 @@ namespace Managers.BattleManager
         public static Action<Equipment> EquipAction;
 
         [Header("=== Camera Settings=== ")] [SerializeField]
-        private CameraController cameraController;
+        public CameraController cameraController;
 
         [Space(5)] [Header("=== Squad Position Info ===")]
         public GameObject[] squads;

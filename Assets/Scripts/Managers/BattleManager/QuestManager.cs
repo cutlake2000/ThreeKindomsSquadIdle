@@ -11,7 +11,6 @@ namespace Managers.BattleManager
     [Serializable]
     public class Quest
     {
-        public string questID; // 유니크한 퀘스트 식별자
         public string name;
         public string description;
         public Enums.QuestType questType; // 퀘스트 타입
@@ -20,24 +19,31 @@ namespace Managers.BattleManager
         public int targetProgress; // 목표 진행량
         public Enums.QuestRewardType questRewardType;
         public int reward; // 보상
-        public bool isCompleted; // 완료 여부
+    }
 
-        // 퀘스트 완료 여부를 업데이트하는 메서드
-        public void UpdateCompletion()
-        {
-            isCompleted = progress >= targetProgress;
-        }
+    [Serializable]
+    public class QuestTarget
+    {
+        public Enums.QuestType questType;
+        public GameObject TargetMark;
+        public GameObject[] activeTarget;
+        public GameObject[] inactiveTarget;
     }
     
     public class QuestManager : MonoBehaviour
     {
         public Action<Enums.QuestType> UpdateTargetQuestProgressAction;
+
+        public GameObject ringMarkPrefab;
+        public GameObject markTargetOnQuestPanel;
         
         public static QuestManager Instance;
         public TextAsset questCsv;
 
         public int questLevel;
+        public GameObject questMark;
         public List<Quest> quests;
+        public List<QuestTarget> questTargets;
 
         private const string QUEST_SAVE_KEY = "QUEST";
 
@@ -56,9 +62,6 @@ namespace Managers.BattleManager
         {
             foreach (var quest in quests)
             {
-                quest.questType = quest.questType;
-                quest.questRewardType = quest.questRewardType;
-
                 switch (quest.questType)
                 {
                     case Enums.QuestType.AttackTalentLevel:
@@ -95,8 +98,12 @@ namespace Managers.BattleManager
             quests[(int)questType].progress = currentValue;
 
             if (quests[(int)questType].progress < quests[(int)questType].targetProgress) return;
-            quests[(int)questType].isCompleted = true;
-            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+            if ((int)questType == questLevel % 5) UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+            
+            if (questTargets[questLevel % 5].TargetMark.activeInHierarchy)
+            {
+                questTargets[questLevel % 5].TargetMark.SetActive(false);
+            }
         }
 
         private void SetAllQuests()
@@ -144,7 +151,6 @@ namespace Managers.BattleManager
                     {
                         var quest = new Quest
                         {
-                            questID = fields[0].Trim(),
                             description = fields[1].Trim(), // CSV에 설명이 없으므로 빈 문자열 할당
                             increaseProgress = int.Parse(fields[2].Trim()),
                             questRewardType =
@@ -152,7 +158,6 @@ namespace Managers.BattleManager
                             reward = int.Parse(fields[4].Trim()),
                             questType = (Enums.QuestType)System.Enum.Parse(typeof(Enums.QuestType), fields[5].Trim()),
                             progress = 0, // 초기 진행량은 0
-                            isCompleted = false // 초기 상태는 미완료
                         };
 
                         quests.Add(quest);
@@ -174,25 +179,36 @@ namespace Managers.BattleManager
         private void UpdateQuestPanelUI()
         {
             var targetQuestIndex = questLevel % 5;
-            
             var targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite(
-                (Enums.CurrencyType)System.Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"));
+                (Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"));
             var targetQuestRewardText = $"{quests[targetQuestIndex].reward}";
             var targetQuestDescriptionText = $"{quests[targetQuestIndex].name}";
             UIManager.Instance.questPanelUI.UpdateQuestPanelUI(targetQuestRewardSprite, targetQuestRewardText,
                 targetQuestDescriptionText);
+
+            if (quests[questLevel % 5].progress >= Instance.quests[questLevel % 5].targetProgress)
+            {
+                UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+            }
+            
+            if (questLevel < 4)
+            {
+                if (!questMark.activeInHierarchy)
+                {
+                    questMark.SetActive(true);
+                }
+                
+                questTargets[questLevel % 5].TargetMark.SetActive(true);
+            }
         }
         
         public void TargetQuestClear()
         {
             var targetQuestIndex = questLevel % 5;
-            
-            AccountManager.Instance.AddCurrency((Enums.CurrencyType)System.Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"), quests[targetQuestIndex].reward);
+            AccountManager.Instance.AddCurrency((Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"), quests[targetQuestIndex].reward);
 
             questLevel++;
             ES3.Save($"{nameof(questLevel)}", questLevel);
-
-            quests[targetQuestIndex].isCompleted = false;
             UIManager.Instance.questPanelUI.completedMark.SetActive(false);
 
             if (questLevel % 5 == 0)
