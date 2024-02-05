@@ -77,6 +77,10 @@ namespace Managers.BattleManager
             CheckRemainedSquadAction += CalculateRemainedSquad;
             CheckStageProgressType += SetStageProgressType;
 
+            nextStageChallenge = ES3.Load("CheckStageProgressType", true);
+
+            stageUIController.SetStageProgressButton(nextStageChallenge);
+            
             maxMainStageCounts = stageSo.MainStageInfos.Count;
             subStageCountsPerMainStage = stageSo.SubStageCountsPerMainStage;
             waveCountsPerSubStage = stageSo.WaveCountsPerSubStage;
@@ -170,9 +174,22 @@ namespace Managers.BattleManager
             goToNextSubStage = true;
             currentWave = 0;
             currentSquadCount = maxSquadCount;
+            
+            currentSubStage--;
 
-            DespawnSquad();
+            if (currentSubStage < 1)
+            {
+                if (currentMainStage > 1)
+                {
+                    currentMainStage--;
+                }
+                
+                currentSubStage = subStageCountsPerMainStage;
+            }
 
+            nextStageChallenge = false;
+            CheckStageProgressType.Invoke(nextStageChallenge);
+            
             SetCurrentMainStageInfo();
             StartCoroutine(StageRunner());
         }
@@ -184,9 +201,22 @@ namespace Managers.BattleManager
             stopWaveTimer = true;
             goToNextSubStage = true;
             currentWave = 0;
+            
+            currentSubStage--;
 
-            DespawnSquad();
-
+            if (currentSubStage < 1)
+            {
+                if (currentMainStage > 1)
+                {
+                    currentMainStage--;
+                }
+                
+                currentSubStage = subStageCountsPerMainStage;
+            }
+            
+            nextStageChallenge = false;
+            CheckStageProgressType.Invoke(nextStageChallenge);
+            
             SetCurrentMainStageInfo();
             StartCoroutine(StageRunner());
         }
@@ -194,6 +224,7 @@ namespace Managers.BattleManager
         private void SetStageProgressType(bool challenge)
         {
             nextStageChallenge = challenge;
+            ES3.Save("CheckStageProgressType", nextStageChallenge);
         }
 
         private IEnumerator StageRunner()

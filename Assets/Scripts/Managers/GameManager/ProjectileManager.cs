@@ -5,7 +5,7 @@ using Function;
 using Module;
 using UnityEngine;
 
-namespace Managers.BattleManager
+namespace Managers.GameManager
 {
     public class ProjectileManager : MonoBehaviour
     {

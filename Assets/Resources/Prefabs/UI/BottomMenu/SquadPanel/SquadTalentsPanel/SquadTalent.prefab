@@ -600,6 +600,42 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &5899116021241113338
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2701306984387251119}
+  m_Layer: 5
+  m_Name: EffectTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2701306984387251119
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5899116021241113338}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5153027907860418567}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -575, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6011750919350870397
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,7 +847,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 307a80bcc7d27467cbf4673095fd9eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdDuration: 1
+  holdDuration: 0.5
   onHold:
     m_PersistentCalls:
       m_Calls: []
@@ -1163,7 +1199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 307a80bcc7d27467cbf4673095fd9eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdDuration: 1
+  holdDuration: 0.5
   onHold:
     m_PersistentCalls:
       m_Calls: []
@@ -1208,6 +1244,7 @@ RectTransform:
   - {fileID: 4844139262014809084}
   - {fileID: 3583369215235739817}
   - {fileID: 3534366594101891325}
+  - {fileID: 2701306984387251119}
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1266,6 +1303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a99ff0f0bbb4d42984d77b91e392f3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effectTarget: {fileID: 2701306984387251119}
   squadTalentSprite: {fileID: 0}
   squadTalentName: 
   initTalentValue: 0
@@ -1274,7 +1312,8 @@ MonoBehaviour:
   increaseTalentValue: 0
   currentLevel: 0
   maxLevel: 10000
-  currentLevelUpCost: 0
+  initialLevelUpCost: 0
+  extraLevelUpCost: 0
   currentIncreasedStat: 0
   squadTalentImage: {fileID: 1034008714395753695}
   squadTalentNameText: {fileID: 4788259752264242531}
@@ -1644,6 +1683,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4308356841438799007, guid: 5a01f754f8ee34ebe8f24b88ad2d9b2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857902008626524679, guid: 5a01f754f8ee34ebe8f24b88ad2d9b2e, type: 3}
+      propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5813059314357468603, guid: 5a01f754f8ee34ebe8f24b88ad2d9b2e, type: 3}

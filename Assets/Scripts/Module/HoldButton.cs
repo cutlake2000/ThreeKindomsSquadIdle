@@ -5,11 +5,11 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Function
+namespace Module
 {
     public class HoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        [Range(0.3f, 5f)] public float holdDuration = 2f;
+        [Range(0f, 3f)] [SerializeField] private float holdDuration = 0.5f;
         public UnityEvent onHold;
         public bool pauseUpgrade;
         private Button button;
@@ -20,7 +20,7 @@ namespace Function
 
         public void Awake()
         {
-            delay = new WaitForSeconds(0.3f);
+            delay = new WaitForSeconds(0.0001f);
         }
 
         public void OnPointerDown(PointerEventData eventData)

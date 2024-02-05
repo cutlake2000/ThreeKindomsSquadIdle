@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Controller.Effects;
 using Creature.Data;
 using Data;
 using Function;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
+using Module;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,7 +17,10 @@ namespace Managers.GameManager
         public static AccountManager Instance;
         public event Action<Enums.CurrencyType, string> OnCurrencyChanged;
         public static Action LevelUpAction;
-        
+
+        public ObjectPool objectPool;
+
+        public Transform effectTarget;
         [Header("닉네임")] public string accountName;
         [Header("레벨 초기값")] public int accountLevel;
         [Header("레벨 최대값")] public int accountMaxLevel;
@@ -28,6 +33,8 @@ namespace Managers.GameManager
         // 모든 통화의 목록 
         public List<Currency> currencies = new();
 
+        private string tempId = "임시 아이디";
+
         private void Awake()
         {
             Instance = this;
@@ -36,7 +43,7 @@ namespace Managers.GameManager
         // 재화 매니저 초기화 메서드
         public void InitAccountManager()
         {
-            accountName = ES3.Load<string>($"{nameof(accountName)}");
+            if (ES3.KeyExists($"{nameof(accountName)}")) accountName = ES3.Load<string>($"{nameof(accountName)}"); //TODO : 추후에 if문 삭제
             accountLevel = ES3.Load($"{nameof(accountLevel)}", 1);
             statPoint = ES3.Load($"{nameof(statPoint)}", 0);
             
@@ -47,6 +54,7 @@ namespace Managers.GameManager
             };
             
             currentAccountMaxExp = accountLevel == 1 ? baseAccountExp : baseAccountExp * (int)Mathf.Pow(accountLevel - 1, 2) + extraAccountExp * (accountLevel - 1);
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoLevelUpButton(currentAccountExp >= currentAccountMaxExp);
             UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoAllUI(accountName, accountLevel, currentAccountExp, currentAccountMaxExp, statPoint);
             UIManager.Instance.playerInfoPanelUI.UpdatePlayerInfoPanelNickNameUI(accountName);
             UIManager.Instance.playerInfoPanelUI.UpdatePlayerInfoPanelLevelUI(accountLevel);
@@ -90,8 +98,11 @@ namespace Managers.GameManager
                 statPoint++;
                 currentAccountMaxExp = baseAccountExp * (int)Mathf.Pow(accountLevel - 1, 2) + extraAccountExp * (accountLevel - 1);
             }
-            
-            var sliderValue = currentAccountExp == 0 ? 0 : int.Parse((currentAccountExp * 100 / currentAccountMaxExp).ToString());
+
+            var effect = objectPool.SpawnFromPool(Enums.PoolType.EffectEnhance);
+            effect.transform.position = effectTarget.position;
+            effect.SetActive(true);
+            effect.GetComponent<ParticleSystem>().Play();
             
             QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.SquadLevel, accountLevel);
             UIManager.Instance.squadPanelUI.squadStatPanelUI.CheckRequiredCurrencyOfMagnificationButton(SquadStatManager.Instance.levelUpMagnification);

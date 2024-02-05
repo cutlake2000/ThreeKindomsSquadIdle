@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Data;
-using Managers.BottomMenuManager.SquadPanel;
+using Managers.BattleManager;
 using Managers.BottomMenuManager.TalentPanel;
-using Managers.GameManager;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Managers.BattleManager
+namespace Managers.GameManager
 {
     [Serializable]
     public class Quest
@@ -26,18 +25,13 @@ namespace Managers.BattleManager
     public class QuestTarget
     {
         public Enums.QuestType questType;
-        public GameObject TargetMark;
+        public GameObject targetMark;
         public GameObject[] activeTarget;
         public GameObject[] inactiveTarget;
     }
     
     public class QuestManager : MonoBehaviour
     {
-        public Action<Enums.QuestType> UpdateTargetQuestProgressAction;
-
-        public GameObject ringMarkPrefab;
-        public GameObject markTargetOnQuestPanel;
-        
         public static QuestManager Instance;
         public TextAsset questCsv;
 
@@ -101,9 +95,9 @@ namespace Managers.BattleManager
             if (quests[(int)questType].progress < quests[(int)questType].targetProgress) return;
             if ((int)questType == questLevel % 5) UIManager.Instance.questPanelUI.completedMark.SetActive(true);
             
-            if (questTargets[questLevel % 5].TargetMark.activeInHierarchy)
+            if (questTargets[questLevel % 5].targetMark.activeInHierarchy)
             {
-                questTargets[questLevel % 5].TargetMark.SetActive(false);
+                questTargets[questLevel % 5].targetMark.SetActive(false);
             }
         }
 
@@ -199,7 +193,7 @@ namespace Managers.BattleManager
                     questMark.SetActive(true);
                 }
                 
-                questTargets[questLevel % 5].TargetMark.SetActive(true);
+                questTargets[questLevel % 5].targetMark.SetActive(true);
             }
             else if (questLevel == 5)
             {

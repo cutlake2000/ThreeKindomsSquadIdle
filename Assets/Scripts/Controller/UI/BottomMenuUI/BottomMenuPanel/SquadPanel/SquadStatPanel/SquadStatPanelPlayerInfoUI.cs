@@ -16,6 +16,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         [Header("스탯 포인트")] [SerializeField] private TMP_Text accountStatPoint;
         [Header("경험치 슬라이더")] [SerializeField] private Slider accountExpSlider;
         [Header("레벨 업 버튼")] [SerializeField] private Button levelUpButton;
+        [Header("레벨 업 잠금 버튼")] [SerializeField] private Button levelUpLockButton;
         
         public void InitializeEventListeners()
         {
@@ -54,7 +55,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         
         public void UpdateSquadStatPanelSquadInfoLevelUpButton(bool active)
         {
-            levelUpButton.interactable = active;
+            levelUpButton.gameObject.SetActive(active);
+            levelUpLockButton.gameObject.SetActive(!active);
         }
     }
 }

@@ -2213,9 +2213,9 @@ RectTransform:
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 720, y: 1480}
-  m_SizeDelta: {x: 1478.919, y: 3040}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &8013272889155626808
 Canvas:
@@ -2256,6 +2256,7 @@ MonoBehaviour:
   accountGenerationPanel: {fileID: 5928270058446655964}
   touchToStartButton: {fileID: 494992226}
   nameInputField: {fileID: 6112597999450122973}
+  loadingSceneManager: {fileID: 0}
 --- !u!224 &8110387727742035511
 RectTransform:
   m_ObjectHideFlags: 0

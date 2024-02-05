@@ -16,14 +16,16 @@ namespace Controller.UI.LoginUI
         private const int minNameLength = 3;
         private const int maxNameLength = 12;
 
+        [SerializeField] private LoadingSceneManager loadingSceneManager;
+
         public void Start()
         {
             summitButton.onClick.AddListener(OnNameSubmit);
         }
 
-        public void OnNameSubmit()
+        private void OnNameSubmit()
         {
-            string playerName = nameInputField.text.Trim();
+            var playerName = nameInputField.text.Trim();
 
             // 빈 문자열인지 확인
             if (string.IsNullOrEmpty(playerName))
@@ -52,7 +54,7 @@ namespace Controller.UI.LoginUI
             ES3.Save("accountName", playerName);
             
             accountGenerationPanel.SetActive(false);
-            touchToStartButton.SetActive(true);
+            loadingSceneManager.ToPlayButton();
         }
     }
 }

@@ -189,6 +189,7 @@ namespace Data
             ProjectileBaseAttackArcher,
             ProjectileBaseAttackWizard,
             ProjectileBaseAttackMonster,
+            EffectEnhance,
             ProjectileSkillAttackWarrior,
             ProjectileSkillAttackArcher,
             ProjectileSkillAttackWizard,

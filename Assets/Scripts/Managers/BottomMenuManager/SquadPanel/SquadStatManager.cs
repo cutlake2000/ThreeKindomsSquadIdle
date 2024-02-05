@@ -1,10 +1,12 @@
 using System;
+using Controller.Effects;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel;
 using Creature.Data;
 using Data;
 using Function;
 using Managers.BattleManager;
 using Managers.GameManager;
+using Module;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 
@@ -14,7 +16,9 @@ namespace Managers.BottomMenuManager.SquadPanel
     {
         public static SquadStatManager Instance;
         public event Action<Enums.SquadStatType, int, bool> OnUpgradeTotalSquadStatFromSquadStatPanel;
-        
+
+        public ObjectPool objectPool;
+        public Transform effectTarget;
         [SerializeField] private SquadStatSo[] squadStatSo;
         public SquadStatPanelItemUI[] squadStatItem;
         public int levelUpMagnification;
@@ -40,6 +44,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                 var index = i;
                 squadStatItem[i].GetComponent<SquadStatPanelItemUI>().upgradeButton.onClick.AddListener(() =>
                     UpgradeSquadStatPanelStat((Enums.StatTypeFromSquadStatPanel)index));
+                
                 squadStatItem[i].GetComponent<SquadStatPanelItemUI>().upgradeButton.GetComponent<HoldButton>().onHold
                     .AddListener(() => UpgradeSquadStatPanelStat((Enums.StatTypeFromSquadStatPanel)index));
             }
@@ -82,6 +87,11 @@ namespace Managers.BottomMenuManager.SquadPanel
             if (squadStatItem[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
 
             AccountManager.Instance.statPoint -= squadStatItem[(int)type].levelUpCost * levelUpMagnification;
+            
+            var effect = objectPool.SpawnFromPool(Enums.PoolType.EffectEnhance);
+            effect.transform.position = effectTarget.position;
+            effect.SetActive(true);
+            effect.GetComponent<ParticleSystem>().Play();
 
             Debug.Log($"levelUpCost {squadStatItem[(int)type].levelUpCost}");
             Debug.Log($"levelUpMagnification {levelUpMagnification}");

@@ -6,6 +6,7 @@ using Data;
 using Function;
 using Managers;
 using Managers.BattleManager;
+using Managers.GameManager;
 using UnityEngine;
 
 namespace Creature.CreatureClass.MonsterClass

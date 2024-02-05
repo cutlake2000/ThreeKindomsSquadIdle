@@ -34322,7 +34322,7 @@ MonoBehaviour:
   currentDuration: 0
   projectileSpeed: 15
   readyToLaunch: 0
-  splashRange: 2
+  splashRange: 1
   nearbyTargets: []
 --- !u!114 &-1811103630617727793
 MonoBehaviour:

@@ -1,6 +1,7 @@
 using Data;
 using Managers;
 using Managers.BattleManager;
+using Managers.GameManager;
 
 namespace Creature.CreatureClass.SquadClass
 {

@@ -34,6 +34,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 
         [Header("UI")] public Image squadStatImage;
 
+        public Transform effectTarget;
         public TMP_Text squadStatNameText;
         public TMP_Text squadStatLevelText;
         public TMP_Text squadStatMaxLevelText;

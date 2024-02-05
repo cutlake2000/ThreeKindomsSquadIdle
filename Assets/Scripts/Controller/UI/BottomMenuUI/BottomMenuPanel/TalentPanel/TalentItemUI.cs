@@ -1,8 +1,10 @@
 using System;
 using Creature.Data;
 using Data;
+using Function;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.TalentPanel;
+using Managers.GameManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -12,6 +14,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
 {
     public class TalentItemUI : MonoBehaviour
     {
+        [Header("이펙트 타겟")] public Transform effectTarget;
         [Header("아이콘")] public Sprite squadTalentSprite;
         [Header("스탯 이름")] public string squadTalentName;
         [Header("초기값")] public int initTalentValue;
@@ -20,7 +23,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         [Header("스탯 증가량")] public int increaseTalentValue;
         [Header("현재 스탯 레벨")] public int currentLevel;
         [Header("최대 스탯 레벨")] public int maxLevel = 10000;
-        [Header("현재 스탯 강화 비용")] public int currentLevelUpCost;
+        [Header("초기 강화 비용 레벨")] public int initialLevelUpCost;
+        [Header("추가 강화 비용 레벨")] public int extraLevelUpCost;
+        [Header("현재 스탯 강화 비용")] public BigInteger currentLevelUpCost;
         [Header("현재 스탯 증가량")] public int currentIncreasedStat;
         [Header("UI")] public Image squadTalentImage;
 
@@ -31,7 +36,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         public TMP_Text squadTalentRequiredCurrencyText;
         public Button upgradeButton;
         public Button upgradeBlockButton;
-        public System.Action<Enums.SquadStatType, int, bool> UpgradeTotalSquadStatBySquadTalentItem;
+        public Action<Enums.SquadStatType, int, bool> UpgradeTotalSquadStatBySquadTalentItem;
 
         public void InitSquadTalentUI()
         {
@@ -56,7 +61,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
                     break;
             }
 
-            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.Gold}> {currentLevelUpCost}";
+            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.Gold}> {currentLevelUpCost.ChangeMoney()}";
         }
 
         // 스텟 업데이트 하는 메서드
