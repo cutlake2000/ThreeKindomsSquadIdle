@@ -1,6 +1,7 @@
 using System;
 using Function;
 using Managers.BattleManager;
+using Managers.GameManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 {
     public class SquadStatPanelPlayerInfoUI : MonoBehaviour
     {
-        [Header("계정 이름")] [SerializeField] private TMP_Text nickName;
+        [Header("계정 이름")] [SerializeField] private TMP_Text accountName;
         [Header("레벨")] [SerializeField] private TMP_Text accountLevel;
         [Header("현재 경험치")] [SerializeField] private TMP_Text accountExp;
         [Header("스탯 포인트")] [SerializeField] private TMP_Text accountStatPoint;
@@ -21,12 +22,17 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
             levelUpButton.onClick.AddListener(() => AccountManager.LevelUpAction?.Invoke());
         }
         
-        public void UpdateSquadStatPanelSquadInfoAllUI(int level, BigInteger currentExp, BigInteger maxExp, int statPoint)
+        public void UpdateSquadStatPanelSquadInfoAllUI(string nickName, int level, BigInteger currentExp, BigInteger maxExp, int statPoint)
         {
-            //TODO : 닉네임 기능은 나중에
+            UpdateSquadStatPanelSquadInfoAccountNameUI(nickName);
             UpdateSquadStatPanelSquadInfoLevelUI(level);
             UpdateSquadStatPanelSquadInfoStatPointUI(statPoint);
             UpdateSquadStatPanelSquadInfoExpUI(currentExp, maxExp);
+        }
+        
+        public void UpdateSquadStatPanelSquadInfoAccountNameUI(string nickName)
+        {
+            accountName.text = $"{nickName}";
         }
 
         public void UpdateSquadStatPanelSquadInfoLevelUI(int level)

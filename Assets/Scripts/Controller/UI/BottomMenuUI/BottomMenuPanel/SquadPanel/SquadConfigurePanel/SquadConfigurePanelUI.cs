@@ -8,6 +8,7 @@ using Function;
 using Managers;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
+using Managers.GameManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -83,7 +84,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         {
             currentSelectedSquadConfigurePanelItem = character;
 
-            requiredSquadEnhanceStoneText.text = $"<sprite={(int)Enums.IconType.Gold}>{character.RequiredCurrencyForLevelUp().ChangeMoney()}";
+            requiredSquadEnhanceStoneText.text = $"<sprite={(int)Enums.IconType.EnhanceStoneSquad}>{character.RequiredCurrencyForLevelUp().ChangeMoney()}";
             var skill1Description = currentSelectedSquadConfigurePanelItem.characterSkills[0].skillDescription;
             var skill2Description = currentSelectedSquadConfigurePanelItem.characterSkills[1].skillDescription;
 

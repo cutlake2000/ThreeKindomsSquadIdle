@@ -4,6 +4,7 @@ using Creature.Data;
 using Data;
 using Function;
 using Managers.BattleManager;
+using Managers.GameManager;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 
@@ -74,13 +75,14 @@ namespace Managers.BottomMenuManager.TalentPanel
 
         public void UpgradeSquadTalentPanelStat(Enums.StatTypeFromSquadTalentPanel type)
         {
+            var index = (int)type;
             if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.Gold,
-                    talentItem[(int)type].levelUpCost * levelUpMagnification)) return;
+                    talentItem[index].currentLevelUpCost * levelUpMagnification)) return;
             if (talentItem[(int)type].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
 
-            talentItem[(int)type].UpdateSquadTalent(levelUpMagnification);
-            SetUpgradeUI(talentItem[(int)type]);
-            TalentPanelUI.CheckRequiredCurrencyOfMagnificationButton((int)type);
+            talentItem[index].UpdateSquadTalent(levelUpMagnification);
+            SetUpgradeUI(talentItem[index]);
+            TalentPanelUI.CheckRequiredCurrencyOfMagnificationButton(index);
 
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }

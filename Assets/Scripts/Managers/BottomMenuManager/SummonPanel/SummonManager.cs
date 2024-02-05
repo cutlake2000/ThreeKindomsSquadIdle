@@ -12,6 +12,7 @@ using Function;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.InventoryPanel;
 using Managers.BottomMenuManager.SquadPanel;
+using Managers.GameManager;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;

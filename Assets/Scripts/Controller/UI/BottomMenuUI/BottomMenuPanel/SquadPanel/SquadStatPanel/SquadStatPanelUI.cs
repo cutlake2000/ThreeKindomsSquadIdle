@@ -2,6 +2,7 @@ using System;
 using Data;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
+using Managers.GameManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

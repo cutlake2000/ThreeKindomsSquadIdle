@@ -1269,7 +1269,6 @@ MonoBehaviour:
   squadTalentSprite: {fileID: 0}
   squadTalentName: 
   initTalentValue: 0
-  levelUpCost: 1
   statTypeFromSquadTalentPanel: 0
   increaseTalentValueType: 0
   increaseTalentValue: 0

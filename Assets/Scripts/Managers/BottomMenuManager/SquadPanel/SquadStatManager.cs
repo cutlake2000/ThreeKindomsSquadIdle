@@ -4,6 +4,7 @@ using Creature.Data;
 using Data;
 using Function;
 using Managers.BattleManager;
+using Managers.GameManager;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 
@@ -47,6 +48,8 @@ namespace Managers.BottomMenuManager.SquadPanel
         // UpdateData 초기화 메서드 - 여기서 스텟퍼센트 조정 가능
         private void InitializeSquadStatData()
         {
+            levelUpMagnification = 1;
+            
             for (var i = 0; i < squadStatSo.Length; i++)
             {
                 squadStatItem[i].squadStatName = squadStatSo[i].squadStatName;

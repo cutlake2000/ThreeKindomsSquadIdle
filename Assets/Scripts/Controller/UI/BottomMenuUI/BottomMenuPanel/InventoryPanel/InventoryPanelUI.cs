@@ -5,6 +5,7 @@ using Data;
 using Function;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.InventoryPanel;
+using Managers.GameManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
