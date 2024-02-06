@@ -43,6 +43,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         [Header("선택 장비 인덱스")] public int currentSelectedInventoryITemIndex;
 
         [Header("선택 장비 정보")]
+        public TMP_Text selectEquipmentTier;
         public Image selectEquipmentIcon;
         public Image selectEquipmentBackground;
         public Image selectEquipmentBackgroundEffect;
@@ -125,6 +126,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         private void UpdateSelectedEquipmentUI(Equipment equipment)
         {
             Debug.Log(selectEquipmentIcon);
+            selectEquipmentTier.text = $"{equipment.equipmentTier} 티어";
             selectEquipmentIcon.sprite = SpriteManager.Instance.GetEquipmentSprite(equipment.equipmentType, equipment.equipmentIconIndex);
             selectEquipmentBackground.sprite = SpriteManager.Instance.GetEquipmentBackground((int)equipment.equipmentRarity);
             selectEquipmentBackgroundEffect.sprite = SpriteManager.Instance.GetEquipmentBackgroundEffect((int)equipment.equipmentRarity);

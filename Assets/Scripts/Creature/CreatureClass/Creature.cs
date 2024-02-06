@@ -31,6 +31,8 @@ namespace Creature.CreatureClass
         public BigInteger currentHealth;
         public BigInteger maxHealth;
         public BigInteger defence;
+        // public BigInteger criticalRate;
+        // public BigInteger criticalDamage;
         public float attackSpeed;
         public float attackRange;
         public float moveSpeed;

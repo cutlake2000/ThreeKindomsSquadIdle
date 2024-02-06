@@ -1,4 +1,5 @@
 using System;
+using Controller.UI.BottomMenuUI;
 using Data;
 using Managers.BattleManager;
 using Managers.GameManager;
@@ -10,6 +11,8 @@ namespace Controller.UI.TopMenuUI.QuestPanel
 {
     public class QuestPanelUI : MonoBehaviour
     {
+        [Header("--- 퀘스트 보상 창 ---")] public QuestResultPanelUI questResultPanelUI;
+        
         public GameObject completedMark;
         public Image questRewardImage;
         public TMP_Text questRewardText;
@@ -17,6 +20,7 @@ namespace Controller.UI.TopMenuUI.QuestPanel
 
         public void InitializeEventListeners()
         {
+            questResultPanelUI.InitializeEventListeners();
             gameObject.GetComponent<Button>().onClick.AddListener(CheckQuestClear);
         }
 

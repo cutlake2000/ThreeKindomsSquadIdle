@@ -1,8 +1,10 @@
 using System;
+using System.Numerics;
 using Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using BigInteger = Function.BigInteger;
 
 namespace Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel
 {
@@ -15,17 +17,17 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel
         public TMP_Text currentDungeonLevelText;
         public TMP_Text currentDungeonRewardText;
 
-        public void UpdateDungeonItemUI(int level, string reward)
+        public void UpdateDungeonItemUI(int level, BigInteger reward)
         {
             currentDungeonLevelText.text = $"{level} 단계";
 
             switch (rewardType)
             {
                 case Enums.CurrencyType.Gold:
-                    currentDungeonRewardText.text = $"+ <sprite={(int)Enums.IconType.Gold}> {reward}";
+                    currentDungeonRewardText.text = $"+ <sprite={(int)Enums.IconType.Gold}> {reward.ChangeMoney()}";
                     break;
                 case Enums.CurrencyType.SquadEnhanceStone:
-                    currentDungeonRewardText.text = $"+ <sprite={(int)Enums.IconType.EnhanceStoneSquad}> {reward}";
+                    currentDungeonRewardText.text = $"+ <sprite={(int)Enums.IconType.EnhanceStoneSquad}> {reward.ChangeMoney()}";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

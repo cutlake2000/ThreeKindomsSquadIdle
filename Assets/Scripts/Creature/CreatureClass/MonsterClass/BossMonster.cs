@@ -2,6 +2,7 @@ using System.Collections;
 using Data;
 using Function;
 using Managers.BattleManager;
+using Managers.GameManager;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -53,7 +54,7 @@ namespace Creature.CreatureClass.MonsterClass
             if (currentBossHealth > 0 || isDead) return;
             isDead = true;
             gameObject.GetComponent<BoxCollider2D>().enabled = false;
-            StageManager.CheckRemainedMonsterAction?.Invoke();
+            StageManager.CheckRemainedMonsterAction.Invoke();
         }
 
         private IEnumerator EventHit()

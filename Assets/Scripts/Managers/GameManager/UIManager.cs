@@ -1,17 +1,14 @@
-using Controller.UI;
 using Controller.UI.BottomMenuUI;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel;
-using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel;
 using Controller.UI.TopMenuUI.PlayerInfoPanelUI;
 using Controller.UI.TopMenuUI.QuestPanel;
 using Controller.UI.TopMenuUI.SkillPanel;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Managers.BattleManager
+namespace Managers.GameManager
 {
     public class UIManager : MonoBehaviour
     {

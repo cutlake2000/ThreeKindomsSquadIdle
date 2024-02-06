@@ -203,15 +203,22 @@ namespace Managers.BattleManager
             currentWave = 0;
             
             currentSubStage--;
+            currentAccumulatedStage--;
 
             if (currentSubStage < 1)
             {
                 if (currentMainStage > 1)
                 {
                     currentMainStage--;
+                    currentSubStage = subStageCountsPerMainStage;
+                }
+                else
+                {
+                    currentSubStage = 1;
+                    currentAccumulatedStage++;
                 }
                 
-                currentSubStage = subStageCountsPerMainStage;
+          
             }
             
             nextStageChallenge = false;
@@ -241,7 +248,7 @@ namespace Managers.BattleManager
                 if (!initStageResult)
                 {
                     stageResultUI.SetActive(true);
-                    stageResultUI.GetComponent<StageResultPanelUI>().PopUpStageClearMessage(isClear);
+                    stageResultUI.GetComponent<ResultPanelUI>().PopUpStageClearMessage(isClear);
                     
                     yield return new WaitForSeconds(2f);
                 }
@@ -263,7 +270,6 @@ namespace Managers.BattleManager
                         }
                     }
                     
-                    stageResultUI.GetComponent<StageResultPanelUI>().PopUnderStageClearMessage();
                     stageResultUI.SetActive(false);
                 }
 

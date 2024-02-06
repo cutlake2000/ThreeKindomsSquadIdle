@@ -92,7 +92,7 @@ namespace Creature.CreatureClass.SquadClass
 
         public void TakeDamage(BigInteger damage)
         {
-            currentHealth -= damage;
+            currentHealth -= damage - (defence / 2);
             currentHealth = currentHealth < 0 ? 0 : currentHealth;
             SetUIHealthBar();
 

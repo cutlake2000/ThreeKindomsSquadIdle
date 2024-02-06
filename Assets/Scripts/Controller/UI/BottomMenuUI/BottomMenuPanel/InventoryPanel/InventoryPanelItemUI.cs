@@ -23,7 +23,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         {
             equipmentTier.text = $"{tier}티어";
             equipmentLevel.text = $"Lv.{level} / {maxLevel}";
-            equipmentTier.text = $"{tier}티어";
             equipmentQuantity.text = $"{quantity} / {maxQuantity}";
             equipmentQuantitySlider.value = quantity;
             equipmentQuantitySlider.maxValue = maxQuantity;

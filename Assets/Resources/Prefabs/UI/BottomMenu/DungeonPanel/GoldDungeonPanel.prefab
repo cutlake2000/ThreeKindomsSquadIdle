@@ -642,13 +642,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dungeonType: 0
+  rewardType: 0
   clearDungeonButton: {fileID: 7516102280015316305}
   enterDungeonButton: {fileID: 787228569951797218}
   currentDungeonLevelText: {fileID: 115195054604369586}
   currentDungeonRewardText: {fileID: 3705732539544226138}
-  clearDungeonLevel: 0
-  currentDungeonLevel: 0
-  currentDungeonReward: 0
 --- !u!1 &4794305133904632168
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,8 +793,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: + <sprite=15> 00.00
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5153c493f84784d74a6012245b73b1ac, type: 2}
-  m_sharedMaterial: {fileID: 6846561199706340938, guid: 5153c493f84784d74a6012245b73b1ac, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 15899c92d954543258bfbf128931ea4f, type: 2}
+  m_sharedMaterial: {fileID: -6383768301819024731, guid: 15899c92d954543258bfbf128931ea4f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

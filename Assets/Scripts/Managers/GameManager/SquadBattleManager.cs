@@ -10,6 +10,7 @@ using Data;
 using Function;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.TalentPanel;
+using Managers.GameManager;
 using UnityEngine;
 
 namespace Managers.BattleManager

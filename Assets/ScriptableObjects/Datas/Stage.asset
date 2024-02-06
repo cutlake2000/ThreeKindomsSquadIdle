@@ -22,5 +22,5 @@ MonoBehaviour:
     <MainStageMonsterTypes>k__BackingField: 00000000
   <SubStageCountsPerMainStage>k__BackingField: 50
   <WaveCountsPerSubStage>k__BackingField: 3
-  <MonsterSpawnCountsPerSubStage>k__BackingField: 15
+  <MonsterSpawnCountsPerSubStage>k__BackingField: 10
   <StageLimitedTime>k__BackingField: 60

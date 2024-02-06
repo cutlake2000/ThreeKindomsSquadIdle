@@ -178,8 +178,8 @@ namespace Managers.GameManager
                 (Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"));
             var targetQuestRewardText = $"{quests[targetQuestIndex].reward}";
             var targetQuestDescriptionText = $"{quests[targetQuestIndex].name}";
-            UIManager.Instance.questPanelUI.UpdateQuestPanelUI(targetQuestRewardSprite, targetQuestRewardText,
-                targetQuestDescriptionText);
+            UIManager.Instance.questPanelUI.UpdateQuestPanelUI(targetQuestRewardSprite, targetQuestRewardText, targetQuestDescriptionText);
+            UIManager.Instance.questPanelUI.questResultPanelUI.UpdateQuestResultPanelUI(targetQuestRewardSprite, targetQuestRewardText);
 
             if (quests[questLevel % 5].progress >= Instance.quests[questLevel % 5].targetProgress)
             {
@@ -205,7 +205,8 @@ namespace Managers.GameManager
         {
             var targetQuestIndex = questLevel % 5;
             AccountManager.Instance.AddCurrency((Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"), quests[targetQuestIndex].reward);
-
+            UIManager.Instance.questPanelUI.questResultPanelUI.gameObject.SetActive(true);
+            
             questLevel++;
             ES3.Save($"{nameof(questLevel)}", questLevel);
             UIManager.Instance.questPanelUI.completedMark.SetActive(false);

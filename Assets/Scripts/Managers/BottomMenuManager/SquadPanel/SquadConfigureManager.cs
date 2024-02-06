@@ -5,6 +5,7 @@ using Creature.Data;
 using Data;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.InventoryPanel;
+using Managers.GameManager;
 using Module;
 using ScriptableObjects.Scripts;
 using Unity.VisualScripting;
