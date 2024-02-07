@@ -2,6 +2,7 @@ using System;
 using Data;
 using Managers;
 using Managers.BattleManager;
+using Managers.GameManager;
 using UnityEngine;
 
 namespace Creature.CreatureClass.SquadFSM.States

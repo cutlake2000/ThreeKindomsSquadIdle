@@ -42,6 +42,8 @@ namespace Managers.BottomMenuManager.SummonPanel
         
         private readonly WaitForSeconds summonWaitForSeconds = new(0.05f);
 
+        private bool initialSquadSummon;
+
         private void Awake()
         {
             Instance = this;
@@ -49,6 +51,7 @@ namespace Managers.BottomMenuManager.SummonPanel
 
         public void InitSummonManager()
         {
+            initialSquadSummon = ES3.Load($"{nameof(initialSquadSummon)}", true);
             InitializeSummonLevel();
             InitializeSummoner();
         }
@@ -126,18 +129,48 @@ namespace Managers.BottomMenuManager.SummonPanel
             
             for (var i = 0; i < count; i++)
             {
-                var randomTier = Random.Range(1, 6);
-
-                var targetName = type switch
+                string targetName;
+                
+                if (initialSquadSummon)
                 {
-                    Enums.SummonType.Squad =>
-                        $"{squadSummoner?.GetRandomPick()}_{squadType[Random.Range(0, 3)]}",
-                    Enums.SummonType.Weapon =>
-                         $"{weaponSummoner?.GetRandomPick()}_{randomTier}_{weaponType[Random.Range(0, 3)]}",
-                    Enums.SummonType.Gear =>
-                        $"{gearSummoner?.GetRandomPick()}_{randomTier}_{gearType[Random.Range(0, 3)]}",
-                    _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-                };
+                    targetName = "Rare_Warrior";
+                    Debug.Log("최초 캐릭터 소환 보상!");
+
+                    initialSquadSummon = false;
+                    ES3.Save($"{nameof(initialSquadSummon)}", initialSquadSummon);
+                }
+                else
+                {
+                
+                }
+                
+                var randomTier = Random.Range(1, 6);
+                switch (type)
+                {
+                    case Enums.SummonType.Squad:
+                        if (initialSquadSummon)
+                        {
+                            targetName = "Rare_Warrior";
+                            Debug.Log("최초 캐릭터 소환 보상!");
+
+                            initialSquadSummon = false;
+                            ES3.Save($"{nameof(initialSquadSummon)}", initialSquadSummon);
+                        }
+                        else
+                        {
+                            targetName = $"{squadSummoner?.GetRandomPick()}_{squadType[Random.Range(0, 3)]}";   
+                        }
+                        
+                        break;
+                    case Enums.SummonType.Weapon:
+                        targetName = $"{weaponSummoner?.GetRandomPick()}_{randomTier}_{weaponType[Random.Range(0, 3)]}";
+                        break;
+                    case Enums.SummonType.Gear:
+                        targetName = $"{gearSummoner?.GetRandomPick()}_{randomTier}_{gearType[Random.Range(0, 3)]}";
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
 
                 if (!CheckDictionaryKey(SummonedItemDictionary, targetName))
                 {

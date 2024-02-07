@@ -8,6 +8,7 @@ using Managers.BottomMenuManager.InventoryPanel;
 using Managers.GameManager;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
@@ -49,8 +50,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         public Image selectEquipmentBackgroundEffect;
         public TMP_Text selectEquipmentName;
         public TMP_Text selectEquipmentGrade;
-        public TMP_Text selectEquipmentEquippedEffect;
-        public TMP_Text selectEquipmentOwnedEffect;
+        public TMP_Text selectEquipmentEquippedEffect1;
+        public TMP_Text selectEquipmentEquippedEffect2;
+        public TMP_Text selectEquipmentOwnedEffect1;
+        public TMP_Text selectEquipmentOwnedEffect2;
         public TMP_Text selectEquipmentLevel;
 
         // 이벤트 설정하는 메서드
@@ -139,10 +142,34 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
                 // Enums.EquipmentRarity.Legend => "레전드",
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+            selectEquipmentEquippedEffect1.text = equipment.equippedEffects[0].statType switch
+            {
+                Enums.SquadStatType.Attack => $"공격력 {equipment.equippedEffects[0].increaseValue} 증가",
+                Enums.SquadStatType.Health => $"체력 {equipment.equippedEffects[0].increaseValue} 증가",
+                _ => throw new ArgumentOutOfRangeException()
+            };
             
-            selectEquipmentEquippedEffect.text =
-                $"공격력 {equipment.equippedEffects[0].increaseValue}% 증가";
-            selectEquipmentOwnedEffect.text = $"체력 {equipment.ownedEffects[0].increaseValue}% 증가";
+            selectEquipmentEquippedEffect2.text = equipment.equippedEffects[1].statType switch
+            {
+                Enums.SquadStatType.Attack => $"공격력 {equipment.equippedEffects[1].increaseValue} 증가",
+                Enums.SquadStatType.Health => $"체력 {equipment.equippedEffects[1].increaseValue} 증가",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            selectEquipmentOwnedEffect1.text = equipment.ownedEffects[0].statType switch
+            {
+                Enums.SquadStatType.Attack => $"공격력 {UIManager.FormatCurrency(equipment.ownedEffects[0].increaseValue)}% 증가",
+                Enums.SquadStatType.Health => $"체력 {UIManager.FormatCurrency(equipment.ownedEffects[1].increaseValue)}% 증가",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            selectEquipmentOwnedEffect2.text = equipment.ownedEffects[0].statType switch
+            {
+                Enums.SquadStatType.Attack => $"공격력 {UIManager.FormatCurrency(equipment.ownedEffects[0].increaseValue)}% 증가",
+                Enums.SquadStatType.Health => $"체력 {UIManager.FormatCurrency(equipment.ownedEffects[1].increaseValue)}% 증가",
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         public GameObject FindInventoryItemList(string id)

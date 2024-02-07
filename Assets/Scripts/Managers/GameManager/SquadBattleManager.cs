@@ -2,18 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Controller.UI;
-using Controller.UI.BottomMenuUI;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
 using Creature.CreatureClass.SquadClass;
 using Creature.Data;
 using Data;
 using Function;
+using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.TalentPanel;
-using Managers.GameManager;
 using UnityEngine;
 
-namespace Managers.BattleManager
+namespace Managers.GameManager
 {
     [Serializable]
     public struct SkillCoolTimer
@@ -245,7 +244,29 @@ namespace Managers.BattleManager
             equipment.SaveEquipmentAllInfo();
             
             // TODO: 장착 시 스탯 증가 반영해야 함
-            // squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, equippedEquipment.equippedEffect);
+            foreach (var equippedEffect in equipment.equippedEffects)
+            {
+                if (equippedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
+                {
+                    squadEntireStat.UpdateStat(equippedEffect.statType, equippedEffect.increaseValue, true);
+                }
+                else
+                {
+                    squadEntireStat.UpdateStat(equippedEffect.statType, equippedEffect.increaseValue, false);
+                }
+            }
+            
+            foreach (var ownedEffect in equipment.ownedEffects)
+            {
+                if (ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
+                {
+                    squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, true);
+                }
+                else
+                {
+                    squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, false);
+                }
+            }
             
             UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipment.equipmentType].GetComponent<InventoryPanelSelectedItemUI>().UpdateInventoryPanelSelectedItem(equipment.equipmentTier, SpriteManager.Instance.GetEquipmentSprite(equipment.equipmentType, equipment.equipmentIconIndex), SpriteManager.Instance.GetEquipmentBackground((int) equipment.equipmentRarity), SpriteManager.Instance.GetEquipmentBackgroundEffect((int) equipment.equipmentRarity));
             

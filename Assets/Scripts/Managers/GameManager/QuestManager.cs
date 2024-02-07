@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Controller.UI.TopMenuUI.QuestPanel;
 using Data;
 using Managers.BattleManager;
@@ -39,6 +40,7 @@ namespace Managers.GameManager
 
         public int questLevel;
         public Quest currentQuest;
+        public QuestTarget currentQuestTarget;
         
         [Header("Quest Mark")]
         public GameObject questMark;
@@ -67,10 +69,29 @@ namespace Managers.GameManager
 
         private void UpdateAllQuestProgress()
         {
-            currentQuest = quests[questLevel];
+            if (questLevel >= 51)
+            {
+                questLevel = 42;
+                currentQuest = quests[questLevel];
+            }
+            else
+            {
+                currentQuest = quests[questLevel];
+            }
+            
+            foreach (var questTarget in questTargets.Where(questTarget => questTarget.questType == currentQuest.questType))
+            {
+                currentQuestTarget = questTarget;
+            }
+            
+            questMark.SetActive(true);
+            currentQuestTarget.targetMark.SetActive(true);
+            
             targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite((Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[questLevel].questRewardType}"));
             targetQuestRewardText = $"{quests[questLevel].reward}";
             targetQuestDescriptionText = $"{quests[questLevel].name}";
+            
+            questMark.SetActive(true);
 
             switch (currentQuest.questType)
             {
@@ -150,10 +171,9 @@ namespace Managers.GameManager
                 quests[questLevel].progress += currentValue;   
             }
 
-            if (quests[questLevel].progress >= quests[questLevel].targetProgress)
-            {
-                UIManager.Instance.questPanelUI.completedMark.SetActive(true);
-            }
+            if (quests[questLevel].progress < quests[questLevel].targetProgress) return;
+            currentQuestTarget.targetMark.SetActive(false);
+            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
         }
 
         private void CreateQuestsFromCsv()

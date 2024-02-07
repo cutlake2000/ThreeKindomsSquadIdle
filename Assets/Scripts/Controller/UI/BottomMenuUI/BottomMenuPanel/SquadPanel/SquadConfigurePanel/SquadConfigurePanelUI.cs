@@ -32,6 +32,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         [Header("선택 영웅 정보")]
         public Image selectedCharacterIcon;
         public TMP_Text selectedCharacterName;
+        public TMP_Text selectedCharacterRarity;
         public TMP_Text selectedCharacterLevel;
         public TMP_Text selectedCharacterOwnedEffect1;
         public TMP_Text selectedCharacterOwnedEffect2;
@@ -95,6 +96,14 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                 currentSelectedSquadConfigurePanelItem.characterType,
                 currentSelectedSquadConfigurePanelItem.characterIconIndex);
             selectedCharacterName.text = currentSelectedSquadConfigurePanelItem.characterName;
+            selectedCharacterRarity.text = currentSelectedSquadConfigurePanelItem.characterRarity switch
+            {
+                Enums.CharacterRarity.Magic => "매직",
+                Enums.CharacterRarity.Rare => "레어",
+                Enums.CharacterRarity.Unique => "유니크",
+                Enums.CharacterRarity.Legend => "레전드",
+                _ => throw new ArgumentOutOfRangeException()
+            };
             selectedCharacterLevel.text =
                 $"Lv. {currentSelectedSquadConfigurePanelItem.characterLevel} / {SquadConfigureManager.CharacterMaxLevel}";
             selectedCharacterOwnedEffect1.text =
@@ -160,7 +169,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     Enums.IncreaseStatValueType.BaseStat =>
                         $"{character.characterOwnedEffects[index].increaseValue} 증가",
                     Enums.IncreaseStatValueType.PercentStat =>
-                        $"{character.characterOwnedEffects[index].increaseValue / 100}% 증가",
+                        $"{UIManager.FormatCurrency(character.characterOwnedEffects[index].increaseValue)}% 증가",
                     _ => throw new ArgumentOutOfRangeException()
                 };
 

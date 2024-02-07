@@ -93,7 +93,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             var equippedEffect = new EquipmentEffect
                             {
-                                statType = i == 0? Enums.StatTypeFromInventoryPanel.Attack : Enums.StatTypeFromInventoryPanel.Health,
+                                statType = i == 0? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
                                 increaseStatType = Enums.IncreaseStatValueType.BaseStat,
                             };
                             equippedEffects.Add(equippedEffect);
@@ -103,7 +103,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             var ownedEffect = new EquipmentEffect
                             {
-                                statType = i == 0 ? Enums.StatTypeFromInventoryPanel.Attack : Enums.StatTypeFromInventoryPanel.Health,
+                                statType = i == 0 ? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
                                 increaseStatType = Enums.IncreaseStatValueType.PercentStat,
                             };
                             ownedEffects.Add(ownedEffect);
@@ -205,7 +205,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             var equippedEffect = new EquipmentEffect
                             {
-                                statType = i == 0? Enums.StatTypeFromInventoryPanel.Attack : Enums.StatTypeFromInventoryPanel.Health,
+                                statType = i == 0? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
                                 increaseStatType = Enums.IncreaseStatValueType.BaseStat,
                                 increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
                             };
@@ -216,9 +216,9 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             var ownedEffect = new EquipmentEffect
                             {
-                                statType = i == 0 ? Enums.StatTypeFromInventoryPanel.Attack : Enums.StatTypeFromInventoryPanel.Health,
+                                statType = i == 0 ? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
                                 increaseStatType = Enums.IncreaseStatValueType.PercentStat,
-                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
+                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(1000, rarityIntValue + 1)
                             };
                             ownedEffects.Add(ownedEffect);
                         }
@@ -271,7 +271,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                 .UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon,
                                     equipmentBackgroundEffect, equipmentBackground);
 
-                            SquadBattleManager.EquipAction(equipment);
+                            SquadBattleManager.EquipAction.Invoke(equipment);
                         }
 
                         InfiniteLoopDetector.Run();
@@ -516,45 +516,47 @@ namespace Managers.BottomMenuManager.InventoryPanel
             };
 
             if (equipments == null) return;
-            var sortDictionary = equipments.OrderBy(equipment => equipment.Value.isEquipped).ThenByDescending(equipment => equipment.Value.isPossessed).ThenByDescending(equipment => equipment.Value.equipmentRarity).ThenBy(equipment => equipment.Value.equipmentTier).ToList();
-            
-            var lowValueEquipment = sortDictionary[^1].Value;
+            var sortDictionary = equipments.Where(equipment => equipment.Value.isPossessed).OrderByDescending(equipment => equipment.Value.equipmentRarity).ThenBy(equipment => equipment.Value.equipmentTier).ToList();
+            var lowValueEquipment = equipments.Where(equipment => equipment.Value.isEquipped).ToList()[0].Value;
             lowValueEquipment.isEquipped = false;
             lowValueEquipment.SaveEquipmentEachInfo(lowValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
             UIManager.Instance.inventoryPanelUI.FindInventoryItemList(lowValueEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(false);
-            
-            var highValueEquipment = sortDictionary[0].Value;
-            highValueEquipment.isEquipped = true;
-            highValueEquipment.SaveEquipmentEachInfo(highValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
-            
-            switch (highValueEquipment.equipmentType)
-            {
-                case Enums.EquipmentType.Sword:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipSword, 1);
-                    break;
-                case Enums.EquipmentType.Bow:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipBow, 1);
-                    break;
-                case Enums.EquipmentType.Staff:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipStaff, 1);
-                    break;
-                case Enums.EquipmentType.Helmet:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipHelmet, 1);
-                    break;
-                case Enums.EquipmentType.Armor:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipArmor, 1);
-                    break;
-                case Enums.EquipmentType.Gauntlet:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipGauntlet, 1);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            
-            UIManager.Instance.inventoryPanelUI.FindInventoryItemList(highValueEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(true);
 
-            SquadBattleManager.EquipAction?.Invoke(highValueEquipment);
-            UIManager.Instance.inventoryPanelUI.SelectEquipment(highValueEquipment);
+            if (sortDictionary.Count != 1)
+            {
+                var highValueEquipment = sortDictionary[0].Value;
+                highValueEquipment.isEquipped = true;
+                highValueEquipment.SaveEquipmentEachInfo(highValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
+            
+                switch (highValueEquipment.equipmentType)
+                {
+                    case Enums.EquipmentType.Sword:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipSword, 1);
+                        break;
+                    case Enums.EquipmentType.Bow:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipBow, 1);
+                        break;
+                    case Enums.EquipmentType.Staff:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipStaff, 1);
+                        break;
+                    case Enums.EquipmentType.Helmet:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipHelmet, 1);
+                        break;
+                    case Enums.EquipmentType.Armor:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipArmor, 1);
+                        break;
+                    case Enums.EquipmentType.Gauntlet:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipGauntlet, 1);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            
+                UIManager.Instance.inventoryPanelUI.FindInventoryItemList(highValueEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(true);
+
+                SquadBattleManager.EquipAction?.Invoke(highValueEquipment);
+                UIManager.Instance.inventoryPanelUI.SelectEquipment(highValueEquipment);
+            }
         }
 
         public void AllComposite(Enums.EquipmentType currentEquipmentType)

@@ -4,6 +4,7 @@ using Controller.UI.BottomMenuUI;
 using Data;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.InventoryPanel;
+using Managers.BottomMenuManager.SquadPanel;
 using Managers.GameManager;
 using TMPro;
 using UnityEngine;
@@ -32,26 +33,88 @@ namespace Controller.UI.TopMenuUI.QuestPanel
             {
                 QuestManager.Instance.TargetQuestClear();
             }
-            else
+            else if (QuestManager.Instance.currentQuest.questType != Enums.QuestType.StageClear)
             {
-                foreach (var t in QuestManager.Instance.questTargets.Where(t => t.questType == QuestManager.Instance.currentQuest.questType))
+                switch (QuestManager.Instance.currentQuestTarget.questType)
                 {
-                    if (t.questType == Enums.QuestType.AutoEquipSword)
-                    {
-                        foreach (var sword in InventoryManager.Instance.SwordsDictionary.Where(sword => sword.Value.isEquipped))
-                        {
-                            UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(sword.Value);
-                        }
-                    }
-                    
-                    foreach (var target in t.activeTarget)
-                    {
-                        target.SetActive(true);
-                    }
-                    foreach (var target in t.inactiveTarget)
-                    {
-                        target.SetActive(false);
-                    }
+                    case Enums.QuestType.AttackTalentLevel:
+                        break;
+                    case Enums.QuestType.HealthTalentLevel:
+                        break;
+                    case Enums.QuestType.AutoEquipSword:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.SwordsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.AutoEquipBow:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.BowsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.AutoEquipStaff:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.StaffsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.AutoEquipHelmet:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.HelmetsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.AutoEquipArmor:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.ArmorsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.AutoEquipGauntlet:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.GauntletsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.SummonWeapon:
+                        break;
+                    case Enums.QuestType.SummonGear:
+                        break;
+                    case Enums.QuestType.SummonSquad:
+                        break;
+                    case Enums.QuestType.EquipSquad:
+                        UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem = SquadConfigureManager.Instance.WarriorDictionary.Where(keyValuePair => keyValuePair.Value.characterId == "Rare_Warrior").ToList()[0].Value;
+                        break;
+                    case Enums.QuestType.PlayGoldDungeon:
+                        break;
+                    case Enums.QuestType.PlayEnhanceStoneDungeon:
+                        break;
+                    case Enums.QuestType.CompositeSword:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.SwordsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.CompositeBow:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.BowsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.CompositeStaff:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.StaffsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.CompositeHelmet:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.HelmetsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.CompositeArmor:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.ArmorsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.CompositeGauntlet:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.GauntletsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
+                    case Enums.QuestType.LevelUpCharacter:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
+                foreach (var target in QuestManager.Instance.currentQuestTarget.activeTarget)
+                {
+                    target.SetActive(true);
+                }
+                foreach (var target in QuestManager.Instance.currentQuestTarget.inactiveTarget)
+                {
+                    target.SetActive(false);
                 }
             }
         }

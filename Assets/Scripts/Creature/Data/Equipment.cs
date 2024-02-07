@@ -10,7 +10,7 @@ namespace Creature.Data
     [Serializable]
     public class EquipmentEffect
     {
-        public Enums.StatTypeFromInventoryPanel statType;
+        public Enums.SquadStatType statType;
         public Enums.IncreaseStatValueType increaseStatType;
         public int increaseValue;
     }

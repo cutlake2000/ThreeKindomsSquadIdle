@@ -50,5 +50,16 @@ namespace Managers.GameManager
             questPanelUI.InitializeEventListeners();
             summonPanelUI.InitializeEventListeners();
         }
+        
+        public static string FormatCurrency(int value)
+        {
+            // 정수 값을 100으로 나누어 소수점 이하로 변환합니다.
+            double doubleValue = value / 100.0;
+
+            // 변환된 값을 "F2" 형식 지정자를 사용하여 소수점 이하 두 자리까지 표시합니다.
+            string formattedValue = doubleValue.ToString("F2");
+
+            return formattedValue;
+        }
     }
 }
