@@ -120,7 +120,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         }
 
         // 선택 장비 데이터 UI로 보여주는 메서드
-        private void UpdateSelectedEquipmentUI(Equipment equipment)
+        public void UpdateSelectedEquipmentUI(Equipment equipment)
         {
             Debug.Log(selectEquipmentIcon);
             selectEquipmentTier.text = $"{equipment.equipmentTier} 티어";
@@ -207,12 +207,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.WeaponEnhanceStone,
                 selectEquipment.GetEnhanceStone());
             selectEquipment.Enhance();
+            
             UpdateSelectedEquipmentUI(selectEquipment);
-
-            if (selectEquipment.isEquipped) OnClickEquip();
-
             UpdateSelectEquipmentData();
-
             OnClickEnhancePanel();
 
             //TODO : Achievement
@@ -225,19 +222,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             squadEquipmentStatusPanel.SetActive(true);
         }
 
-        // 장착 버튼 눌렸을 때 불리는 메서드
-        public void OnClickEquip()
-        {
-            SquadBattleManager.EquipAction?.Invoke(InventoryManager.GetEquipment(selectEquipment.equipmentId));
-        }
-
         private void OnClickAutoEquip()
         {
-            selectEquipment.isEquipped = false;
-            FindInventoryItemList(selectEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(false);
-            selectEquipment.SaveEquipmentEachInfo(selectEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
-            SquadBattleManager.EquipAction?.Invoke(InventoryManager.GetEquipment(selectEquipment.equipmentId));
-            
             InventoryManager.Instance.AutoEquip(selectEquipment.equipmentType);
         }
 

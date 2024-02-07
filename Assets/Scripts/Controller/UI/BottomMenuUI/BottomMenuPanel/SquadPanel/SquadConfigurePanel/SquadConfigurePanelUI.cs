@@ -264,6 +264,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         /// </summary>
         private void OnClickCharacterEquip()
         {
+            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.EquipSquad, 1);
             var character = currentSelectedSquadConfigurePanelItem.characterType switch
             {
                 Enums.CharacterType.Warrior => SquadConfigureManager.Instance.WarriorDictionary[

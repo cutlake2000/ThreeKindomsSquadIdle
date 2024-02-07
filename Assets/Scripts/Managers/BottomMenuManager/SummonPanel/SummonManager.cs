@@ -205,9 +205,10 @@ namespace Managers.BottomMenuManager.SummonPanel
                     {
                         targetCharacter.isPossessed = true;
                         targetCharacter.characterLevel = 1;
+                        targetCharacter.SaveCharacterEquippedInfo(targetCharacter.characterId);
                     }
-                    
-                    targetCharacter.SaveCharacterEquippedInfo(targetCharacter.characterId);
+
+                    targetCharacter.SaveCharacterPossessedInfo(targetCharacter.characterId);
                     
                     squadConfigurePanelScrollViewItem.UpdateSquadConfigureAllItemUI(targetCharacter.characterLevel, targetCharacter.isEquipped, targetCharacter.isPossessed, targetCharacter.characterName, SpriteManager.Instance.GetCharacterSprite(targetCharacter.characterType, targetCharacter.characterIconIndex));
                     

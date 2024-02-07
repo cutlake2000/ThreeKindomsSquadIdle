@@ -112,10 +112,6 @@ namespace Managers.GameManager
                     break;
                 case Enums.QuestType.EquipSquad:
                     break;
-                case Enums.QuestType.UseSkill:
-                    break;
-                case Enums.QuestType.TouchAutoButton:
-                    break;
                 case Enums.QuestType.PlayGoldDungeon:
                     break;
                 case Enums.QuestType.CompositeSword:
@@ -147,7 +143,7 @@ namespace Managers.GameManager
             
             if (questType is Enums.QuestType.AttackTalentLevel or Enums.QuestType.HealthTalentLevel or Enums.QuestType.StageClear or Enums.QuestType.StageClear)
             {
-                quests[questLevel].progress = currentValue; // TODO: +=, = ?   
+                quests[questLevel].progress = currentValue;
             }
             else
             {

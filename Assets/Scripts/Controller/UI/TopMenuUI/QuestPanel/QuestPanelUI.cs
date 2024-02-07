@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using Controller.UI.BottomMenuUI;
 using Data;
 using Managers.BattleManager;
+using Managers.BottomMenuManager.InventoryPanel;
 using Managers.GameManager;
 using TMPro;
 using UnityEngine;
@@ -32,13 +34,24 @@ namespace Controller.UI.TopMenuUI.QuestPanel
             }
             else
             {
-                foreach (var target in QuestManager.Instance.questTargets[QuestManager.Instance.questLevel % 5].activeTarget)
+                foreach (var t in QuestManager.Instance.questTargets.Where(t => t.questType == QuestManager.Instance.currentQuest.questType))
                 {
-                    target.SetActive(true);
-                }
-                foreach (var target in QuestManager.Instance.questTargets[QuestManager.Instance.questLevel % 5].inactiveTarget)
-                {
-                    target.SetActive(false);
+                    if (t.questType == Enums.QuestType.AutoEquipSword)
+                    {
+                        foreach (var sword in InventoryManager.Instance.SwordsDictionary.Where(sword => sword.Value.isEquipped))
+                        {
+                            UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(sword.Value);
+                        }
+                    }
+                    
+                    foreach (var target in t.activeTarget)
+                    {
+                        target.SetActive(true);
+                    }
+                    foreach (var target in t.inactiveTarget)
+                    {
+                        target.SetActive(false);
+                    }
                 }
             }
         }

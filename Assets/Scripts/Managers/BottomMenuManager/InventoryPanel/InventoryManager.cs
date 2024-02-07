@@ -310,7 +310,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
             targetInventoryItemList.GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemQuantityUI(equipment.equipmentQuantity);
             equipment.SaveEquipmentEachInfo(equipment.equipmentId, Enums.EquipmentProperty.Quantity);
 
-            var nextEquipment = GetNextEquipment(equipment.equipmentId, equipment.equipmentType);
+            var nextEquipment = GetNextEquipment(equipment.equipmentId);
 
             if (nextEquipment == null) return;
 
@@ -425,7 +425,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
         }
 
         // 매개변수로 받은 key값을 사용하는 장비의 다음레벨 장비를 불러오는 메서드
-        private static Equipment GetNextEquipment(string currentKey, Enums.EquipmentType type)
+        private static Equipment GetNextEquipment(string currentKey)
         {
             var splitString = currentKey.Split('_');
             var targetTierIndex = Convert.ToInt32(splitString[1]);
@@ -516,30 +516,36 @@ namespace Managers.BottomMenuManager.InventoryPanel
             };
 
             if (equipments == null) return;
-
-            var highValueEquipment = equipments.OrderByDescending(equipment => equipment.Value.isPossessed).ThenByDescending(equipment => equipment.Value.equipmentRarity).ThenBy(equipment => equipment.Value.equipmentTier).ToList()[0].Value;
+            var sortDictionary = equipments.OrderBy(equipment => equipment.Value.isEquipped).ThenByDescending(equipment => equipment.Value.isPossessed).ThenByDescending(equipment => equipment.Value.equipmentRarity).ThenBy(equipment => equipment.Value.equipmentTier).ToList();
+            
+            var lowValueEquipment = sortDictionary[^1].Value;
+            lowValueEquipment.isEquipped = false;
+            lowValueEquipment.SaveEquipmentEachInfo(lowValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
+            UIManager.Instance.inventoryPanelUI.FindInventoryItemList(lowValueEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(false);
+            
+            var highValueEquipment = sortDictionary[0].Value;
             highValueEquipment.isEquipped = true;
             highValueEquipment.SaveEquipmentEachInfo(highValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
             
             switch (highValueEquipment.equipmentType)
             {
                 case Enums.EquipmentType.Sword:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeSword, 1);
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipSword, 1);
                     break;
                 case Enums.EquipmentType.Bow:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeBow, 1);
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipBow, 1);
                     break;
                 case Enums.EquipmentType.Staff:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeStaff, 1);
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipStaff, 1);
                     break;
                 case Enums.EquipmentType.Helmet:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeHelmet, 1);
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipHelmet, 1);
                     break;
                 case Enums.EquipmentType.Armor:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeArmor, 1);
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipArmor, 1);
                     break;
                 case Enums.EquipmentType.Gauntlet:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeGauntlet, 1);
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipGauntlet, 1);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -212,6 +212,11 @@ namespace Creature.Data
         {
             ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
         }
+
+        public void SaveCharacterPossessedInfo(string id)
+        {
+            ES3.Save($"{nameof(isPossessed)}_" + id, isPossessed);
+        }
         
         
         // public void SaveCharacterEachInfo(string equipmentID, Enum.CharacterProperty property)

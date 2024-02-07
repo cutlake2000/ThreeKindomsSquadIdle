@@ -47,7 +47,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         
         public void UpdateInventoryPanelItemEquipMark(bool isEquipped)
         {
-            possessMark.SetActive(!isEquipped);
+            equipMark.SetActive(isEquipped);
         }
     }
 }

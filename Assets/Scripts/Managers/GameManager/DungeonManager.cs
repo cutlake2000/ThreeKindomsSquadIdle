@@ -112,6 +112,8 @@ namespace Managers.GameManager
                         CheckRemainedBossHealth += UpdateBossKillUI;
                         bossMonster = Instantiate(bossMonsterPrefab, bossMonsterSpawnPosition);
                         bossMonster.GetComponent<BossMonster>().InitializeBossMonsterData(currentDungeonLevel);
+                        
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayEnhanceStoneDungeon, 1);
 
                         targetScore = 1;
                     }
@@ -119,6 +121,8 @@ namespace Managers.GameManager
                     {
                         monsterSpawnCountsPerSubStage = dungeonSo[index].monsterSpawnCountsPerSubStage;
                         targetScore = dungeonSo[index].targetScore;
+                        
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayGoldDungeon, 1);
                     }
                     
                     StageManager.CheckRemainedMonsterAction += CalculateRemainedMonster;
