@@ -1,0 +1,54 @@
+순번,내용,달성 목표,보상 타입,보상,구분,타입
+메인 퀘스트 1,재능 - 공격력 Lv.5 달성하기,5,Dia,1000,AttackTalentLevel,OneTime
+메인 퀘스트 2,재능 - 체력 Lv. 5 달성하기,5,Dia,1000,HealthTalentLevel,OneTime
+메인 퀘스트 3,무기 소환 10회 진행하기,10,Dia,1000,SummonWeapon,OneTime
+메인 퀘스트 4,전사 무기 자동 장착하기,1,Dia,1000,AutoEquipSword,OneTime
+메인 퀘스트 5,궁수 무기 자동 장착하기,1,Dia,1000,AutoEquipBow,OneTime
+메인 퀘스트 6,법사 무기 자동 장착하기,1,Dia,1000,AutoEquipStaff,OneTime
+메인 퀘스트 7,1-5 스테이지 돌파하기,5,Dia,1000,StageClear,OneTime
+메인 퀘스트 8,방어구 소환 10회 진행하기,10,Dia,1000,SummonGear,OneTime
+메인 퀘스트 9,투구 자동 장착하기,1,Dia,1000,AutoEquipHelmet,OneTime
+메인 퀘스트 10,갑옷 자동 장착하기,1,Dia,1000,AutoEquipArmor,OneTime
+메인 퀘스트 11,장갑 자동 장착하기,1,Dia,1000,AutoEquipGauntlet,OneTime
+메인 퀘스트 12,캐릭터 소환 10회 진행하기,10,Dia,1000,SummonSquad,OneTime
+메인 퀘스트 13,캐릭터 장착하기,1,Dia,1000,EquipSquad,OneTime
+메인 퀘스트 14,스킬 2회 사용하기,2,Dia,1000,UseSkill,OneTime
+메인 퀘스트 15,오토 버튼 터치 하기,1,Dia,1000,TouchAutoButton,OneTime
+메인 퀘스트 16,1-10 스테이지 돌파하기,10,Dia,1000,StageClear,OneTime
+메인 퀘스트 17,재능 - 공격력 Lv.10 달성하기,10,Dia,1000,AttackTalentLevel,OneTime
+메인 퀘스트 18,재능 - 체력 Lv.10 달성하기,10,Dia,1000,HealthTalentLevel,OneTime
+메인 퀘스트 19,골드 던전 1회 플레이,1,Dia,1000,PlayGoldDungeon,OneTime
+메인 퀘스트 20,재능 - 공격력 Lv.15 달성하기,15,Dia,1000,AttackTalentLevel,OneTime
+메인 퀘스트 21,재능 - 체력 Lv.15 달성하기,15,Dia,1000,HealthTalentLevel,OneTime
+메인 퀘스트 22,무기 소환 100회 진행하기,100,Dia,1000,SummonWeapon,OneTime
+메인 퀘스트 23,근거리 무기 합성하기,1,Dia,1000,CompositeSword,OneTime
+메인 퀘스트 24,원거리 무기 합성하기,1,Dia,1000,CompositeBow,OneTime
+메인 퀘스트 25,마법 무기 합성하기,1,Dia,1000,CompositeStaff,OneTime
+메인 퀘스트 26,방어구 소환 100회 진행하기,100,Dia,1000,SummonGear,OneTime
+메인 퀘스트 27,투구 합성하기,1,Dia,1000,CompositeHelmet,OneTime
+메인 퀘스트 28,갑옷 합성하기,1,Dia,1000,CompositeArmor,OneTime
+메인 퀘스트 29,장갑 합성하기,1,Dia,1000,CompositeGauntlet,OneTime
+메인 퀘스트 30,재능 - 공격력 Lv.20 달성하기,20,Dia,1000,AttackTalentLevel,OneTime
+메인 퀘스트 31,재능 - 체력 Lv.20 달성하기,20,Dia,1000,HealthTalentLevel,OneTime
+메인 퀘스트 32,1-15 스테이지 돌파하기,15,Dia,1000,StageClear,OneTime
+메인 퀘스트 33,공성전 1회 플레이,1,Dia,1000,PlayEnhanceStoneDungeon,OneTime
+메인 퀘스트 34,캐릭터 소환 10회 진행하기,10,Dia,1000,SummonSquad,OneTime
+메인 퀘스트 35,캐릭터 레벨업 하기,1,Dia,1000,LevelUpCharacter,OneTime
+메인 퀘스트 36,골드 던전 1회 플레이,1,Dia,1000,PlayGoldDungeon,OneTime
+메인 퀘스트 37,재능 - 공격력 Lv.25 달성하기,25,Dia,1000,AttackTalentLevel,OneTime
+메인 퀘스트 38,재능 - 체력 증가 Lv.25 달성하기,25,Dia,1000,HealthTalentLevel,OneTime
+메인 퀘스트 39,무기 소환 10회 진행하기,10,Dia,1000,SummonWeapon,OneTime
+메인 퀘스트 42,방어구 소환 10회 진행하기,10,Dia,1000,SummonGear,OneTime
+메인 퀘스트 45,1-20스테이지 돌파하기,20,Dia,1000,StageClear,OneTime
+메인 퀘스트 46,공성전 1회 플레이,1,EnhanceStoneSquad,10000,PlayEnhanceStoneDungeon,OneTime
+메인 퀘스트 47,캐릭터 소환 10회 진행하기,10,Dia,1000,SummonSquad,OneTime
+메인 퀘스트 48,캐릭터 레벨업 하기,1,Dia,1000,LevelUpCharacter,OneTime
+메인 퀘스트 49,골드 던전 1회 플레이,1,Dia,1000,PlayGoldDungeon,Loop
+메인 퀘스트 50,공격력 증가 Lv.30 달성하기,30,Dia,1000,AttackTalentLevel,Loop
+메인 퀘스트 51,체력 증가 Lv.30 달성하기,30,Dia,1000,HealthTalentLevel,Loop
+메인 퀘스트 52,무기 소환 10회 진행하기,10,Dia,1000,SummonWeapon,Loop
+메인 퀘스트 53,방어구 소환 10회 진행하기,10,Dia,1000,SummonGear,Loop
+메인 퀘스트 54,1-25 스테이지 돌파하기,25,Dia,1000,StageClear,Loop
+메인 퀘스트 55,공성전 1회 플레이,1,EnhanceStoneSquad,10000,PlayEnhanceStoneDungeon,Loop
+메인 퀘스트 56,캐릭터 소환 10회 진행하기,10,Dia,1000,SummonSquad,Loop
+메인 퀘스트 57,캐릭터 레벨업 하기,1,Dia,1000,LevelUpCharacter,Loop

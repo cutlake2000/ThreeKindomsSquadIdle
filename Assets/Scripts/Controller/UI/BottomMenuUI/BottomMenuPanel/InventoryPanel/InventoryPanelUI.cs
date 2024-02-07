@@ -175,7 +175,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         // 강화 판넬 버튼 눌렸을 때 불리는 메서드
         public void OnClickEnhancePanel()
         {
-            var enhanceEquipmentTemp = InventoryManager.GetEquipment(selectEquipment.equipmentId);
+            // var enhanceEquipmentTemp = InventoryManager.GetEquipment(selectEquipment.equipmentId);
             // selectEquipment.GetComponent<Equipment>().SetEquipmentInfo(enhanceEquipmentTemp.GetComponent<Equipment>());
             //
             // if (enhanceEquipmentTemp == null) return;

@@ -45,7 +45,7 @@ namespace Managers.BattleManager
         [SerializeField] private string currentMainStageName;
         public int currentStageIndex; // 누적 스테이지 정보
         [SerializeField] private bool isClear;
-        [SerializeField] private int currentAccumulatedStage;
+        public int currentAccumulatedStage;
         [SerializeField] private int currentMainStage;
         [SerializeField] private int currentSubStage;
         [SerializeField] public int currentWave;
@@ -127,6 +127,7 @@ namespace Managers.BattleManager
                     currentWave -= waveCountsPerSubStage;
                     currentSubStage++;
                     currentAccumulatedStage++;
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.StageClear, currentAccumulatedStage);
 
                     stopWaveTimer = true;
                     goToNextSubStage = true;

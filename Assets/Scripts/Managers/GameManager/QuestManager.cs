@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Controller.UI.TopMenuUI.QuestPanel;
 using Data;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.TalentPanel;
@@ -12,13 +13,13 @@ namespace Managers.GameManager
     public class Quest
     {
         public string name;
-        public string description;
         public Enums.QuestType questType; // 퀘스트 타입
         public int progress; // 현재 진행량
         public int increaseProgress;
         public int targetProgress; // 목표 진행량
         public Enums.QuestRewardType questRewardType;
         public int reward; // 보상
+        public bool isLoopQuest;
     }
 
     [Serializable]
@@ -32,13 +33,22 @@ namespace Managers.GameManager
     
     public class QuestManager : MonoBehaviour
     {
+        public Action<Enums.QuestType, int> IncreaseQuestProgressAction;
         public static QuestManager Instance;
         public TextAsset questCsv;
 
         public int questLevel;
+        public Quest currentQuest;
+        
+        [Header("Quest Mark")]
         public GameObject questMark;
         public List<Quest> quests;
         public List<QuestTarget> questTargets;
+
+        [Header("Quest Reward")]
+        public Sprite targetQuestRewardSprite;
+        public string targetQuestRewardText;
+        public string targetQuestDescriptionText;
 
         private const string QUEST_SAVE_KEY = "QUEST";
 
@@ -49,40 +59,83 @@ namespace Managers.GameManager
 
         public void InitQuestManager()
         {
-            SetAllQuests();
+            IncreaseQuestProgressAction += IncreaseQuestProgress;
+            CreateQuestsFromCsv();
             UpdateAllQuestProgress();
+            UpdateQuestRewardPanelUI();
         }
 
         private void UpdateAllQuestProgress()
         {
-            foreach (var quest in quests)
+            currentQuest = quests[questLevel];
+            targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite((Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[questLevel].questRewardType}"));
+            targetQuestRewardText = $"{quests[questLevel].reward}";
+            targetQuestDescriptionText = $"{quests[questLevel].name}";
+
+            switch (currentQuest.questType)
             {
-                switch (quest.questType)
-                {
-                    case Enums.QuestType.AttackTalentLevel:
-                        quest.targetProgress = quest.increaseProgress * ((questLevel + 5) / 5);
-                        quest.name = $"{quest.description}{quest.targetProgress} 달성";
-                        break;
-                    case Enums.QuestType.HealthTalentLevel:
-                        quest.targetProgress = quest.increaseProgress * ((questLevel + 5) / 5);
-                        quest.name = $"{quest.description}{quest.targetProgress} 달성";
-                        break;
-                    case Enums.QuestType.DefenceTalentLevel:
-                        quest.targetProgress = quest.increaseProgress * ((questLevel + 5) / 5);
-                        quest.name = $"{quest.description}{quest.targetProgress} 달성";
-                        break;
-                    case Enums.QuestType.SquadLevel:
-                        quest.targetProgress = quest.increaseProgress * ((questLevel + 5) / 5);
-                        quest.name = $"{quest.description}{quest.targetProgress} 달성";
-                        break;
-                    case Enums.QuestType.StageClear:
-                        quest.targetProgress = questLevel > 50 ? 5 : questLevel + 5;
-                        quest.name =
-                            $"{quest.description} {quest.targetProgress / 50 + 1}-{quest.targetProgress} 클리어";
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }   
+                case Enums.QuestType.AttackTalentLevel:
+                    if (TalentManager.Instance.talentItem[0].currentLevel >= currentQuest.targetProgress)
+                    {
+                        UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                    }
+                    break;
+                case Enums.QuestType.HealthTalentLevel:
+                    if (TalentManager.Instance.talentItem[1].currentLevel >= currentQuest.targetProgress)
+                    {
+                        UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                    }
+                    break;
+                case Enums.QuestType.SummonWeapon:
+                    break;
+                case Enums.QuestType.AutoEquipSword:
+                    break;
+                case Enums.QuestType.AutoEquipBow:
+                    break;
+                case Enums.QuestType.AutoEquipStaff:
+                    break;
+                case Enums.QuestType.StageClear:
+                    if (StageManager.Instance.currentAccumulatedStage >= currentQuest.targetProgress)
+                    {
+                        UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                    }
+                    break;
+                case Enums.QuestType.SummonGear:
+                    break;
+                case Enums.QuestType.AutoEquipHelmet:
+                    break;
+                case Enums.QuestType.AutoEquipArmor:
+                    break;
+                case Enums.QuestType.AutoEquipGauntlet:
+                    break;
+                case Enums.QuestType.SummonSquad:
+                    break;
+                case Enums.QuestType.EquipSquad:
+                    break;
+                case Enums.QuestType.UseSkill:
+                    break;
+                case Enums.QuestType.TouchAutoButton:
+                    break;
+                case Enums.QuestType.PlayGoldDungeon:
+                    break;
+                case Enums.QuestType.CompositeSword:
+                    break;
+                case Enums.QuestType.CompositeBow:
+                    break;
+                case Enums.QuestType.CompositeStaff:
+                    break;
+                case Enums.QuestType.CompositeHelmet:
+                    break;
+                case Enums.QuestType.CompositeArmor:
+                    break;
+                case Enums.QuestType.CompositeGauntlet:
+                    break;
+                case Enums.QuestType.PlayEnhanceStoneDungeon:
+                    break;
+                case Enums.QuestType.LevelUpCharacter:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             UpdateQuestPanelUI();
@@ -90,49 +143,26 @@ namespace Managers.GameManager
 
         public void IncreaseQuestProgress(Enums.QuestType questType, int currentValue)
         {
-            var index = (int)questType;
-            var currentTargetIndex = questLevel % 5;
-                
-            quests[index].progress = currentValue;
-
-            if (quests[index].progress < quests[index].targetProgress) return;
-            if (index == questLevel % 5) UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+            if (currentQuest.questType != questType) return;
             
-            if (currentTargetIndex != 5 && questTargets[currentTargetIndex].targetMark.activeInHierarchy && questTargets[currentTargetIndex].questType == questType)
+            if (questType is Enums.QuestType.AttackTalentLevel or Enums.QuestType.HealthTalentLevel or Enums.QuestType.StageClear or Enums.QuestType.StageClear)
             {
-                questTargets[currentTargetIndex].targetMark.SetActive(false);
-            }
-        }
-
-        private void SetAllQuests()
-        {
-            if (ES3.KeyExists(QUEST_SAVE_KEY))
-            {
-                questLevel = ES3.Load($"{nameof(questLevel)}", 0);
-                quests = ES3.Load<List<Quest>>(QUEST_SAVE_KEY);
+                quests[questLevel].progress = currentValue; // TODO: +=, = ?   
             }
             else
             {
-                CreateQuestsFromCsv();
+                quests[questLevel].progress += currentValue;   
+            }
 
-                foreach (var quest in quests)
-                {
-                    quest.progress = quest.questType switch
-                    {
-                        Enums.QuestType.AttackTalentLevel => TalentManager.Instance.talentItem[0].currentLevel,
-                        Enums.QuestType.HealthTalentLevel => TalentManager.Instance.talentItem[1].currentLevel,
-                        Enums.QuestType.DefenceTalentLevel => TalentManager.Instance.talentItem[2].currentLevel,
-                        Enums.QuestType.SquadLevel => AccountManager.Instance.accountLevel,
-                        Enums.QuestType.StageClear => StageManager.Instance.currentStageIndex,
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-                }
+            if (quests[questLevel].progress >= quests[questLevel].targetProgress)
+            {
+                UIManager.Instance.questPanelUI.completedMark.SetActive(true);
             }
         }
 
         private void CreateQuestsFromCsv()
         {
-            questCsv = Resources.Load<TextAsset>("CSV/QuestData");
+            questCsv = Resources.Load<TextAsset>("CSV/GuideQuest");
             questLevel = ES3.Load($"{nameof(questLevel)}", 0);
             quests = new List<Quest>();
 
@@ -149,13 +179,13 @@ namespace Managers.GameManager
                     {
                         var quest = new Quest
                         {
-                            description = fields[1].Trim(), // CSV에 설명이 없으므로 빈 문자열 할당
-                            increaseProgress = int.Parse(fields[2].Trim()),
-                            questRewardType =
-                                (Enums.QuestRewardType)System.Enum.Parse(typeof(Enums.QuestRewardType), fields[3].Trim()),
+                            name = fields[1].Trim(),
+                            targetProgress = int.Parse(fields[2].Trim()),
+                            progress = 0,
+                            questRewardType = (Enums.QuestRewardType)Enum.Parse(typeof(Enums.QuestRewardType), fields[3].Trim()),
                             reward = int.Parse(fields[4].Trim()),
-                            questType = (Enums.QuestType)System.Enum.Parse(typeof(Enums.QuestType), fields[5].Trim()),
-                            progress = 0, // 초기 진행량은 0
+                            questType = (Enums.QuestType)Enum.Parse(typeof(Enums.QuestType), fields[5].Trim()),
+                            isLoopQuest = fields[6].Trim() == "Loop"
                         };
 
                         quests.Add(quest);
@@ -176,52 +206,27 @@ namespace Managers.GameManager
 
         private void UpdateQuestPanelUI()
         {
-            var targetQuestIndex = questLevel % 5;
-            var targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite(
-                (Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"));
-            var targetQuestRewardText = $"{quests[targetQuestIndex].reward}";
-            var targetQuestDescriptionText = $"{quests[targetQuestIndex].name}";
             UIManager.Instance.questPanelUI.UpdateQuestPanelUI(targetQuestRewardSprite, targetQuestRewardText, targetQuestDescriptionText);
-            UIManager.Instance.questPanelUI.questResultPanelUI.UpdateQuestResultPanelUI(targetQuestRewardSprite, targetQuestRewardText);
+        }
 
-            if (quests[questLevel % 5].progress >= Instance.quests[questLevel % 5].targetProgress)
-            {
-                UIManager.Instance.questPanelUI.completedMark.SetActive(true);
-            }
-            
-            if (questLevel < 4)
-            {
-                if (!questMark.activeInHierarchy)
-                {
-                    questMark.SetActive(true);
-                }
-                
-                questTargets[questLevel % 5].targetMark.SetActive(true);
-            }
-            else if (questLevel == 5)
-            {
-                questMark.SetActive(false);
-            }
+        private void UpdateQuestRewardPanelUI()
+        {
+            UIManager.Instance.questPanelUI.questResultPanelUI.UpdateQuestResultPanelUI(targetQuestRewardSprite, targetQuestRewardText);
         }
         
         public void TargetQuestClear()
         {
-            var targetQuestIndex = questLevel % 5;
-            AccountManager.Instance.AddCurrency((Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[targetQuestIndex].questRewardType}"), quests[targetQuestIndex].reward);
+            UpdateQuestRewardPanelUI();
+            
+            AccountManager.Instance.AddCurrency((Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[questLevel].questRewardType}"), quests[questLevel].reward);
             UIManager.Instance.questPanelUI.questResultPanelUI.gameObject.SetActive(true);
             
             questLevel++;
             ES3.Save($"{nameof(questLevel)}", questLevel);
+
             UIManager.Instance.questPanelUI.completedMark.SetActive(false);
 
-            if (questLevel % 5 == 0)
-            {
-                UpdateAllQuestProgress();   
-            }
-            else
-            {
-                UpdateQuestPanelUI();
-            }
+            UpdateAllQuestProgress();
         }
     }
 }

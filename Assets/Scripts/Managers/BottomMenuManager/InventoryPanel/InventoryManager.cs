@@ -9,6 +9,7 @@ using Managers.GameManager;
 using Module;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Managers.BottomMenuManager.InventoryPanel
@@ -19,6 +20,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
         public const int MaxQuantity = 5;
         public static InventoryManager Instance;
         public static Dictionary<string, Equipment> AllEquipments = new();
+
+        [FormerlySerializedAs("isCompositePossible")] public bool isComposited;
 
         [Header("임시 장비 이름")] public List<string> swordNames = new();
         public List<string> bowNames = new();
@@ -280,8 +283,10 @@ namespace Managers.BottomMenuManager.InventoryPanel
         // 매개변수로 받은 장비 합성하는 메서드
         private void CompositeAllEquipment(Equipment equipment)
         {
+            isComposited = false;
             if (equipment.equipmentQuantity < 5) return;
-
+            isComposited = true;
+            
             var compositeCount = equipment.equipmentQuantity / 5;
             equipment.equipmentQuantity %= 5;
             
@@ -324,6 +329,33 @@ namespace Managers.BottomMenuManager.InventoryPanel
                 else
                 {
                     nextEquipment.SaveEquipmentEachInfo(nextEquipment.equipmentId, Enums.EquipmentProperty.Quantity);   
+                }
+            }
+
+            if (isComposited)
+            {
+                switch (equipment.equipmentType)
+                {
+                    case Enums.EquipmentType.Sword:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeSword, 1);
+                        break;
+                    case Enums.EquipmentType.Bow:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeBow, 1);
+                        break;
+                    case Enums.EquipmentType.Staff:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeStaff, 1);
+                        break;
+                    case Enums.EquipmentType.Helmet:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeHelmet, 1);
+                        break;
+                    case Enums.EquipmentType.Armor:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeArmor, 1);
+                        break;
+                    case Enums.EquipmentType.Gauntlet:
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeGauntlet, 1);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -489,6 +521,30 @@ namespace Managers.BottomMenuManager.InventoryPanel
             highValueEquipment.isEquipped = true;
             highValueEquipment.SaveEquipmentEachInfo(highValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
             
+            switch (highValueEquipment.equipmentType)
+            {
+                case Enums.EquipmentType.Sword:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeSword, 1);
+                    break;
+                case Enums.EquipmentType.Bow:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeBow, 1);
+                    break;
+                case Enums.EquipmentType.Staff:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeStaff, 1);
+                    break;
+                case Enums.EquipmentType.Helmet:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeHelmet, 1);
+                    break;
+                case Enums.EquipmentType.Armor:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeArmor, 1);
+                    break;
+                case Enums.EquipmentType.Gauntlet:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.CompositeGauntlet, 1);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
             UIManager.Instance.inventoryPanelUI.FindInventoryItemList(highValueEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(true);
 
             SquadBattleManager.EquipAction?.Invoke(highValueEquipment);
@@ -511,8 +567,9 @@ namespace Managers.BottomMenuManager.InventoryPanel
             if (equipments == null) return;
 
             var index = 0;
-            
+
             foreach (var equipment in equipments)
+            {
                 if (index == equipments.Count - 1)
                 {
                     var splitString = equipment.Value.equipmentId.Split('_');
@@ -540,6 +597,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                     CompositeAllEquipment(equipment.Value);
                     index++;
                 }
+            }
         }
 
         public static void IncreaseQuantity(Equipment equipment, int increaseValue)

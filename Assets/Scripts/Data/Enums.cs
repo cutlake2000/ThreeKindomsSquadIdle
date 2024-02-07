@@ -91,17 +91,35 @@ namespace Data
         {
             AttackTalentLevel,
             HealthTalentLevel,
-            DefenceTalentLevel,
-            SquadLevel,
-            StageClear
+            SummonWeapon,
+            AutoEquipSword,
+            AutoEquipBow,
+            AutoEquipStaff,
+            StageClear,
+            SummonGear,
+            AutoEquipHelmet,
+            AutoEquipArmor,
+            AutoEquipGauntlet,
+            SummonSquad,
+            EquipSquad,
+            UseSkill,
+            TouchAutoButton,
+            PlayGoldDungeon,
+            CompositeSword,
+            CompositeBow,
+            CompositeStaff,
+            CompositeHelmet,
+            CompositeArmor,
+            CompositeGauntlet,
+            PlayEnhanceStoneDungeon,
+            LevelUpCharacter
         }
         
         public enum QuestRewardType
         {
             Gold,
             Dia,
-            GoldDungeonTicket,
-            EnhanceDungeonTicket
+            EnhanceStoneSquad
         }
 
         public enum DungeonClearType

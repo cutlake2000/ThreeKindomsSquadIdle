@@ -77,13 +77,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
             switch (statTypeFromSquadTalentPanel)
             {
                 case Enums.StatTypeFromSquadTalentPanel.Attack:
-                    QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.AttackTalentLevel, currentLevel);
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AttackTalentLevel, currentLevel);
                     break;
                 case Enums.StatTypeFromSquadTalentPanel.Health:
-                    QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.HealthTalentLevel, currentLevel);
-                    break;
-                case Enums.StatTypeFromSquadTalentPanel.Defence:
-                    QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.DefenceTalentLevel, currentLevel);
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.HealthTalentLevel, currentLevel);
                     break;
             }
         }

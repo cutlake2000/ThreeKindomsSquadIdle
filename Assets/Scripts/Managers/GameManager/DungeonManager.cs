@@ -202,6 +202,18 @@ namespace Managers.GameManager
             {
                 dungeonUI.SetActive(false);
             }
+
+            switch (currentDungeonType)
+            {
+                case Enums.DungeonType.GoldDungeon:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayGoldDungeon, 1);
+                    break;
+                case Enums.DungeonType.SquadEnhanceStoneDungeon:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayEnhanceStoneDungeon, 1);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             
             StageManager.CheckRemainedMonsterAction -= CalculateRemainedMonster;
             StageManager.CheckRemainedSquadAction -= CalculateRemainedSquad;

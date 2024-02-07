@@ -97,6 +97,21 @@ namespace Managers.BottomMenuManager.SummonPanel
         public void SummonRandomTarget(Enums.SummonType type, int count)
         {
             if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.Dia, count * 10)) return;
+
+            switch (type)
+            {
+                case Enums.SummonType.Squad:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonSquad, count);
+                    break;
+                case Enums.SummonType.Weapon:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonWeapon, count);
+                    break;
+                case Enums.SummonType.Gear:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonGear, count);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
             
             SummonedItemDictionary.Clear();
             currentSummonType = type;
