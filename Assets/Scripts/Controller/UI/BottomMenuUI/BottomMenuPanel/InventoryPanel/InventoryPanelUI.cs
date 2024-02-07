@@ -57,14 +57,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         private void OnEnable()
         {
             OnClickSelectEquipment += SelectEquipment;
-            // UpdateEquipmentUIAction += UpdateSelectedEquipmentUI;
-            UpdateEquipmentUIAction += SetOnEquippedBtnUI;
         }
 
         private void OnDisable()
         {
             OnClickSelectEquipment -= SelectEquipment;
-            UpdateEquipmentUIAction -= SetOnEquippedBtnUI;
         }
 
         // 버튼 클릭 리스너 설정하는 메서드
@@ -139,7 +136,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
                 Enums.EquipmentRarity.Magic => "매직",
                 Enums.EquipmentRarity.Rare => "레어",
                 Enums.EquipmentRarity.Unique => "유니크",
-                Enums.EquipmentRarity.Legend => "레전드",
+                // Enums.EquipmentRarity.Legend => "레전드",
                 _ => throw new ArgumentOutOfRangeException()
             };
             
@@ -147,20 +144,32 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
                 $"공격력 {equipment.equippedEffects[0].increaseValue}% 증가";
             selectEquipmentOwnedEffect.text = $"체력 {equipment.ownedEffects[0].increaseValue}% 증가";
         }
-        
-        // 장착 버튼 활성화 / 비활성화 메서드
-        private void SetOnEquippedBtnUI(bool onEquipped)
+
+        public GameObject FindInventoryItemList(string id)
         {
-            // if (onEquipped)
-            // {
-            //     equipBtn.gameObject.SetActive(false);
-            //     unEquipBtn.gameObject.SetActive(true);
-            // }
-            // else
-            // {
-            //     equipBtn.gameObject.SetActive(true);
-            //     unEquipBtn.gameObject.SetActive(false);
-            // }
+            var splitString = id.Split('_');
+            var targetRarityIndex = (int)Enum.Parse(typeof(Enums.EquipmentRarity), splitString[0]) * 5;
+            var targetType = (Enums.EquipmentType)Enum.Parse(typeof(Enums.EquipmentType), splitString[2]);
+            var targetTierIndex = 5 - Convert.ToInt32(splitString[1]);
+            var targetIndex = targetRarityIndex + targetTierIndex;
+
+            switch (targetType)
+            {
+                case Enums.EquipmentType.Sword:
+                    return UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords[targetIndex];
+                case Enums.EquipmentType.Bow:
+                    return UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows[targetIndex];
+                case Enums.EquipmentType.Staff:
+                    return UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemStaffs[targetIndex];
+                case Enums.EquipmentType.Helmet:
+                    return UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemHelmets[targetIndex];
+                case Enums.EquipmentType.Armor:
+                    return UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemArmors[targetIndex];
+                case Enums.EquipmentType.Gauntlet:
+                    return UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets[targetIndex];
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         // 강화 판넬 버튼 눌렸을 때 불리는 메서드
@@ -225,6 +234,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         private void OnClickAutoEquip()
         {
             selectEquipment.isEquipped = false;
+            FindInventoryItemList(selectEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(false);
             selectEquipment.SaveEquipmentEachInfo(selectEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
             SquadBattleManager.EquipAction?.Invoke(InventoryManager.GetEquipment(selectEquipment.equipmentId));
             

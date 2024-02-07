@@ -24,6 +24,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
         [Header("추가 100회 뽑기")] [SerializeField] private Button extra100SummonBtn;
         [Header("추가 250회 뽑기")] [SerializeField] private Button extra250SummonBtn;
         
+        [Header("추가 뽑기 락 버튼")] 
+        [SerializeField] private Button extra30SummonLockBtn;
+        [SerializeField] private Button extra100SummonLockBtn;
+        [SerializeField] private Button extra250SummonLockBtn;
+        
         [Header("나가기 버튼")] [SerializeField] private Button summonResultExitButton;
         
         public void InitializeEventListener()
@@ -33,6 +38,44 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
             extra250SummonBtn.onClick.AddListener(() => SummonManager.Instance.SummonRandomTarget(SummonManager.Instance.currentSummonType, 250));
             
             summonResultExitButton.onClick.AddListener(() => ActiveSummonResultPanel(false));
+        }
+
+        public void UpdateSummonResultPanelExtraSummonButtonUI()
+        {
+            var requiredDia = Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Dia));
+
+            if (requiredDia >= 300)
+            {
+                extra30SummonBtn.gameObject.SetActive(true);
+                extra30SummonLockBtn.gameObject.SetActive(false);
+            }
+            else
+            {
+                extra30SummonBtn.gameObject.SetActive(false);
+                extra30SummonLockBtn.gameObject.SetActive(true);
+            }
+
+            if (requiredDia >= 1000)
+            {
+                extra100SummonBtn.gameObject.SetActive(true);
+                extra100SummonLockBtn.gameObject.SetActive(false);
+            }
+            else
+            {
+                extra100SummonBtn.gameObject.SetActive(false);
+                extra100SummonLockBtn.gameObject.SetActive(true);
+            }
+
+            if (requiredDia >= 2500)
+            {
+                extra250SummonBtn.gameObject.SetActive(true);
+                extra250SummonLockBtn.gameObject.SetActive(false);
+            }
+            else
+            {
+                extra250SummonBtn.gameObject.SetActive(false);
+                extra250SummonLockBtn.gameObject.SetActive(true);
+            }
         }
 
         public void UpdateSummonResultPanelUI()
@@ -51,7 +94,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
             currentSummonExpSlider.value = targetSummonLevel.CurrentSummonExp / targetSummonLevel.TargetSummonExp;
         }
 
-        public void ActiveSummonResultPanel(bool active)
+        private void ActiveSummonResultPanel(bool active)
         {
             gameObject.SetActive(active);
         }

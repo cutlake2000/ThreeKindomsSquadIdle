@@ -26,7 +26,7 @@ namespace Creature.Data
     }
     
     [Serializable]
-    public class Equipment : MonoBehaviour
+    public class Equipment
     {
         [Header("ES3 ID")] public string equipmentId;
         [Header("이름")] public string equipmentName;
@@ -86,12 +86,12 @@ namespace Creature.Data
                 Enums.EquipmentRarity.Magic => 80,
                 Enums.EquipmentRarity.Rare => 160,
                 Enums.EquipmentRarity.Unique => 320,
-                Enums.EquipmentRarity.Legend => 640,
-                Enums.EquipmentRarity.Epic => 1280,
-                Enums.EquipmentRarity.Ancient => 2560,
-                Enums.EquipmentRarity.Legendary => 5120,
-                Enums.EquipmentRarity.Mythology => 10240,
-                Enums.EquipmentRarity.Null => 0,
+                // Enums.EquipmentRarity.Legend => 640,
+                // Enums.EquipmentRarity.Epic => 1280,
+                // Enums.EquipmentRarity.Ancient => 2560,
+                // Enums.EquipmentRarity.Legendary => 5120,
+                // Enums.EquipmentRarity.Mythology => 10240,
+                // Enums.EquipmentRarity.Null => 0,
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
 
@@ -156,6 +156,16 @@ namespace Creature.Data
             ES3.Save($"{nameof(equipmentQuantity)}_" + equipmentId, equipmentQuantity);
             ES3.Save($"{nameof(isEquipped)}_" + equipmentId, isEquipped);
             ES3.Save($"{nameof(isPossessed)}_" + equipmentId, isPossessed);
+
+            for (var i = 0; i < equippedEffects.Count; i++)
+            {
+                ES3.Save($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId, equippedEffects[i].increaseValue);   
+            }
+            
+            for (var i = 0; i < ownedEffects.Count; i++)
+            {
+                ES3.Save($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId, ownedEffects[i].increaseValue);   
+            }
         }
         
         public void SaveEquipmentAllInfo(string id)
@@ -165,6 +175,16 @@ namespace Creature.Data
             ES3.Save($"{nameof(equipmentQuantity)}_" + id, equipmentQuantity);
             ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
             ES3.Save($"{nameof(isPossessed)}_" + id, isPossessed);
+
+            for (var i = 0; i < equippedEffects.Count; i++)
+            {
+                ES3.Save($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId, equippedEffects[i].increaseValue);   
+            }
+            
+            for (var i = 0; i < ownedEffects.Count; i++)
+            {
+                ES3.Save($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId, ownedEffects[i].increaseValue);   
+            }
         }
 
         public void SaveEquipmentEachInfo(string equipmentID, Enums.EquipmentProperty property)

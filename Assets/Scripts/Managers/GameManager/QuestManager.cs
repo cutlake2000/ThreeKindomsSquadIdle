@@ -90,14 +90,17 @@ namespace Managers.GameManager
 
         public void IncreaseQuestProgress(Enums.QuestType questType, int currentValue)
         {
-            quests[(int)questType].progress = currentValue;
+            var index = (int)questType;
+            var currentTargetIndex = questLevel % 5;
+                
+            quests[index].progress = currentValue;
 
-            if (quests[(int)questType].progress < quests[(int)questType].targetProgress) return;
-            if ((int)questType == questLevel % 5) UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+            if (quests[index].progress < quests[index].targetProgress) return;
+            if (index == questLevel % 5) UIManager.Instance.questPanelUI.completedMark.SetActive(true);
             
-            if (questTargets[questLevel % 5].targetMark.activeInHierarchy)
+            if (currentTargetIndex != 5 && questTargets[currentTargetIndex].targetMark.activeInHierarchy && questTargets[currentTargetIndex].questType == questType)
             {
-                questTargets[questLevel % 5].targetMark.SetActive(false);
+                questTargets[currentTargetIndex].targetMark.SetActive(false);
             }
         }
 

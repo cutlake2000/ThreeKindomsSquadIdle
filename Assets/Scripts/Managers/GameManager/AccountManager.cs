@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Controller.Effects;
+using Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel;
 using Creature.Data;
 using Data;
 using Function;
@@ -85,7 +86,6 @@ namespace Managers.GameManager
                 UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoLevelUpButton(true);
             }
             
-            var sliderValue = currentAccountExp == 0 ? 0 : int.Parse((currentAccountExp * 100/ currentAccountMaxExp).ToString());
             UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoExpUI(currentAccountExp, currentAccountMaxExp);
         }
         
@@ -105,7 +105,7 @@ namespace Managers.GameManager
             effect.GetComponent<ParticleSystem>().Play();
             
             QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.SquadLevel, accountLevel);
-            UIManager.Instance.squadPanelUI.squadStatPanelUI.CheckRequiredCurrencyOfMagnificationButton(SquadStatManager.Instance.levelUpMagnification);
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.CheckRequiredCurrencyOfMagnificationAllButton();
             UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoLevelUpButton(false);
             UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoAllUI(accountName, accountLevel, currentAccountExp, currentAccountMaxExp, statPoint);
             UIManager.Instance.playerInfoPanelUI.UpdatePlayerInfoPanelLevelUI(accountLevel);
@@ -181,6 +181,13 @@ namespace Managers.GameManager
                 case Enums.CurrencyType.Dia:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.Dia);
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.Dia}> {BigInteger.ChangeMoney(amount)}";
+                    
+                    foreach (var summonPanelScrollViewItem in UIManager.Instance.summonPanelUI.summonPanelScrollViewItems)
+                    {
+                        summonPanelScrollViewItem.GetComponent<SummonPanelItemUI>().UpdateSummonPanelSummonButtonUI();
+                    }
+                    UIManager.Instance.summonPanelUI.summonResultPanelUI.UpdateSummonResultPanelExtraSummonButtonUI();
+                    
                     break;
                 case Enums.CurrencyType.SquadEnhanceStone:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.SquadEnhanceStone);

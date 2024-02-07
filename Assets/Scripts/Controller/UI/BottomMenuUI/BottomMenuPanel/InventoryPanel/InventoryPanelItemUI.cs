@@ -40,9 +40,14 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             equipmentQuantitySlider.maxValue = InventoryManager.MaxQuantity;
         }
 
-        public void UpdateInventoryPanelItemPossessMark()
+        public void UpdateInventoryPanelItemPossessMark(bool isPossessed)
         {
-            possessMark.SetActive(false);
+            possessMark.SetActive(!isPossessed);
+        }
+        
+        public void UpdateInventoryPanelItemEquipMark(bool isEquipped)
+        {
+            possessMark.SetActive(!isEquipped);
         }
     }
 }

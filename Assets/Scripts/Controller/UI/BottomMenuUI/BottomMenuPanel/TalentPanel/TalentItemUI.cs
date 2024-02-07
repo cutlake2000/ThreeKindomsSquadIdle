@@ -61,7 +61,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
                     break;
             }
 
-            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.Gold}> {currentLevelUpCost.ChangeMoney()}";
+            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.Gold}> {(currentLevelUpCost * TalentManager.Instance.levelUpMagnification).ChangeMoney()}";
         }
 
         // 스텟 업데이트 하는 메서드

@@ -97,6 +97,7 @@ namespace Managers.BottomMenuManager.SummonPanel
         public void SummonRandomTarget(Enums.SummonType type, int count)
         {
             if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.Dia, count * 10)) return;
+            
             SummonedItemDictionary.Clear();
             currentSummonType = type;
             UIManager.Instance.summonPanelUI.summonResultPanelUI.gameObject.SetActive(true);
@@ -110,14 +111,14 @@ namespace Managers.BottomMenuManager.SummonPanel
             
             for (var i = 0; i < count; i++)
             {
-                var randomTier = Random.Range(1, 5);
+                var randomTier = Random.Range(1, 6);
 
                 var targetName = type switch
                 {
                     Enums.SummonType.Squad =>
                         $"{squadSummoner?.GetRandomPick()}_{squadType[Random.Range(0, 3)]}",
                     Enums.SummonType.Weapon =>
-                        $"{weaponSummoner?.GetRandomPick()}_{randomTier}_{weaponType[Random.Range(0, 3)]}",
+                         $"{weaponSummoner?.GetRandomPick()}_{randomTier}_{weaponType[Random.Range(0, 3)]}",
                     Enums.SummonType.Gear =>
                         $"{gearSummoner?.GetRandomPick()}_{randomTier}_{gearType[Random.Range(0, 3)]}",
                     _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
@@ -151,7 +152,6 @@ namespace Managers.BottomMenuManager.SummonPanel
                     Character targetCharacter;
                     SquadConfigurePanelItemUI squadConfigurePanelScrollViewItem;
                     
-                    var targetRarityIndex = (int)Enum.Parse(typeof(Enums.CharacterRarity), splitString[0]);
                     var targetType = (Enums.CharacterType)Enum.Parse(typeof(Enums.CharacterType), splitString[1]);
 
                     switch (targetType)
@@ -252,7 +252,7 @@ namespace Managers.BottomMenuManager.SummonPanel
                     targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.Quantity);
 
                     inventoryScrollViewItem.UpdateInventoryPanelItemQuantityUI(targetEquipment.equipmentQuantity);
-                    inventoryScrollViewItem.UpdateInventoryPanelItemPossessMark();
+                    inventoryScrollViewItem.UpdateInventoryPanelItemPossessMark(targetEquipment.isPossessed);
                     
                     UIManager.Instance.summonPanelUI.summonResultPanelUI.summonResultPanelItems[i]
                         .GetComponent<SummonResultPanelItemUI>().UpdateSummonResultPanelEquipmentItemUI(
@@ -298,7 +298,7 @@ namespace Managers.BottomMenuManager.SummonPanel
                         weaponSummoner = new WeightedRandomPicker<string>();
                         for (var i = 0 ; i < summonSo.SummonWeapons[WeaponSummonLevel.CurrentSummonLevel - 1].SummonProbabilities.Length; i++)
                         {
-                            weaponSummoner.Add($"{(Enums.CharacterRarity) i}", summonSo.SummonWeapons[WeaponSummonLevel.CurrentSummonLevel - 1].SummonProbabilities[i]);
+                            weaponSummoner.Add($"{(Enums.EquipmentRarity) i}", summonSo.SummonWeapons[WeaponSummonLevel.CurrentSummonLevel - 1].SummonProbabilities[i]);
                         }
                     }
                     UIManager.Instance.summonPanelUI.summonPanelScrollViewItems[1].GetComponent<SummonPanelItemUI>().UpdateSummonPanelItemUI(WeaponSummonLevel.CurrentSummonLevel, WeaponSummonLevel.CurrentSummonExp, WeaponSummonLevel.TargetSummonExp);
@@ -309,7 +309,7 @@ namespace Managers.BottomMenuManager.SummonPanel
                         gearSummoner = new WeightedRandomPicker<string>();
                         for (var i = 0 ; i < summonSo.SummonGears[GearSummonLevel.CurrentSummonLevel - 1].SummonProbabilities.Length; i++)
                         {
-                            gearSummoner.Add($"{(Enums.CharacterRarity) i}", summonSo.SummonGears[GearSummonLevel.CurrentSummonLevel - 1].SummonProbabilities[i]);
+                            gearSummoner.Add($"{(Enums.EquipmentRarity) i}", summonSo.SummonGears[GearSummonLevel.CurrentSummonLevel - 1].SummonProbabilities[i]);
                         }
                     }
                     UIManager.Instance.summonPanelUI.summonPanelScrollViewItems[2].GetComponent<SummonPanelItemUI>().UpdateSummonPanelItemUI(GearSummonLevel.CurrentSummonLevel, GearSummonLevel.CurrentSummonExp, GearSummonLevel.TargetSummonExp);

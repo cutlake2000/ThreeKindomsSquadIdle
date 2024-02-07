@@ -44,6 +44,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
                     Debug.Log($"{TalentManager.Instance.levelUpMagnification}");
 
                     CheckRequiredCurrencyOfMagnificationAllButton();
+
+                    foreach (var talentItem in TalentManager.Instance.talentItem)
+                    {
+                        talentItem.GetComponent<TalentItemUI>().UpdateSquadTalentUI();
+                    }
                 }
                 else
                 {
@@ -58,8 +63,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         {
             foreach (var talentItem in TalentManager.Instance.talentItem)
             {
+                // talentItem.GetComponent<TalentItemUI>().UpdateSquadTalentUI();
+                
                 if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Gold)) <
-                    SquadStatManager.Instance.levelUpMagnification * talentItem.currentLevelUpCost)
+                    TalentManager.Instance.levelUpMagnification * talentItem.currentLevelUpCost)
                 {
                     talentItem.upgradeButton.gameObject.SetActive(false);
                     talentItem.upgradeBlockButton.gameObject.SetActive(true);
@@ -77,7 +84,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
             var talent = TalentManager.Instance.talentItem[index];
 
             if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Gold)) <
-                SquadStatManager.Instance.levelUpMagnification * talent.currentLevelUpCost)
+                TalentManager.Instance.levelUpMagnification * talent.currentLevelUpCost)
             {
                 talent.upgradeButton.gameObject.SetActive(false);
                 talent.upgradeBlockButton.gameObject.SetActive(true);

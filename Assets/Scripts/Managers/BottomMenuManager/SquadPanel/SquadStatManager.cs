@@ -89,7 +89,7 @@ namespace Managers.BottomMenuManager.SquadPanel
             AccountManager.Instance.statPoint -= squadStatItem[(int)type].levelUpCost * levelUpMagnification;
             
             var effect = objectPool.SpawnFromPool(Enums.PoolType.EffectEnhance);
-            effect.transform.position = effectTarget.position;
+            effect.transform.position = squadStatItem[(int)type].effectTarget.position;
             effect.SetActive(true);
             effect.GetComponent<ParticleSystem>().Play();
 
@@ -99,8 +99,8 @@ namespace Managers.BottomMenuManager.SquadPanel
 
             squadStatItem[(int)type].UpdateSquadStat(levelUpMagnification);
             SetUpgradeUI(squadStatItem[(int)type]);
-            UIManager.Instance.squadPanelUI.squadStatPanelUI.CheckRequiredCurrencyOfMagnificationButton((int)type);
-
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.CheckRequiredCurrencyOfMagnificationAllButton();
+            UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoStatPointUI(AccountManager.Instance.statPoint);
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }
 

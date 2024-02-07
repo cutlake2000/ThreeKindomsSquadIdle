@@ -15,7 +15,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
         [Header("아이템 배경 효과")] public Image itemBackgroundEffect;
         [Header("소환된 개수")] public TMP_Text itemCount;
         [Header("소환 이펙트 애니메이션")] public Animator summonEffectsAnimator;
-        [Header("소환 이펙트 파티클")] public List<ParticleSystem> summonEffectsParticle;
+        // [Header("소환 이펙트 파티클")] public List<ParticleSystem> summonEffectsParticle;
 
         public void UpdateSummonResultPanelEquipmentItemUI(int tier, Sprite image, int grade, int count)
         {
@@ -37,7 +37,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
         public void StartSummonEffect()
         {
             summonEffectsAnimator.SetTrigger("Summon");
-            summonEffectsParticle[itemRarity].Play(true);
+            // summonEffectsParticle[itemRarity].Play(true);
         }
     }
 }

@@ -142,13 +142,13 @@ namespace Data
             Uncommon,
             Magic,
             Rare,
-            Unique,
-            Legend,
-            Epic,
-            Ancient,
-            Legendary,
-            Mythology,
-            Null
+            Unique
+            // Legend,
+            // Epic,
+            // Ancient,
+            // Legendary,
+            // Mythology,
+            // Null
         }
 
         /// <summary>

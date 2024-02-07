@@ -6,6 +6,7 @@ using Managers.GameManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using AccountManager = Managers.GameManager.AccountManager;
 
 namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 {
@@ -41,7 +42,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 
                     SquadStatManager.Instance.levelUpMagnification = (int)Mathf.Pow(10, i);
 
-                    CheckRequiredCurrencyOfMagnificationButton(i);
+                    CheckRequiredCurrencyOfMagnificationAllButton();
                 }
                 else
                 {
@@ -52,11 +53,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
                 }
         }
 
-        public void CheckRequiredCurrencyOfMagnificationButton(int index)
+        public void CheckRequiredCurrencyOfMagnificationAllButton()
         {
-            var levelUpCost = SquadStatManager.Instance.squadStatItem[index].levelUpCost;
-
-            if (AccountManager.Instance.statPoint < SquadStatManager.Instance.levelUpMagnification * levelUpCost)
+            if (AccountManager.Instance.statPoint < SquadStatManager.Instance.levelUpMagnification)
                 foreach (var squadStat in SquadStatManager.Instance.squadStatItem)
                 {
                     if (squadStat.maxLevel - squadStat.currentLevel <= AccountManager.Instance.statPoint)

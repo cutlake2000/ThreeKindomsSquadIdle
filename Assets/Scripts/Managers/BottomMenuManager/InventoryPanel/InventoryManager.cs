@@ -284,14 +284,48 @@ namespace Managers.BottomMenuManager.InventoryPanel
 
             var compositeCount = equipment.equipmentQuantity / 5;
             equipment.equipmentQuantity %= 5;
+            
+            var splitString = equipment.equipmentId.Split('_');
+            var targetRarityIndex = (int)Enum.Parse(typeof(Enums.EquipmentRarity), splitString[0]) * 5;
+            var targetType = (Enums.EquipmentType)Enum.Parse(typeof(Enums.EquipmentType), splitString[2]);
+            var targetTierIndex = 5 - Convert.ToInt32(splitString[1]);
+            var targetIndex = targetRarityIndex + targetTierIndex;
 
-            // equipment.SetQuantityText();
+            var targetInventoryItemList = targetType switch
+            {
+                Enums.EquipmentType.Sword => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords[targetIndex],
+                Enums.EquipmentType.Bow => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows[targetIndex],
+                Enums.EquipmentType.Staff => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemStaffs[targetIndex],
+                Enums.EquipmentType.Helmet => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemHelmets[targetIndex],
+                Enums.EquipmentType.Armor => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemArmors[targetIndex],
+                Enums.EquipmentType.Gauntlet => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets[targetIndex],
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            targetInventoryItemList.GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemQuantityUI(equipment.equipmentQuantity);
             equipment.SaveEquipmentEachInfo(equipment.equipmentId, Enums.EquipmentProperty.Quantity);
 
             var nextEquipment = GetNextEquipment(equipment.equipmentId, equipment.equipmentType);
 
             if (nextEquipment == null) return;
+
             nextEquipment.equipmentQuantity += compositeCount;
+            
+            if (nextEquipment.equipmentQuantity < 5)
+            {
+                UIManager.Instance.inventoryPanelUI.FindInventoryItemList(nextEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemQuantityUI(nextEquipment.equipmentQuantity);
+                
+                if (nextEquipment.isPossessed == false)
+                {
+                    nextEquipment.isPossessed = true;
+                    UIManager.Instance.inventoryPanelUI.FindInventoryItemList(nextEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemPossessMark(nextEquipment.isPossessed);
+                    nextEquipment.SaveEquipmentEachInfo(nextEquipment.equipmentId, Enums.EquipmentProperty.IsPossessed);
+                }
+                else
+                {
+                    nextEquipment.SaveEquipmentEachInfo(nextEquipment.equipmentId, Enums.EquipmentProperty.Quantity);   
+                }
+            }
         }
 
         // AllEquipment에 Equipment 더하는 메서드
@@ -361,31 +395,22 @@ namespace Managers.BottomMenuManager.InventoryPanel
         // 매개변수로 받은 key값을 사용하는 장비의 다음레벨 장비를 불러오는 메서드
         private static Equipment GetNextEquipment(string currentKey, Enums.EquipmentType type)
         {
-            var currentRarityIndex = -1;
-            var currentLevel = -1;
+            var splitString = currentKey.Split('_');
+            var targetTierIndex = Convert.ToInt32(splitString[1]);
+            var targetRarityIndex = (int)Enum.Parse(typeof(Enums.EquipmentRarity), splitString[0]);
 
-            // 현재 키에서 희귀도와 레벨 분리
-            foreach (var rarity in Enums.equipmentRarities)
+            targetTierIndex--;
+
+            if (targetTierIndex <= 0)
             {
-                if (!currentKey.StartsWith(rarity.ToString())) continue;
+                targetTierIndex = 5;
 
-                currentRarityIndex = Array.IndexOf(Enums.equipmentRarities, rarity);
-                int.TryParse(currentKey.Replace(rarity + "_", "")[0].ToString(), out currentLevel);
-                break;
+                targetRarityIndex++;
             }
 
-            if (currentRarityIndex == -1 || currentLevel == -1) return null;
+            var targetKey = $"{(Enums.EquipmentRarity)targetRarityIndex}_{targetTierIndex}_{splitString[2]}";
 
-            var nextKey = string.Empty;
-
-            if (currentLevel < MaxTier)
-                // 같은 희귀도 내에서 다음 레벨 찾기
-                nextKey = Enums.equipmentRarities[currentRarityIndex] + "_" + (currentLevel + 1) + "_" + $"{type}";
-            else if (currentRarityIndex < Enums.equipmentRarities.Length - 1)
-                // 희귀도를 증가시키고 첫 번째 레벨의 장비 찾기
-                nextKey = Enums.equipmentRarities[currentRarityIndex + 1] + "_1" + "_" + $"{type}";
-
-            return AllEquipments.GetValueOrDefault(nextKey);
+            return AllEquipments.GetValueOrDefault(targetKey);
         }
 
         // // 매개변수로 받은 key값을 사용하는 장비의 이전레벨 장비를 불러오는 메서드
@@ -463,6 +488,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
             var highValueEquipment = equipments.OrderByDescending(equipment => equipment.Value.isPossessed).ThenByDescending(equipment => equipment.Value.equipmentRarity).ThenBy(equipment => equipment.Value.equipmentTier).ToList()[0].Value;
             highValueEquipment.isEquipped = true;
             highValueEquipment.SaveEquipmentEachInfo(highValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
+            
+            UIManager.Instance.inventoryPanelUI.FindInventoryItemList(highValueEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(true);
 
             SquadBattleManager.EquipAction?.Invoke(highValueEquipment);
             UIManager.Instance.inventoryPanelUI.SelectEquipment(highValueEquipment);
@@ -488,7 +515,24 @@ namespace Managers.BottomMenuManager.InventoryPanel
             foreach (var equipment in equipments)
                 if (index == equipments.Count - 1)
                 {
-                    // equipment.SetQuantityText();
+                    var splitString = equipment.Value.equipmentId.Split('_');
+                    var targetRarityIndex = (int)Enum.Parse(typeof(Enums.EquipmentRarity), splitString[0]) * 5;
+                    var targetType = (Enums.EquipmentType)Enum.Parse(typeof(Enums.EquipmentType), splitString[2]);
+                    var targetTierIndex = 5 - Convert.ToInt32(splitString[1]);
+                    var targetIndex = targetRarityIndex + targetTierIndex;
+
+                    var targetInventoryItemList = targetType switch
+                    {
+                        Enums.EquipmentType.Sword => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords[targetIndex],
+                        Enums.EquipmentType.Bow => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows[targetIndex],
+                        Enums.EquipmentType.Staff => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemStaffs[targetIndex],
+                        Enums.EquipmentType.Helmet => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemHelmets[targetIndex],
+                        Enums.EquipmentType.Armor => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemArmors[targetIndex],
+                        Enums.EquipmentType.Gauntlet => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets[targetIndex],
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+
+                    targetInventoryItemList.GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemQuantityUI(equipment.Value.equipmentQuantity);
                     equipment.Value.SaveEquipmentEachInfo(equipment.Value.equipmentId, Enums.EquipmentProperty.Quantity);
                 }
                 else
