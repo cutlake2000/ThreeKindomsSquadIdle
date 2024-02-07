@@ -27,26 +27,26 @@ namespace Controller.UI.LoginUI
         {
             var playerName = nameInputField.text.Trim();
 
-            // 빈 문자열인지 확인
-            if (string.IsNullOrEmpty(playerName))
-            {
-                Debug.LogError("닉네임을 입력해주세요.");
-                return;
-            }
-
-            // 길이 제한 확인
-            if (playerName.Length is < minNameLength or > maxNameLength)
-            {
-                Debug.LogError($"닉네임은 {minNameLength}자 이상, {maxNameLength}자 이하로 설정해주세요.");
-                return;
-            }
-
-            // 특수 문자나 공백이 포함되어 있는지 확인 (선택적)
-            if (playerName.Any(ch => !char.IsLetterOrDigit(ch)))
-            {
-                Debug.LogError("닉네임에는 특수 문자나 공백을 포함할 수 없습니다.");
-                return;
-            }
+            // // 빈 문자열인지 확인
+            // if (string.IsNullOrEmpty(playerName))
+            // {
+            //     Debug.LogError("닉네임을 입력해주세요.");
+            //     return;
+            // }
+            //
+            // // 길이 제한 확인
+            // if (playerName.Length is < minNameLength or > maxNameLength)
+            // {
+            //     Debug.LogError($"닉네임은 {minNameLength}자 이상, {maxNameLength}자 이하로 설정해주세요.");
+            //     return;
+            // }
+            //
+            // // 특수 문자나 공백이 포함되어 있는지 확인 (선택적)
+            // if (playerName.Any(ch => !char.IsLetterOrDigit(ch)))
+            // {
+            //     Debug.LogError("닉네임에는 특수 문자나 공백을 포함할 수 없습니다.");
+            //     return;
+            // }
 
             // TODO: 중복 닉네임 확인 로직 추가 (서버와의 통신이 필요할 수 있음)
 

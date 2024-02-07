@@ -14,9 +14,19 @@ namespace Creature.Data
         public Enums.IncreaseStatValueType increaseStatType;
         public int increaseValue;
     }
+
+    [Serializable]
+    public class EquipmentES3Loader
+    {
+        public string id;
+        public int level;
+        public int quantity;
+        public bool isEquipped;
+        public bool isPossessed;
+    }
     
     [Serializable]
-    public class Equipment
+    public class Equipment : MonoBehaviour
     {
         [Header("ES3 ID")] public string equipmentId;
         [Header("이름")] public string equipmentName;
@@ -32,6 +42,8 @@ namespace Creature.Data
         [Space(5)]
         [Header("장착 효과 타입")] public List<EquipmentEffect> equippedEffects;
         [Header("보유 효과 타입")] public List<EquipmentEffect> ownedEffects;
+
+        [Header("ES3 Loader")] public EquipmentES3Loader equipmentES3Loader;
         
         /// <summary>
         /// 처음 생성할 때 사용되는 생성자
@@ -82,6 +94,8 @@ namespace Creature.Data
                 Enums.EquipmentRarity.Null => 0,
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
+
+            this.equipmentES3Loader = equipmentES3Loader;
             
             SaveEquipmentAllInfo();
         }
@@ -142,16 +156,6 @@ namespace Creature.Data
             ES3.Save($"{nameof(equipmentQuantity)}_" + equipmentId, equipmentQuantity);
             ES3.Save($"{nameof(isEquipped)}_" + equipmentId, isEquipped);
             ES3.Save($"{nameof(isPossessed)}_" + equipmentId, isPossessed);
-
-            for (var i = 0; i < equippedEffects.Count; i++)
-            {
-                ES3.Save($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId, equippedEffects[i].increaseValue);   
-            }
-            
-            for (var i = 0; i < ownedEffects.Count; i++)
-            {
-                ES3.Save($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId, ownedEffects[i].increaseValue);   
-            }
         }
         
         public void SaveEquipmentAllInfo(string id)
@@ -161,16 +165,6 @@ namespace Creature.Data
             ES3.Save($"{nameof(equipmentQuantity)}_" + id, equipmentQuantity);
             ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
             ES3.Save($"{nameof(isPossessed)}_" + id, isPossessed);
-
-            for (var i = 0; i < equippedEffects.Count; i++)
-            {
-                ES3.Save($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId, equippedEffects[i].increaseValue);   
-            }
-            
-            for (var i = 0; i < ownedEffects.Count; i++)
-            {
-                ES3.Save($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId, ownedEffects[i].increaseValue);   
-            }
         }
 
         public void SaveEquipmentEachInfo(string equipmentID, Enums.EquipmentProperty property)
