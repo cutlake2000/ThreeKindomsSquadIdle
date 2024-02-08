@@ -73,6 +73,7 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                         break;
                     case Enums.QuestType.EquipSquad:
                         UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem = SquadConfigureManager.Instance.WarriorDictionary.Where(keyValuePair => keyValuePair.Value.characterId == "Rare_Warrior").ToList()[0].Value;
+                        UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigurePanelSelectedCharacterInfoUI(UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem);
                         break;
                     case Enums.QuestType.PlayGoldDungeon:
                         break;

@@ -131,7 +131,7 @@ namespace Managers.BottomMenuManager.SummonPanel
             {
                 string targetName;
                 
-                if (initialSquadSummon)
+                if (initialSquadSummon && type == Enums.SummonType.Squad)
                 {
                     targetName = "Rare_Warrior";
                     Debug.Log("최초 캐릭터 소환 보상!");
@@ -141,35 +141,33 @@ namespace Managers.BottomMenuManager.SummonPanel
                 }
                 else
                 {
-                
-                }
-                
-                var randomTier = Random.Range(1, 6);
-                switch (type)
-                {
-                    case Enums.SummonType.Squad:
-                        if (initialSquadSummon)
-                        {
-                            targetName = "Rare_Warrior";
-                            Debug.Log("최초 캐릭터 소환 보상!");
+                    var randomTier = Random.Range(1, 6);
+                    switch (type)
+                    {
+                        case Enums.SummonType.Squad:
+                            if (initialSquadSummon)
+                            {
+                                targetName = "Rare_Warrior";
+                                Debug.Log("최초 캐릭터 소환 보상!");
 
-                            initialSquadSummon = false;
-                            ES3.Save($"{nameof(initialSquadSummon)}", initialSquadSummon);
-                        }
-                        else
-                        {
-                            targetName = $"{squadSummoner?.GetRandomPick()}_{squadType[Random.Range(0, 3)]}";   
-                        }
+                                initialSquadSummon = false;
+                                ES3.Save($"{nameof(initialSquadSummon)}", initialSquadSummon);
+                            }
+                            else
+                            {
+                                targetName = $"{squadSummoner?.GetRandomPick()}_{squadType[Random.Range(0, 3)]}";   
+                            }
                         
-                        break;
-                    case Enums.SummonType.Weapon:
-                        targetName = $"{weaponSummoner?.GetRandomPick()}_{randomTier}_{weaponType[Random.Range(0, 3)]}";
-                        break;
-                    case Enums.SummonType.Gear:
-                        targetName = $"{gearSummoner?.GetRandomPick()}_{randomTier}_{gearType[Random.Range(0, 3)]}";
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                            break;
+                        case Enums.SummonType.Weapon:
+                            targetName = $"{weaponSummoner?.GetRandomPick()}_{randomTier}_{weaponType[Random.Range(0, 3)]}";
+                            break;
+                        case Enums.SummonType.Gear:
+                            targetName = $"{gearSummoner?.GetRandomPick()}_{randomTier}_{gearType[Random.Range(0, 3)]}";
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    }   
                 }
 
                 if (!CheckDictionaryKey(SummonedItemDictionary, targetName))
@@ -238,10 +236,15 @@ namespace Managers.BottomMenuManager.SummonPanel
                     {
                         targetCharacter.isPossessed = true;
                         targetCharacter.characterLevel = 1;
-                        targetCharacter.SaveCharacterEquippedInfo(targetCharacter.characterId);
-                    }
+                        // targetCharacter.SaveCharacterEquippedInfo(targetCharacter.characterId);
 
-                    targetCharacter.SaveCharacterPossessedInfo(targetCharacter.characterId);
+                        foreach (var ownedEffect in targetCharacter.characterOwnedEffects)
+                        {
+                            SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, false);
+                        }
+                        
+                        // targetCharacter.SaveCharacterPossessedInfo(targetCharacter.characterId);
+                    }
                     
                     squadConfigurePanelScrollViewItem.UpdateSquadConfigureAllItemUI(targetCharacter.characterLevel, targetCharacter.isEquipped, targetCharacter.isPossessed, targetCharacter.characterName, SpriteManager.Instance.GetCharacterSprite(targetCharacter.characterType, targetCharacter.characterIconIndex));
                     
@@ -295,10 +298,10 @@ namespace Managers.BottomMenuManager.SummonPanel
                     if (targetEquipment.isPossessed == false)
                     {
                         targetEquipment.isPossessed = true;
-                        targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.IsPossessed);
+                        // targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.IsPossessed);
                     }
                     
-                    targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.Quantity);
+                    // targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.Quantity);
 
                     inventoryScrollViewItem.UpdateInventoryPanelItemQuantityUI(targetEquipment.equipmentQuantity);
                     inventoryScrollViewItem.UpdateInventoryPanelItemPossessMark(targetEquipment.isPossessed);

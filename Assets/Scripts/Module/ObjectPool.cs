@@ -19,7 +19,8 @@ namespace Module
 
                 for (var i = 0; i < pool.size; i++)
                 {
-                    var obj = Instantiate(pool.prefab, transform, true);
+                    var obj = Instantiate(pool.prefab, pool.parentTransform == null ? transform : pool.parentTransform, true);
+
                     obj.SetActive(false);
                     objectPool.Enqueue(obj);
                 }
@@ -43,6 +44,7 @@ namespace Module
         public struct Pool
         {
             public Enums.PoolType tag;
+            public Transform parentTransform;
             public GameObject prefab;
             public int size;
         }

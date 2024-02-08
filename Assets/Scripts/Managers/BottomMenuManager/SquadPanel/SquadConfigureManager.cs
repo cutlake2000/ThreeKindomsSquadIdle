@@ -70,8 +70,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                     var characterId = $"{characterSo.characterRarity}_{characterSo.characterType}";
                     var characterName = characterSo.characterName;
                     var characterIconIndex = characterSo.characterIconIndex;
-                    var characterIcon =
-                        SpriteManager.Instance.GetCharacterSprite(characterType, characterSo.characterIconIndex);
+                    var characterIcon = SpriteManager.Instance.GetCharacterSprite(characterType, characterSo.characterIconIndex);
                     var characterRarity = characterSo.characterRarity;
                     var characterModelIndex = characterSo.characterModelIndex;
                     var characterModel = characterType switch
@@ -98,13 +97,12 @@ namespace Managers.BottomMenuManager.SquadPanel
                     }
 
                     if (character.isPossessed)
+                    {
                         foreach (var effect in character.characterOwnedEffects)
-                            if (effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
-                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(
-                                    (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, true);
-                            else
-                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(
-                                    (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, false);
+                        {
+                            SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, false);
+                        }
+                    }
 
                     InfiniteLoopDetector.Run();
                 }
@@ -160,14 +158,13 @@ namespace Managers.BottomMenuManager.SquadPanel
                     }
 
                     if (character.isPossessed)
+                    {
                         foreach (var effect in character.characterOwnedEffects)
-                            if (effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
-                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(
-                                    (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, true);
-                            else
-                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(
-                                    (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, false);
-
+                        {
+                            SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, false);
+                        }
+                    }
+                    
                     InfiniteLoopDetector.Run();
                 }
 

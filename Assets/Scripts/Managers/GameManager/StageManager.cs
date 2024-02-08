@@ -95,7 +95,7 @@ namespace Managers.BattleManager
             currentAccumulatedStage = ES3.Load($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", 1);
             currentMainStage = ES3.Load($"{nameof(StageManager)}/{nameof(currentMainStage)}", 1);
             currentSubStage = ES3.Load($"{nameof(StageManager)}/{nameof(currentSubStage)}", 1);
-            currentWave = 1;
+            currentWave = 0;
             
             SetCurrentMainStageInfo();
         }
@@ -118,13 +118,12 @@ namespace Managers.BattleManager
             
             currentWave++;
 
-            if (currentWave > waveCountsPerSubStage)
+            if (currentWave > waveCountsPerSubStage - 1)
             {
                 isClear = true;
                 
                 if (nextStageChallenge)
                 {
-                    currentWave -= waveCountsPerSubStage;
                     currentSubStage++;
                     currentAccumulatedStage++;
                     QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.StageClear, currentAccumulatedStage);
@@ -155,7 +154,6 @@ namespace Managers.BattleManager
                 else
                 {
                     goToNextSubStage = true;
-                    currentWave = 0;
 
                     ES3.Save($"{nameof(StageManager)}/{nameof(currentStageIndex)}", currentSubStage);
                 }
@@ -173,7 +171,6 @@ namespace Managers.BattleManager
             isClear = false;
             stopWaveTimer = true;
             goToNextSubStage = true;
-            currentWave = 0;
             currentSquadCount = maxSquadCount;
             
             currentSubStage--;
@@ -201,7 +198,6 @@ namespace Managers.BattleManager
             isClear = false;
             stopWaveTimer = true;
             goToNextSubStage = true;
-            currentWave = 0;
             
             currentSubStage--;
             currentAccumulatedStage--;
@@ -243,7 +239,7 @@ namespace Managers.BattleManager
 
             if (goToNextSubStage)
             {
-                currentWave = 1;
+       
                 SetUI();
                 
                 if (!initStageResult)
@@ -277,8 +273,11 @@ namespace Managers.BattleManager
                 yield return new WaitForSeconds(1.0f);
                 
                 SpawnSquad();
+                currentWave = 0;
                 goToNextSubStage = false;
                 initStageResult = false;
+                
+                SetUI();
                 
                 yield return new WaitForSeconds(1.0f);
             }

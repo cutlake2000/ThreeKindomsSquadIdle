@@ -98,12 +98,14 @@ namespace Managers.GameManager
                 case Enums.QuestType.AttackTalentLevel:
                     if (TalentManager.Instance.talentItem[0].currentLevel >= currentQuest.targetProgress)
                     {
+                        currentQuest.progress = currentQuest.targetProgress;
                         UIManager.Instance.questPanelUI.completedMark.SetActive(true);
                     }
                     break;
                 case Enums.QuestType.HealthTalentLevel:
                     if (TalentManager.Instance.talentItem[1].currentLevel >= currentQuest.targetProgress)
                     {
+                        currentQuest.progress = currentQuest.targetProgress;
                         UIManager.Instance.questPanelUI.completedMark.SetActive(true);
                     }
                     break;
@@ -118,6 +120,7 @@ namespace Managers.GameManager
                 case Enums.QuestType.StageClear:
                     if (StageManager.Instance.currentAccumulatedStage >= currentQuest.targetProgress)
                     {
+                        currentQuest.progress = currentQuest.targetProgress;
                         UIManager.Instance.questPanelUI.completedMark.SetActive(true);
                     }
                     break;

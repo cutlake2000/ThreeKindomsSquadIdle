@@ -13,7 +13,7 @@ namespace Creature.Data
     [Serializable]
     public class CharacterEffect
     {
-        public Enums.StatTypeFromSquadConfigurePanel statType;
+        public Enums.SquadStatType statType;
         public Enums.IncreaseStatValueType increaseStatType;
         public int increaseValue;
     }

@@ -156,7 +156,15 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                     SpriteManager.Instance.GetEquipmentBackgroundEffect((int)equipmentRarity),
                                     SpriteManager.Instance.GetEquipmentBackground((int)equipmentRarity));
 
-                            SquadBattleManager.EquipAction(equipment);
+                            SquadBattleManager.EquipAction?.Invoke(equipment);
+                        }
+                        
+                        if (equipment.isPossessed)
+                        {
+                            foreach (var effect in equipment.ownedEffects)
+                            {
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, false);
+                            }
                         }
                     }
                 }
@@ -270,8 +278,16 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                 .GetComponent<InventoryPanelSelectedItemUI>()
                                 .UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon,
                                     equipmentBackgroundEffect, equipmentBackground);
+         
+                            SquadBattleManager.EquipAction?.Invoke(equipment);
+                        }
 
-                            SquadBattleManager.EquipAction.Invoke(equipment);
+                        if (equipment.isPossessed)
+                        {
+                            foreach (var effect in equipment.ownedEffects)
+                            {
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, false);
+                            }
                         }
 
                         InfiniteLoopDetector.Run();
@@ -519,6 +535,12 @@ namespace Managers.BottomMenuManager.InventoryPanel
             var sortDictionary = equipments.Where(equipment => equipment.Value.isPossessed).OrderByDescending(equipment => equipment.Value.equipmentRarity).ThenBy(equipment => equipment.Value.equipmentTier).ToList();
             var lowValueEquipment = equipments.Where(equipment => equipment.Value.isEquipped).ToList()[0].Value;
             lowValueEquipment.isEquipped = false;
+            
+            foreach (var effect in lowValueEquipment.equippedEffects)
+            {
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), -effect.increaseValue, true);
+            }
+            
             lowValueEquipment.SaveEquipmentEachInfo(lowValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
             UIManager.Instance.inventoryPanelUI.FindInventoryItemList(lowValueEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(false);
 
@@ -526,6 +548,12 @@ namespace Managers.BottomMenuManager.InventoryPanel
             {
                 var highValueEquipment = sortDictionary[0].Value;
                 highValueEquipment.isEquipped = true;
+                
+                foreach (var effect in highValueEquipment.equippedEffects)
+                {
+                    SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, true);
+                }
+                
                 highValueEquipment.SaveEquipmentEachInfo(highValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
             
                 switch (highValueEquipment.equipmentType)

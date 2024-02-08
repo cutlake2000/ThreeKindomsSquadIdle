@@ -176,7 +176,7 @@ namespace Managers.GameManager
                 else
                 {
                     isClear = true;
-                    StartCoroutine(RunStageRunner(true));
+                    StartCoroutine(RunStageRunner());
                 }
             }
         }
@@ -187,18 +187,20 @@ namespace Managers.GameManager
 
             if (currentSquadCount <= 0)
             {
-                StartCoroutine(RunStageRunner(false));   
+                isClear = false;
+                StartCoroutine(RunStageRunner());   
             }
         }
 
         private void CalculateRemainedTime()
         {
             if (waveTime > 0) return;
-
-            StartCoroutine(RunStageRunner(false));
+            
+            isClear = false;
+            StartCoroutine(RunStageRunner());
         }
 
-        private IEnumerator RunStageRunner(bool isClear)
+        private IEnumerator RunStageRunner()
         {
             currentSquadCount = 3;
 

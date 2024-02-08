@@ -65,6 +65,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
 
         [Header("스크롤뷰 전환 버튼 On / Off 스프라이트")] public Color[] squadScrollViewPanelButtonsColors;
 
+        public Character previousWarriorEquippedEffect;
+        public Character previousArcherEquippedEffect;
+        public Character previousWizardEquippedEffect;
+
         private void OnEnable()
         {
             OnClickSquadConfigureItem += UpdateSquadConfigurePanelSelectedCharacterInfoUI;
@@ -76,6 +80,21 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             
             if (!SquadConfigureManager.Instance.isSquadConfigureChanged) return;
             
+            foreach (var equippedEffect in previousWarriorEquippedEffect.characterEquippedEffects)
+            {
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), equippedEffect.statType.ToString()), -equippedEffect.increaseValue, true);   
+            }
+            
+            foreach (var equippedEffect in previousArcherEquippedEffect.characterEquippedEffects)
+            {
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), equippedEffect.statType.ToString()), -equippedEffect.increaseValue, true);   
+            }
+            
+            foreach (var equippedEffect in previousWizardEquippedEffect.characterEquippedEffects)
+            {
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), equippedEffect.statType.ToString()), -equippedEffect.increaseValue, true);   
+            }
+
             SquadConfigureManager.Instance.UpdateSquadConfigureModelOnMenu(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Warrior));
             SquadConfigureManager.Instance.UpdateSquadConfigureModelOnMenu(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Archer));
             SquadConfigureManager.Instance.UpdateSquadConfigureModelOnMenu(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Wizard));
@@ -159,8 +178,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             {
                 var statType = character.characterOwnedEffects[index].statType switch
                 {
-                    Enums.StatTypeFromSquadConfigurePanel.Attack => "공격력 ",
-                    Enums.StatTypeFromSquadConfigurePanel.Health => "체력 ",
+                    Enums.SquadStatType.Attack => "공격력 ",
+                    Enums.SquadStatType.Health => "체력 ",
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -181,8 +200,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             {
                 var statType = character.characterEquippedEffects[index].statType switch
                 {
-                    Enums.StatTypeFromSquadConfigurePanel.Attack => "공격력 ",
-                    Enums.StatTypeFromSquadConfigurePanel.Health => "체력 ",
+                    Enums.SquadStatType.Attack => "공격력 ",
+                    Enums.SquadStatType.Health => "체력 ",
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -191,7 +210,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     Enums.IncreaseStatValueType.BaseStat =>
                         $"{character.characterEquippedEffects[index].increaseValue} 증가",
                     Enums.IncreaseStatValueType.PercentStat =>
-                        $"{character.characterEquippedEffects[index].increaseValue / 100}% 증가",
+                        $"{UIManager.FormatCurrency(character.characterEquippedEffects[index].increaseValue)}% 증가",
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -274,7 +293,12 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         private void OnClickCharacterEquip()
         {
             QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.EquipSquad, 1);
-            var character = currentSelectedSquadConfigurePanelItem.characterType switch
+
+            previousWarriorEquippedEffect = SquadConfigureManager.Instance.WarriorDictionary.First(character => character.Value.isEquipped).Value;
+            previousArcherEquippedEffect = SquadConfigureManager.Instance.ArchersDictionary.First(character => character.Value.isEquipped).Value;
+            previousWizardEquippedEffect = SquadConfigureManager.Instance.WizardsDictionary.First(character => character.Value.isEquipped).Value;
+            
+            var newCharacter = currentSelectedSquadConfigurePanelItem.characterType switch
             {
                 Enums.CharacterType.Warrior => SquadConfigureManager.Instance.WarriorDictionary[
                     currentSelectedSquadConfigurePanelItem.characterId],
@@ -285,13 +309,13 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                 _ => null
             };
 
-            if (character == null || character.isEquipped) return;
+            if (newCharacter == null || newCharacter.isEquipped) return;
 
             SquadConfigureManager.Instance.isSquadConfigureChanged = true;
             configuredSquadPanel.SetActive(true);
             selectedSquadPanel.SetActive(false);
             
-            switch (character.characterType)
+            switch (newCharacter.characterType)
             {
                 case Enums.CharacterType.Warrior:
                     foreach (var warrior in SquadConfigureManager.Instance.WarriorDictionary.Where(warrior => warrior.Value.isEquipped))
@@ -321,11 +345,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     throw new ArgumentOutOfRangeException();
             }
             
-            character.isEquipped = true;
+            newCharacter.isEquipped = true;
             
-            UpdateCharacterData(character);
-            UpdateSquadConfigureScrollViewItemUI(character.characterType, true);
-            SquadConfigureManager.Instance.InstantiateModelOfConfigureUnderParent(character.characterType, character.characterModel);
+            UpdateCharacterData(newCharacter);
+            UpdateSquadConfigureScrollViewItemUI(newCharacter.characterType, true);
+            SquadConfigureManager.Instance.InstantiateModelOfConfigureUnderParent(newCharacter.characterType, newCharacter.characterModel);
         }
 
         public void UpdateSquadConfigureScrollViewItemUI(Enums.CharacterType characterType, bool sortFlag)

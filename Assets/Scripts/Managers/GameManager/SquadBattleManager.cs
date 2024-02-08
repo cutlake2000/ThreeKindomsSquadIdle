@@ -132,10 +132,8 @@ namespace Managers.GameManager
         // 이벤트 설정하는 메서드
         private void InitializeEventListeners()
         {
-            SquadStatManager.Instance.OnUpgradeTotalSquadStatFromSquadStatPanel += squadEntireStat
-                .UpdateStat;
-            TalentManager.Instance.OnUpgradeTotalSquadStatFromSquadTalentPanel +=
-                squadEntireStat.UpdateStat; //TODO : 재능 스탯 증가
+            SquadStatManager.Instance.OnUpgradeTotalSquadStatFromSquadStatPanel += squadEntireStat.UpdateStat;
+            TalentManager.Instance.OnUpgradeTotalSquadStatFromSquadTalentPanel += squadEntireStat.UpdateStat; //TODO : 재능 스탯 증가
 
             EquipAction += Equip;
         }
@@ -246,27 +244,20 @@ namespace Managers.GameManager
             // TODO: 장착 시 스탯 증가 반영해야 함
             foreach (var equippedEffect in equipment.equippedEffects)
             {
-                if (equippedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
-                {
-                    squadEntireStat.UpdateStat(equippedEffect.statType, equippedEffect.increaseValue, true);
-                }
-                else
-                {
-                    squadEntireStat.UpdateStat(equippedEffect.statType, equippedEffect.increaseValue, false);
-                }
+                squadEntireStat.UpdateStat(equippedEffect.statType, equippedEffect.increaseValue, true);
             }
             
-            foreach (var ownedEffect in equipment.ownedEffects)
-            {
-                if (ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
-                {
-                    squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, true);
-                }
-                else
-                {
-                    squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, false);
-                }
-            }
+            // foreach (var ownedEffect in equipment.ownedEffects)
+            // {
+            //     if (ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
+            //     {
+            //         squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, true);
+            //     }
+            //     else
+            //     {
+            //         squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, false);
+            //     }
+            // }
             
             UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipment.equipmentType].GetComponent<InventoryPanelSelectedItemUI>().UpdateInventoryPanelSelectedItem(equipment.equipmentTier, SpriteManager.Instance.GetEquipmentSprite(equipment.equipmentType, equipment.equipmentIconIndex), SpriteManager.Instance.GetEquipmentBackground((int) equipment.equipmentRarity), SpriteManager.Instance.GetEquipmentBackgroundEffect((int) equipment.equipmentRarity));
             

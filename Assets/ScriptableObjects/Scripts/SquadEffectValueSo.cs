@@ -14,7 +14,7 @@ namespace ScriptableObjects.Scripts
     [Serializable]
     public class SquadEffect
     {
-        public Enums.StatTypeFromSquadConfigurePanel statType;
+        public Enums.SquadStatType statType;
         public Enums.IncreaseStatValueType increaseStatType;
         public int increaseValue;
     }
