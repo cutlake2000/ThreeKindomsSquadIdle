@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Data;
 using Function;
 using Managers.BottomMenuManager.InventoryPanel;
+using Managers.GameManager;
 using UnityEngine;
 
 namespace Creature.Data
@@ -13,16 +14,6 @@ namespace Creature.Data
         public Enums.SquadStatType statType;
         public Enums.IncreaseStatValueType increaseStatType;
         public int increaseValue;
-    }
-
-    [Serializable]
-    public class EquipmentES3Loader
-    {
-        public string id;
-        public int level;
-        public int quantity;
-        public bool isEquipped;
-        public bool isPossessed;
     }
     
     [Serializable]
@@ -94,10 +85,8 @@ namespace Creature.Data
                 // Enums.EquipmentRarity.Null => 0,
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
-
-            this.equipmentES3Loader = equipmentES3Loader;
             
-            SaveEquipmentAllInfo();
+            SaveEquipmentDataIntoES3Loader();
         }
 
         /// <summary>
@@ -120,7 +109,7 @@ namespace Creature.Data
             this.equippedEffects = equippedEffects;
             this.ownedEffects = ownedEffects;
 
-            LoadEquipmentAllInfo();
+            LoadEquipmentDataFromES3Loader();
         }
         
         // 강화 메서드
@@ -149,103 +138,83 @@ namespace Creature.Data
         }
 
         // 장비 데이터를 ES3 파일에 저장
-        public void SaveEquipmentAllInfo()
+        public void SaveEquipmentDataIntoES3Loader()
         {
-            ES3.Save($"{nameof(equipmentId)}_" + equipmentId, equipmentId);
-            ES3.Save($"{nameof(equipmentLevel)}_" + equipmentId, equipmentLevel);
-            ES3.Save($"{nameof(equipmentQuantity)}_" + equipmentId, equipmentQuantity);
-            ES3.Save($"{nameof(isEquipped)}_" + equipmentId, isEquipped);
-            ES3.Save($"{nameof(isPossessed)}_" + equipmentId, isPossessed);
+            var targetIndex = InventoryManager.FindEquipmentIndex(equipmentId);
+            InventoryManager.Instance.equipmentES3Loaders[targetIndex].SaveData(equipmentId, equipmentLevel, equipmentQuantity, isEquipped, isPossessed);
+        }
 
-            for (var i = 0; i < equippedEffects.Count; i++)
-            {
-                ES3.Save($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId, equippedEffects[i].increaseValue);   
-            }
-            
-            for (var i = 0; i < ownedEffects.Count; i++)
-            {
-                ES3.Save($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId, ownedEffects[i].increaseValue);   
-            }
+        public void LoadEquipmentDataFromES3Loader()
+        {
+            var targetIndex = InventoryManager.FindEquipmentIndex(equipmentId);
+
+            equipmentId = InventoryManager.Instance.equipmentES3Loaders[targetIndex].id;
+            equipmentLevel = InventoryManager.Instance.equipmentES3Loaders[targetIndex].level;
+            equipmentQuantity = InventoryManager.Instance.equipmentES3Loaders[targetIndex].quantity;
+            isEquipped = InventoryManager.Instance.equipmentES3Loaders[targetIndex].isEquipped;
+            isPossessed = InventoryManager.Instance.equipmentES3Loaders[targetIndex].isPossessed;
         }
         
-        public void SaveEquipmentAllInfo(string id)
-        {
-            ES3.Save($"{nameof(equipmentId)}_" + id, equipmentId);
-            ES3.Save($"{nameof(equipmentLevel)}_" + id, equipmentLevel);
-            ES3.Save($"{nameof(equipmentQuantity)}_" + id, equipmentQuantity);
-            ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
-            ES3.Save($"{nameof(isPossessed)}_" + id, isPossessed);
-
-            for (var i = 0; i < equippedEffects.Count; i++)
-            {
-                ES3.Save($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId, equippedEffects[i].increaseValue);   
-            }
-            
-            for (var i = 0; i < ownedEffects.Count; i++)
-            {
-                ES3.Save($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId, ownedEffects[i].increaseValue);   
-            }
-        }
-
-        public void SaveEquipmentEachInfo(string equipmentID, Enums.EquipmentProperty property)
-        {
-            switch (property)
-            {
-                case Enums.EquipmentProperty.Quantity:
-                    ES3.Save($"{nameof(equipmentQuantity)}_" + equipmentID, equipmentQuantity);
-                    break;
-                case Enums.EquipmentProperty.Level:
-                    ES3.Save($"{nameof(equipmentTier)}_" + equipmentID, equipmentTier);
-                    break;
-                case Enums.EquipmentProperty.IsEquipped:
-                    ES3.Save($"{nameof(isEquipped)}_" + equipmentID, isEquipped);
-                    break;
-                case Enums.EquipmentProperty.IsPossessed:
-                    ES3.Save($"{nameof(isPossessed)}_" + equipmentID, isPossessed);
-                    break;
-            }
-        }
-
-        // 장비 데이터를 ES3 파일에서 불러오기
-        public void LoadEquipmentAllInfo()
-        {
-            if (!ES3.KeyExists($"{nameof(equipmentId)}_" + equipmentId)) return;
-            
-            equipmentLevel = ES3.Load<int>($"{nameof(equipmentLevel)}_" +equipmentId);
-            equipmentQuantity = ES3.Load<int>($"{nameof(equipmentQuantity)}_" +equipmentId);
-            isEquipped = ES3.Load<bool>($"{nameof(isEquipped)}_" + equipmentId);
-            isPossessed = ES3.Load<bool>($"{nameof(isPossessed)}_" + equipmentId);
-
-            for (var i = 0; i < equippedEffects.Count; i++)
-            {
-                equippedEffects[i].increaseValue = ES3.Load<int>($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId);   
-            }
-            
-            for (var i = 0; i < ownedEffects.Count; i++)
-            {
-                ownedEffects[i].increaseValue = ES3.Load<int>($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId);
-            }
-        }
-
-        public void LoadEquipmentAllInfo(string id)
-        {
-            if (!ES3.KeyExists($"{nameof(equipmentId)}_" + id)) return;
-            
-            equipmentLevel = ES3.Load<int>($"{nameof(equipmentLevel)}_" +id);
-            equipmentQuantity = ES3.Load<int>($"{nameof(equipmentQuantity)}_" +id);
-            isEquipped = ES3.Load<bool>($"{nameof(isEquipped)}_" + id);
-            isPossessed = ES3.Load<bool>($"{nameof(isPossessed)}_" + id);
-
-            for (var i = 0; i < equippedEffects.Count; i++)
-            {
-                equippedEffects[i].increaseValue = ES3.Load<int>($"equipmentEquippedEffects[{i}]).increaseValue_" + id);   
-            }
-            
-            for (var i = 0; i < ownedEffects.Count; i++)
-            {
-                ownedEffects[i].increaseValue = ES3.Load<int>($"equipmentOwnedEffects[{i}]).increaseValue_" + id);
-            }
-        }
+        
+        // public void SaveEquipmentAllInfo(string id)
+        // {
+        //     ES3.Save($"{nameof(equipmentId)}_" + id, equipmentId);
+        //     ES3.Save($"{nameof(equipmentLevel)}_" + id, equipmentLevel);
+        //     ES3.Save($"{nameof(equipmentQuantity)}_" + id, equipmentQuantity);
+        //     ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
+        //     ES3.Save($"{nameof(isPossessed)}_" + id, isPossessed);
+        //
+        //     for (var i = 0; i < equippedEffects.Count; i++)
+        //     {
+        //         ES3.Save($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId, equippedEffects[i].increaseValue);   
+        //     }
+        //     
+        //     for (var i = 0; i < ownedEffects.Count; i++)
+        //     {
+        //         ES3.Save($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId, ownedEffects[i].increaseValue);   
+        //     }
+        // }
+        
+        // public void SaveEquipmentEachInfo(string equipmentID, Enums.EquipmentProperty property)
+        // {
+        //     switch (property)
+        //     {
+        //         case Enums.EquipmentProperty.Quantity:
+        //             ES3.Save($"{nameof(equipmentQuantity)}_" + equipmentID, equipmentQuantity);
+        //             break;
+        //         case Enums.EquipmentProperty.Level:
+        //             ES3.Save($"{nameof(equipmentTier)}_" + equipmentID, equipmentTier);
+        //             break;
+        //         case Enums.EquipmentProperty.IsEquipped:
+        //             ES3.Save($"{nameof(isEquipped)}_" + equipmentID, isEquipped);
+        //             break;
+        //         case Enums.EquipmentProperty.IsPossessed:
+        //             ES3.Save($"{nameof(isPossessed)}_" + equipmentID, isPossessed);
+        //             break;
+        //     }
+        // }
+        //
+        // // 장비 데이터를 ES3 파일에서 불러오기
+        // public void LoadEquipmentAllInfo()
+        // {
+        //     if (!ES3.KeyExists($"{nameof(equipmentId)}_" + equipmentId)) return;
+        //     
+        //     equipmentLevel = ES3.Load<int>($"{nameof(equipmentLevel)}_" +equipmentId);
+        //     equipmentQuantity = ES3.Load<int>($"{nameof(equipmentQuantity)}_" +equipmentId);
+        //     isEquipped = ES3.Load<bool>($"{nameof(isEquipped)}_" + equipmentId);
+        //     isPossessed = ES3.Load<bool>($"{nameof(isPossessed)}_" + equipmentId);
+        //
+        //     for (var i = 0; i < equippedEffects.Count; i++)
+        //     {
+        //         equippedEffects[i].increaseValue = ES3.Load<int>($"equipmentEquippedEffects[{i}]).increaseValue_" + equipmentId);   
+        //     }
+        //     
+        //     for (var i = 0; i < ownedEffects.Count; i++)
+        //     {
+        //         ownedEffects[i].increaseValue = ES3.Load<int>($"equipmentOwnedEffects[{i}]).increaseValue_" + equipmentId);
+        //     }
+        // }
+        
 
         // 매개변수로 받은 WeaponInfo 의 정보 복사
         public void SetEquipmentInfo(Equipment equipment)

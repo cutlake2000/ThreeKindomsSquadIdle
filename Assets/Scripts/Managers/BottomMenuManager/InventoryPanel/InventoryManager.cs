@@ -14,6 +14,25 @@ using UnityEngine.UI;
 
 namespace Managers.BottomMenuManager.InventoryPanel
 {
+    [Serializable]
+    public class EquipmentES3Loader
+    {
+        public string id;
+        public int level;
+        public int quantity;
+        public bool isEquipped;
+        public bool isPossessed;
+
+        public void SaveData(string id, int level, int quantity, bool isEquipped, bool isPossessed)
+        {
+            this.id = id;
+            this.level = level;
+            this.quantity = quantity;
+            this.isEquipped = isEquipped;
+            this.isPossessed = isPossessed;
+        }
+    }
+    
     public class InventoryManager : MonoBehaviour
     {
         public const int MaxTier = 1;
@@ -30,6 +49,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
         public List<string> armorNames = new();
         public List<string> gauntletNames = new();
         public const int EquipmentMaxLevel = 250;
+
+        public EquipmentES3Loader[] equipmentES3Loaders = new EquipmentES3Loader[150];
 
         public readonly Dictionary<string, Equipment> SwordsDictionary = new();
         public readonly Dictionary<string, Equipment> BowsDictionary = new();
@@ -61,6 +82,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
         // 로컬에 저장되어 있는 장비 데이터들 불러오는 메서드
         private void LoadAllEquipment()
         {
+            equipmentES3Loaders = ES3.Load<EquipmentES3Loader[]>($"{nameof(equipmentES3Loaders)}");
+            
             foreach (var equipmentType in Enums.equipmentTypes)
             {
                 var equipmentIndex = 0;
@@ -95,6 +118,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             {
                                 statType = i == 0? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
                                 increaseStatType = Enums.IncreaseStatValueType.BaseStat,
+                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
                             };
                             equippedEffects.Add(equippedEffect);
                         }
@@ -105,6 +129,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             {
                                 statType = i == 0 ? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
                                 increaseStatType = Enums.IncreaseStatValueType.PercentStat,
+                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
                             };
                             ownedEffects.Add(ownedEffect);
                         }
@@ -169,6 +194,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
                     }
                 }
             }
+            
+            SaveAllEquipmentInfo();
         }
 
         // 장비 데이터를 만드는 메서드
@@ -176,6 +203,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
         {
             foreach (var equipmentType in Enums.equipmentTypes)
             {
+                var initialEquip = false;
                 var equipmentIndex = 0;
 
                 foreach (var rarity in Enums.equipmentRarities)
@@ -195,12 +223,26 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             Enums.EquipmentType.Gauntlet => $"{gauntletNames[rarityIntValue]} {6 - equipmentTier}",
                             _ => null
                         };
-                        var equipmentLevel = 1;
-                        var isEquipped = rarityIntValue == 0 && equipmentTier == 5;
-                        var isPossessed = rarityIntValue == 0 && equipmentTier == 5;
+                        const int equipmentLevel = 1;
+
+                        bool isEquipped;
+                        bool isPossessed;
+                        
+                        if (initialEquip == false)
+                        {
+                            isEquipped = true;
+                            isPossessed = true;
+                            
+                            initialEquip = true;
+                        }
+                        else
+                        {
+                            isEquipped = false;
+                            isPossessed = false;
+                        }
+                        
                         var equipmentIconIndex = equipmentIndex;
                         var equipmentIcon = SpriteManager.Instance.GetEquipmentSprite(equipmentType, equipmentIndex);
-                        var equipmentRarity = rarity;
                         var equipmentQuantity = isPossessed ? 1 : 0;
                         var equipmentBackground = SpriteManager.Instance.GetEquipmentBackground(rarityIntValue);
                         var equipmentBackgroundEffect =
@@ -226,13 +268,13 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             {
                                 statType = i == 0 ? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
                                 increaseStatType = Enums.IncreaseStatValueType.PercentStat,
-                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(1000, rarityIntValue + 1)
+                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
                             };
                             ownedEffects.Add(ownedEffect);
                         }
 
                         var equipment = new Equipment(equipmentId, equipmentName, equipmentIconIndex, equipmentLevel,
-                            equipmentType, equipmentRarity, equipmentTier, equipmentQuantity, isEquipped, isPossessed,
+                            equipmentType, rarity, equipmentTier, equipmentQuantity, isEquipped, isPossessed,
                             equippedEffects, ownedEffects);
                         
                         AddEquipment(equipmentId, equipment);
@@ -265,8 +307,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                 SpriteManager.Instance.GetEquipmentSprite(
                                     equipmentType,
                                     equipmentIconIndex),
-                                SpriteManager.Instance.GetEquipmentBackgroundEffect((int)equipmentRarity),
-                                SpriteManager.Instance.GetEquipmentBackground((int)equipmentRarity));
+                                SpriteManager.Instance.GetEquipmentBackgroundEffect((int)rarity),
+                                SpriteManager.Instance.GetEquipmentBackground((int)rarity));
                         
                         targetScrollViewItem[equipmentIndex].GetComponent<Button>().onClick.AddListener(() => InventoryPanelUI.SelectEquipmentAction(equipment));
 
@@ -294,6 +336,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
                     }
                 }
             }
+            
+            SaveAllEquipmentInfo();
         }
 
         // 매개변수로 받은 장비 합성하는 메서드
@@ -324,7 +368,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
             };
 
             targetInventoryItemList.GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemQuantityUI(equipment.equipmentQuantity);
-            equipment.SaveEquipmentEachInfo(equipment.equipmentId, Enums.EquipmentProperty.Quantity);
+            equipment.SaveEquipmentDataIntoES3Loader();
 
             var nextEquipment = GetNextEquipment(equipment.equipmentId);
 
@@ -340,12 +384,14 @@ namespace Managers.BottomMenuManager.InventoryPanel
                 {
                     nextEquipment.isPossessed = true;
                     UIManager.Instance.inventoryPanelUI.FindInventoryItemList(nextEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemPossessMark(nextEquipment.isPossessed);
-                    nextEquipment.SaveEquipmentEachInfo(nextEquipment.equipmentId, Enums.EquipmentProperty.IsPossessed);
+                    
+                    foreach (var ownedEffect in nextEquipment.ownedEffects)
+                    {
+                        SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, false);   
+                    }
                 }
-                else
-                {
-                    nextEquipment.SaveEquipmentEachInfo(nextEquipment.equipmentId, Enums.EquipmentProperty.Quantity);   
-                }
+                
+                nextEquipment.SaveEquipmentDataIntoES3Loader();
             }
 
             if (isComposited)
@@ -422,23 +468,23 @@ namespace Managers.BottomMenuManager.InventoryPanel
             return null;
         }
 
-        // AllEquipment에서 매개변수로 받은 key을 사용하는 Equipment 업데이트 하는 메서드
-        public static void SetEquipment(string equipmentId, Equipment equipment)
-        {
-            var targetEquipment = AllEquipments[equipmentId];
-
-            if (targetEquipment == null) return;
-            Debug.Log("이름 : " + targetEquipment.equipmentName);
-
-            targetEquipment.equippedEffects = equipment.equippedEffects;
-            targetEquipment.ownedEffects = equipment.ownedEffects;
-            targetEquipment.equipmentQuantity = equipment.equipmentQuantity;
-            targetEquipment.isEquipped = equipment.isEquipped;
-            targetEquipment.equipmentTier = equipment.equipmentTier;
-
-            // targetEquipment.SetQuantityText();
-            targetEquipment.SaveEquipmentAllInfo(targetEquipment.equipmentId);
-        }
+        // // AllEquipment에서 매개변수로 받은 key을 사용하는 Equipment 업데이트 하는 메서드
+        // public static void SetEquipment(string equipmentId, Equipment equipment)
+        // {
+        //     var targetEquipment = AllEquipments[equipmentId];
+        //
+        //     if (targetEquipment == null) return;
+        //     Debug.Log("이름 : " + targetEquipment.equipmentName);
+        //
+        //     targetEquipment.equippedEffects = equipment.equippedEffects;
+        //     targetEquipment.ownedEffects = equipment.ownedEffects;
+        //     targetEquipment.equipmentQuantity = equipment.equipmentQuantity;
+        //     targetEquipment.isEquipped = equipment.isEquipped;
+        //     targetEquipment.equipmentTier = equipment.equipmentTier;
+        //
+        //     // targetEquipment.SetQuantityText();
+        //     targetEquipment.SaveEquipmentAllInfo(targetEquipment.equipmentId);
+        // }
 
         // 매개변수로 받은 key값을 사용하는 장비의 다음레벨 장비를 불러오는 메서드
         private static Equipment GetNextEquipment(string currentKey)
@@ -533,19 +579,20 @@ namespace Managers.BottomMenuManager.InventoryPanel
 
             if (equipments == null) return;
             var sortDictionary = equipments.Where(equipment => equipment.Value.isPossessed).OrderByDescending(equipment => equipment.Value.equipmentRarity).ThenBy(equipment => equipment.Value.equipmentTier).ToList();
-            var lowValueEquipment = equipments.Where(equipment => equipment.Value.isEquipped).ToList()[0].Value;
-            lowValueEquipment.isEquipped = false;
-            
-            foreach (var effect in lowValueEquipment.equippedEffects)
-            {
-                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), -effect.increaseValue, true);
-            }
-            
-            lowValueEquipment.SaveEquipmentEachInfo(lowValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
-            UIManager.Instance.inventoryPanelUI.FindInventoryItemList(lowValueEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(false);
 
             if (sortDictionary.Count != 1)
             {
+                var lowValueEquipment = equipments.Where(equipment => equipment.Value.isEquipped).ToList()[0].Value;
+                lowValueEquipment.isEquipped = false;
+            
+                foreach (var effect in lowValueEquipment.equippedEffects)
+                {
+                    SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), -effect.increaseValue, true);
+                }
+            
+                lowValueEquipment.SaveEquipmentDataIntoES3Loader();
+                UIManager.Instance.inventoryPanelUI.FindInventoryItemList(lowValueEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(false);
+                
                 var highValueEquipment = sortDictionary[0].Value;
                 highValueEquipment.isEquipped = true;
                 
@@ -554,7 +601,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                     SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, true);
                 }
                 
-                highValueEquipment.SaveEquipmentEachInfo(highValueEquipment.equipmentId, Enums.EquipmentProperty.IsEquipped);
+                highValueEquipment.SaveEquipmentDataIntoES3Loader();
             
                 switch (highValueEquipment.equipmentType)
                 {
@@ -585,6 +632,12 @@ namespace Managers.BottomMenuManager.InventoryPanel
                 SquadBattleManager.EquipAction?.Invoke(highValueEquipment);
                 UIManager.Instance.inventoryPanelUI.SelectEquipment(highValueEquipment);
             }
+            else
+            {
+                
+            }
+            
+            SaveAllEquipmentInfo();
         }
 
         public void AllComposite(Enums.EquipmentType currentEquipmentType)
@@ -626,7 +679,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                     };
 
                     targetInventoryItemList.GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemQuantityUI(equipment.Value.equipmentQuantity);
-                    equipment.Value.SaveEquipmentEachInfo(equipment.Value.equipmentId, Enums.EquipmentProperty.Quantity);
+                    equipment.Value.SaveEquipmentDataIntoES3Loader();
                 }
                 else
                 {
@@ -634,14 +687,26 @@ namespace Managers.BottomMenuManager.InventoryPanel
                     index++;
                 }
             }
+            
+            SaveAllEquipmentInfo();
+        }
+        
+        public void SaveAllEquipmentInfo()
+        {
+            ES3.Save($"{nameof(equipmentES3Loaders)}", equipmentES3Loaders);
         }
 
-        public static void IncreaseQuantity(Equipment equipment, int increaseValue)
+        public static int FindEquipmentIndex(string id)
         {
-            equipment.equipmentQuantity += increaseValue;
+            var separatedId = id.Split('_');
 
-            // equipment.SetQuantityText();
-            equipment.SaveEquipmentEachInfo(equipment.equipmentId, Enums.EquipmentProperty.Quantity);
+            var equipmentTypeIndex = (int) Enum.Parse(typeof(Enums.EquipmentType),separatedId[2]);
+            var rarityIndex = (int) Enum.Parse(typeof(Enums.EquipmentRarity),separatedId[0]);
+            var tierIndex = 6 - int.Parse(separatedId[1]);
+
+            var targetIndex = equipmentTypeIndex * 25 + rarityIndex * 5 + tierIndex - 1;
+
+            return targetIndex;
         }
     }
 }

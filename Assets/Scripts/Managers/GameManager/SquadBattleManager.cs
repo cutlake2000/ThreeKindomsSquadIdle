@@ -8,6 +8,7 @@ using Creature.Data;
 using Data;
 using Function;
 using Managers.BattleManager;
+using Managers.BottomMenuManager.InventoryPanel;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.TalentPanel;
 using UnityEngine;
@@ -164,9 +165,6 @@ namespace Managers.GameManager
                     return totalAcquisitionGold;
                 case Enums.SquadStatType.AcquisitionExp:
                     return totalAcquisitionExp;
-                default:
-                    Debug.Log("에러에러!!");
-                    break;
             }
 
             return 0;
@@ -186,9 +184,6 @@ namespace Managers.GameManager
                     return moveSpeed;
                 case Enums.SquadStatType.FollowRange:
                     return followRange;
-                default:
-                    Debug.Log("에러에러!!");
-                    break;
             }
 
             return 0;
@@ -239,7 +234,7 @@ namespace Managers.GameManager
         {
             // TODO : 이전 장비 장착 해제
             equipment.isEquipped = true;
-            equipment.SaveEquipmentAllInfo();
+            equipment.SaveEquipmentDataIntoES3Loader();
             
             // TODO: 장착 시 스탯 증가 반영해야 함
             foreach (var equippedEffect in equipment.equippedEffects)
@@ -261,7 +256,7 @@ namespace Managers.GameManager
             
             UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipment.equipmentType].GetComponent<InventoryPanelSelectedItemUI>().UpdateInventoryPanelSelectedItem(equipment.equipmentTier, SpriteManager.Instance.GetEquipmentSprite(equipment.equipmentType, equipment.equipmentIconIndex), SpriteManager.Instance.GetEquipmentBackground((int) equipment.equipmentRarity), SpriteManager.Instance.GetEquipmentBackgroundEffect((int) equipment.equipmentRarity));
             
-            // Debug.Log("장비 장착" + equippedEquipment.id);
+            InventoryManager.Instance.SaveAllEquipmentInfo();
         }
 
         private void UnEquip(Equipment equipment)

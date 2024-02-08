@@ -14,6 +14,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel
         public Enums.CurrencyType rewardType;
         public Button clearDungeonButton;
         public Button enterDungeonButton;
+        public Button enterLockDungeonButton;
         public TMP_Text currentDungeonLevelText;
         public TMP_Text currentDungeonRewardText;
 
@@ -32,6 +33,12 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public void UpdateButtonUI(bool active)
+        {
+            enterDungeonButton.gameObject.SetActive(active);
+            enterLockDungeonButton.gameObject.SetActive(!active);
         }
     }
 }

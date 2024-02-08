@@ -35,8 +35,7 @@ namespace Creature.CreatureClass.MonsterClass
 
         public override void TakeDamage(BigInteger damage)
         {
-            Debug.Log($"아야! {damage}");
-            currentBossHealth -= (damage - currentBossDefence / 2);
+            currentBossHealth -= damage * 100 / currentBossDefence + 100;
             currentBossHealth = currentBossHealth < 0 ? 0 : currentBossHealth;
 
             if (isEventHitRunning == false && !isDead)

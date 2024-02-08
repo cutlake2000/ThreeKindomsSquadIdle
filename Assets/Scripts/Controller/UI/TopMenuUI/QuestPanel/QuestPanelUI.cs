@@ -29,12 +29,20 @@ namespace Controller.UI.TopMenuUI.QuestPanel
 
         private void CheckQuestClear()
         {
-            if (QuestManager.Instance.currentQuest.progress >= QuestManager.Instance.currentQuest.targetProgress)
+            if (QuestManager.Instance.isCurrentQuestClear)
             {
+                if (QuestManager.Instance.currentQuestTarget.targetMark != null)
+                {
+                    QuestManager.Instance.currentQuestTarget.targetMark.SetActive(false);   
+                }
+                QuestManager.Instance.isCurrentQuestClear = false;
                 QuestManager.Instance.TargetQuestClear();
             }
             else if (QuestManager.Instance.currentQuest.questType != Enums.QuestType.StageClear)
             {
+                QuestManager.Instance.backboardPanel.SetActive(true);
+                QuestManager.Instance.currentQuestTarget.targetMark.SetActive(true);
+                
                 switch (QuestManager.Instance.currentQuestTarget.questType)
                 {
                     case Enums.QuestType.AttackTalentLevel:
@@ -66,10 +74,13 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.SummonWeapon:
+                        UIManager.Instance.summonPanelUI.SetScrollViewVerticalPosition(0.5f);
                         break;
                     case Enums.QuestType.SummonGear:
+                        UIManager.Instance.summonPanelUI.SetScrollViewVerticalPosition(0f);
                         break;
                     case Enums.QuestType.SummonSquad:
+                        UIManager.Instance.summonPanelUI.SetScrollViewVerticalPosition(1f);
                         break;
                     case Enums.QuestType.EquipSquad:
                         UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem = SquadConfigureManager.Instance.WarriorDictionary.Where(keyValuePair => keyValuePair.Value.characterId == "Rare_Warrior").ToList()[0].Value;

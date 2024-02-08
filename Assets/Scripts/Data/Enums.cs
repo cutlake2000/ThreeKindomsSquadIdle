@@ -117,7 +117,9 @@ namespace Data
         {
             Gold,
             Dia,
-            EnhanceStoneSquad
+            SquadEnhanceStone,
+            GoldDungeonTicket,
+            EnhanceDungeonTicket
         }
 
         public enum DungeonClearType
@@ -177,8 +179,7 @@ namespace Data
             Staff,
             Helmet,
             Armor,
-            Gauntlet,
-            Null
+            Gauntlet
         }
 
         public enum IncreaseStatValueType

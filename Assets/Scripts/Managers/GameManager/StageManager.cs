@@ -1,16 +1,14 @@
 using System;
 using System.Collections;
-using Controller.UI;
 using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI;
 using Data;
 using Function;
-using Managers.GameManager;
+using Managers.BattleManager;
 using ScriptableObjects.Scripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Managers.BattleManager
+namespace Managers.GameManager
 {
     [Serializable]
     public class StageReward
@@ -244,8 +242,10 @@ namespace Managers.BattleManager
                 
                 if (!initStageResult)
                 {
+                    
+                    stageResultUI.GetComponent<StageRewardPanelUI>().UpdateRewardUI(SpriteManager.Instance.GetCurrencySprite(stageRewards[0].rewardType), $"+ {stageRewards[0].GetStageReward(currentAccumulatedStage).ChangeMoney()}", SpriteManager.Instance.GetCurrencySprite(stageRewards[1].rewardType), $"+ {stageRewards[1].GetStageReward(currentAccumulatedStage).ChangeMoney()}");
+                    stageResultUI.GetComponent<StageRewardPanelUI>().PopUpStageClearMessage(isClear);
                     stageResultUI.SetActive(true);
-                    stageResultUI.GetComponent<ResultPanelUI>().PopUpStageClearMessage(isClear);
                     
                     yield return new WaitForSeconds(2f);
                 }
@@ -267,7 +267,7 @@ namespace Managers.BattleManager
                         }
                     }
                     
-                    stageResultUI.SetActive(false);
+                    stageResultUI.GetComponent<StageRewardPanelUI>().gameObject.SetActive(false);
                 }
 
                 yield return new WaitForSeconds(1.0f);

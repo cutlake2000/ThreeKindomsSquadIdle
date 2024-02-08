@@ -1,5 +1,6 @@
 using Data;
 using Managers.BattleManager;
+using Managers.GameManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

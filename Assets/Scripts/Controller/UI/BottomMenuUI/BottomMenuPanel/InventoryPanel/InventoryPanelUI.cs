@@ -84,7 +84,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
 
             allCompositeButton.onClick.AddListener(OnClickAllComposite);
             autoEquipButton.onClick.AddListener(OnClickAutoEquip);
-            levelUpButton.onClick.AddListener(OnClickLevelUp);
+            // levelUpButton.onClick.AddListener(OnClickLevelUp);
         }
 
         private void OnClickEquipment(int index)
@@ -224,24 +224,24 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         }
 
         // 강화 버튼 눌렸을 때 불리는 메서드
-        public void OnClickLevelUp()
-        {
-            if (selectEquipment.equipmentLevel >= InventoryManager.EquipmentMaxLevel) return;
-
-            if (selectEquipment.GetEnhanceStone() >
-                new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.WeaponEnhanceStone))) return;
-
-            AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.WeaponEnhanceStone,
-                selectEquipment.GetEnhanceStone());
-            selectEquipment.Enhance();
-            
-            UpdateSelectedEquipmentUI(selectEquipment);
-            UpdateSelectEquipmentData();
-            OnClickEnhancePanel();
-
-            //TODO : Achievement
-            // AchievementManager.Instance.IncreaseAchievementValue(Data.Enum.AchieveType.Enhance, 1);
-        }
+        // public void OnClickLevelUp()
+        // {
+        //     if (selectEquipment.equipmentLevel >= InventoryManager.EquipmentMaxLevel) return;
+        //
+        //     if (selectEquipment.GetEnhanceStone() >
+        //         new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.WeaponEnhanceStone))) return;
+        //
+        //     AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.WeaponEnhanceStone,
+        //         selectEquipment.GetEnhanceStone());
+        //     selectEquipment.Enhance();
+        //     
+        //     UpdateSelectedEquipmentUI(selectEquipment);
+        //     UpdateSelectEquipmentData();
+        //     OnClickEnhancePanel();
+        //
+        //     //TODO : Achievement
+        //     // AchievementManager.Instance.IncreaseAchievementValue(Data.Enum.AchieveType.Enhance, 1);
+        // }
 
         private void OnClickExit()
         {
@@ -254,10 +254,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             InventoryManager.Instance.AutoEquip(selectEquipment.equipmentType);
         }
 
-        // 선택한 장비 데이터 업데이트 (저장한다고 생각하면 편함)
-        public void UpdateSelectEquipmentData()
-        {
-            InventoryManager.SetEquipment(selectEquipment.equipmentId, selectEquipment);
-        }
+        // // 선택한 장비 데이터 업데이트 (저장한다고 생각하면 편함)
+        // public void UpdateSelectEquipmentData()
+        // {
+        //     InventoryManager.SetEquipment(selectEquipment.equipmentId, selectEquipment);
+        // }
     }
 }

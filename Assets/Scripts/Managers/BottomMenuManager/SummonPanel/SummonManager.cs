@@ -134,7 +134,6 @@ namespace Managers.BottomMenuManager.SummonPanel
                 if (initialSquadSummon && type == Enums.SummonType.Squad)
                 {
                     targetName = "Rare_Warrior";
-                    Debug.Log("최초 캐릭터 소환 보상!");
 
                     initialSquadSummon = false;
                     ES3.Save($"{nameof(initialSquadSummon)}", initialSquadSummon);
@@ -145,19 +144,7 @@ namespace Managers.BottomMenuManager.SummonPanel
                     switch (type)
                     {
                         case Enums.SummonType.Squad:
-                            if (initialSquadSummon)
-                            {
-                                targetName = "Rare_Warrior";
-                                Debug.Log("최초 캐릭터 소환 보상!");
-
-                                initialSquadSummon = false;
-                                ES3.Save($"{nameof(initialSquadSummon)}", initialSquadSummon);
-                            }
-                            else
-                            {
-                                targetName = $"{squadSummoner?.GetRandomPick()}_{squadType[Random.Range(0, 3)]}";   
-                            }
-                        
+                            targetName = $"{squadSummoner?.GetRandomPick()}_{squadType[Random.Range(0, 3)]}";   
                             break;
                         case Enums.SummonType.Weapon:
                             targetName = $"{weaponSummoner?.GetRandomPick()}_{randomTier}_{weaponType[Random.Range(0, 3)]}";
@@ -181,10 +168,10 @@ namespace Managers.BottomMenuManager.SummonPanel
                 }
             }
 
-            foreach (var item in SummonedItemDictionary)
-            {
-                Debug.Log($"가챠! {item.Key} {item.Value}개");
-            }
+            // foreach (var item in SummonedItemDictionary)
+            // {
+            //     Debug.Log($"가챠! {item.Key} {item.Value}개");
+            // }
             
             var summonLists = SummonedItemDictionary.ToList();
 
@@ -298,10 +285,14 @@ namespace Managers.BottomMenuManager.SummonPanel
                     if (targetEquipment.isPossessed == false)
                     {
                         targetEquipment.isPossessed = true;
-                        // targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.IsPossessed);
+
+                        foreach (var ownedEffect in targetEquipment.ownedEffects)
+                        {
+                            SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
+                        }
                     }
                     
-                    // targetEquipment.SaveEquipmentEachInfo(targetEquipment.equipmentId, Enums.EquipmentProperty.Quantity);
+                    targetEquipment.SaveEquipmentDataIntoES3Loader();
 
                     inventoryScrollViewItem.UpdateInventoryPanelItemQuantityUI(targetEquipment.equipmentQuantity);
                     inventoryScrollViewItem.UpdateInventoryPanelItemPossessMark(targetEquipment.isPossessed);
@@ -313,6 +304,8 @@ namespace Managers.BottomMenuManager.SummonPanel
                                 targetEquipment.equipmentIconIndex), (int)targetEquipment.equipmentRarity, target.Value);
                 }
             }
+            
+            InventoryManager.Instance.SaveAllEquipmentInfo();
 
             IncreaseSummonExp(type, count);
             StartCoroutine(SummonEffect(dictionaryCount));

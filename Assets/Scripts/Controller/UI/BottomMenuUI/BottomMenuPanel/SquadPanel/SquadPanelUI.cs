@@ -20,9 +20,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel
         public Button[] squadPanelOnButton;
         public Button[] squadPanelOffButton;
 
-        [Header("스쿼드 패널 전환 버튼 On / Off 스프라이트")]
-        public Sprite[] squadPanelButtonSprites;
-
         public void InitializeEventListeners()
         {
             squadStatPanelUI.InitializeEventListeners();

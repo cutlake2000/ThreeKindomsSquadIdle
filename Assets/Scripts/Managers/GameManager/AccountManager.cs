@@ -104,7 +104,7 @@ namespace Managers.GameManager
             effect.SetActive(true);
             effect.GetComponent<ParticleSystem>().Play();
             
-            // QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.SquadLevel, accountLevel);
+            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.LevelUpCharacter, 1);
             UIManager.Instance.squadPanelUI.squadStatPanelUI.CheckRequiredCurrencyOfMagnificationAllButton();
             UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoLevelUpButton(false);
             UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoAllUI(accountName, accountLevel, currentAccountExp, currentAccountMaxExp, statPoint);
@@ -192,6 +192,16 @@ namespace Managers.GameManager
                 case Enums.CurrencyType.SquadEnhanceStone:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.SquadEnhanceStone);
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.EnhanceStoneSquad}> {BigInteger.ChangeMoney(amount)}";
+                    break;
+                case Enums.CurrencyType.GoldDungeonTicket:
+                    currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.GoldDungeonTicket);
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyGold}>      {BigInteger.ChangeMoney(amount)}";
+                    DungeonManager.Instance.dungeonItems[0].UpdateButtonUI(Int32.Parse(currency.amount) >= 1);
+                    break;
+                case Enums.CurrencyType.EnhanceDungeonTicket:
+                    currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.EnhanceDungeonTicket);
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyEnhanceStoneSquad}>     {BigInteger.ChangeMoney(amount)}";
+                    DungeonManager.Instance.dungeonItems[1].UpdateButtonUI(Int32.Parse(currency.amount) >= 1);
                     break;
             }
         }

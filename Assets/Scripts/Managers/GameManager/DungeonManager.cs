@@ -34,7 +34,7 @@ namespace Managers.GameManager
         private GameObject[] dungeonMap;
 
         [Header("=== 전투 결과창 UI ===")] [SerializeField]
-        private GameObject stageResultUI;
+        private GameObject dungeonRewardResultUI;
 
         [Header("보스 몬스터 스폰 포지션")] [SerializeField] private Transform bossMonsterSpawnPosition;
         [Header("보스 몬스터 프리팹")] [SerializeField] private GameObject bossMonsterPrefab;
@@ -86,6 +86,20 @@ namespace Managers.GameManager
                 var index = i;
                 dungeonItems[index].enterDungeonButton.onClick.AddListener(() =>
                 {
+                    switch (dungeonItems[index].dungeonType)
+                    {
+                        case Enums.DungeonType.GoldDungeon:
+                            if (int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) < 1) return;
+                            AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.GoldDungeonTicket, 1);
+                            break;
+                        case Enums.DungeonType.SquadEnhanceStoneDungeon:
+                            if (int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EnhanceDungeonTicket)) < 1) return;
+                            AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.EnhanceDungeonTicket, 1);
+                            break;
+                    }
+                    
+                    UpdateDungeonPanelScrollViewAllItemUI();
+                    
                     StageManager.Instance.StopStageRunner();
 
                     StageManager.CheckRemainedMonsterAction -= StageManager.Instance.CalculateRemainedMonster;
@@ -100,7 +114,7 @@ namespace Managers.GameManager
                     currentDungeonType = dungeonSo[index].dungeonType;
                     currentDungeonRewardType = dungeonSo[index].rewardType;
                     currentScore = 0;
-                    currentDungeonReward = dungeonSo[index].reward * (int) Mathf.Pow(increaseRewardPercent + 100, currentDungeonLevel - 1);
+                    currentDungeonReward = dungeonSo[index].reward * (increaseRewardPercent + 100) * currentDungeonLevel / 100;
                     waveTime = dungeonSo[index].waveTime;
                     stageMap.SetActive(false);
                     
@@ -151,14 +165,25 @@ namespace Managers.GameManager
             for (var i = 0; i < dungeonItems.Length; i++)
             {
                 var level = ES3.Load($"{dungeonSo[i].dungeonType}/{nameof(currentDungeonLevel)}", 1);
-                BigInteger rewardCal = (int)(dungeonSo[i].reward * Mathf.Pow(increaseRewardPercent + 100, level - 1));
+                BigInteger rewardCal = dungeonSo[i].reward * (increaseRewardPercent + 100) * level / 100;
+                
+                switch (dungeonItems[i].dungeonType)
+                {
+                    case Enums.DungeonType.GoldDungeon:
+                        dungeonItems[i].UpdateButtonUI(int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) >= 1);
+                        break;
+                    case Enums.DungeonType.SquadEnhanceStoneDungeon:
+                        dungeonItems[i].UpdateButtonUI(int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EnhanceDungeonTicket)) >= 1);
+                        break;
+                }
+                
                 dungeonItems[i].UpdateDungeonItemUI(level, rewardCal);
             }
         }
         
         private void UpdateDungeonPanelScrollViewItemUI()
         {
-            BigInteger rewardCal = (int)(dungeonSo[(int) currentDungeonType].reward * Mathf.Pow(increaseRewardPercent + 100, currentDungeonLevel - 1));
+            BigInteger rewardCal = dungeonSo[(int) currentDungeonType].reward * (increaseRewardPercent + 100) * currentDungeonLevel / 100;
             dungeonItems[(int) currentDungeonType].UpdateDungeonItemUI(currentDungeonLevel, rewardCal);
         }
 
@@ -230,9 +255,10 @@ namespace Managers.GameManager
             stopWaveTimer = true;
             currentSquadCount = maxSquadCount;
 
-            stageResultUI.SetActive(true);
+            dungeonRewardResultUI.SetActive(true);
             Debug.Log("패널 온!");
-            stageResultUI.GetComponent<ResultPanelUI>().PopUpStageClearMessage(isClear);
+            dungeonRewardResultUI.GetComponent<DungeonRewardPanelUI>().UpdateRewardUI(SpriteManager.Instance.GetCurrencySprite(currentDungeonRewardType), $"+ {currentDungeonReward.ChangeMoney()}");
+            dungeonRewardResultUI.GetComponent<DungeonRewardPanelUI>().PopUpDungeonClearMessage(isClear);
 
             if (isClear)
             {
@@ -244,7 +270,7 @@ namespace Managers.GameManager
 
             yield return new WaitForSeconds(1.5f);
 
-            stageResultUI.GetComponent<ResultPanelUI>().gameObject.SetActive(false);
+            dungeonRewardResultUI.GetComponent<DungeonRewardPanelUI>().gameObject.SetActive(false);
 
             yield return new WaitForSeconds(1.0f);
 

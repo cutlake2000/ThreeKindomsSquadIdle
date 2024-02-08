@@ -41,12 +41,14 @@ namespace Managers.GameManager
         public int questLevel;
         public Quest currentQuest;
         public QuestTarget currentQuestTarget;
+        public bool isCurrentQuestClear;
         
         [Header("Quest Mark")]
         public GameObject questMark;
         public List<Quest> quests;
         public List<QuestTarget> questTargets;
-
+        public GameObject backboardPanel;
+        
         [Header("Quest Reward")]
         public Sprite targetQuestRewardSprite;
         public string targetQuestRewardText;
@@ -85,13 +87,15 @@ namespace Managers.GameManager
             }
             
             questMark.SetActive(true);
-            currentQuestTarget.targetMark.SetActive(true);
             
-            targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite((Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[questLevel].questRewardType}"));
+            if (currentQuestTarget.targetMark != null)
+            {
+                currentQuestTarget.targetMark.SetActive(true);
+            }
+            
+            targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite((Enums.CurrencyType)Enum.Parse(typeof(Enums.CurrencyType), $"{quests[questLevel].questRewardType}"));
             targetQuestRewardText = $"{quests[questLevel].reward}";
             targetQuestDescriptionText = $"{quests[questLevel].name}";
-            
-            questMark.SetActive(true);
 
             switch (currentQuest.questType)
             {
@@ -99,6 +103,8 @@ namespace Managers.GameManager
                     if (TalentManager.Instance.talentItem[0].currentLevel >= currentQuest.targetProgress)
                     {
                         currentQuest.progress = currentQuest.targetProgress;
+                        isCurrentQuestClear = true;
+                        ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
                         UIManager.Instance.questPanelUI.completedMark.SetActive(true);
                     }
                     break;
@@ -106,6 +112,8 @@ namespace Managers.GameManager
                     if (TalentManager.Instance.talentItem[1].currentLevel >= currentQuest.targetProgress)
                     {
                         currentQuest.progress = currentQuest.targetProgress;
+                        isCurrentQuestClear = true;
+                        ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
                         UIManager.Instance.questPanelUI.completedMark.SetActive(true);
                     }
                     break;
@@ -121,6 +129,8 @@ namespace Managers.GameManager
                     if (StageManager.Instance.currentAccumulatedStage >= currentQuest.targetProgress)
                     {
                         currentQuest.progress = currentQuest.targetProgress;
+                        isCurrentQuestClear = true;
+                        ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
                         UIManager.Instance.questPanelUI.completedMark.SetActive(true);
                     }
                     break;
@@ -165,7 +175,7 @@ namespace Managers.GameManager
         {
             if (currentQuest.questType != questType) return;
             
-            if (questType is Enums.QuestType.AttackTalentLevel or Enums.QuestType.HealthTalentLevel or Enums.QuestType.StageClear or Enums.QuestType.StageClear)
+            if (questType is Enums.QuestType.AttackTalentLevel or Enums.QuestType.HealthTalentLevel or Enums.QuestType.StageClear)
             {
                 quests[questLevel].progress = currentValue;
             }
@@ -174,9 +184,13 @@ namespace Managers.GameManager
                 quests[questLevel].progress += currentValue;   
             }
 
-            if (quests[questLevel].progress < quests[questLevel].targetProgress) return;
-            currentQuestTarget.targetMark.SetActive(false);
-            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+            if (quests[questLevel].progress >= quests[questLevel].targetProgress)
+            {
+                if (currentQuestTarget.targetMark != null) currentQuestTarget.targetMark.SetActive(false);
+                UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                isCurrentQuestClear = true;
+                ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+            }
         }
 
         private void CreateQuestsFromCsv()
@@ -184,6 +198,7 @@ namespace Managers.GameManager
             questCsv = Resources.Load<TextAsset>("CSV/GuideQuest");
             questLevel = ES3.Load($"{nameof(questLevel)}", 0);
             quests = new List<Quest>();
+            isCurrentQuestClear = ES3.Load($"{nameof(currentQuest)}", false);
 
             var lines = questCsv.text.Split('\n');
 
@@ -237,7 +252,7 @@ namespace Managers.GameManager
         {
             UpdateQuestRewardPanelUI();
             
-            AccountManager.Instance.AddCurrency((Enums.CurrencyType)Enum.Parse(typeof(Enums.QuestRewardType), $"{quests[questLevel].questRewardType}"), quests[questLevel].reward);
+            AccountManager.Instance.AddCurrency((Enums.CurrencyType)Enum.Parse(typeof(Enums.CurrencyType), $"{quests[questLevel].questRewardType}"), quests[questLevel].reward);
             UIManager.Instance.questPanelUI.questResultPanelUI.gameObject.SetActive(true);
             
             questLevel++;

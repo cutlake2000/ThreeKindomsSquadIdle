@@ -4,6 +4,7 @@ using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.GameManager;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Controller.UI.BottomMenuUI
@@ -14,6 +15,9 @@ namespace Controller.UI.BottomMenuUI
         [SerializeField] private Button[] openButtons;
         [SerializeField] private Button[] closeButtons;
         [SerializeField] private GameObject[] panels;
+        
+        [Header("백보드")]
+        [SerializeField] private Button backboardPanel;
 
         public void InitializeEventListeners()
         {
@@ -31,11 +35,27 @@ namespace Controller.UI.BottomMenuUI
                 if (i == 3) continue; // TODO : 유물 버튼 락
                 closeButtons[i].onClick.AddListener(() => OnClickClosePanel(index));
             }
+            
+            backboardPanel.onClick.AddListener(OnClickBackboardPanel);
+        }
+
+        private void OnClickBackboardPanel()
+        {
+            for (var i = 0; i < panels.Length; i++)
+            {
+                openButtons[i].gameObject.SetActive(true);
+                closeButtons[i].gameObject.SetActive(false);
+                panels[i].gameObject.SetActive(false);
+            }
+            
+            backboardPanel.gameObject.SetActive(false);
         }
 
         // 버튼 클릭 시 호출되는 메서드
         private void OnClickOpenPanel(int index)
         {
+            backboardPanel.gameObject.SetActive(true);
+            
             // 모든 패널을 순회하면서 상태 설정
             for (var i = 0; i < panels.Length; i++)
             {
@@ -59,6 +79,7 @@ namespace Controller.UI.BottomMenuUI
 
         private void OnClickClosePanel(int index)
         {
+            backboardPanel.gameObject.SetActive(false);
             closeButtons[index].gameObject.SetActive(false);
             panels[index].SetActive(false);
             openButtons[index].gameObject.SetActive(true);

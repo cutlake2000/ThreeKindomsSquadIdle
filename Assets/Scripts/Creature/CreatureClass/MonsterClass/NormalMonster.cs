@@ -112,7 +112,8 @@ namespace Creature.CreatureClass.MonsterClass
 
         public override void TakeDamage(BigInteger damage)
         {
-            currentHealth -= damage;
+            currentHealth -= damage * 100 / defence + 100;
+            
             currentHealth = currentHealth < 0 ? 0 : currentHealth;
             SetUIHealthBar();
 

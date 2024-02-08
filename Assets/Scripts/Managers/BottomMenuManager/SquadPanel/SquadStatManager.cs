@@ -93,9 +93,9 @@ namespace Managers.BottomMenuManager.SquadPanel
             effect.SetActive(true);
             effect.GetComponent<ParticleSystem>().Play();
 
-            Debug.Log($"levelUpCost {squadStatItem[(int)type].levelUpCost}");
-            Debug.Log($"levelUpMagnification {levelUpMagnification}");
-            Debug.Log($"Magnification {squadStatItem[(int)type].levelUpCost * levelUpMagnification}");
+            // Debug.Log($"levelUpCost {squadStatItem[(int)type].levelUpCost}");
+            // Debug.Log($"levelUpMagnification {levelUpMagnification}");
+            // Debug.Log($"Magnification {squadStatItem[(int)type].levelUpCost * levelUpMagnification}");
 
             squadStatItem[(int)type].UpdateSquadStat(levelUpMagnification);
             SetUpgradeUI(squadStatItem[(int)type]);
