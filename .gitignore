@@ -2,7 +2,12 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
-/Assets/Externals
+/Assets/Externals/
+/Assets/Editor Default Resources/
+/Assets/ExternalDependencyManager/
+Assets/Firebase/
+/Assets/Plugins/
+/Assets/google-services/
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
