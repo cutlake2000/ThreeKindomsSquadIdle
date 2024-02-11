@@ -26,6 +26,9 @@ namespace Managers.GameManager
             Enums.PoolType poolType)
         {
             var obj = objectPool.SpawnFromPool(poolType);
+
+            if (obj == null) return;
+
             obj.transform.position = startPosition;
 
             switch (poolType)

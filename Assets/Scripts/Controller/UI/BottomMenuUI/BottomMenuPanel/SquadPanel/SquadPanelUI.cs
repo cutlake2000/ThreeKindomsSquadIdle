@@ -1,6 +1,10 @@
+using System;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel;
 using Controller.UI.TopMenuUI.PlayerInfoPanelUI;
+using Data;
+using Managers.BottomMenuManager.SquadPanel;
+using Managers.GameManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;

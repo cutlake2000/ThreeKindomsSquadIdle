@@ -195,7 +195,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                 }
             }
             
-            SaveAllEquipmentInfo();
+            // SaveAllEquipmentInfo();
         }
 
         // 장비 데이터를 만드는 메서드

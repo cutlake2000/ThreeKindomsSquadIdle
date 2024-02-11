@@ -229,10 +229,9 @@ namespace Managers.BottomMenuManager.SummonPanel
                         {
                             SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, false);
                         }
-                        
-                        // targetCharacter.SaveCharacterPossessedInfo(targetCharacter.characterId);
                     }
                     
+                    targetCharacter.SaveCharacterDataIntoES3Loader();
                     squadConfigurePanelScrollViewItem.UpdateSquadConfigureAllItemUI(targetCharacter.characterLevel, targetCharacter.isEquipped, targetCharacter.isPossessed, targetCharacter.characterName, SpriteManager.Instance.GetCharacterSprite(targetCharacter.characterType, targetCharacter.characterIconIndex));
                     
                     UIManager.Instance.summonPanelUI.summonResultPanelUI.summonResultPanelItems[i]
@@ -304,8 +303,15 @@ namespace Managers.BottomMenuManager.SummonPanel
                                 targetEquipment.equipmentIconIndex), (int)targetEquipment.equipmentRarity, target.Value);
                 }
             }
-            
-            InventoryManager.Instance.SaveAllEquipmentInfo();
+
+            if (type == Enums.SummonType.Squad)
+            {
+                SquadConfigureManager.Instance.SaveAllCharacterInfo();
+            }
+            else
+            {
+                InventoryManager.Instance.SaveAllEquipmentInfo();
+            }
 
             IncreaseSummonExp(type, count);
             StartCoroutine(SummonEffect(dictionaryCount));

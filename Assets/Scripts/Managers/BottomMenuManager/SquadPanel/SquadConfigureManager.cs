@@ -13,13 +13,35 @@ using UnityEngine;
 
 namespace Managers.BottomMenuManager.SquadPanel
 {
+    [Serializable]
+    public class CharacterES3Loader
+    {
+        public string id;
+        public int level;
+        public int quantity;
+        public bool isEquipped;
+        public bool isPossessed;
+
+        public void SaveData(string id, int level, int quantity, bool isEquipped, bool isPossessed)
+        {
+            this.id = id;
+            this.level = level;
+            this.quantity = quantity;
+            this.isEquipped = isEquipped;
+            this.isPossessed = isPossessed;
+        }
+    }
+    
     public class SquadConfigureManager : MonoBehaviour
     {
         public const int CharacterMaxLevel = 100;
         public static SquadConfigureManager Instance;
         private static readonly Dictionary<string, Character> AllCharactersDictionary = new();
 
-        public bool isSquadConfigureChanged;
+        
+        [Header("스쿼드 구성 변화 여부")]public bool isSquadConfigureChanged;
+        
+        public CharacterES3Loader[] characterES3Loaders = new CharacterES3Loader[9];
 
         //TODO: 임시 So 대체 클래스 -> 추후 csv, json으로 대체
         [SerializeField] private SquadConfigureSo[] squadConfigureSo;
@@ -39,6 +61,11 @@ namespace Managers.BottomMenuManager.SquadPanel
         public readonly Dictionary<string, Character> ArchersDictionary = new();
         public readonly Dictionary<string, Character> WarriorDictionary = new();
         public readonly Dictionary<string, Character> WizardsDictionary = new();
+
+        [Header("타겟 모델 ID")]
+        public string targetWarrior;
+        public string targetArcher;
+        public string targetWizard;
 
         private void Awake()
         {
@@ -61,6 +88,8 @@ namespace Managers.BottomMenuManager.SquadPanel
 
         private void LoadAllCharacters()
         {
+            characterES3Loaders = ES3.Load<CharacterES3Loader[]>($"{nameof(characterES3Loaders)}");
+            
             foreach (var characterType in Enums.characterTypes)
             {
                 foreach (var characterSo in squadConfigureSo)
@@ -92,6 +121,21 @@ namespace Managers.BottomMenuManager.SquadPanel
 
                     if (character.isEquipped)
                     {
+                        switch (characterType)
+                        {
+                            case Enums.CharacterType.Warrior:
+                                targetWarrior = character.characterId;
+                                break;
+                            case Enums.CharacterType.Archer:
+                                targetArcher = character.characterId;
+                                break;
+                            case Enums.CharacterType.Wizard:
+                                targetWizard = character.characterId;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                        
                         UpdateSquadConfigureModelOnMenu(character);
                         UpdateSquadConfigureModelOnBattle(character);
                     }
@@ -107,8 +151,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                     InfiniteLoopDetector.Run();
                 }
 
-                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigureScrollViewItemUI(
-                    characterType, true);
+                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigureScrollViewItemUI(characterType, true);
             }
         }
 
@@ -153,6 +196,20 @@ namespace Managers.BottomMenuManager.SquadPanel
 
                     if (character.isEquipped)
                     {
+                        switch (characterType)
+                        {
+                            case Enums.CharacterType.Warrior:
+                                targetWarrior = character.characterId;
+                                break;
+                            case Enums.CharacterType.Archer:
+                                targetArcher = character.characterId;
+                                break;
+                            case Enums.CharacterType.Wizard:
+                                targetWizard = character.characterId;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
                         UpdateSquadConfigureModelOnMenu(character);
                         UpdateSquadConfigureModelOnBattle(character);
                     }
@@ -168,9 +225,10 @@ namespace Managers.BottomMenuManager.SquadPanel
                     InfiniteLoopDetector.Run();
                 }
 
-                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigureScrollViewItemUI(
-                    characterType, true);
+                UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigureScrollViewItemUI(characterType, true);
             }
+            
+            SaveAllCharacterInfo();
         }
 
         /// <summary>
@@ -181,15 +239,28 @@ namespace Managers.BottomMenuManager.SquadPanel
             switch (characterType)
             {
                 case Enums.CharacterType.Warrior:
-                    return WarriorDictionary[warriors[0].characterId];
+                    return WarriorDictionary[targetWarrior];
                 case Enums.CharacterType.Archer:
-                    return ArchersDictionary[archers[0].characterId];
+                    return ArchersDictionary[targetArcher];
                 case Enums.CharacterType.Wizard:
-                    return WizardsDictionary[wizards[0].characterId];
+                    return WizardsDictionary[targetWizard];
                 default:
                     throw new ArgumentOutOfRangeException(nameof(characterType), characterType, null);
             }
         }
+
+        public static int FindCharacterIndex(string id)
+        {
+            var separatedId = id.Split('_');
+            
+            var rarityIndex = (int) Enum.Parse(typeof(Enums.CharacterRarity),separatedId[0]);
+            var characterTypeIndex = (int) Enum.Parse(typeof(Enums.CharacterType),separatedId[1]);
+            
+            var targetIndex = characterTypeIndex * 3 + rarityIndex;
+            Debug.Log($"{id} index : {targetIndex}");
+            return targetIndex;
+        }
+
 
         /// <summary>
         /// 캐릭터 모델을 UI에 세팅하는 메서드
@@ -433,26 +504,10 @@ namespace Managers.BottomMenuManager.SquadPanel
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-        public void UpdateCharacterData(string characterId, Character character)
+        
+        public void SaveAllCharacterInfo()
         {
-            var targetCharacter = character.characterType switch
-            {
-                Enums.CharacterType.Warrior => WarriorDictionary[characterId],
-                Enums.CharacterType.Archer => ArchersDictionary[characterId],
-                Enums.CharacterType.Wizard => WizardsDictionary[characterId],
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            if (targetCharacter == null) return;
-
-            targetCharacter.characterLevel = character.characterLevel;
-
-            for (var i = 0; i < targetCharacter.characterOwnedEffects.Count; i++)
-                targetCharacter.characterOwnedEffects[i].increaseValue =
-                    character.characterOwnedEffects[i].increaseValue;
-
-            targetCharacter.SaveCharacterEquippedInfo(targetCharacter.characterId);
+            ES3.Save($"{nameof(characterES3Loaders)}", characterES3Loaders);
         }
     }
 }

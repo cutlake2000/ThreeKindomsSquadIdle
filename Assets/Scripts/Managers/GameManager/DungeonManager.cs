@@ -256,7 +256,6 @@ namespace Managers.GameManager
             currentSquadCount = maxSquadCount;
 
             dungeonRewardResultUI.SetActive(true);
-            Debug.Log("패널 온!");
             dungeonRewardResultUI.GetComponent<DungeonRewardPanelUI>().UpdateRewardUI(SpriteManager.Instance.GetCurrencySprite(currentDungeonRewardType), $"+ {currentDungeonReward.ChangeMoney()}");
             dungeonRewardResultUI.GetComponent<DungeonRewardPanelUI>().PopUpDungeonClearMessage(isClear);
 

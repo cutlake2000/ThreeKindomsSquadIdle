@@ -86,17 +86,6 @@ namespace Controller.UI.BottomMenuUI
             
             if (StageManager.Instance.initStageResult) StageManager.Instance.initStageResult = false;
             if (StageManager.Instance.stageResultUI.activeInHierarchy) StageManager.Instance.stageResultUI.SetActive(false);
-            
-            if (!SquadConfigureManager.Instance.isSquadConfigureChanged) return;
-            
-            StageManager.Instance.StopStageRunner();
-            SquadConfigureManager.Instance.UpdateSquadConfigureModelOnBattle(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Warrior));
-            SquadConfigureManager.Instance.UpdateSquadConfigureModelOnBattle(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Archer));
-            SquadConfigureManager.Instance.UpdateSquadConfigureModelOnBattle(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Wizard));
-            StageManager.Instance.initStageResult = true;
-            StageManager.Instance.goToNextSubStage = true;
-                
-            StageManager.Instance.StartStageRunner();
         }
     }
 }

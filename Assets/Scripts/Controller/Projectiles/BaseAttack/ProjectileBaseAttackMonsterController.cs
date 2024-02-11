@@ -23,7 +23,7 @@ namespace Controller.Projectiles.BaseAttack
             FlipSprite(Direction.x);
 
             Damage = damage;
-            Debug.Log($"몬스터 데미지 : {Damage}");
+            // Debug.Log($"몬스터 데미지 : {Damage}");
 
             transform.right = Direction * -1;
         }

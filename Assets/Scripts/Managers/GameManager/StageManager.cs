@@ -212,8 +212,6 @@ namespace Managers.GameManager
                     currentSubStage = 1;
                     currentAccumulatedStage++;
                 }
-                
-          
             }
             
             nextStageChallenge = false;
@@ -237,12 +235,10 @@ namespace Managers.GameManager
 
             if (goToNextSubStage)
             {
-       
                 SetUI();
                 
                 if (!initStageResult)
                 {
-                    
                     stageResultUI.GetComponent<StageRewardPanelUI>().UpdateRewardUI(SpriteManager.Instance.GetCurrencySprite(stageRewards[0].rewardType), $"+ {stageRewards[0].GetStageReward(currentAccumulatedStage).ChangeMoney()}", SpriteManager.Instance.GetCurrencySprite(stageRewards[1].rewardType), $"+ {stageRewards[1].GetStageReward(currentAccumulatedStage).ChangeMoney()}");
                     stageResultUI.GetComponent<StageRewardPanelUI>().PopUpStageClearMessage(isClear);
                     stageResultUI.SetActive(true);
@@ -255,15 +251,18 @@ namespace Managers.GameManager
 
                 if (!initStageResult)
                 {
-                    foreach (var reward in stageRewards)
+                    if (isClear)
                     {
-                        if (reward.rewardType != Enums.CurrencyType.Exp)
+                        foreach (var reward in stageRewards)
                         {
-                            AccountManager.Instance.AddCurrency(reward.rewardType, reward.GetStageReward(currentAccumulatedStage));   
-                        }
-                        else
-                        {
-                            AccountManager.Instance.AddExp(reward.GetStageReward(currentAccumulatedStage));
+                            if (reward.rewardType != Enums.CurrencyType.Exp)
+                            {
+                                AccountManager.Instance.AddCurrency(reward.rewardType, reward.GetStageReward(currentAccumulatedStage));   
+                            }
+                            else
+                            {
+                                AccountManager.Instance.AddExp(reward.GetStageReward(currentAccumulatedStage));
+                            }
                         }
                     }
                     

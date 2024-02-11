@@ -41,6 +41,7 @@ namespace Creature.Data
         [field: Header("보유 효과")] public List<CharacterEffect> characterOwnedEffects;
 
         [Space(5)] [Header("프리팹 모델")] public int characterModelIndex;
+        [Header("ES3 Loader")] public CharacterES3Loader characterES3Loader;
 
         public GameObject characterModel;
 
@@ -88,7 +89,7 @@ namespace Creature.Data
                 characterEquippedEffects.Add(new CharacterEffect());
                 characterEquippedEffects[i].statType = equippedEffect.squadEffects[i].statType;
                 characterEquippedEffects[i].increaseStatType = equippedEffect.squadEffects[i].increaseStatType;
-                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue;
+                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue + equippedEffect.squadEffects[i].increaseValue / 100 * characterLevel;
             }
 
             for (var i = 0; i < ownedEffect.squadEffects.Count; i++)
@@ -96,7 +97,7 @@ namespace Creature.Data
                 characterOwnedEffects.Add(new CharacterEffect());
                 characterOwnedEffects[i].statType = ownedEffect.squadEffects[i].statType;
                 characterOwnedEffects[i].increaseStatType = ownedEffect.squadEffects[i].increaseStatType;
-                characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue;
+                characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue * + ownedEffect.squadEffects[i].increaseValue / 100 * characterLevel;
             }
 
             characterRequiredCurrency = rarity switch
@@ -108,7 +109,7 @@ namespace Creature.Data
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
 
-            SaveCharacterAllInfo();
+            SaveCharacterDataIntoES3Loader();
         }
 
         /// <summary>
@@ -147,6 +148,7 @@ namespace Creature.Data
                 characterEquippedEffects.Add(new CharacterEffect());
                 characterEquippedEffects[i].statType = equippedEffect.squadEffects[i].statType;
                 characterEquippedEffects[i].increaseStatType = equippedEffect.squadEffects[i].increaseStatType;
+                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue + equippedEffect.squadEffects[i].increaseValue / 100 * characterLevel;
             }
 
             for (var i = 0; i < ownedEffect.squadEffects.Count; i++)
@@ -154,6 +156,7 @@ namespace Creature.Data
                 characterOwnedEffects.Add(new CharacterEffect());
                 characterOwnedEffects[i].statType = ownedEffect.squadEffects[i].statType;
                 characterOwnedEffects[i].increaseStatType = ownedEffect.squadEffects[i].increaseStatType;
+                characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue * + ownedEffect.squadEffects[i].increaseValue / 100 * characterLevel;
             }
 
             characterRequiredCurrency = rarity switch
@@ -165,73 +168,25 @@ namespace Creature.Data
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
 
-            LoadCharacterAllInfo();
-        }
-
-        public void LoadCharacterAllInfo()
-        {
-            if (!ES3.KeyExists($"{nameof(characterId)}_" + characterId)) return;
-
-            characterLevel = ES3.Load<int>($"{nameof(characterLevel)}_" + characterId);
-            isEquipped = ES3.Load<bool>($"{nameof(isEquipped)}_" + characterId);
-            isPossessed = ES3.Load<bool>($"{nameof(isPossessed)}_" + characterId);
-            characterQuantity = ES3.Load<int>($"{nameof(characterQuantity)}_" + characterId);
-
-            for (var i = 0; i < characterEquippedEffects.Count; i++)
-                characterEquippedEffects[i].increaseValue =
-                    ES3.Load<int>($"characterEquippedEffects[{i}].increaseValue_" + characterId);
-
-            for (var i = 0; i < characterOwnedEffects.Count; i++)
-                characterOwnedEffects[i].increaseValue =
-                    ES3.Load<int>($"characterOwnedEffects[{i}].increaseValue_" + characterId);
-        }
-
-        public void SaveCharacterAllInfo()
-        {
-            ES3.Save($"{nameof(characterId)}_" + characterId, characterId);
-
-            ES3.Save($"{nameof(characterLevel)}_" + characterId, characterLevel);
-            ES3.Save($"{nameof(isEquipped)}_" + characterId, isEquipped);
-            ES3.Save($"{nameof(isPossessed)}_" + characterId, isPossessed);
-            ES3.Save($"{nameof(characterQuantity)}_" + characterId, characterQuantity);
-
-            for (var i = 0; i < characterEquippedEffects.Count; i++)
-                ES3.Save($"characterEquippedEffects[{i}].increaseValue_" + characterId,
-                    characterEquippedEffects[i].increaseValue);
-
-            for (var i = 0; i < characterOwnedEffects.Count; i++)
-                ES3.Save($"characterOwnedEffects[{i}].increaseValue_" + characterId,
-                    characterOwnedEffects[i].increaseValue);
-        }
-
-        public void SaveCharacterQuantityInfo(string id)
-        {
-            ES3.Save($"{nameof(characterQuantity)}_" + id, characterQuantity);
-        }
-
-        public void SaveCharacterEquippedInfo(string id)
-        {
-            ES3.Save($"{nameof(isEquipped)}_" + id, isEquipped);
-        }
-
-        public void SaveCharacterPossessedInfo(string id)
-        {
-            ES3.Save($"{nameof(isPossessed)}_" + id, isPossessed);
+            LoadCharacterDataFromES3Loader();
         }
         
-        
-        // public void SaveCharacterEachInfo(string equipmentID, Enum.CharacterProperty property)
-        // {
-        //     switch (property)
-        //     {
-        //         case Enum.CharacterProperty.Level:
-        //             ES3.Save($"{nameof(characterLevel)}_" + characterId, characterLevel);
-        //             break;
-        //         case Enum.CharacterProperty.Level:
-        //             ES3.Save($"{nameof(characterLevel)}_" + characterId, characterLevel);
-        //             break;
-        //     }
-        // }
+        public void SaveCharacterDataIntoES3Loader()
+        {
+            var targetIndex = SquadConfigureManager.FindCharacterIndex(characterId);
+            SquadConfigureManager.Instance.characterES3Loaders[targetIndex].SaveData(characterId, characterLevel, characterQuantity, isEquipped, isPossessed);
+        }
+
+        public void LoadCharacterDataFromES3Loader()
+        {
+            var targetIndex = SquadConfigureManager.FindCharacterIndex(characterId);
+
+            characterId = SquadConfigureManager.Instance.characterES3Loaders[targetIndex].id;
+            characterLevel = SquadConfigureManager.Instance.characterES3Loaders[targetIndex].level;
+            characterQuantity = SquadConfigureManager.Instance.characterES3Loaders[targetIndex].quantity;
+            isEquipped = SquadConfigureManager.Instance.characterES3Loaders[targetIndex].isEquipped;
+            isPossessed = SquadConfigureManager.Instance.characterES3Loaders[targetIndex].isPossessed;
+        }
 
         public BigInteger RequiredCurrencyForLevelUp()
         {

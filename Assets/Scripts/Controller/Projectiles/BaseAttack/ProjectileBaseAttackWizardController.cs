@@ -16,14 +16,14 @@ namespace Controller.Projectiles.BaseAttack
         [SerializeField] protected float splashRange;
 
         [SerializeField] protected Collider2D[] nearbyTargets;
-        protected TargetFinder TargetFinder;
+        private TargetFinder targetFinder;
 
-        protected virtual void Awake()
+        protected void Awake()
         {
-            TargetFinder = GetComponent<TargetFinder>();
+            targetFinder = GetComponent<TargetFinder>();
         }
 
-        protected virtual void Update()
+        protected void Update()
         {
             if (!readyToLaunch) return;
 
@@ -39,7 +39,7 @@ namespace Controller.Projectiles.BaseAttack
             transform.position += Direction * (projectileSpeed * Time.deltaTime);
         }
 
-        protected virtual void OnEnable()
+        protected void OnEnable()
         {
             nearbyTargets = null;
         }
@@ -62,11 +62,11 @@ namespace Controller.Projectiles.BaseAttack
             readyToLaunch = true;
         }
 
-        protected void FindNearbyEnemy()
+        private void FindNearbyEnemy()
         {
             if (nearbyTargets != null || splashRange == 0) return;
 
-            nearbyTargets = TargetFinder.ScanNearby(splashRange);
+            nearbyTargets = targetFinder.ScanNearby(splashRange);
 
             if (nearbyTargets != null) AttackEnemy();
         }

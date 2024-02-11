@@ -91,13 +91,13 @@ namespace Creature.CreatureClass.SquadClass
             currentTarget = null;
         }
 
-        public void TakeDamage(BigInteger damage)
+        public void TakeDamage(BigInteger inputDamage)
         {
-            currentHealth -= damage - (defence / 2);
+            currentHealth -= inputDamage - (defence / 2);
             currentHealth = currentHealth < 0 ? 0 : currentHealth;
             SetUIHealthBar();
 
-            Debug.Log($"{gameObject.name} {damage} 데미지!");
+            // Debug.Log($"{gameObject.name} {damage} 데미지!");
 
             if (currentHealth > 0 && !isDead) return;
             isDead = true;
