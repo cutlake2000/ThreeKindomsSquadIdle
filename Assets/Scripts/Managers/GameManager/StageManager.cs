@@ -237,7 +237,7 @@ namespace Managers.GameManager
             {
                 SetUI();
                 
-                if (!initStageResult)
+                if (initStageResult == false)
                 {
                     stageResultUI.GetComponent<StageRewardPanelUI>().UpdateRewardUI(SpriteManager.Instance.GetCurrencySprite(stageRewards[0].rewardType), $"+ {stageRewards[0].GetStageReward(currentAccumulatedStage).ChangeMoney()}", SpriteManager.Instance.GetCurrencySprite(stageRewards[1].rewardType), $"+ {stageRewards[1].GetStageReward(currentAccumulatedStage).ChangeMoney()}");
                     stageResultUI.GetComponent<StageRewardPanelUI>().PopUpStageClearMessage(isClear);
@@ -249,7 +249,7 @@ namespace Managers.GameManager
                 DespawnSquad();
                 DespawnMonster();
 
-                if (!initStageResult)
+                if (initStageResult == false)
                 {
                     if (isClear)
                     {
@@ -267,9 +267,9 @@ namespace Managers.GameManager
                     }
                     
                     stageResultUI.GetComponent<StageRewardPanelUI>().gameObject.SetActive(false);
+                    
+                    yield return new WaitForSeconds(1.0f);
                 }
-
-                yield return new WaitForSeconds(1.0f);
                 
                 SpawnSquad();
                 currentWave = 0;

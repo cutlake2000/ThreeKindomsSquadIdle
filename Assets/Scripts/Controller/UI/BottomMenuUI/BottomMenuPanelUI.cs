@@ -84,7 +84,7 @@ namespace Controller.UI.BottomMenuUI
             panels[index].SetActive(false);
             openButtons[index].gameObject.SetActive(true);
             
-            if (StageManager.Instance.initStageResult) StageManager.Instance.initStageResult = false;
+            if (StageManager.Instance.initStageResult) StageManager.Instance.initStageResult = true;
             if (StageManager.Instance.stageResultUI.activeInHierarchy) StageManager.Instance.stageResultUI.SetActive(false);
         }
     }

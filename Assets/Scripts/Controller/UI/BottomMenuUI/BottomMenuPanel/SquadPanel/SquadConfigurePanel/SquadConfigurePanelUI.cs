@@ -79,6 +79,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             OnClickSquadConfigureItem -= UpdateSquadConfigurePanelSelectedCharacterInfoUI;
             
             if (!SquadConfigureManager.Instance.isSquadConfigureChanged) return;
+            SquadConfigureManager.Instance.isSquadConfigureChanged = false;
             
             foreach (var equippedEffect in previousWarrior.characterEquippedEffects)
             {
@@ -94,8 +95,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             {
                 SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), equippedEffect.statType.ToString()), -equippedEffect.increaseValue, true);   
             }
-            
-            if (!SquadConfigureManager.Instance.isSquadConfigureChanged) return;
             
             StageManager.Instance.StopStageRunner();
             
