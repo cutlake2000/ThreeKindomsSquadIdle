@@ -2256,7 +2256,7 @@ MonoBehaviour:
   accountGenerationPanel: {fileID: 5928270058446655964}
   touchToStartButton: {fileID: 494992226}
   nameInputField: {fileID: 6112597999450122973}
-  loadingSceneManager: {fileID: 0}
+  loadingSceneManager: {fileID: 1473297606}
 --- !u!224 &8110387727742035511
 RectTransform:
   m_ObjectHideFlags: 0
