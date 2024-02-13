@@ -24,6 +24,7 @@ namespace ES3Types
 
 		protected override object ReadUnityObject<T>(ES3Reader reader)
 		{
+		    try
 			var obj = new Material(Shader.Find("Diffuse"));
 			ReadUnityObject<T>(reader, obj);
 			return obj;

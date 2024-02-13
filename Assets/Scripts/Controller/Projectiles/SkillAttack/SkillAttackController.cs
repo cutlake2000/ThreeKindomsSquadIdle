@@ -48,30 +48,6 @@ namespace Controller.Projectiles.SkillAttack
             ActivateSkill();
         }
 
-        protected IEnumerator MoveCollider()
-        {
-            attackCollider.SetActive(true);
-
-            while (true)
-            {
-                particleCurrentTime += Time.deltaTime;
-                yield return null;
-
-                if (particleCurrentTime < particleMaxTime)
-                {
-                    var newPositionX = -4 * particleCurrentTime / particleMaxTime;
-                    var newPosition = new Vector3(newPositionX, 0, 0);
-                    attackCollider.transform.localPosition = newPosition;
-                }
-                else
-                {
-                    particleCurrentTime = 0;
-                    attackCollider.SetActive(false);
-                    yield break;
-                }
-            }
-        }
-
         protected virtual void ActivateSkill()
         {
         }

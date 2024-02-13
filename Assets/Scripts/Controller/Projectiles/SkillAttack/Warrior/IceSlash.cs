@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Controller.Projectiles.SkillAttack.Warrior
@@ -14,6 +15,30 @@ namespace Controller.Projectiles.SkillAttack.Warrior
             particle.transform.localRotation = Quaternion.Euler(0, -90, 70.0f * Mathf.Abs(direction.y) + 20.0f);
 
             StartCoroutine(MoveCollider());
+        }
+        
+        private IEnumerator MoveCollider()
+        {
+            attackCollider.SetActive(true);
+
+            while (true)
+            {
+                particleCurrentTime += Time.deltaTime;
+                yield return null;
+
+                if (particleCurrentTime < particleMaxTime)
+                {
+                    var newPositionX = -4 * particleCurrentTime / particleMaxTime;
+                    var newPosition = new Vector3(newPositionX, 0, 0);
+                    attackCollider.transform.localPosition = newPosition;
+                }
+                else
+                {
+                    particleCurrentTime = 0;
+                    attackCollider.SetActive(false);
+                    yield break;
+                }
+            }
         }
 
         protected override void FlipSprite(float directionX)
