@@ -15,12 +15,12 @@ namespace Controller.Projectiles.BaseAttack
 
         public void InitializeWarriorBaseAttack(BigInteger damage, Vector3 direction)
         {
-            Direction = direction;
-            FlipSprite(Direction.x);
+            this.direction = direction;
+            FlipLocalScaleXY(this.direction.x);
 
             Damage = damage;
 
-            transform.right = Direction * -1;
+            transform.right = this.direction * -1;
         }
     }
 }

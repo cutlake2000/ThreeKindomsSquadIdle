@@ -19,7 +19,7 @@ namespace Controller.Projectiles.SkillAttack.Warrior
         
         private IEnumerator MoveCollider()
         {
-            attackCollider.SetActive(true);
+            attackColliders[0].SetActive(true);
 
             while (true)
             {
@@ -30,12 +30,12 @@ namespace Controller.Projectiles.SkillAttack.Warrior
                 {
                     var newPositionX = -4 * particleCurrentTime / particleMaxTime;
                     var newPosition = new Vector3(newPositionX, 0, 0);
-                    attackCollider.transform.localPosition = newPosition;
+                    attackColliders[0].transform.localPosition = newPosition;
                 }
                 else
                 {
                     particleCurrentTime = 0;
-                    attackCollider.SetActive(false);
+                    attackColliders[0].SetActive(false);
                     yield break;
                 }
             }

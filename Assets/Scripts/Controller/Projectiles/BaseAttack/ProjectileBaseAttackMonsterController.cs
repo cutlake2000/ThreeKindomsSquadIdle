@@ -19,13 +19,13 @@ namespace Controller.Projectiles.BaseAttack
 
         public void InitializeMonsterBaseAttack(BigInteger damage, Vector3 direction)
         {
-            Direction = direction;
-            FlipSprite(Direction.x);
+            base.direction = direction;
+            FlipLocalScaleY(base.direction.x);
 
             Damage = damage;
             // Debug.Log($"몬스터 데미지 : {Damage}");
 
-            transform.right = Direction * -1;
+            transform.right = base.direction * -1;
         }
     }
 }

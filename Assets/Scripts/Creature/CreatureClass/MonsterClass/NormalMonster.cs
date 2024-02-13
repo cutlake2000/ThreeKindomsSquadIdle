@@ -58,7 +58,7 @@ namespace Creature.CreatureClass.MonsterClass
             monsterStateMachine?.ChangeState(monsterStateMachine.MonsterIdleState);
         }
 
-        protected override void SetEventListener()
+        protected override void AddEventListener()
         {
             animationEventReceiver.OnNormalAttack += OnNormalAttack;
         }

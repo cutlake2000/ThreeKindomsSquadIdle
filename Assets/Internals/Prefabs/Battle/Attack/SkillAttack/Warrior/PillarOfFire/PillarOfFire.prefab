@@ -68224,7 +68224,7 @@ Transform:
   - {fileID: 6950154857528988745}
   - {fileID: 8495213477650934294}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -45, y: 0, z: 0}
 --- !u!114 &2591722145900736288
 MonoBehaviour:
@@ -68241,7 +68241,8 @@ MonoBehaviour:
   skillType: 1
   direction: {x: 0, y: 0, z: 0}
   projectileTransform: {fileID: 4096188165372268291}
-  attackCollider: {fileID: 8467253051317556371}
+  attackColliders:
+  - {fileID: 8467253051317556371}
   particleCurrentTime: 0
   particleMaxTime: 0
   startPosition: {x: 0, y: 0, z: 0}
@@ -77966,7 +77967,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.1}

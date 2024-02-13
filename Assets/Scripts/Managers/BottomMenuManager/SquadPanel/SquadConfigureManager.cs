@@ -257,7 +257,6 @@ namespace Managers.BottomMenuManager.SquadPanel
             var characterTypeIndex = (int) Enum.Parse(typeof(Enums.CharacterType),separatedId[1]);
             
             var targetIndex = characterTypeIndex * 3 + rarityIndex;
-            Debug.Log($"{id} index : {targetIndex}");
             return targetIndex;
         }
 
@@ -317,9 +316,11 @@ namespace Managers.BottomMenuManager.SquadPanel
         private void InstantiateModelOfBattleUnderParent(Enums.CharacterType type, GameObject prefab, Sprite characterIcon,
             Transform parentTransform)
         {
-            if (parentTransform.childCount >= 2) Destroy(parentTransform.GetChild(1).gameObject);
+            if (parentTransform.GetComponent<Squad>().characterModel != null) Destroy(parentTransform.GetComponent<Squad>().characterModel);
             
             var character = Instantiate(prefab, parentTransform);
+            parentTransform.GetComponent<Squad>().characterModel = character;
+            
             character.transform.SetParent(parentTransform);
 
             SquadBattleManager.Instance.squads[(int)type].GetComponent<Squad>().animator =

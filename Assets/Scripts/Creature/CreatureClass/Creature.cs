@@ -51,13 +51,23 @@ namespace Creature.CreatureClass
         protected virtual void OnEnable()
         {
             SetCreatureComponent();
-            SetEventListener();
+            AddEventListener();
             SetAllSpritesList();
             InitCreature();
         }
 
-        protected virtual void SetEventListener()
+        protected void OnDisable()
         {
+            SubtractEventListener();
+        }
+
+        protected virtual void AddEventListener()
+        {
+        }
+
+        protected virtual void SubtractEventListener()
+        {
+            
         }
 
         public virtual void SetAllSpritesList()

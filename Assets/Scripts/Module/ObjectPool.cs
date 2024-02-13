@@ -13,16 +13,32 @@ namespace Module
         private void Awake()
         {
             PoolDictionary = new Dictionary<Enums.PoolType, Queue<GameObject>>();
+            
             foreach (var pool in pools)
             {
                 var objectPool = new Queue<GameObject>();
 
-                for (var i = 0; i < pool.size; i++)
+                if (pool.parentTransform == null)
                 {
-                    var obj = Instantiate(pool.prefab, pool.parentTransform == null ? transform : pool.parentTransform, true);
-
-                    obj.SetActive(false);
-                    objectPool.Enqueue(obj);
+                    for (var i = 0; i < pool.size; i++)
+                    {
+                        var obj = Instantiate(pool.prefab, transform, true);
+                        
+                        obj.SetActive(false);
+                        objectPool.Enqueue(obj);
+                    }
+                }
+                else
+                {
+                    for (var i = 0; i < pool.size; i++)
+                    {
+                        var obj = Instantiate(pool.prefab, pool.parentTransform, false);
+                    
+                        obj.transform.position = new Vector3(2.3f, pool.adjustPosition.y,0);
+                        
+                        obj.SetActive(false);
+                        objectPool.Enqueue(obj);
+                    }
                 }
 
                 PoolDictionary.Add(pool.tag, objectPool);
@@ -45,6 +61,7 @@ namespace Module
         {
             public Enums.PoolType tag;
             public Transform parentTransform;
+            public Vector3 adjustPosition;
             public GameObject prefab;
             public int size;
         }

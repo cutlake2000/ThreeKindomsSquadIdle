@@ -12,6 +12,7 @@ using Managers.BottomMenuManager.InventoryPanel;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.TalentPanel;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Managers.GameManager
 {
@@ -68,8 +69,8 @@ namespace Managers.GameManager
         [Header("Base SquadStats")] [SerializeField]
         public SquadEntireStat squadEntireStat;
 
-        [Header("Total SquadStats")] public BigInteger totalWarriorAttack;
-
+        [Header("Total SquadStats")]
+        public BigInteger totalWarriorAttack;
         public BigInteger totalArcherAttack;
         public BigInteger totalWizardAttack;
         public BigInteger totalAttack;
@@ -81,6 +82,11 @@ namespace Managers.GameManager
         public BigInteger totalCriticalDamage;
         public BigInteger totalAcquisitionGold;
         public BigInteger totalAcquisitionExp;
+
+        [Header("공격력 보정 (+% / -%)")] public int totalAttackAdjustValue; 
+        [Header("워리어 공격력 보정치 (%)")] public int warriorTotalAttackAdjustValue;
+        [Header("아처 공격력 보정치 (%)")] public int archerTotalAttackAdjustValue;
+        [Header("위자드 공격력 보정치 (%)")] public int wizardTotalAttackAdjustValue;
 
         public SquadLevel SquadLevel;
 
@@ -115,9 +121,9 @@ namespace Managers.GameManager
 
         private void SetSquadStatsFromBaseStats()
         {
-            totalWarriorAttack = squadEntireStat.baseAttack;
-            totalArcherAttack = squadEntireStat.baseAttack;
-            totalWizardAttack = squadEntireStat.baseAttack;
+            totalWarriorAttack = squadEntireStat.baseAttack * warriorTotalAttackAdjustValue / 100;
+            totalArcherAttack = squadEntireStat.baseAttack * archerTotalAttackAdjustValue / 100;
+            totalWizardAttack = squadEntireStat.baseAttack * wizardTotalAttackAdjustValue / 100;
             totalAttack = squadEntireStat.baseAttack;
 
             totalMaxHealth = squadEntireStat.baseHealth;
@@ -144,11 +150,11 @@ namespace Managers.GameManager
             switch (statusType)
             {
                 case Enums.SquadStatType.WarriorAtk:
-                    return totalWarriorAttack;
+                    return totalWarriorAttack * (warriorTotalAttackAdjustValue + Random.Range(-totalAttackAdjustValue, totalAttackAdjustValue + 1)) / 100;
                 case Enums.SquadStatType.ArcherAtk:
-                    return totalArcherAttack;
+                    return totalArcherAttack * (archerTotalAttackAdjustValue + Random.Range(-totalAttackAdjustValue, totalAttackAdjustValue + 1)) / 100;
                 case Enums.SquadStatType.WizardAtk:
-                    return totalWizardAttack;
+                    return totalWizardAttack * (wizardTotalAttackAdjustValue + Random.Range(-totalAttackAdjustValue, totalAttackAdjustValue + 1)) / 100;
                 case Enums.SquadStatType.Health:
                     return totalMaxHealth;
                 case Enums.SquadStatType.Defence:

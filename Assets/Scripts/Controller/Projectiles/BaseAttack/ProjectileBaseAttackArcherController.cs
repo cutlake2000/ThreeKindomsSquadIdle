@@ -1,3 +1,4 @@
+using System;
 using Creature.CreatureClass.MonsterClass;
 using Data;
 using Function;
@@ -13,6 +14,11 @@ namespace Controller.Projectiles.BaseAttack
         [SerializeField] protected float projectileSpeed;
         [SerializeField] protected bool readyToLaunch;
 
+        private void OnDisable()
+        {
+            transform.position = Vector3.zero;
+        }
+
         private void Update()
         {
             if (!readyToLaunch) return;
@@ -26,7 +32,7 @@ namespace Controller.Projectiles.BaseAttack
         {
             if (!readyToLaunch) return;
 
-            transform.position += Direction * (projectileSpeed * Time.deltaTime);
+            transform.position += direction * (projectileSpeed * Time.deltaTime);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -39,12 +45,12 @@ namespace Controller.Projectiles.BaseAttack
 
         public void InitializeArcherBaseAttack(BigInteger damage, Vector3 direction)
         {
-            Direction = direction;
-            FlipSprite(Direction.x);
+            base.direction = direction;
+            FlipLocalScaleY(base.direction.x);
 
             Damage = damage;
             currentDuration = 0;
-            transform.right = Direction;
+            transform.right = base.direction;
             readyToLaunch = true;
         }
 

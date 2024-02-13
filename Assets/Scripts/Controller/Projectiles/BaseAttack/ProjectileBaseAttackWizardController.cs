@@ -22,6 +22,11 @@ namespace Controller.Projectiles.BaseAttack
         {
             targetFinder = GetComponent<TargetFinder>();
         }
+        
+        private void OnDisable()
+        {
+            transform.position = Vector3.zero;
+        }
 
         protected void Update()
         {
@@ -36,7 +41,7 @@ namespace Controller.Projectiles.BaseAttack
         {
             if (!readyToLaunch) return;
 
-            transform.position += Direction * (projectileSpeed * Time.deltaTime);
+            transform.position += direction * (projectileSpeed * Time.deltaTime);
         }
 
         protected void OnEnable()
@@ -53,12 +58,12 @@ namespace Controller.Projectiles.BaseAttack
 
         public void InitializeWizardBaseAttack(BigInteger damage, Vector3 direction)
         {
-            Direction = direction;
-            FlipSprite(Direction.x);
+            base.direction = direction;
+            FlipLocalScaleY(base.direction.x);
 
             Damage = damage;
             currentDuration = 0;
-            transform.right = Direction;
+            transform.right = base.direction;
             readyToLaunch = true;
         }
 

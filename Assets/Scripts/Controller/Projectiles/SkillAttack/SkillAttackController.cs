@@ -3,6 +3,7 @@ using Data;
 using Function;
 using Module;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Controller.Projectiles.SkillAttack
 {
@@ -16,8 +17,8 @@ namespace Controller.Projectiles.SkillAttack
         [Header("파티클 Transform")] [SerializeField]
         protected Transform projectileTransform;
 
-        [Header("AttackCollider")] [SerializeField]
-        protected GameObject attackCollider;
+        [FormerlySerializedAs("attackCollider")] [Header("AttackCollider")] [SerializeField]
+        protected GameObject[] attackColliders;
 
         [Header("AttackCollider 이동 관련 파리미터")] [SerializeField]
         protected float particleCurrentTime;
@@ -40,7 +41,11 @@ namespace Controller.Projectiles.SkillAttack
             startPosition = start;
             targetPosition = target;
 
-            attackCollider.GetComponent<AttackCollider>().damage = skillDamage * 2;
+            foreach (var ac in attackColliders)
+            {
+                ac.GetComponent<Collider2D>().GetComponent<AttackCollider>().damage = skillDamage * 2;    
+            }
+            
             gameObject.GetComponent<ParticleSystem>().Play(true);
 
             FlipSprite(direction.x);

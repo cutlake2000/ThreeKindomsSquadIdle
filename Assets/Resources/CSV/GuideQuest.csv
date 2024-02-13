@@ -49,4 +49,4 @@
 메인 퀘스트 52,1-25 스테이지 돌파하기,25,EnhanceDungeonTicket,1,StageClear,Loop
 메인 퀘스트 53,공성전 1회 플레이,1,SquadEnhanceStone,10000,PlayEnhanceStoneDungeon,Loop
 메인 퀘스트 54,캐릭터 소환 10회 진행하기,10,Dia,1000,SummonSquad,Loop
-메인 퀘스트 55,캐릭터 레벨업 하기,1,Dia,1000,LevelUpCharacter,Loop
+메인 퀘스트 55,캐릭터 레벨업 하기,1,GoldDungeonTicket,1,LevelUpCharacter,Loop

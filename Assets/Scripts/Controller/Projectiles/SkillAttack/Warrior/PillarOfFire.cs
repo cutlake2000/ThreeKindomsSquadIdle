@@ -15,11 +15,11 @@ namespace Controller.Projectiles.SkillAttack.Warrior
 
             switch (particleCurrentTime)
             {
-                case >= 1.5f when attackCollider.activeInHierarchy:
-                    attackCollider.SetActive(false);
+                case >= 1.5f when attackColliders[0].activeInHierarchy:
+                    attackColliders[0].SetActive(false);
                     break;
-                case >= 0.8f when attackCollider.activeInHierarchy == false:
-                    attackCollider.SetActive(true);
+                case >= 0.8f when attackColliders[0].activeInHierarchy == false:
+                    attackColliders[0].SetActive(true);
                     break;
             }
         }

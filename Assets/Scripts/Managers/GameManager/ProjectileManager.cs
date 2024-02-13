@@ -29,28 +29,32 @@ namespace Managers.GameManager
 
             if (obj == null) return;
 
-            obj.transform.position = startPosition;
-
-            switch (poolType)
+            if (poolType == Enums.PoolType.ProjectileBaseAttackWarrior)
             {
-                case Enums.PoolType.ProjectileBaseAttackWarrior:
-                    var warriorBaseAttackController = obj.GetComponent<ProjectileBaseAttackWarriorController>();
-                    warriorBaseAttackController.InitializeWarriorBaseAttack(damage, direction);
-                    break;
-                case Enums.PoolType.ProjectileBaseAttackArcher:
-                    var archerBaseAttackController = obj.GetComponent<ProjectileBaseAttackArcherController>();
-                    archerBaseAttackController.InitializeArcherBaseAttack(damage, direction);
-                    break;
-                case Enums.PoolType.ProjectileBaseAttackWizard:
-                    var wizardBaseAttackController = obj.GetComponent<ProjectileBaseAttackWizardController>();
-                    wizardBaseAttackController.InitializeWizardBaseAttack(damage, direction);
-                    break;
-                case Enums.PoolType.ProjectileBaseAttackMonster:
-                    var monsterBaseAttackController = obj.GetComponent<ProjectileBaseAttackMonsterController>();
-                    monsterBaseAttackController.InitializeMonsterBaseAttack(damage, direction);
-                    break;
+                var warriorBaseAttackController = obj.GetComponent<ProjectileBaseAttackWarriorController>();
+                warriorBaseAttackController.InitializeWarriorBaseAttack(damage, direction);
             }
-
+            else
+            {
+                obj.transform.position = startPosition;
+                
+                switch (poolType)
+                {
+                    case Enums.PoolType.ProjectileBaseAttackArcher:
+                        var archerBaseAttackController = obj.GetComponent<ProjectileBaseAttackArcherController>();
+                        archerBaseAttackController.InitializeArcherBaseAttack(damage, direction);
+                        break;
+                    case Enums.PoolType.ProjectileBaseAttackWizard:
+                        var wizardBaseAttackController = obj.GetComponent<ProjectileBaseAttackWizardController>();
+                        wizardBaseAttackController.InitializeWizardBaseAttack(damage, direction);
+                        break;
+                    case Enums.PoolType.ProjectileBaseAttackMonster:
+                        var monsterBaseAttackController = obj.GetComponent<ProjectileBaseAttackMonsterController>();
+                        monsterBaseAttackController.InitializeMonsterBaseAttack(damage, direction);
+                        break;
+                }
+            }
+            
             obj.SetActive(true);
         }
 

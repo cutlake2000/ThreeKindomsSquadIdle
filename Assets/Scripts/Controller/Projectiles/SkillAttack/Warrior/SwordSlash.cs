@@ -1,4 +1,5 @@
 using System.Collections;
+using Module;
 using UnityEngine;
 
 namespace Controller.Projectiles.SkillAttack.Warrior
@@ -7,35 +8,33 @@ namespace Controller.Projectiles.SkillAttack.Warrior
     {
         [Header("파티클 회전 관련")] [SerializeField] protected GameObject particle;
 
-        public WaitForSeconds ParticleStandByTime;
-        private int hitCount;
+        private readonly WaitForSeconds particleStandByTime = new(0.2f);
 
         protected override void ActivateSkill()
         {
+            foreach (var ac in attackColliders)
+            {
+                ac.GetComponent<AttackCollider>().damage = skillDamage * 2;
+            }
+            
             projectileTransform.position = startPosition;
             projectileTransform.right = direction * -1;
 
-            particle.transform.localRotation = Quaternion.Euler(0, -90, 70.0f * Mathf.Abs(direction.y) + 20.0f);
+            particle.transform.localRotation = Quaternion.Euler(20, 90, 70.0f * Mathf.Abs(direction.y));
 
             StartCoroutine(MultiHitCollider());
         }
         
         private IEnumerator MultiHitCollider()
         {
-            var currentHitCount = 0;
-
-            while (currentHitCount < 3)
+            foreach (var t in attackColliders)
             {
-                attackCollider.SetActive(true);
+                t.SetActive(true);
                 
-                yield return ParticleStandByTime;
-                
-                attackCollider.SetActive(false);
-                
-                currentHitCount++;
-            }
+                yield return particleStandByTime;
             
-            attackCollider.SetActive(false);
+                t.SetActive(false);
+            }
         }
         
         protected override void FlipSprite(float directionX)

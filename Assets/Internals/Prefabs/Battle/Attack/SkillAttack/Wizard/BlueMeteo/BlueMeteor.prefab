@@ -37,7 +37,7 @@ Transform:
   - {fileID: 5617003302885199620}
   - {fileID: 2848759147801728172}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1018808326247178527
 MonoBehaviour:
@@ -54,7 +54,7 @@ MonoBehaviour:
   skillType: 1
   direction: {x: 0, y: 0, z: 0}
   projectileTransform: {fileID: 0}
-  attackCollider: {fileID: 1950593144807177814, guid: 7f4f1cc4dac174948a183264b16f3ed0, type: 3}
+  attackColliders: []
   particleCurrentTime: 0
   particleMaxTime: 0
   startPosition: {x: 0, y: 0, z: 0}

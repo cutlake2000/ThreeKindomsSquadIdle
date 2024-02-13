@@ -22,6 +22,8 @@ namespace Creature.CreatureClass.SquadClass
 
         [Header("StateMachine")] private SquadStateMachine squadStateMachine;
 
+        [Header("Model")] public GameObject characterModel;
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -47,13 +49,20 @@ namespace Creature.CreatureClass.SquadClass
             squadStateMachine.PhysicsUpdate();
         }
         
-        protected override void SetEventListener()
+        protected override void AddEventListener()
         {
             animationEventReceiver.OnNormalAttackEffect += OnNormalAttackEffect;
             animationEventReceiver.OnNormalAttack += OnNormalAttack;
             animationEventReceiver.OnSkillAttack += OnSkillAttack;
         }
 
+        protected override void SubtractEventListener()
+        {
+            animationEventReceiver.OnNormalAttackEffect -= OnNormalAttackEffect;
+            animationEventReceiver.OnNormalAttack -= OnNormalAttack;
+            animationEventReceiver.OnSkillAttack -= OnSkillAttack;
+        }
+        
         public override void SetAllSpritesList()
         {
             allSprites.AddRange(spumSprite._itemList);
