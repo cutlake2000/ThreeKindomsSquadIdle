@@ -36,6 +36,9 @@ namespace Managers.GameManager
         private readonly int[] spawnXs = { -10, 10, 0 };
         private Dictionary<Enums.MonsterClassType, Queue<NormalMonster>> monsterNewPools;
         private int spawnCount;
+        
+        [Header("피해량 보정 (+% / -%)")] public int totalAttackAdjustValue;
+        [Header("데미지 감소 보정치 (높을수록 더 낮은 감소 수치)")] public int damageReduction;
 
         private void Awake()
         {

@@ -7,6 +7,7 @@ using Managers;
 using Managers.BattleManager;
 using Managers.GameManager;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Creature.CreatureClass.SquadClass
 {
@@ -102,7 +103,11 @@ namespace Creature.CreatureClass.SquadClass
 
         public void TakeDamage(BigInteger inputDamage)
         {
-            currentHealth -= inputDamage - (defence / 2);
+            var randomDamage = Random.Range(-SquadBattleManager.Instance.totalAttackAdjustValue, SquadBattleManager.Instance.totalAttackAdjustValue + 1) + 100;
+            var reduction = defence * 100 / (defence + SquadBattleManager.Instance.damageReduction) + 100;
+            var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
+            currentHealth -= adjustDamage;
+            
             currentHealth = currentHealth < 0 ? 0 : currentHealth;
             SetUIHealthBar();
 

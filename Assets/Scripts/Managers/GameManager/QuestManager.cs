@@ -27,7 +27,7 @@ namespace Managers.GameManager
     public class QuestTarget
     {
         public Enums.QuestType questType;
-        public GameObject targetMark;
+        [FormerlySerializedAs("targetMark")] public GameObject[] targetMarks;
         public GameObject[] activeTarget;
         public GameObject[] inactiveTarget;
     }
@@ -88,9 +88,12 @@ namespace Managers.GameManager
             
             questMark.SetActive(true);
             
-            if (currentQuestTarget.targetMark != null)
+            if (currentQuestTarget.targetMarks != null)
             {
-                currentQuestTarget.targetMark.SetActive(true);
+                foreach (var tm in currentQuestTarget.targetMarks)
+                {
+                    tm.SetActive(true);
+                }
             }
             
             targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite((Enums.CurrencyType)Enum.Parse(typeof(Enums.CurrencyType), $"{quests[questLevel].questRewardType}"));
@@ -184,13 +187,19 @@ namespace Managers.GameManager
                 quests[questLevel].progress += currentValue;   
             }
 
-            if (quests[questLevel].progress >= quests[questLevel].targetProgress)
+            if (quests[questLevel].progress < quests[questLevel].targetProgress) return;
+            
+            if (currentQuestTarget.targetMarks != null)
             {
-                if (currentQuestTarget.targetMark != null) currentQuestTarget.targetMark.SetActive(false);
-                UIManager.Instance.questPanelUI.completedMark.SetActive(true);
-                isCurrentQuestClear = true;
-                ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                foreach (var tm in currentQuestTarget.targetMarks)
+                {
+                    tm.SetActive(true);
+                }
             }
+                
+            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+            isCurrentQuestClear = true;
+            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
         }
 
         private void CreateQuestsFromCsv()

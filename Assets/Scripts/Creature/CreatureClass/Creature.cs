@@ -38,7 +38,6 @@ namespace Creature.CreatureClass
         public float moveSpeed;
 
         [Header("Sprite")] [SerializeField] public List<SpriteRenderer> allSprites = new();
-
         [Header("HpBar")] [SerializeField] protected GameObject hpBar;
 
         protected TargetFinder TargetFinder;

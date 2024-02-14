@@ -2,6 +2,7 @@ using Data;
 using Managers;
 using Managers.BattleManager;
 using Managers.GameManager;
+using UnityEngine;
 
 namespace Creature.CreatureClass.SquadClass
 {
@@ -20,7 +21,7 @@ namespace Creature.CreatureClass.SquadClass
         protected override void OnNormalAttack()
         {
             base.OnNormalAttack();
-
+            
             ProjectileManager.Instance.InstantiateBaseAttack(damage, ProjectileSpawnPosition, Direction,
                 Enums.PoolType.ProjectileBaseAttackArcher);
         }

@@ -18,11 +18,11 @@
 메인 퀘스트 17,잊혀진 고대 사원 1회 플레이,1,Dia,1000,PlayGoldDungeon,OneTime
 메인 퀘스트 18,재능 - 공격력 Lv.15 달성하기,15,Dia,1000,AttackTalentLevel,OneTime
 메인 퀘스트 19,재능 - 체력 Lv.15 달성하기,15,Dia,1000,HealthTalentLevel,OneTime
-메인 퀘스트 20,무기 소환 100회 진행하기,100,Dia,1000,SummonWeapon,OneTime
+메인 퀘스트 20,무기 소환 10회 진행하기,10,Dia,1000,SummonWeapon,OneTime
 메인 퀘스트 21,근거리 무기 합성하기,1,Dia,1000,CompositeSword,OneTime
 메인 퀘스트 22,원거리 무기 합성하기,1,Dia,1000,CompositeBow,OneTime
 메인 퀘스트 23,마법 무기 합성하기,1,Dia,1000,CompositeStaff,OneTime
-메인 퀘스트 24,방어구 소환 100회 진행하기,100,Dia,1000,SummonGear,OneTime
+메인 퀘스트 24,방어구 소환 10회 진행하기,10,Dia,1000,SummonGear,OneTime
 메인 퀘스트 25,투구 합성하기,1,Dia,1000,CompositeHelmet,OneTime
 메인 퀘스트 26,갑옷 합성하기,1,Dia,1000,CompositeArmor,OneTime
 메인 퀘스트 27,장갑 합성하기,1,Dia,1000,CompositeGauntlet,OneTime
@@ -37,7 +37,7 @@
 메인 퀘스트 36,재능 - 체력 증가 Lv.25 달성하기,25,Dia,1000,HealthTalentLevel,OneTime
 메인 퀘스트 37,무기 소환 10회 진행하기,10,Dia,1000,SummonWeapon,OneTime
 메인 퀘스트 38,방어구 소환 10회 진행하기,10,Dia,1000,SummonGear,OneTime
-메인 퀘스트 39,1-20스테이지 돌파하기,20,EnhanceDungeonTicket,1,StageClear,OneTime
+메인 퀘스트 39,1-20 스테이지 돌파하기,20,EnhanceDungeonTicket,1,StageClear,OneTime
 메인 퀘스트 42,공성전 1회 플레이,1,SquadEnhanceStone,10000,PlayEnhanceStoneDungeon,OneTime
 메인 퀘스트 45,캐릭터 소환 10회 진행하기,10,Dia,1000,SummonSquad,OneTime
 메인 퀘스트 46,캐릭터 레벨업 하기,1,GoldDungeonTicket,1,LevelUpCharacter,OneTime

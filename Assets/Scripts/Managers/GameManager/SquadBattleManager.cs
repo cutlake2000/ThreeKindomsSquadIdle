@@ -83,10 +83,11 @@ namespace Managers.GameManager
         public BigInteger totalAcquisitionGold;
         public BigInteger totalAcquisitionExp;
 
-        [Header("공격력 보정 (+% / -%)")] public int totalAttackAdjustValue; 
+        [Header("피해량 보정 (+% / -%)")] public int totalAttackAdjustValue; 
         [Header("워리어 공격력 보정치 (%)")] public int warriorTotalAttackAdjustValue;
         [Header("아처 공격력 보정치 (%)")] public int archerTotalAttackAdjustValue;
         [Header("위자드 공격력 보정치 (%)")] public int wizardTotalAttackAdjustValue;
+        [Header("데미지 감소 보정치 (높을수록 더 낮은 감소 수치)")] public int damageReduction;
 
         public SquadLevel SquadLevel;
 
@@ -150,11 +151,11 @@ namespace Managers.GameManager
             switch (statusType)
             {
                 case Enums.SquadStatType.WarriorAtk:
-                    return totalWarriorAttack * (warriorTotalAttackAdjustValue + Random.Range(-totalAttackAdjustValue, totalAttackAdjustValue + 1)) / 100;
+                    return totalWarriorAttack * warriorTotalAttackAdjustValue; 
                 case Enums.SquadStatType.ArcherAtk:
-                    return totalArcherAttack * (archerTotalAttackAdjustValue + Random.Range(-totalAttackAdjustValue, totalAttackAdjustValue + 1)) / 100;
+                    return totalArcherAttack * archerTotalAttackAdjustValue;
                 case Enums.SquadStatType.WizardAtk:
-                    return totalWizardAttack * (wizardTotalAttackAdjustValue + Random.Range(-totalAttackAdjustValue, totalAttackAdjustValue + 1)) / 100;
+                    return totalWizardAttack * wizardTotalAttackAdjustValue;
                 case Enums.SquadStatType.Health:
                     return totalMaxHealth;
                 case Enums.SquadStatType.Defence:

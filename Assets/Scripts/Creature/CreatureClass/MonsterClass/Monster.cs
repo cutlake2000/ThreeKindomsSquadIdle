@@ -5,6 +5,6 @@ namespace Creature.CreatureClass.MonsterClass
 {
     public class Monster : Creature
     {
-        public virtual void TakeDamage(BigInteger damage){}
+        public virtual void TakeDamage(BigInteger inputDamage){}
     }
 }

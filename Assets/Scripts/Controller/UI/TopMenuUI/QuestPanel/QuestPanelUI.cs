@@ -31,17 +31,25 @@ namespace Controller.UI.TopMenuUI.QuestPanel
         {
             if (QuestManager.Instance.isCurrentQuestClear)
             {
-                if (QuestManager.Instance.currentQuestTarget.targetMark != null)
+                if (QuestManager.Instance.currentQuestTarget.targetMarks != null)
                 {
-                    QuestManager.Instance.currentQuestTarget.targetMark.SetActive(false);   
+                    foreach (var tm in QuestManager.Instance.currentQuestTarget.targetMarks)
+                    {
+                        tm.SetActive(false);
+                    }
                 }
+                
                 QuestManager.Instance.isCurrentQuestClear = false;
                 QuestManager.Instance.TargetQuestClear();
             }
             else if (QuestManager.Instance.currentQuest.questType != Enums.QuestType.StageClear)
             {
                 QuestManager.Instance.backboardPanel.SetActive(true);
-                QuestManager.Instance.currentQuestTarget.targetMark.SetActive(true);
+                
+                foreach (var tm in QuestManager.Instance.currentQuestTarget.targetMarks)
+                {
+                    tm.SetActive(true);
+                }
                 
                 switch (QuestManager.Instance.currentQuestTarget.questType)
                 {

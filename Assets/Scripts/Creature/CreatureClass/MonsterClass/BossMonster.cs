@@ -33,9 +33,9 @@ namespace Creature.CreatureClass.MonsterClass
             currentBossDefence = MonsterManager.Instance.bossMonsterBaseStats.defence * dungeonLevel;
         }
 
-        public override void TakeDamage(BigInteger damage)
+        public override void TakeDamage(BigInteger inputDamage)
         {
-            currentBossHealth -= damage * 100 / currentBossDefence + 100;
+            currentBossHealth -= inputDamage * 100 / currentBossDefence + 100;
             currentBossHealth = currentBossHealth < 0 ? 0 : currentBossHealth;
 
             if (isEventHitRunning == false && !isDead)
@@ -46,7 +46,7 @@ namespace Creature.CreatureClass.MonsterClass
             var bounds = GetComponent<Collider2D>().bounds;
             var damageEffectSpawnPosition = bounds.center + new Vector3(0.0f, bounds.extents.y + 1f, 0.0f);
             EffectManager.Instance.CreateEffectsAtPosition(FunctionManager.Vector3ToVector2(damageEffectSpawnPosition),
-                damage.ChangeMoney(), Enums.PoolType.EffectDamage);
+                inputDamage.ChangeMoney(), Enums.PoolType.EffectDamage);
             
             DungeonManager.CheckRemainedBossHealth?.Invoke(currentBossHealth, maxBossHealth);
 

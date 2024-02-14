@@ -110,9 +110,12 @@ namespace Creature.CreatureClass.MonsterClass
             damage *= stageLevel * increaseValue / 100;
         }
 
-        public override void TakeDamage(BigInteger damage)
+        public override void TakeDamage(BigInteger inputDamage)
         {
-            currentHealth -= damage * 100 / defence + 100;
+            var randomDamage = Random.Range(-MonsterManager.Instance.totalAttackAdjustValue, MonsterManager.Instance.totalAttackAdjustValue + 1) + 100;
+            var reduction = defence * 100 / (defence + MonsterManager.Instance.damageReduction) + 100;
+            var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
+            currentHealth -= adjustDamage;
             
             currentHealth = currentHealth < 0 ? 0 : currentHealth;
             SetUIHealthBar();
@@ -123,7 +126,7 @@ namespace Creature.CreatureClass.MonsterClass
             var damageEffectSpawnPosition = bounds.center + new Vector3(0.0f, bounds.extents.y + 1f, 0.0f);
 
             EffectManager.Instance.CreateEffectsAtPosition(FunctionManager.Vector3ToVector2(damageEffectSpawnPosition),
-                damage.ChangeMoney(), Enums.PoolType.EffectDamage);
+                adjustDamage.ChangeMoney(), Enums.PoolType.EffectDamage);
 
             if (isEventHitRunning == false && !isDead) StartCoroutine(EventHit());
 
