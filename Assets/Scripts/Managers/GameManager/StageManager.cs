@@ -81,6 +81,9 @@ namespace Managers.GameManager
             
             maxMainStageCounts = stageSo.MainStageInfos.Count;
             subStageCountsPerMainStage = stageSo.SubStageCountsPerMainStage;
+            
+            // maxMainStageCounts = 1;
+            // subStageCountsPerMainStage = 3;
             waveCountsPerSubStage = stageSo.WaveCountsPerSubStage;
             monsterSpawnCountsPerSubStage = stageSo.MonsterSpawnCountsPerSubStage;
             nextStageChallenge = true;
@@ -100,7 +103,7 @@ namespace Managers.GameManager
 
         public void SetCurrentMainStageInfo()
         {
-            currentMainStageName = stageSo.MainStageInfos[currentMainStage - 1].MainStageName;
+            currentMainStageName = $"{stageSo.MainStageInfos[currentMainStage - 1].MainStageName} {currentMainStage}-";
         }
 
         public void StartStageRunner()
@@ -138,11 +141,13 @@ namespace Managers.GameManager
                         {
                             currentMainStage = maxMainStageCounts;
                             currentSubStage = subStageCountsPerMainStage;
+                            
+                            stageUIController.SetStageProgressButton(false);
+                            nextStageChallenge = false;
+                            goToNextSubStage = false;
                         }
                         
                         ES3.Save($"{nameof(StageManager)}/{nameof(currentMainStage)}", currentMainStage);
-
-                        SetCurrentMainStageInfo();
                     }
                     
                     QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.StageClear, currentAccumulatedStage);
@@ -156,8 +161,7 @@ namespace Managers.GameManager
                     ES3.Save($"{nameof(StageManager)}/{nameof(currentStageIndex)}", currentSubStage);
                 }
             }
-
-            SetCurrentMainStageInfo();
+            
             StartCoroutine(StageRunner());
         }
 
@@ -186,7 +190,6 @@ namespace Managers.GameManager
             nextStageChallenge = false;
             CheckStageProgressType.Invoke(nextStageChallenge);
             
-            SetCurrentMainStageInfo();
             StartCoroutine(StageRunner());
         }
 
@@ -217,7 +220,6 @@ namespace Managers.GameManager
             nextStageChallenge = false;
             CheckStageProgressType.Invoke(nextStageChallenge);
             
-            SetCurrentMainStageInfo();
             StartCoroutine(StageRunner());
         }
 
@@ -229,14 +231,11 @@ namespace Managers.GameManager
 
         private IEnumerator StageRunner()
         {
-            SetUI();
-
-            yield return new WaitForSeconds(1.0f);
-
+            SetCurrentMainStageInfo();
+            UpdateSliderUI();
+            
             if (goToNextSubStage)
             {
-                SetUI();
-                
                 if (initStageResult == false)
                 {
                     stageResultUI.GetComponent<StageRewardPanelUI>().UpdateRewardUI(SpriteManager.Instance.GetCurrencySprite(stageRewards[0].rewardType), $"+ {stageRewards[0].GetStageReward(currentAccumulatedStage).ChangeMoney()}", SpriteManager.Instance.GetCurrencySprite(stageRewards[1].rewardType), $"+ {stageRewards[1].GetStageReward(currentAccumulatedStage).ChangeMoney()}");
@@ -276,21 +275,27 @@ namespace Managers.GameManager
                 goToNextSubStage = false;
                 initStageResult = false;
                 
-                SetUI();
+                UpdateAllStageUI();
                 
                 yield return new WaitForSeconds(1.0f);
             }
 
+            UpdateAllStageUI();
             SpawnMonster();
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
         }
 
-        private void SetUI()
+        private void UpdateAllStageUI()
         {
             stageUIController.SetUIText(Enums.UITextType.CurrentStageName, $"{currentMainStageName}{currentSubStage}");
             stageUIController.SetUIText(Enums.UITextType.CurrentWave, $"{currentWave} / {waveCountsPerSubStage}");
-            stageUIController.SetUISlider(Enums.UISliderType.CurrentWaveSlider,
-                1.0f * currentWave / waveCountsPerSubStage);
+            stageUIController.SetUISlider(Enums.UISliderType.CurrentWaveSlider, 1.0f * currentWave / waveCountsPerSubStage);
+        }
+
+        private void UpdateSliderUI()
+        {
+            stageUIController.SetUIText(Enums.UITextType.CurrentWave, $"{currentWave} / {waveCountsPerSubStage}");
+            stageUIController.SetUISlider(Enums.UISliderType.CurrentWaveSlider, 1.0f * currentWave / waveCountsPerSubStage);
         }
 
         private void SpawnSquad()

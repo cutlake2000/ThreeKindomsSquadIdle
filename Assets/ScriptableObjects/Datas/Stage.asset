@@ -13,12 +13,29 @@ MonoBehaviour:
   m_Name: Stage
   m_EditorClassIdentifier: 
   <MainStageInfos>k__BackingField:
-  - <MainStageName>k__BackingField: "\uCFF5\uC9DD\uCFF5\uC9DD 1-"
+  - <MainStageName>k__BackingField: "\uC625\uC11D\uC758 \uB3D9\uAD74"
     <MainStageMonsterTypes>k__BackingField: 00000000
-  - <MainStageName>k__BackingField: "\uC5BC\uC464! 2-"
+  - <MainStageName>k__BackingField: "\uBE44\uBC00\uC758 \uC232"
     <MainStageMonsterTypes>k__BackingField: 01000000
-  - <MainStageName>k__BackingField: "\uB369\uAE30\uB7EC\uB7EC\uCFF5\uB354\uB7EC\uB7EC
-      3-"
+  - <MainStageName>k__BackingField: "\uC6A9\uC758 \uC228\uACB0 \uD611\uACE1"
+    <MainStageMonsterTypes>k__BackingField: 00000000
+  - <MainStageName>k__BackingField: "\uCC9C\uC0C1\uC758 \uC815\uC6D0"
+    <MainStageMonsterTypes>k__BackingField: 01000000
+  - <MainStageName>k__BackingField: "\uC554\uD751\uC758 \uD0D1"
+    <MainStageMonsterTypes>k__BackingField: 00000000
+  - <MainStageName>k__BackingField: "\uBC14\uB78C\uC758 \uACC4\uACE1"
+    <MainStageMonsterTypes>k__BackingField: 01000000
+  - <MainStageName>k__BackingField: "\uC9C4\uC8FC\uC758 \uC12C"
+    <MainStageMonsterTypes>k__BackingField: 00000000
+  - <MainStageName>k__BackingField: "\uC740\uD558\uC758 \uBB3C\uAE38"
+    <MainStageMonsterTypes>k__BackingField: 01000000
+  - <MainStageName>k__BackingField: "\uBD88\uAF43\uC758 \uC808\uBCBD"
+    <MainStageMonsterTypes>k__BackingField: 00000000
+  - <MainStageName>k__BackingField: "\uBD88\uAF43\uC758 \uC808\uBCBD"
+    <MainStageMonsterTypes>k__BackingField: 00000000
+  - <MainStageName>k__BackingField: "\uC78A\uD600\uC9C4 \uC0AC\uC6D0"
+    <MainStageMonsterTypes>k__BackingField: 01000000
+  - <MainStageName>k__BackingField: "\uCC9C\uB465\uC758 \uC694\uC0C8"
     <MainStageMonsterTypes>k__BackingField: 00000000
   <SubStageCountsPerMainStage>k__BackingField: 50
   <WaveCountsPerSubStage>k__BackingField: 3

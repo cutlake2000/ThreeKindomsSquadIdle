@@ -55,6 +55,8 @@ namespace Controller.Projectiles.SkillAttack.Archer
         
         private IEnumerator MultiHitCollider()
         {
+            yield return particleStandByTime;
+            
             foreach (var t in attackColliders)
             {
                 t.SetActive(true);

@@ -222,7 +222,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     Enums.IncreaseStatValueType.BaseStat =>
                         $"{character.characterEquippedEffects[index].increaseValue} 증가",
                     Enums.IncreaseStatValueType.PercentStat =>
-                        $"{UIManager.FormatCurrency(character.characterEquippedEffects[index].increaseValue)}% 증가",
+                        $"{UIManager.FormatCurrency(character.characterEquippedEffects[index].increaseValue / 100)}% 증가",
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -304,12 +304,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         /// </summary>
         private void OnClickCharacterEquip()
         {
-            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.EquipSquad, 1);
-
-            previousWarrior = SquadConfigureManager.Instance.WarriorDictionary.First(character => character.Value.isEquipped).Value;
-            previousArcher = SquadConfigureManager.Instance.ArchersDictionary.First(character => character.Value.isEquipped).Value;
-            previousWizard = SquadConfigureManager.Instance.WizardsDictionary.First(character => character.Value.isEquipped).Value;
-            
             Character newCharacter;
             switch (currentSelectedSquadConfigurePanelItem.characterType)
             {
@@ -331,37 +325,30 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             }
 
             if (newCharacter == null || newCharacter.isEquipped) return;
-
+            
+            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.EquipSquad, 1);
+            
             SquadConfigureManager.Instance.isSquadConfigureChanged = true;
+            
             configuredSquadPanel.SetActive(true);
             selectedSquadPanel.SetActive(false);
             
             switch (newCharacter.characterType)
             {
                 case Enums.CharacterType.Warrior:
-                    foreach (var warrior in SquadConfigureManager.Instance.WarriorDictionary.Where(warrior => warrior.Value.isEquipped))
-                    {
-                        warrior.Value.isEquipped = false;
-                        warrior.Value.SaveCharacterDataIntoES3Loader();
-                        Debug.Log($"{warrior.Value.characterId} 장착 해제 {warrior.Value.isEquipped}");
-                        break;
-                    }
+                    previousWarrior = SquadConfigureManager.Instance.WarriorDictionary.First(character => character.Value.isEquipped).Value;
+                    previousWarrior.isEquipped = false;
+                    previousWarrior.SaveCharacterDataIntoES3Loader();
                     break;
                 case Enums.CharacterType.Archer:
-                    foreach (var archer in SquadConfigureManager.Instance.ArchersDictionary.Where(archer => archer.Value.isEquipped))
-                    {
-                        archer.Value.isEquipped = false;
-                        archer.Value.SaveCharacterDataIntoES3Loader();
-                        break;
-                    }
+                    previousArcher = SquadConfigureManager.Instance.ArchersDictionary.First(character => character.Value.isEquipped).Value;
+                    previousArcher.isEquipped = false;
+                    previousArcher.SaveCharacterDataIntoES3Loader();
                     break;
                 case Enums.CharacterType.Wizard:
-                    foreach (var wizard in SquadConfigureManager.Instance.WizardsDictionary.Where(wizard => wizard.Value.isEquipped))
-                    {
-                        wizard.Value.isEquipped = false;
-                        wizard.Value.SaveCharacterDataIntoES3Loader();
-                        break;
-                    }
+                    previousWizard = SquadConfigureManager.Instance.WizardsDictionary.First(character => character.Value.isEquipped).Value;
+                    previousWizard.isEquipped = false;
+                    previousWizard.SaveCharacterDataIntoES3Loader();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -374,6 +361,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             
             UpdateSquadConfigureScrollViewItemUI(newCharacter.characterType, false);
             SquadConfigureManager.Instance.InstantiateModelOfConfigureUnderParent(newCharacter.characterType, newCharacter.characterModel);
+            SquadConfigureManager.Instance.SaveAllCharacterInfo();
         }
 
         public void UpdateSquadConfigureScrollViewItemUI(Enums.CharacterType characterType, bool initialSorting)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Controller.UI.TopMenuUI.QuestPanel;
 using Data;
 using Managers.BattleManager;
@@ -27,7 +28,7 @@ namespace Managers.GameManager
     public class QuestTarget
     {
         public Enums.QuestType questType;
-        [FormerlySerializedAs("targetMark")] public GameObject[] targetMarks;
+        public GameObject[] targetMarks;
         public GameObject[] activeTarget;
         public GameObject[] inactiveTarget;
     }
@@ -42,8 +43,9 @@ namespace Managers.GameManager
         public Quest currentQuest;
         public QuestTarget currentQuestTarget;
         public bool isCurrentQuestClear;
-        
+
         [Header("Quest Mark")]
+        public GameObject initialQuestMark;
         public GameObject questMark;
         public List<Quest> quests;
         public List<QuestTarget> questTargets;
@@ -71,10 +73,40 @@ namespace Managers.GameManager
 
         private void UpdateAllQuestProgress()
         {
-            if (questLevel >= 51)
+            if (questLevel >= 46)
             {
-                questLevel = 42;
-                currentQuest = quests[questLevel];
+                var questIndex = (questLevel - 46) % 9 + 46;
+                currentQuest = quests[questIndex];
+
+                var targetLevel = 30 + 5 * (questLevel - 46) / 9;
+                
+                switch (questIndex)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        currentQuest.name = ParsingIncreaseTalentStatType(currentQuest.name, targetLevel);
+                        currentQuest.targetProgress = targetLevel;
+                        break;
+                    case 2:
+                        currentQuest.name = ParsingIncreaseTalentStatType(currentQuest.name, targetLevel);
+                        currentQuest.targetProgress = targetLevel;
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        currentQuest.name = ParsingIncreaseStageLevel(targetLevel);
+                        currentQuest.targetProgress = targetLevel;
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                }
             }
             else
             {
@@ -120,7 +152,7 @@ namespace Managers.GameManager
                         UIManager.Instance.questPanelUI.completedMark.SetActive(true);
                     }
                     break;
-                case Enums.QuestType.SummonWeapon:
+                case Enums.QuestType.SummonWeapon10:
                     break;
                 case Enums.QuestType.AutoEquipSword:
                     break;
@@ -137,7 +169,7 @@ namespace Managers.GameManager
                         UIManager.Instance.questPanelUI.completedMark.SetActive(true);
                     }
                     break;
-                case Enums.QuestType.SummonGear:
+                case Enums.QuestType.SummonGear10:
                     break;
                 case Enums.QuestType.AutoEquipHelmet:
                     break;
@@ -145,7 +177,7 @@ namespace Managers.GameManager
                     break;
                 case Enums.QuestType.AutoEquipGauntlet:
                     break;
-                case Enums.QuestType.SummonSquad:
+                case Enums.QuestType.SummonSquad10:
                     break;
                 case Enums.QuestType.EquipSquad:
                     break;
@@ -166,6 +198,10 @@ namespace Managers.GameManager
                 case Enums.QuestType.PlayEnhanceStoneDungeon:
                     break;
                 case Enums.QuestType.LevelUpCharacter:
+                    break;
+                case Enums.QuestType.SummonWeapon100:
+                    break;
+                case Enums.QuestType.SummonGear100:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -202,10 +238,56 @@ namespace Managers.GameManager
             ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
         }
 
+        private static string ParsingIncreaseTalentStatType(string oldName, int targetLevel)
+        {
+            // 정규식을 사용하여 문자열에서 "Lv." 다음에 오는 숫자를 추출
+            const string pattern = @"Lv\.(\d+)";
+            var match = Regex.Match(oldName, pattern);
+
+            // 문자열에서 숫자를 추출하여 정수로 변환
+            var currentLevel = 0;
+            if (match.Success)
+            {
+                currentLevel = int.Parse(match.Groups[1].Value);
+            }
+
+            // 새로운 레벨 값을 문자열에 삽입하여 새로운 문자열 생성
+            var newString = oldName.Replace($"Lv.{currentLevel}", $"Lv.{targetLevel}");
+
+            // 결과 출력
+            return newString;
+        }
+
+        private static string ParsingIncreaseStageLevel(int currentLevel)
+        {
+            int stageNumber;
+            int subStageNumber;
+
+            // 스테이지와 서브 스테이지 번호 계산
+            if (currentLevel <= 5)
+            {
+                stageNumber = 1;
+                subStageNumber = 25 + 5 * currentLevel;
+            }
+            else
+            {
+                stageNumber = (currentLevel - 5) / 5 + 1;
+                subStageNumber = (currentLevel - 5) % 5 + 5;
+            }
+
+            // 결과 문자열 생성
+            var result = $"{stageNumber}-{subStageNumber}";
+
+            return result;
+        }
+
         private void CreateQuestsFromCsv()
         {
             questCsv = Resources.Load<TextAsset>("CSV/GuideQuest");
             questLevel = ES3.Load($"{nameof(questLevel)}", 0);
+            
+            if (questLevel == 0) initialQuestMark.SetActive(true);
+            
             quests = new List<Quest>();
             isCurrentQuestClear = ES3.Load($"{nameof(currentQuest)}", false);
 

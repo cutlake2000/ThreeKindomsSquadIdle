@@ -283,12 +283,9 @@ namespace Managers.BottomMenuManager.SquadPanel
                 skillSpawnPoints[(int)character.characterType].transform);
 
             foreach (var effect in character.characterEquippedEffects)
-                if (effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat)
-                    SquadBattleManager.Instance.squadEntireStat.UpdateStat(
-                        (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, true);
-                else
-                    SquadBattleManager.Instance.squadEntireStat.UpdateStat(
-                        (Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, false);
+            {
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
+            }
         }
 
         /// <summary>
@@ -320,7 +317,6 @@ namespace Managers.BottomMenuManager.SquadPanel
             
             var character = Instantiate(prefab, parentTransform);
             parentTransform.GetComponent<Squad>().characterModel = character;
-            
             character.transform.SetParent(parentTransform);
 
             SquadBattleManager.Instance.squads[(int)type].GetComponent<Squad>().animator =

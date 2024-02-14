@@ -100,17 +100,35 @@ namespace Managers.BottomMenuManager.SummonPanel
         public void SummonRandomTarget(Enums.SummonType type, int count)
         {
             if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.Dia, count * 10)) return;
-
+            
+            UIManager.Instance.summonPanelUI.summonResultPanelUI.HideAllSummonResultPanelExtraSummonButtonUI();
+            
             switch (type)
             {
                 case Enums.SummonType.Squad:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonSquad, count);
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonSquad10, count);
                     break;
                 case Enums.SummonType.Weapon:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonWeapon, count);
+                    switch (count)
+                    {
+                        case 10:
+                            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonWeapon10, count);
+                            break;
+                        case 100:
+                            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonWeapon100, count);
+                            break;
+                    }
                     break;
                 case Enums.SummonType.Gear:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonGear, count);
+                    switch (count)
+                    {
+                        case 10:
+                            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonGear10, count);
+                            break;
+                        case 100:
+                            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.SummonGear100, count);
+                            break;
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -326,6 +344,8 @@ namespace Managers.BottomMenuManager.SummonPanel
                 UIManager.Instance.summonPanelUI.summonResultPanelUI.summonResultPanelItems[i].StartSummonEffect();
                 yield return summonWaitForSeconds;
             }
+            
+            UIManager.Instance.summonPanelUI.summonResultPanelUI.UpdateSummonResultPanelExtraSummonButtonUI();
         }
         
         private void IncreaseSummonExp(Enums.SummonType type, int count)

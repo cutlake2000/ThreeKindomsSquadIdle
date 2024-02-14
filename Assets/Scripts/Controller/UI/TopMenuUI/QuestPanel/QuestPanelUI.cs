@@ -29,6 +29,8 @@ namespace Controller.UI.TopMenuUI.QuestPanel
 
         private void CheckQuestClear()
         {
+            if (QuestManager.Instance.initialQuestMark.activeInHierarchy) QuestManager.Instance.initialQuestMark.SetActive(false);
+            
             if (QuestManager.Instance.isCurrentQuestClear)
             {
                 if (QuestManager.Instance.currentQuestTarget.targetMarks != null)
@@ -53,10 +55,6 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                 
                 switch (QuestManager.Instance.currentQuestTarget.questType)
                 {
-                    case Enums.QuestType.AttackTalentLevel:
-                        break;
-                    case Enums.QuestType.HealthTalentLevel:
-                        break;
                     case Enums.QuestType.AutoEquipSword:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.SwordsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
@@ -81,22 +79,24 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.GauntletsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
-                    case Enums.QuestType.SummonWeapon:
+                    case Enums.QuestType.SummonWeapon10:
                         UIManager.Instance.summonPanelUI.SetScrollViewVerticalPosition(0.5f);
                         break;
-                    case Enums.QuestType.SummonGear:
+                    case Enums.QuestType.SummonGear10:
                         UIManager.Instance.summonPanelUI.SetScrollViewVerticalPosition(0f);
                         break;
-                    case Enums.QuestType.SummonSquad:
+                    case Enums.QuestType.SummonSquad10:
                         UIManager.Instance.summonPanelUI.SetScrollViewVerticalPosition(1f);
+                        break;
+                    case Enums.QuestType.SummonWeapon100:
+                        UIManager.Instance.summonPanelUI.SetScrollViewVerticalPosition(0.5f);
+                        break;
+                    case Enums.QuestType.SummonGear100:
+                        UIManager.Instance.summonPanelUI.SetScrollViewVerticalPosition(0f);
                         break;
                     case Enums.QuestType.EquipSquad:
                         UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem = SquadConfigureManager.Instance.WarriorDictionary.Where(keyValuePair => keyValuePair.Value.characterId == "Rare_Warrior").ToList()[0].Value;
                         UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigurePanelSelectedCharacterInfoUI(UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem);
-                        break;
-                    case Enums.QuestType.PlayGoldDungeon:
-                        break;
-                    case Enums.QuestType.PlayEnhanceStoneDungeon:
                         break;
                     case Enums.QuestType.CompositeSword:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.SwordsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
@@ -123,6 +123,16 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.LevelUpCharacter:
+                        break;
+                    case Enums.QuestType.AttackTalentLevel:
+                        break;
+                    case Enums.QuestType.HealthTalentLevel:
+                        break;
+                    case Enums.QuestType.StageClear:
+                        break;
+                    case Enums.QuestType.PlayGoldDungeon:
+                        break;
+                    case Enums.QuestType.PlayEnhanceStoneDungeon:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

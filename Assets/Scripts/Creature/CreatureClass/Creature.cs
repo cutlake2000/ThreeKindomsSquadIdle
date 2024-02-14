@@ -92,8 +92,6 @@ namespace Creature.CreatureClass
 
         private void SetCreatureComponent()
         {
-            animator = GetComponentInChildren<Animator>();
-            animationEventReceiver = GetComponentInChildren<AnimationEventReceiver>();
             TargetFinder = GetComponent<TargetFinder>();
             rigid = GetComponent<Rigidbody2D>();
             healthBar.maxValue = 100;

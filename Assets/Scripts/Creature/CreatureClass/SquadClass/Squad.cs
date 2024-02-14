@@ -6,6 +6,7 @@ using Function;
 using Managers;
 using Managers.BattleManager;
 using Managers.GameManager;
+using Module;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -27,6 +28,9 @@ namespace Creature.CreatureClass.SquadClass
 
         protected override void OnEnable()
         {
+            animator = characterModel.GetComponentInChildren<Animator>();
+            animationEventReceiver = characterModel.GetComponentInChildren<AnimationEventReceiver>();
+            
             base.OnEnable();
             
             squadStateMachine = new SquadStateMachine(this);

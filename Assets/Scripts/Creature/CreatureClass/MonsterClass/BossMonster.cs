@@ -35,9 +35,12 @@ namespace Creature.CreatureClass.MonsterClass
 
         public override void TakeDamage(BigInteger inputDamage)
         {
-            currentBossHealth -= inputDamage * 100 / currentBossDefence + 100;
-            currentBossHealth = currentBossHealth < 0 ? 0 : currentBossHealth;
-
+            var randomDamage = Random.Range(-MonsterManager.Instance.totalAttackAdjustValue, MonsterManager.Instance.totalAttackAdjustValue + 1) + 100;
+            var reduction = defence * 100 / (currentBossDefence + MonsterManager.Instance.damageReduction) + 100;
+            var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
+            
+            currentBossHealth -= adjustDamage;
+            
             if (isEventHitRunning == false && !isDead)
             {
                 StartCoroutine(EventHit());

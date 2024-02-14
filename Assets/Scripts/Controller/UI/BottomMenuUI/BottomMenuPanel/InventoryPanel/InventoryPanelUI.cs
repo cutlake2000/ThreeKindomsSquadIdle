@@ -22,6 +22,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         [Header("선택한 장비 정보를 띄워주는 패널")] public GameObject selectedEquipmentPanel;
         [Header("장착한 장비 버튼")] public GameObject[] equipmentButton;
         [Header("장비 스크롤뷰 패널")] public GameObject[] scrollViewEquipmentPanel;
+        [Header("선택한 장비 종류")] public TMP_Text currentSelectedEquipmentType;
 
         [Header("스쿼드 구성 패널 아이템 UI")]
         public List<GameObject> inventoryScrollViewItemSwords = new();
@@ -89,12 +90,44 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
 
         private void OnClickEquipment(int index)
         {
-            for (var i = 0; i < scrollViewEquipmentPanel.Length; i++) scrollViewEquipmentPanel[i].SetActive(i == index);
+            for (var i = 0; i < scrollViewEquipmentPanel.Length; i++)
+            {
+                scrollViewEquipmentPanel[i].SetActive(i == index);
+                
+                switch (index)
+                {
+                    case 3:
+                        currentSelectedEquipmentType.text = "<sprite=6 color=#000000> 투구";
+                        break;
+                    case 4:
+                        currentSelectedEquipmentType.text = "<sprite=7 color=#000000> 갑옷";
+                        break;
+                    case 5:
+                        currentSelectedEquipmentType.text = "<sprite=1 color=#000000> 장갑";
+                        break;
+                }
+            }
         }
         
         private void OnClickWeapon(int index)
         {
-            for (var i = 0; i < spawnTargetPosition.Count; i++) spawnTargetPosition[i].SetActive(i == index);
+            for (var i = 0; i < spawnTargetPosition.Count; i++)
+            {
+                spawnTargetPosition[i].SetActive(i == index);
+                
+                switch (index)
+                {
+                    case 0:
+                        currentSelectedEquipmentType.text = "<sprite=0 color=#000000> 근접 무기";
+                        break;
+                    case 1:
+                        currentSelectedEquipmentType.text = "<sprite=13 color=#000000> 원거리 무기";
+                        break;
+                    case 2:
+                        currentSelectedEquipmentType.text = "<sprite=12 color=#000000> 마법 무기";
+                        break;
+                }
+            }
         }
 
         // 장비 선택 이벤트 트리거 하는 메서드 

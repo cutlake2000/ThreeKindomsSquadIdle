@@ -7,6 +7,8 @@ using Function;
 using Managers;
 using Managers.BattleManager;
 using Managers.GameManager;
+using Module;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Creature.CreatureClass.MonsterClass
@@ -28,7 +30,7 @@ namespace Creature.CreatureClass.MonsterClass
         [Header("StateMachine")] private MonsterStateMachine monsterStateMachine;
 
         [Header("Projectile")] private Vector2 projectileSpawnPosition;
-
+        
         protected void Start()
         {
             monsterStateMachine = new MonsterStateMachine(this);
@@ -53,8 +55,11 @@ namespace Creature.CreatureClass.MonsterClass
 
         protected override void OnEnable()
         {
+            animator = GetComponentInChildren<Animator>();
+            animationEventReceiver = GetComponentInChildren<AnimationEventReceiver>();
+            
             base.OnEnable();
-
+            
             monsterStateMachine?.ChangeState(monsterStateMachine.MonsterIdleState);
         }
 

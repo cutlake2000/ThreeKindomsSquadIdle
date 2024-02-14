@@ -89,7 +89,7 @@ namespace Creature.Data
                 characterEquippedEffects.Add(new CharacterEffect());
                 characterEquippedEffects[i].statType = equippedEffect.squadEffects[i].statType;
                 characterEquippedEffects[i].increaseStatType = equippedEffect.squadEffects[i].increaseStatType;
-                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue + equippedEffect.squadEffects[i].increaseValue / 100 * characterLevel;
+                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue + equippedEffect.squadEffects[i].increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
             }
 
             for (var i = 0; i < ownedEffect.squadEffects.Count; i++)
@@ -97,7 +97,7 @@ namespace Creature.Data
                 characterOwnedEffects.Add(new CharacterEffect());
                 characterOwnedEffects[i].statType = ownedEffect.squadEffects[i].statType;
                 characterOwnedEffects[i].increaseStatType = ownedEffect.squadEffects[i].increaseStatType;
-                characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue * + ownedEffect.squadEffects[i].increaseValue / 100 * characterLevel;
+                characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue + ownedEffect.squadEffects[i].increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
             }
 
             characterRequiredCurrency = rarity switch
@@ -142,13 +142,15 @@ namespace Creature.Data
 
             characterEquippedEffects = new List<CharacterEffect>();
             characterOwnedEffects = new List<CharacterEffect>();
+            
+            LoadCharacterDataFromES3Loader();
 
             for (var i = 0; i < equippedEffect.squadEffects.Count; i++)
             {
                 characterEquippedEffects.Add(new CharacterEffect());
                 characterEquippedEffects[i].statType = equippedEffect.squadEffects[i].statType;
                 characterEquippedEffects[i].increaseStatType = equippedEffect.squadEffects[i].increaseStatType;
-                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue + equippedEffect.squadEffects[i].increaseValue / 100 * characterLevel;
+                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue + equippedEffect.squadEffects[i].increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
             }
 
             for (var i = 0; i < ownedEffect.squadEffects.Count; i++)
@@ -156,7 +158,7 @@ namespace Creature.Data
                 characterOwnedEffects.Add(new CharacterEffect());
                 characterOwnedEffects[i].statType = ownedEffect.squadEffects[i].statType;
                 characterOwnedEffects[i].increaseStatType = ownedEffect.squadEffects[i].increaseStatType;
-                characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue * + ownedEffect.squadEffects[i].increaseValue / 100 * characterLevel;
+                characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue + ownedEffect.squadEffects[i].increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
             }
 
             characterRequiredCurrency = rarity switch
@@ -167,8 +169,6 @@ namespace Creature.Data
                 Enums.CharacterRarity.Legend => 65,
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
-
-            LoadCharacterDataFromES3Loader();
         }
         
         public void SaveCharacterDataIntoES3Loader()

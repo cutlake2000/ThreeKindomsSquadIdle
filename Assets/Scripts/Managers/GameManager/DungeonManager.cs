@@ -63,6 +63,8 @@ namespace Managers.GameManager
         [SerializeField] private int monsterSpawnCountsPerSubStage;
         [SerializeField] private bool isClear;
 
+        [Header("=== 던전 레벨 당 일반 몬스터 스탯 증가량 (%) ===")] public int increaseNormalMonsterStatValuePercent;
+        [Header("=== 던전 레벨 당 보스 몬스터 스탯 증가량 (%) ===")] public int increaseBossMonsterStatValuePercent;
         [Header("=== 던전 보상 증가량 (%) ===")] public int increaseRewardPercent = 20;
 
         public int baseClearReward = 2000;
@@ -125,7 +127,7 @@ namespace Managers.GameManager
                     {
                         CheckRemainedBossHealth += UpdateBossKillUI;
                         bossMonster = Instantiate(bossMonsterPrefab, bossMonsterSpawnPosition);
-                        bossMonster.GetComponent<BossMonster>().InitializeBossMonsterData(currentDungeonLevel);
+                        bossMonster.GetComponent<BossMonster>().InitializeBossMonsterData(currentDungeonLevel * increaseBossMonsterStatValuePercent / 100);
                         
                         QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayEnhanceStoneDungeon, 1);
 
@@ -349,8 +351,8 @@ namespace Managers.GameManager
         private void SpawnMonster(int level)
         {
             currentRemainedMonsterCount = monsterSpawnCountsPerSubStage;
-            //TODO: So로 빼서 몬스터 타입 지정해줄 것
-            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human, level, monsterSpawnCountsPerSubStage);
+            
+            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human, level * increaseNormalMonsterStatValuePercent / 100, monsterSpawnCountsPerSubStage);
         }
 
         private void DespawnMonster()

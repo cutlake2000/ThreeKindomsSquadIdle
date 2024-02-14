@@ -20,9 +20,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
         [Header("소환 경험치 슬라이더")] [SerializeField] private Slider currentSummonExpSlider;
 
         [Header("소환 아이템")] public List<SummonResultPanelItemUI> summonResultPanelItems;
-        [Header("추가 30회 뽑기")] [SerializeField] private Button extra30SummonBtn;
-        [Header("추가 100회 뽑기")] [SerializeField] private Button extra100SummonBtn;
-        [Header("추가 250회 뽑기")] [SerializeField] private Button extra250SummonBtn;
+        [Header("추가 30회 뽑기")] public Button extra30SummonBtn;
+        [Header("추가 100회 뽑기")] public Button extra100SummonBtn;
+        [Header("추가 250회 뽑기")] public Button extra250SummonBtn;
         
         [Header("추가 뽑기 락 버튼")] 
         [SerializeField] private Button extra30SummonLockBtn;
@@ -38,6 +38,18 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
             extra250SummonBtn.onClick.AddListener(() => SummonManager.Instance.SummonRandomTarget(SummonManager.Instance.currentSummonType, 250));
             
             summonResultExitButton.onClick.AddListener(() => ActiveSummonResultPanel(false));
+        }
+
+        public void HideAllSummonResultPanelExtraSummonButtonUI()
+        {
+            extra30SummonBtn.gameObject.SetActive(false);
+            extra100SummonBtn.gameObject.SetActive(false);
+            extra250SummonBtn.gameObject.SetActive(false);
+            extra30SummonLockBtn.gameObject.SetActive(false);
+            extra100SummonLockBtn.gameObject.SetActive(false);
+            extra250SummonLockBtn.gameObject.SetActive(false);
+            
+            summonResultExitButton.gameObject.SetActive(false);
         }
 
         public void UpdateSummonResultPanelExtraSummonButtonUI()
@@ -76,6 +88,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
                 extra250SummonBtn.gameObject.SetActive(false);
                 extra250SummonLockBtn.gameObject.SetActive(true);
             }
+            
+            summonResultExitButton.gameObject.SetActive(true);
         }
 
         public void UpdateSummonResultPanelUI()
