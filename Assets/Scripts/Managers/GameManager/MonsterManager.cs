@@ -6,7 +6,7 @@ using Data;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Managers.BattleManager
+namespace Managers.GameManager
 {
     [Serializable]
     public class MonsterBaseStat
