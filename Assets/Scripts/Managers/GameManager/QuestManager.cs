@@ -40,6 +40,7 @@ namespace Managers.GameManager
         public TextAsset questCsv;
 
         public int questLevel;
+        public int targetQuestLevel;
         public Quest currentQuest;
         public QuestTarget currentQuestTarget;
         public bool isCurrentQuestClear;
@@ -73,32 +74,34 @@ namespace Managers.GameManager
 
         private void UpdateAllQuestProgress()
         {
-            if (questLevel >= 46)
+            Firebase.Analytics.FirebaseAnalytics.LogEvent($"current_quest_{(questLevel)}");
+            
+            if (questLevel > 42)
             {
-                var questIndex = (questLevel - 46) % 9 + 46;
-                currentQuest = quests[questIndex];
+                targetQuestLevel = (questLevel - 42) % 9 + 42;
+                currentQuest = quests[targetQuestLevel];
 
-                var targetLevel = 30 + 5 * (questLevel - 46) / 9;
+                var targetProcess = 30 + 5 * ((questLevel - 42) / 9);
                 
-                switch (questIndex)
+                switch ((questLevel - 42) % 9)
                 {
                     case 0:
                         break;
                     case 1:
-                        currentQuest.name = ParsingIncreaseTalentStatType(currentQuest.name, targetLevel);
-                        currentQuest.targetProgress = targetLevel;
+                        currentQuest.name = ParsingIncreaseTalentStatType(currentQuest.name, targetProcess);
+                        currentQuest.targetProgress = targetProcess;
                         break;
                     case 2:
-                        currentQuest.name = ParsingIncreaseTalentStatType(currentQuest.name, targetLevel);
-                        currentQuest.targetProgress = targetLevel;
+                        currentQuest.name = ParsingIncreaseTalentStatType(currentQuest.name, targetProcess);
+                        currentQuest.targetProgress = targetProcess;
                         break;
                     case 3:
                         break;
                     case 4:
                         break;
                     case 5:
-                        currentQuest.name = ParsingIncreaseStageLevel(targetLevel);
-                        currentQuest.targetProgress = targetLevel;
+                        currentQuest.name = ParsingIncreaseStageLevel((questLevel - 42) / 9);
+                        currentQuest.targetProgress = 20 + 5 * ((questLevel - 42) / 9 + 1);
                         break;
                     case 6:
                         break;
@@ -110,6 +113,7 @@ namespace Managers.GameManager
             }
             else
             {
+                targetQuestLevel = questLevel;
                 currentQuest = quests[questLevel];
             }
             
@@ -128,9 +132,9 @@ namespace Managers.GameManager
                 }
             }
             
-            targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite((Enums.CurrencyType)Enum.Parse(typeof(Enums.CurrencyType), $"{quests[questLevel].questRewardType}"));
-            targetQuestRewardText = $"{quests[questLevel].reward}";
-            targetQuestDescriptionText = $"{quests[questLevel].name}";
+            targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite((Enums.CurrencyType)Enum.Parse(typeof(Enums.CurrencyType), $"{quests[targetQuestLevel].questRewardType}"));
+            targetQuestRewardText = $"{quests[targetQuestLevel].reward}";
+            targetQuestDescriptionText = $"{quests[targetQuestLevel].name}";
 
             switch (currentQuest.questType)
             {
@@ -216,14 +220,14 @@ namespace Managers.GameManager
             
             if (questType is Enums.QuestType.AttackTalentLevel or Enums.QuestType.HealthTalentLevel or Enums.QuestType.StageClear)
             {
-                quests[questLevel].progress = currentValue;
+                quests[targetQuestLevel].progress = currentValue;
             }
             else
             {
-                quests[questLevel].progress += currentValue;   
+                quests[targetQuestLevel].progress += currentValue;   
             }
 
-            if (quests[questLevel].progress < quests[questLevel].targetProgress) return;
+            if (quests[targetQuestLevel].progress < quests[targetQuestLevel].targetProgress) return;
             
             if (currentQuestTarget.targetMarks != null)
             {
@@ -276,7 +280,7 @@ namespace Managers.GameManager
             }
 
             // 결과 문자열 생성
-            var result = $"{stageNumber}-{subStageNumber}";
+            var result = $"{stageNumber}-{subStageNumber} 스테이지 돌파하기";
 
             return result;
         }
@@ -343,11 +347,12 @@ namespace Managers.GameManager
         {
             UpdateQuestRewardPanelUI();
             
-            AccountManager.Instance.AddCurrency((Enums.CurrencyType)Enum.Parse(typeof(Enums.CurrencyType), $"{quests[questLevel].questRewardType}"), quests[questLevel].reward);
+            AccountManager.Instance.AddCurrency((Enums.CurrencyType)Enum.Parse(typeof(Enums.CurrencyType), $"{quests[targetQuestLevel].questRewardType}"), quests[targetQuestLevel].reward);
             UIManager.Instance.questPanelUI.questResultPanelUI.gameObject.SetActive(true);
             
             questLevel++;
             ES3.Save($"{nameof(questLevel)}", questLevel);
+            ES3.Save($"{nameof(currentQuest)}", false);
 
             UIManager.Instance.questPanelUI.completedMark.SetActive(false);
 

@@ -38,15 +38,15 @@
 메인 퀘스트 37,무기 10회 소환 진행하기,10,Dia,200,SummonWeapon10,OneTime
 메인 퀘스트 38,방어구 10회 소환 진행하기,10,Dia,200,SummonGear10,OneTime
 메인 퀘스트 39,1-20 스테이지 돌파하기,20,EnhanceDungeonTicket,1,StageClear,OneTime
-메인 퀘스트 42,공성전 1회 플레이,1,SquadEnhanceStone,200,PlayEnhanceStoneDungeon,OneTime
-메인 퀘스트 45,캐릭터 10회 소환 진행하기,10,Dia,200,SummonSquad10,OneTime
-메인 퀘스트 46,캐릭터 레벨업 하기,1,GoldDungeonTicket,1,LevelUpCharacter,OneTime
-메인 퀘스트 47,잊혀진 고대 사원 1회 플레이,1,Dia,200,PlayGoldDungeon,Loop
-메인 퀘스트 48,공격력 증가 Lv.30 달성하기,30,Dia,200,AttackTalentLevel,Loop
-메인 퀘스트 49,체력 증가 Lv.30 달성하기,30,Dia,200,HealthTalentLevel,Loop
-메인 퀘스트 50,무기 10회 소환 진행하기,10,Dia,200,SummonWeapon10,Loop
-메인 퀘스트 51,방어구 10회 소환 진행하기,10,Dia,200,SummonGear10,Loop
-메인 퀘스트 52,1-25 스테이지 돌파하기,25,EnhanceDungeonTicket,1,StageClear,Loop
-메인 퀘스트 53,공성전 1회 플레이,1,SquadEnhanceStone,10000,PlayEnhanceStoneDungeon,Loop
-메인 퀘스트 54,캐릭터 10회 소환 진행하기,10,Dia,200,SummonSquad10,Loop
-메인 퀘스트 55,캐릭터 레벨업 하기,1,GoldDungeonTicket,1,LevelUpCharacter,Loop
+메인 퀘스트 40,공성전 1회 플레이,1,SquadEnhanceStone,200,PlayEnhanceStoneDungeon,OneTime
+메인 퀘스트 41,캐릭터 10회 소환 진행하기,10,Dia,200,SummonSquad10,OneTime
+메인 퀘스트 42,캐릭터 레벨업 하기,1,GoldDungeonTicket,1,LevelUpCharacter,OneTime
+메인 퀘스트 43,잊혀진 고대 사원 1회 플레이,1,Dia,200,PlayGoldDungeon,Loop
+메인 퀘스트 44,공격력 증가 Lv.30 달성하기,30,Dia,200,AttackTalentLevel,Loop
+메인 퀘스트 45,체력 증가 Lv.30 달성하기,30,Dia,200,HealthTalentLevel,Loop
+메인 퀘스트 46,무기 10회 소환 진행하기,10,Dia,200,SummonWeapon10,Loop
+메인 퀘스트 47,방어구 10회 소환 진행하기,10,Dia,200,SummonGear10,Loop
+메인 퀘스트 48,1-25 스테이지 돌파하기,25,EnhanceDungeonTicket,1,StageClear,Loop
+메인 퀘스트 49,공성전 1회 플레이,1,SquadEnhanceStone,10000,PlayEnhanceStoneDungeon,Loop
+메인 퀘스트 50,캐릭터 10회 소환 진행하기,10,Dia,200,SummonSquad10,Loop
+메인 퀘스트 51,캐릭터 레벨업 하기,1,GoldDungeonTicket,1,LevelUpCharacter,Loop

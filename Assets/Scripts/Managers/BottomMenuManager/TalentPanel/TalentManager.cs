@@ -90,7 +90,24 @@ namespace Managers.BottomMenuManager.TalentPanel
             effect.GetComponent<ParticleSystem>().Play();
             
             talent.currentLevelUpCost = CalculateLevelUpCostOfTalent(talent.initialLevelUpCost, talent.currentLevel, talent.extraLevelUpCost);
-            talent.UpdateSquadTalent(levelUpMagnification);
+            
+            talent.currentLevel += levelUpMagnification;
+            talent.currentIncreasedStat += talent.increaseTalentValue * levelUpMagnification;
+
+            ES3.Save($"{nameof(SquadEntireStat)}/{type}/currentLevel : ", talent.currentLevel);
+            var isBaseStat = talent.increaseTalentValueType == Enums.IncreaseStatValueType.BaseStat;
+            talent.UpgradeTotalSquadStatBySquadTalentItem?.Invoke((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), type.ToString()), talent.increaseTalentValue * levelUpMagnification, isBaseStat);
+
+            switch (type)
+            {
+                case Enums.StatTypeFromSquadTalentPanel.Attack:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AttackTalentLevel, talent.currentLevel);
+                    break;
+                case Enums.StatTypeFromSquadTalentPanel.Health:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.HealthTalentLevel, talent.currentLevel);
+                    break;
+            }
+            
             SetUpgradeUI(talentItem[index]);
             TalentPanelUI.CheckRequiredCurrencyOfMagnificationButton(index);
 

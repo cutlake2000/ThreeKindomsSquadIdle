@@ -89,7 +89,7 @@ namespace Creature.Data
                 characterEquippedEffects.Add(new CharacterEffect());
                 characterEquippedEffects[i].statType = equippedEffect.squadEffects[i].statType;
                 characterEquippedEffects[i].increaseStatType = equippedEffect.squadEffects[i].increaseStatType;
-                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue + equippedEffect.squadEffects[i].increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
+                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue;
             }
 
             for (var i = 0; i < ownedEffect.squadEffects.Count; i++)
@@ -97,7 +97,7 @@ namespace Creature.Data
                 characterOwnedEffects.Add(new CharacterEffect());
                 characterOwnedEffects[i].statType = ownedEffect.squadEffects[i].statType;
                 characterOwnedEffects[i].increaseStatType = ownedEffect.squadEffects[i].increaseStatType;
-                characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue + ownedEffect.squadEffects[i].increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
+                characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue;
             }
 
             characterRequiredCurrency = rarity switch
@@ -150,7 +150,7 @@ namespace Creature.Data
                 characterEquippedEffects.Add(new CharacterEffect());
                 characterEquippedEffects[i].statType = equippedEffect.squadEffects[i].statType;
                 characterEquippedEffects[i].increaseStatType = equippedEffect.squadEffects[i].increaseStatType;
-                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue + equippedEffect.squadEffects[i].increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
+                characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue;
             }
 
             for (var i = 0; i < ownedEffect.squadEffects.Count; i++)
@@ -199,11 +199,11 @@ namespace Creature.Data
         {
             characterLevel = Mathf.Min(characterLevel + 1, SquadConfigureManager.CharacterMaxLevel);
 
-            for (var i = 0; i < characterOwnedEffects.Count; i++)
+            foreach (var ownedEffect in characterOwnedEffects)
             {
-                characterOwnedEffects[i].increaseValue += characterOwnedEffects[i].increaseValue / SquadConfigureManager.CharacterMaxLevel * characterLevel;
-                var isBaseStat = characterOwnedEffects[i].increaseStatType == Enums.IncreaseStatValueType.BaseStat;
-                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), characterOwnedEffects[i].statType.ToString()), characterOwnedEffects[i].increaseValue, isBaseStat);
+                ownedEffect.increaseValue = ownedEffect.increaseValue + ownedEffect.increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
+                var isBaseStat = ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat;
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), ownedEffect.increaseValue, isBaseStat);
             }
         }
     }

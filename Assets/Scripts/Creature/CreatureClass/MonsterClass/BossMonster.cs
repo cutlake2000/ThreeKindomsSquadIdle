@@ -40,6 +40,7 @@ namespace Creature.CreatureClass.MonsterClass
             var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
             
             currentBossHealth -= adjustDamage;
+            currentBossHealth = currentBossHealth < 0 ? 0 : currentBossHealth;
             
             if (isEventHitRunning == false && !isDead)
             {

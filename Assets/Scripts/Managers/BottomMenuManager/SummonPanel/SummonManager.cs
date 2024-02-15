@@ -240,8 +240,7 @@ namespace Managers.BottomMenuManager.SummonPanel
                     if (targetCharacter.isPossessed == false)
                     {
                         targetCharacter.isPossessed = true;
-                        targetCharacter.characterLevel = 1;
-                        // targetCharacter.SaveCharacterEquippedInfo(targetCharacter.characterId);
+                        targetCharacter.characterLevel = 0;
 
                         foreach (var ownedEffect in targetCharacter.characterOwnedEffects)
                         {
@@ -260,6 +259,7 @@ namespace Managers.BottomMenuManager.SummonPanel
                 else
                 {
                     Equipment targetEquipment;
+                    Equipment equippedEquipment;
                     InventoryPanelItemUI inventoryScrollViewItem;
                     
                     var targetRarityIndex = (int)Enum.Parse(typeof(Enums.EquipmentRarity), splitString[0]) * 5;
@@ -271,26 +271,32 @@ namespace Managers.BottomMenuManager.SummonPanel
                     {
                         case Enums.EquipmentType.Sword:
                             targetEquipment = InventoryManager.Instance.SwordsDictionary[target.Key];
+                            equippedEquipment = InventoryManager.Instance.equippedSword;
                             inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords[targetIndex].GetComponent<InventoryPanelItemUI>();
                             break;
                         case Enums.EquipmentType.Bow:
                             targetEquipment = InventoryManager.Instance.BowsDictionary[target.Key];
+                            equippedEquipment = InventoryManager.Instance.equippedBow;
                             inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows[targetIndex].GetComponent<InventoryPanelItemUI>();
                             break;
                         case Enums.EquipmentType.Staff:
                             targetEquipment = InventoryManager.Instance.StaffsDictionary[target.Key];
+                            equippedEquipment = InventoryManager.Instance.equippedStaff;
                             inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemStaffs[targetIndex].GetComponent<InventoryPanelItemUI>();
                             break;
                         case Enums.EquipmentType.Helmet:
                             targetEquipment = InventoryManager.Instance.HelmetsDictionary[target.Key];
+                            equippedEquipment = InventoryManager.Instance.equippedHelmet;
                             inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemHelmets[targetIndex].GetComponent<InventoryPanelItemUI>();
                             break;
                         case Enums.EquipmentType.Armor:
                             targetEquipment = InventoryManager.Instance.ArmorsDictionary[target.Key];
+                            equippedEquipment = InventoryManager.Instance.equippedArmor;
                             inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemArmors[targetIndex].GetComponent<InventoryPanelItemUI>();
                             break;
                         case Enums.EquipmentType.Gauntlet:
                             targetEquipment = InventoryManager.Instance.GauntletsDictionary[target.Key];
+                            equippedEquipment = InventoryManager.Instance.equippedGauntlet;
                             inventoryScrollViewItem = UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets[targetIndex].GetComponent<InventoryPanelItemUI>();
                             break;
                         default:
@@ -298,10 +304,17 @@ namespace Managers.BottomMenuManager.SummonPanel
                     }
                 
                     targetEquipment.equipmentQuantity += target.Value;
+
+                    if (targetEquipment.equipmentQuantity >= 5) InventoryManager.Instance.canAllComposite[(int)targetType] = true;
                     
                     if (targetEquipment.isPossessed == false)
                     {
                         targetEquipment.isPossessed = true;
+
+                        if (targetEquipment.equipmentRarity > equippedEquipment.equipmentRarity || (targetEquipment.equipmentRarity == equippedEquipment.equipmentRarity && targetEquipment.equipmentTier > equippedEquipment.equipmentTier))
+                        {
+                            InventoryManager.Instance.canAutoEquip[(int) targetEquipment.equipmentType] = true;
+                        }
 
                         foreach (var ownedEffect in targetEquipment.ownedEffects)
                         {

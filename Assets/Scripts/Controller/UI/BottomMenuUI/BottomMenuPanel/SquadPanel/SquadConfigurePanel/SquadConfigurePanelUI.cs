@@ -222,7 +222,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     Enums.IncreaseStatValueType.BaseStat =>
                         $"{character.characterEquippedEffects[index].increaseValue} 증가",
                     Enums.IncreaseStatValueType.PercentStat =>
-                        $"{UIManager.FormatCurrency(character.characterEquippedEffects[index].increaseValue / 100)}% 증가",
+                        $"{UIManager.FormatCurrency(character.characterEquippedEffects[index].increaseValue)}% 증가",
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -291,12 +291,13 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             if (character.RequiredCurrencyForLevelUp() >
                 new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.SquadEnhanceStone))) return;
 
-            AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.SquadEnhanceStone,
-                character.RequiredCurrencyForLevelUp());
+            AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.SquadEnhanceStone, character.RequiredCurrencyForLevelUp());
             character.CharacterLevelUp();
             character.SaveCharacterDataIntoES3Loader();
             UpdateSquadConfigurePanelSelectedCharacterInfoUI(character);
             UpdateSquadConfigureScrollViewItemUI(character.characterType, false);
+            
+            SquadConfigureManager.Instance.SaveAllCharacterInfo();
         }
 
         /// <summary>

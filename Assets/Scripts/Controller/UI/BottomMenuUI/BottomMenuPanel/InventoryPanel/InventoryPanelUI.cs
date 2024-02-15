@@ -36,9 +36,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
 
         [Space(5)]
         [Header("=== 장비 선택 팝업 창 ===")]
+        [Header("선택 장비 정보 패널 나가기 버튼")] public Button selectedEquipmentPanelExitButton;
         [Header("전체 합성 버튼")] public Button allCompositeButton;
-
+        [Header("전체 합성 잠금 버튼")] public Button allCompositeLockButton;
         [Header("자동 장착 버튼")] public Button autoEquipButton;
+        [Header("자동 장착 잠금 버튼")] public Button autoEquipLockButton;
         [Header("레벨 업 버튼")] public Button levelUpButton;
 
         [Header("선택 장비")] public Equipment selectEquipment;
@@ -85,28 +87,15 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
 
             allCompositeButton.onClick.AddListener(OnClickAllComposite);
             autoEquipButton.onClick.AddListener(OnClickAutoEquip);
+            selectedEquipmentPanelExitButton.onClick.AddListener(OnClockSelectedEquipmentPanelExit);
             // levelUpButton.onClick.AddListener(OnClickLevelUp);
         }
 
-        private void OnClickEquipment(int index)
+        private void OnClockSelectedEquipmentPanelExit()
         {
-            for (var i = 0; i < scrollViewEquipmentPanel.Length; i++)
-            {
-                scrollViewEquipmentPanel[i].SetActive(i == index);
-                
-                switch (index)
-                {
-                    case 3:
-                        currentSelectedEquipmentType.text = "<sprite=6 color=#000000> 투구";
-                        break;
-                    case 4:
-                        currentSelectedEquipmentType.text = "<sprite=7 color=#000000> 갑옷";
-                        break;
-                    case 5:
-                        currentSelectedEquipmentType.text = "<sprite=1 color=#000000> 장갑";
-                        break;
-                }
-            }
+            selectedEquipmentPanelExitButton.gameObject.SetActive(false);
+            selectedEquipmentPanel.SetActive(false);
+            squadEquipmentStatusPanel.SetActive(true);
         }
         
         private void OnClickWeapon(int index)
@@ -115,18 +104,46 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             {
                 spawnTargetPosition[i].SetActive(i == index);
                 
-                switch (index)
-                {
-                    case 0:
-                        currentSelectedEquipmentType.text = "<sprite=0 color=#000000> 근접 무기";
-                        break;
-                    case 1:
-                        currentSelectedEquipmentType.text = "<sprite=13 color=#000000> 원거리 무기";
-                        break;
-                    case 2:
-                        currentSelectedEquipmentType.text = "<sprite=12 color=#000000> 마법 무기";
-                        break;
-                }
+                UpdateEquipmentTypeUI(index);
+                UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[index]);
+                UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[index]);
+            }
+        }
+
+        private void OnClickEquipment(int index)
+        {
+            for (var i = 0; i < scrollViewEquipmentPanel.Length; i++)
+            {
+                scrollViewEquipmentPanel[i].SetActive(i == index);
+
+                UpdateEquipmentTypeUI(index);
+                UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[index]);
+                UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[index]);
+            }
+        }
+
+        public void UpdateEquipmentTypeUI(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    currentSelectedEquipmentType.text = "<sprite=0 color=#000000> 근접 무기";
+                    break;
+                case 1:
+                    currentSelectedEquipmentType.text = "<sprite=13 color=#000000> 원거리 무기";
+                    break;
+                case 2:
+                    currentSelectedEquipmentType.text = "<sprite=12 color=#000000> 마법 무기";
+                    break;
+                case 3:
+                    currentSelectedEquipmentType.text = "<sprite=6 color=#000000> 투구";
+                    break;
+                case 4:
+                    currentSelectedEquipmentType.text = "<sprite=7 color=#000000> 갑옷";
+                    break;
+                case 5:
+                    currentSelectedEquipmentType.text = "<sprite=1 color=#000000> 장갑";
+                    break;
             }
         }
 
@@ -143,22 +160,25 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             {
                 squadEquipmentStatusPanel.SetActive(true);
                 selectedEquipmentPanel.SetActive(false);
+                if (selectedEquipmentPanelExitButton.gameObject.activeInHierarchy) selectedEquipmentPanelExitButton.gameObject.SetActive(false);
             }
             else
             {
                 if (squadEquipmentStatusPanel.activeInHierarchy) squadEquipmentStatusPanel.SetActive(false);
                 if (!selectedEquipmentPanel.activeInHierarchy) selectedEquipmentPanel.SetActive(true);
+                if (selectedEquipmentPanelExitButton.gameObject.activeInHierarchy == false) selectedEquipmentPanelExitButton.gameObject.SetActive(true);
 
                 selectEquipment = equipment;
             
                 UpdateSelectedEquipmentUI(selectEquipment);
+                UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[(int) equipment.equipmentType]);
+                UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[(int) equipment.equipmentType]);
             }
         }
 
         // 선택 장비 데이터 UI로 보여주는 메서드
         public void UpdateSelectedEquipmentUI(Equipment equipment)
         {
-            Debug.Log(selectEquipmentIcon);
             selectEquipmentTier.text = $"{equipment.equipmentTier} 티어";
             selectEquipmentIcon.sprite = SpriteManager.Instance.GetEquipmentSprite(equipment.equipmentType, equipment.equipmentIconIndex);
             selectEquipmentBackground.sprite = SpriteManager.Instance.GetEquipmentBackground((int)equipment.equipmentRarity);
@@ -285,6 +305,18 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         private void OnClickAutoEquip()
         {
             InventoryManager.Instance.AutoEquip(selectEquipment.equipmentType);
+        }
+
+        public void UpdateAllCompositeButton(bool canComposite)
+        {
+            allCompositeButton.gameObject.SetActive(canComposite);
+            allCompositeLockButton.gameObject.SetActive(!canComposite);
+        }
+
+        public void UpdateAutoEquipButton(bool canAutoEquip)
+        {
+            autoEquipButton.gameObject.SetActive(canAutoEquip);
+            autoEquipLockButton.gameObject.SetActive(!canAutoEquip);
         }
 
         // // 선택한 장비 데이터 업데이트 (저장한다고 생각하면 편함)

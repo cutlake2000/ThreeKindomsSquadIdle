@@ -170,7 +170,7 @@ namespace Managers.BottomMenuManager.SquadPanel
        
                     var isEquipped = characterIndex == 0;
 
-                    var characterLevel = isEquipped ? 1 : 0;
+                    const int characterLevel = 0;
                     var characterIconIndex = characterSo.characterIconIndex;
                     var characterIcon =
                         SpriteManager.Instance.GetCharacterSprite(characterType, characterSo.characterIconIndex);

@@ -40,16 +40,27 @@ namespace Managers.BottomMenuManager.InventoryPanel
         public static InventoryManager Instance;
         public static Dictionary<string, Equipment> AllEquipments = new();
 
-        [FormerlySerializedAs("isCompositePossible")] public bool isComposited;
+        public bool isComposited;
 
-        [Header("임시 장비 이름")] public List<string> swordNames = new();
+        [Header("장비 이름")]
+        public List<string> swordNames = new();
         public List<string> bowNames = new();
         public List<string> staffNames = new();
         public List<string> helmetNames = new();
         public List<string> armorNames = new();
         public List<string> gauntletNames = new();
+        
+        [Header("장비 최대 레벨")]
         public const int EquipmentMaxLevel = 250;
 
+        [Header("현재 장착 중인 장비")]
+        public Equipment equippedSword;
+        public Equipment equippedBow;
+        public Equipment equippedStaff;
+        public Equipment equippedHelmet;
+        public Equipment equippedArmor;
+        public Equipment equippedGauntlet;
+        
         public EquipmentES3Loader[] equipmentES3Loaders = new EquipmentES3Loader[150];
 
         public readonly Dictionary<string, Equipment> SwordsDictionary = new();
@@ -58,6 +69,9 @@ namespace Managers.BottomMenuManager.InventoryPanel
         public readonly Dictionary<string, Equipment> HelmetsDictionary = new();
         public readonly Dictionary<string, Equipment> ArmorsDictionary = new();
         public readonly Dictionary<string, Equipment> GauntletsDictionary = new();
+
+        public bool[] canAllComposite = new bool[] { false, false, false, false, false, false};
+        public bool[] canAutoEquip = new bool[] { false, false, false, false, false, false};
 
         private void Awake()
         {
@@ -86,6 +100,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
             
             foreach (var equipmentType in Enums.equipmentTypes)
             {
+                var isExistHighValueEquipment = 0;
                 var equipmentIndex = 0;
 
                 foreach (var rarity in Enums.equipmentRarities)
@@ -136,7 +151,13 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         
                         var equipment = new Equipment(equipmentId, equipmentName, equipmentIconIndex, equipmentIcon,
                             equipmentType, equipmentRarity, equipmentTier, equippedEffects, ownedEffects);
+                        
                         AddEquipment(equipmentId, equipment);
+                        
+                        if (equipment.equipmentQuantity >= 5 & canAllComposite[(int)equipmentType] == false) // 장비 정보를 로드해왔을 때, 해당 장비의 수량이 5개 이상이라면 해당 장비 타입 전체 합성 활성화
+                        {
+                            canAllComposite[(int)equipmentType] = true;
+                        }
 
                         var targetScrollViewItem = equipmentType switch
                         {
@@ -172,9 +193,21 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         targetScrollViewItem[equipmentIndex].GetComponent<Button>().onClick.AddListener(() => InventoryPanelUI.SelectEquipmentAction(equipment));
 
                         equipmentIndex++;
+                        
+                        if (equipment.isPossessed)
+                        {
+                            if (isExistHighValueEquipment == -1 && canAutoEquip[(int) equipmentType] == false) canAutoEquip[(int) equipmentType] = true; // 이전에 마킹된 장비가 있고, 보유 중인 상위 등급의 장비가 존재하기에 AutoEquipmentButton 활성화
+                            
+                            foreach (var effect in equipment.ownedEffects)
+                            {
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, false);
+                            }
+                        }
 
                         if (equipment.isEquipped)
                         {
+                            if (isExistHighValueEquipment == 0) isExistHighValueEquipment = -1; // 장착 중인 장비를 찾았다면 마킹
+                                
                             UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipmentType]
                                 .GetComponent<InventoryPanelSelectedItemUI>()
                                 .UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon,
@@ -182,14 +215,6 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                     SpriteManager.Instance.GetEquipmentBackground((int)equipmentRarity));
 
                             SquadBattleManager.EquipAction?.Invoke(equipment);
-                        }
-                        
-                        if (equipment.isPossessed)
-                        {
-                            foreach (var effect in equipment.ownedEffects)
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, false);
-                            }
                         }
                     }
                 }
@@ -606,21 +631,27 @@ namespace Managers.BottomMenuManager.InventoryPanel
                 switch (highValueEquipment.equipmentType)
                 {
                     case Enums.EquipmentType.Sword:
+                        equippedSword = highValueEquipment;
                         QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipSword, 1);
                         break;
                     case Enums.EquipmentType.Bow:
+                        equippedBow = highValueEquipment;
                         QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipBow, 1);
                         break;
                     case Enums.EquipmentType.Staff:
+                        equippedStaff = highValueEquipment;
                         QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipStaff, 1);
                         break;
                     case Enums.EquipmentType.Helmet:
+                        equippedHelmet = highValueEquipment;
                         QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipHelmet, 1);
                         break;
                     case Enums.EquipmentType.Armor:
+                        equippedArmor = highValueEquipment;
                         QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipArmor, 1);
                         break;
                     case Enums.EquipmentType.Gauntlet:
+                        equippedGauntlet = highValueEquipment;
                         QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AutoEquipGauntlet, 1);
                         break;
                     default:
@@ -632,11 +663,9 @@ namespace Managers.BottomMenuManager.InventoryPanel
                 SquadBattleManager.EquipAction?.Invoke(highValueEquipment);
                 UIManager.Instance.inventoryPanelUI.SelectEquipment(highValueEquipment);
             }
-            else
-            {
-                
-            }
             
+            canAutoEquip[(int)currentEquipmentType] = false;
+            UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(false);
             SaveAllEquipmentInfo();
         }
 
@@ -687,7 +716,9 @@ namespace Managers.BottomMenuManager.InventoryPanel
                     index++;
                 }
             }
-            
+
+            canAllComposite[(int)currentEquipmentType] = false;
+            UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(false);
             SaveAllEquipmentInfo();
         }
         

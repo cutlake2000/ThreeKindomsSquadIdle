@@ -63,26 +63,5 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
 
             squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.Gold}> {(currentLevelUpCost * TalentManager.Instance.levelUpMagnification).ChangeMoney()}";
         }
-
-        // 스텟 업데이트 하는 메서드
-        public void UpdateSquadTalent(int count)
-        {
-            currentLevel += count;
-            currentIncreasedStat += increaseTalentValue * count;
-
-            ES3.Save($"{nameof(SquadEntireStat)}/{statTypeFromSquadTalentPanel}/currentLevel : ", currentLevel);
-            var isBaseStat = increaseTalentValueType == Enums.IncreaseStatValueType.BaseStat;
-            UpgradeTotalSquadStatBySquadTalentItem?.Invoke((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), statTypeFromSquadTalentPanel.ToString()), increaseTalentValue * count, isBaseStat);
-
-            switch (statTypeFromSquadTalentPanel)
-            {
-                case Enums.StatTypeFromSquadTalentPanel.Attack:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AttackTalentLevel, currentLevel);
-                    break;
-                case Enums.StatTypeFromSquadTalentPanel.Health:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.HealthTalentLevel, currentLevel);
-                    break;
-            }
-        }
     }
 }

@@ -22,7 +22,7 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.OnNormalAttack();
             
-            Debug.Log("워리어 공격");
+            // Debug.Log("워리어 공격");
 
             ProjectileManager.Instance.InstantiateBaseAttack(damage, Vector2.zero, Direction,
                 Enums.PoolType.ProjectileBaseAttackWarrior);

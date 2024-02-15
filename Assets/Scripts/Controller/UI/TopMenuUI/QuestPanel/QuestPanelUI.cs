@@ -57,26 +57,38 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                 {
                     case Enums.QuestType.AutoEquipSword:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.SwordsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[0]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(0);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.AutoEquipBow:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.BowsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[1]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(1);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.AutoEquipStaff:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.StaffsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[2]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(2);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.AutoEquipHelmet:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.HelmetsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[3]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(3);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.AutoEquipArmor:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.ArmorsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[4]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(4);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.AutoEquipGauntlet:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.GauntletsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[5]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(5);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.SummonWeapon10:
@@ -100,26 +112,38 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                         break;
                     case Enums.QuestType.CompositeSword:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.SwordsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[0]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(0);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.CompositeBow:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.BowsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[1]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(1);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.CompositeStaff:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.StaffsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[2]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(2);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.CompositeHelmet:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.HelmetsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[3]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(3);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.CompositeArmor:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.ArmorsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[4]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(4);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.CompositeGauntlet:
                         UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.GauntletsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[5]);
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(5);
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.LevelUpCharacter:
