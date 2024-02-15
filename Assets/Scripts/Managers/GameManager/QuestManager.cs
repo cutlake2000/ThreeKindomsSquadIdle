@@ -76,14 +76,14 @@ namespace Managers.GameManager
         {
             Firebase.Analytics.FirebaseAnalytics.LogEvent($"current_quest_{(questLevel)}");
             
-            if (questLevel > 42)
+            if (questLevel > 43)
             {
-                targetQuestLevel = (questLevel - 42) % 9 + 42;
+                targetQuestLevel = (questLevel - 43) % 9 + 43;
                 currentQuest = quests[targetQuestLevel];
 
-                var targetProcess = 30 + 5 * ((questLevel - 42) / 9);
+                var targetProcess = 30 + 5 * ((questLevel - 43) / 9);
                 
-                switch ((questLevel - 42) % 9)
+                switch ((questLevel - 43) % 9)
                 {
                     case 0:
                         break;
@@ -100,8 +100,8 @@ namespace Managers.GameManager
                     case 4:
                         break;
                     case 5:
-                        currentQuest.name = ParsingIncreaseStageLevel((questLevel - 42) / 9);
-                        currentQuest.targetProgress = 20 + 5 * ((questLevel - 42) / 9 + 1);
+                        currentQuest.name = ParsingIncreaseStageLevel((questLevel - 43) / 9);
+                        currentQuest.targetProgress = 20 + 5 * ((questLevel - 43) / 9 + 1);
                         break;
                     case 6:
                         break;
@@ -207,6 +207,8 @@ namespace Managers.GameManager
                     break;
                 case Enums.QuestType.SummonGear100:
                     break;
+                case Enums.QuestType.LevelUpSquad:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -233,7 +235,7 @@ namespace Managers.GameManager
             {
                 foreach (var tm in currentQuestTarget.targetMarks)
                 {
-                    tm.SetActive(true);
+                    tm.SetActive(false);
                 }
             }
                 

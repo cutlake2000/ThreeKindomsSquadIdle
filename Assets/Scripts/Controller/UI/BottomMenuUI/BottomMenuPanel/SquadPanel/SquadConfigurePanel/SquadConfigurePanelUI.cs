@@ -58,12 +58,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         public List<GameObject> squadConfigureScrollViewItemArchers = new();
         public List<GameObject> squadConfigureScrollViewItemWizards = new();
 
-        [Header("워리어 / 아처 / 위자드 스크롤뷰 전환 버튼")] public Button[] squadScrollViewPanelButtons;
-
-        public Image[] squadScrollViewPanelButtonIcons;
-        public TMP_Text[] squadScrollViewPanelButtonTexts;
-
-        [Header("스크롤뷰 전환 버튼 On / Off 스프라이트")] public Color[] squadScrollViewPanelButtonsColors;
+        [Header("워리어 / 아처 / 위자드 스크롤뷰 전환 버튼")]
+        public Button[] squadScrollViewPanelButtons;
+        public Button[] squadScrollViewPanelLockButtons;
 
         [FormerlySerializedAs("previousWarriorEquippedEffect")] public Character previousWarrior;
         [FormerlySerializedAs("previousArcherEquippedEffect")] public Character previousArcher;
@@ -236,10 +233,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
 
         public void InitializeEventListeners()
         {
-            for (var i = 0; i < squadScrollViewPanelButtons.Length; i++)
+            for (var i = 0; i < squadScrollViewPanelLockButtons.Length; i++)
             {
                 var index = i;
-                squadScrollViewPanelButtons[i].GetComponent<Button>().onClick
+                squadScrollViewPanelLockButtons[i].GetComponent<Button>().onClick
                     .AddListener(() => InitializeSquadPanelButton(index));
             }
 
@@ -250,22 +247,18 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         private void InitializeSquadPanelButton(int index)
         {
             for (var i = 0; i < squadScrollViewPanel.Length; i++)
-                if (i == index)
-                {
-                    characterSelectMark[i].SetActive(true);
-                    squadScrollViewPanel[i].SetActive(true);
-                    squadScrollViewPanelButtons[i].image.color = squadScrollViewPanelButtonsColors[0];
-                    squadScrollViewPanelButtonIcons[i].color = Color.black;
-                    squadScrollViewPanelButtonTexts[i].color = Color.black;
-                }
-                else
-                {
-                    characterSelectMark[i].SetActive(false);
-                    squadScrollViewPanel[i].SetActive(false);
-                    squadScrollViewPanelButtons[i].image.color = squadScrollViewPanelButtonsColors[1];
-                    squadScrollViewPanelButtonIcons[i].color = Color.white;
-                    squadScrollViewPanelButtonTexts[i].color = Color.white;
-                }
+            {
+                characterSelectMark[i].SetActive(i == index);
+                squadScrollViewPanel[i].SetActive(i == index);
+
+                UpdateSquadScrollViewPanelButtonUI(i, i == index);
+            }
+        }
+
+        public void UpdateSquadScrollViewPanelButtonUI(int index, bool active)
+        {
+            squadScrollViewPanelButtons[index].gameObject.SetActive(active);
+            squadScrollViewPanelLockButtons[index].gameObject.SetActive(active);
         }
 
         /// <summary>
@@ -292,11 +285,12 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                 new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.SquadEnhanceStone))) return;
 
             AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.SquadEnhanceStone, character.RequiredCurrencyForLevelUp());
+            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.LevelUpCharacter, 1);
+            
             character.CharacterLevelUp();
             character.SaveCharacterDataIntoES3Loader();
             UpdateSquadConfigurePanelSelectedCharacterInfoUI(character);
             UpdateSquadConfigureScrollViewItemUI(character.characterType, false);
-            
             SquadConfigureManager.Instance.SaveAllCharacterInfo();
         }
 

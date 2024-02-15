@@ -147,6 +147,10 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                         UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
                         break;
                     case Enums.QuestType.LevelUpCharacter:
+                        UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem = SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Warrior);
+                        UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigurePanelSelectedCharacterInfoUI(UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem);
+                        //TODO : 레벨 업 버튼 업데이트
+                        
                         break;
                     case Enums.QuestType.AttackTalentLevel:
                         break;
@@ -157,6 +161,8 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                     case Enums.QuestType.PlayGoldDungeon:
                         break;
                     case Enums.QuestType.PlayEnhanceStoneDungeon:
+                        break;
+                    case Enums.QuestType.LevelUpSquad:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

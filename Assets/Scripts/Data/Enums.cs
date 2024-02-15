@@ -112,7 +112,8 @@ namespace Data
             CompositeHelmet,
             CompositeArmor,
             CompositeGauntlet,
-            LevelUpCharacter
+            LevelUpCharacter,
+            LevelUpSquad
         }
         
         public enum QuestRewardType
@@ -134,23 +135,6 @@ namespace Data
         {
             GoldDungeon,
             SquadEnhanceStoneDungeon
-        }
-
-        // 장비 능력치
-        public enum EquipmentProperty
-        {
-            Name,
-            Quantity,
-            Level,
-            IsEquipped,
-            IsPossessed,
-            Type,
-            Rarity,
-            EnhancementLevel,
-            BasicEquippedEffect,
-            BasicOwnedEffect,
-            EquippedEffect,
-            OwnedEffect
         }
 
         /// <summary>

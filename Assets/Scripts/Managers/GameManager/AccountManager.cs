@@ -104,7 +104,7 @@ namespace Managers.GameManager
             effect.SetActive(true);
             effect.GetComponent<ParticleSystem>().Play();
             
-            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.LevelUpCharacter, 1);
+            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.LevelUpSquad, 1);
             UIManager.Instance.squadPanelUI.squadStatPanelUI.CheckRequiredCurrencyOfMagnificationAllButton();
             UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoLevelUpButton(false);
             UIManager.Instance.squadPanelUI.squadStatPanelUI.squadStatPanelPlayerInfoUI.UpdateSquadStatPanelSquadInfoAllUI(accountName, accountLevel, currentAccountExp, currentAccountMaxExp, statPoint);
