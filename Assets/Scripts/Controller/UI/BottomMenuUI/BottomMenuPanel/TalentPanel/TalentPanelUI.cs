@@ -1,5 +1,6 @@
 using System;
 using Data;
+using Function;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.TalentPanel;
@@ -63,9 +64,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         {
             foreach (var talentItem in TalentManager.Instance.talentItem)
             {
-                // talentItem.GetComponent<TalentItemUI>().UpdateSquadTalentUI();
-                
-                if (Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Gold)) <
+                if (new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Gold)) <
                     TalentManager.Instance.levelUpMagnification * talentItem.currentLevelUpCost)
                 {
                     talentItem.upgradeButton.gameObject.SetActive(false);

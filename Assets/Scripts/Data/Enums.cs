@@ -246,50 +246,6 @@ namespace Data
             FollowRange
         }
 
-        public enum StatTypeFromSquadConfigurePanel
-        {
-            Attack, // 공격력
-            Health // 체력
-        }
-
-        public enum StatTypeFromSquadStatPanel
-        {
-            Attack, // 공격력
-            Health, // 체력
-            Penetration, // 관통
-            Accuracy, // 명중
-            AcquisitionGold, // 골드 획득량
-            AcquisitionExp, // 경험치 증가량
-            CriticalDamage, // 치명타 피해량
-            AmplificationSkillEffects, // 스킬 효과 증폭
-            CurrentAtk // 최종 공격력
-        }
-
-        public enum StatTypeFromSquadTalentPanel
-        {
-            Attack,
-            Health,
-            Defence,
-            CriticalRate,
-            CriticalDamage,
-            Accuracy,
-            Penetration,
-            LuckyCriticalRate,
-            LuckyCriticalDamage,
-            SpecialCriticalRate,
-            SpecialCriticalDamage,
-            AccuracyPlus,
-            PenetrationPlus,
-            AmplificationAttack,
-            AmplificationHealth
-        }
-
-        public enum StatTypeFromInventoryPanel
-        {
-            Attack,
-            Health
-        }
-
         public enum SummonType
         {
             Squad,

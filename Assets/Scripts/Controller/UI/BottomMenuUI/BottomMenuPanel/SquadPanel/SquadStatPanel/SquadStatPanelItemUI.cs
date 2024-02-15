@@ -1,6 +1,7 @@
 using System;
 using Creature.Data;
 using Data;
+using ScriptableObjects.Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -18,7 +19,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
 
         [Header("레벨 업 비용")] public int levelUpCost = 1;
 
-        [Space(5)] [Header("스탯 증가 타입")] public Enums.StatTypeFromSquadStatPanel statTypeFromSquadStatPanel;
+        [Space(5)] [Header("스탯 증가 타입")] public Enums.SquadStatType statTypeFromSquadStatPanel;
 
         [Header("스탯 증가량 타입")] public Enums.IncreaseStatValueType increaseStatValueType;
 
@@ -74,9 +75,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
             currentLevel += count;
             currentIncreasedStat += increaseStatValue * count;
 
-            ES3.Save($"{nameof(SquadEntireStat)}/{statTypeFromSquadStatPanel}/currentLevel : ", currentLevel);
-            var isBaseStat = increaseStatValueType == Enums.IncreaseStatValueType.BaseStat;
-            UpgradeTotalSquadStatBySquadStatItem?.Invoke((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), statTypeFromSquadStatPanel.ToString()), increaseStatValue * count, isBaseStat);
+            ES3.Save($"{nameof(SquadStatSo)}/{statTypeFromSquadStatPanel}/currentLevel : ", currentLevel);
+            UpgradeTotalSquadStatBySquadStatItem?.Invoke(statTypeFromSquadStatPanel, increaseStatValue * count, increaseStatValueType == Enums.IncreaseStatValueType.BaseStat);
         }
     }
 }

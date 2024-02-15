@@ -83,17 +83,17 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             
             foreach (var equippedEffect in previousWarrior.characterEquippedEffects)
             {
-                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), equippedEffect.statType.ToString()), -equippedEffect.increaseValue, true);   
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), equippedEffect.statType.ToString()), -equippedEffect.increaseValue, equippedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
             }
             
             foreach (var equippedEffect in previousArcher.characterEquippedEffects)
             {
-                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), equippedEffect.statType.ToString()), -equippedEffect.increaseValue, true);   
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), equippedEffect.statType.ToString()), -equippedEffect.increaseValue, equippedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
             }
             
             foreach (var equippedEffect in previousWizard.characterEquippedEffects)
             {
-                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), equippedEffect.statType.ToString()), -equippedEffect.increaseValue, true);   
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), equippedEffect.statType.ToString()), -equippedEffect.increaseValue, equippedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
             }
             
             StageManager.Instance.StopStageRunner();

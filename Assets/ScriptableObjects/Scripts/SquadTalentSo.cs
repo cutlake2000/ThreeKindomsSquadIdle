@@ -19,8 +19,8 @@ namespace ScriptableObjects.Scripts
         [Header("레벨 업 비용")]
         public int levelUpCost = 1;
 
-        [FormerlySerializedAs("statTypeBySquadTalentPanel")] [Header("스탯 증가 타입")]
-        public Data.Enums.StatTypeFromSquadTalentPanel statTypeFromSquadTalentPanel;
+        [Header("스탯 증가 타입")]
+        public Data.Enums.SquadStatType statTypeFromSquadTalentPanel;
         [Header("스탯 증가량 타입")]
         public Data.Enums.IncreaseStatValueType increaseTalentValueType;
         [Header("스탯 증가량")]

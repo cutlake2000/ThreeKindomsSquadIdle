@@ -144,7 +144,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                     {
                         foreach (var effect in character.characterOwnedEffects)
                         {
-                            SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, false);
+                            SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
                         }
                     }
 
@@ -218,7 +218,7 @@ namespace Managers.BottomMenuManager.SquadPanel
                     {
                         foreach (var effect in character.characterOwnedEffects)
                         {
-                            SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, false);
+                            SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
                         }
                     }
                     

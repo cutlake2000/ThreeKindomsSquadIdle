@@ -42,9 +42,9 @@ namespace Managers.BottomMenuManager.TalentPanel
             {
                 var index = i;
                 talentItem[i].GetComponent<TalentItemUI>().upgradeButton.onClick.AddListener(() =>
-                    UpgradeSquadTalentPanelStat((Enums.StatTypeFromSquadTalentPanel)index));
+                    UpgradeSquadTalentPanelStat(index));
                 talentItem[i].GetComponent<TalentItemUI>().upgradeButton.GetComponent<HoldButton>().onHold
-                    .AddListener(() => UpgradeSquadTalentPanelStat((Enums.StatTypeFromSquadTalentPanel)index));
+                    .AddListener(() => UpgradeSquadTalentPanelStat(index));
             }
         }
 
@@ -59,13 +59,15 @@ namespace Managers.BottomMenuManager.TalentPanel
                 talentItem[i].initialLevelUpCost = squadTalentSo[i].initialLevelUpCost;
                 talentItem[i].extraLevelUpCost = squadTalentSo[i].levelUpCost;
                 talentItem[i].increaseTalentValue = squadTalentSo[i].increaseTalentValue;
-                talentItem[i].currentLevel = ES3.Load($"{nameof(SquadEntireStat)}/{(Enums.StatTypeFromSquadTalentPanel)i}/currentLevel : ", 0);
+                talentItem[i].currentLevel = ES3.Load($"{nameof(SquadTalentSo)}/{talentItem[i].statTypeFromSquadTalentPanel}/currentLevel : ", 0);
                 talentItem[i].currentLevelUpCost = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost);
                 talentItem[i].currentIncreasedStat = talentItem[i].currentLevel * talentItem[i].increaseTalentValue;
                 talentItem[i].squadTalentSprite = squadTalentSo[i].squadTalentImage;
                 talentItem[i].UpgradeTotalSquadStatBySquadTalentItem = OnUpgradeTotalSquadStatFromSquadTalentPanel;
 
                 talentItem[i].InitSquadTalentUI();
+                
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat(talentItem[i].statTypeFromSquadTalentPanel, talentItem[i].currentIncreasedStat, talentItem[i].increaseTalentValueType == Enums.IncreaseStatValueType.BaseStat);
             }
         }
 
@@ -75,9 +77,8 @@ namespace Managers.BottomMenuManager.TalentPanel
             foreach (var squadTalent in talentItem) squadTalent.UpdateSquadTalentUI();
         }
 
-        public void UpgradeSquadTalentPanelStat(Enums.StatTypeFromSquadTalentPanel type)
+        public void UpgradeSquadTalentPanelStat(int index)
         {
-            var index = (int)type;
             var talent = talentItem[index];
             
             if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.Gold,
@@ -94,16 +95,16 @@ namespace Managers.BottomMenuManager.TalentPanel
             talent.currentLevel += levelUpMagnification;
             talent.currentIncreasedStat += talent.increaseTalentValue * levelUpMagnification;
 
-            ES3.Save($"{nameof(SquadEntireStat)}/{type}/currentLevel : ", talent.currentLevel);
+            ES3.Save($"{nameof(SquadTalentSo)}/{talent.statTypeFromSquadTalentPanel}/currentLevel : ", talent.currentLevel);
             var isBaseStat = talent.increaseTalentValueType == Enums.IncreaseStatValueType.BaseStat;
-            talent.UpgradeTotalSquadStatBySquadTalentItem?.Invoke((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), type.ToString()), talent.increaseTalentValue * levelUpMagnification, isBaseStat);
+            talent.UpgradeTotalSquadStatBySquadTalentItem?.Invoke(talent.statTypeFromSquadTalentPanel, talent.increaseTalentValue * levelUpMagnification, isBaseStat);
 
-            switch (type)
+            switch (talent.statTypeFromSquadTalentPanel)
             {
-                case Enums.StatTypeFromSquadTalentPanel.Attack:
+                case Enums.SquadStatType.Attack:
                     QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.AttackTalentLevel, talent.currentLevel);
                     break;
-                case Enums.StatTypeFromSquadTalentPanel.Health:
+                case Enums.SquadStatType.Health:
                     QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.HealthTalentLevel, talent.currentLevel);
                     break;
             }

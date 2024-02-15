@@ -175,12 +175,12 @@ namespace Managers.GameManager
                     break;
                 case Enums.CurrencyType.Gold:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.Gold);
-                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.Gold}> {BigInteger.ChangeMoney(amount)}";
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.Gold}>    {BigInteger.ChangeMoney(amount)}";
                     UIManager.Instance.talentPanelUI.CheckRequiredCurrencyOfMagnificationAllButton();
                     break;
                 case Enums.CurrencyType.Dia:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.Dia);
-                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.Dia}> {BigInteger.ChangeMoney(amount)}";
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.Dia}>    {BigInteger.ChangeMoney(amount)}";
                     
                     foreach (var summonPanelScrollViewItem in UIManager.Instance.summonPanelUI.summonPanelScrollViewItems)
                     {
@@ -196,12 +196,12 @@ namespace Managers.GameManager
                 case Enums.CurrencyType.GoldDungeonTicket:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.GoldDungeonTicket);
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyGold}>      {BigInteger.ChangeMoney(amount)}";
-                    DungeonManager.Instance.dungeonItems[0].UpdateButtonUI(Int32.Parse(currency.amount) >= 1);
+                    DungeonManager.Instance.dungeonItems[0].UpdateButtonUI(int.Parse(currency.amount) >= 1);
                     break;
                 case Enums.CurrencyType.EnhanceDungeonTicket:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.EnhanceDungeonTicket);
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyEnhanceStoneSquad}>     {BigInteger.ChangeMoney(amount)}";
-                    DungeonManager.Instance.dungeonItems[1].UpdateButtonUI(Int32.Parse(currency.amount) >= 1);
+                    DungeonManager.Instance.dungeonItems[1].UpdateButtonUI(int.Parse(currency.amount) >= 1);
                     break;
             }
         }
