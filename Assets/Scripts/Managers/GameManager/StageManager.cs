@@ -4,9 +4,12 @@ using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
+using Managers.BottomMenuManager.SquadPanel;
 using ScriptableObjects.Scripts;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Managers.GameManager
 {
@@ -53,7 +56,7 @@ namespace Managers.GameManager
         [SerializeField] private int currentSquadCount;
 
         [Header("--- 스테이지 러너 상태 ---")]
-        [SerializeField] private bool nextStageChallenge;
+        public bool challengeProgress;
         [SerializeField] private int maxSquadCount;
         [SerializeField] private int maxMainStageCounts;
         [SerializeField] private int subStageCountsPerMainStage;
@@ -74,10 +77,10 @@ namespace Managers.GameManager
             CheckRemainedMonsterAction += CalculateRemainedMonster;
             CheckRemainedSquadAction += CalculateRemainedSquad;
             CheckStageProgressType += SetStageProgressType;
+            
+            challengeProgress = ES3.Load($"{nameof(challengeProgress)}", true);
 
-            nextStageChallenge = ES3.Load("CheckStageProgressType", true);
-
-            stageUIController.SetStageProgressButton(nextStageChallenge);
+            stageUIController.SetStageProgressButton(challengeProgress);
             
             maxMainStageCounts = stageSo.MainStageInfos.Count;
             subStageCountsPerMainStage = stageSo.SubStageCountsPerMainStage;
@@ -86,7 +89,6 @@ namespace Managers.GameManager
             // subStageCountsPerMainStage = 3;
             waveCountsPerSubStage = stageSo.WaveCountsPerSubStage;
             monsterSpawnCountsPerSubStage = stageSo.MonsterSpawnCountsPerSubStage;
-            nextStageChallenge = true;
             goToNextSubStage = true;
             stopWaveTimer = false;
             initStageResult = true;
@@ -123,7 +125,7 @@ namespace Managers.GameManager
             {
                 isClear = true;
                 
-                if (nextStageChallenge)
+                if (challengeProgress)
                 {
                     currentSubStage++;
                     currentAccumulatedStage++;
@@ -143,7 +145,7 @@ namespace Managers.GameManager
                             currentSubStage = subStageCountsPerMainStage;
                             
                             stageUIController.SetStageProgressButton(false);
-                            nextStageChallenge = false;
+                            challengeProgress = false;
                             goToNextSubStage = false;
                         }
                         
@@ -176,19 +178,26 @@ namespace Managers.GameManager
             currentSquadCount = maxSquadCount;
             
             currentSubStage--;
+            currentAccumulatedStage--;
 
             if (currentSubStage < 1)
             {
                 if (currentMainStage > 1)
                 {
                     currentMainStage--;
+                    currentSubStage = subStageCountsPerMainStage;
                 }
-                
-                currentSubStage = subStageCountsPerMainStage;
+                else
+                {
+                    currentSubStage = 1;
+                    currentAccumulatedStage++;
+                }
             }
 
-            nextStageChallenge = false;
-            CheckStageProgressType.Invoke(nextStageChallenge);
+            challengeProgress = false;
+            ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
+            ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
+            CheckStageProgressType.Invoke(challengeProgress);
             
             StartCoroutine(StageRunner());
         }
@@ -217,16 +226,18 @@ namespace Managers.GameManager
                 }
             }
             
-            nextStageChallenge = false;
-            CheckStageProgressType.Invoke(nextStageChallenge);
+            challengeProgress = false;
+            ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
+            ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
+            CheckStageProgressType.Invoke(challengeProgress);
             
             StartCoroutine(StageRunner());
         }
 
         private void SetStageProgressType(bool challenge)
         {
-            nextStageChallenge = challenge;
-            ES3.Save("CheckStageProgressType", nextStageChallenge);
+            challengeProgress = challenge;
+            ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
         }
 
         private IEnumerator StageRunner()
@@ -276,6 +287,7 @@ namespace Managers.GameManager
                 initStageResult = false;
                 
                 UpdateAllStageUI();
+                SquadBattleManager.Instance.cameraController.SetCameraTarget(SquadConfigureManager.Instance.modelSpawnPoints[0].transform);
                 
                 yield return new WaitForSeconds(1.0f);
             }

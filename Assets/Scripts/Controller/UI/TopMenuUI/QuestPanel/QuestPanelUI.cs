@@ -31,6 +31,8 @@ namespace Controller.UI.TopMenuUI.QuestPanel
         {
             if (QuestManager.Instance.initialQuestMark.activeInHierarchy) QuestManager.Instance.initialQuestMark.SetActive(false);
             
+            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.InitialQuest, 1);
+            
             if (QuestManager.Instance.isCurrentQuestClear)
             {
                 if (QuestManager.Instance.currentQuestTarget.targetMarks != null)

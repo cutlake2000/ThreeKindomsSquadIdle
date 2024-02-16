@@ -1,5 +1,7 @@
 using System;
 using Data;
+using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SummonPanel;
 using Managers.BottomMenuManager.TalentPanel;
@@ -37,7 +39,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
 
         public void UpdateSummonPanelSummonButtonUI()
         {
-            var requiredDia = Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Dia));
+            var requiredDia = new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Dia));
 
             if (requiredDia >= 100)
             {

@@ -1,6 +1,7 @@
 using Creature.CreatureClass.MonsterClass;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Module;
 using UnityEngine;

@@ -2,16 +2,16 @@ using Managers.BottomMenuManager.InventoryPanel;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.SummonPanel;
 using Managers.BottomMenuManager.TalentPanel;
-using Managers.GameManager;
 using UnityEngine;
 
-namespace Managers.BattleManager
+namespace Managers.GameManager
 {
     public class GameManager : MonoBehaviour
-    { 
+    {
+        // [SerializeField] private OfflineTimerCtrl offlineTimerCtrl;
         private void Start()
         {
-            SquadBattleManager.Instance.InitSquadManager();
+            // offlineTimerCtrl.StartApplication();
             
             SquadStatManager.Instance.InitSquadStatManager();
             SquadConfigureManager.Instance.InitSquadConfigureManager();
@@ -21,6 +21,7 @@ namespace Managers.BattleManager
             AccountManager.Instance.InitAccountManager();
             InventoryManager.Instance.InitEquipmentManager();
             
+            SquadBattleManager.Instance.InitSquadManager();
             StageManager.Instance.InitStageManager();
             QuestManager.Instance.InitQuestManager();
             
@@ -29,5 +30,11 @@ namespace Managers.BattleManager
             StageManager.Instance.StartStageRunner();
             ES3.Save("Init_Game", true);
         }
+
+        // private void OnApplicationPause(bool pause)
+        // {
+        //     if (pause) offlineTimerCtrl.TimeReset();
+        //     else offlineTimerCtrl.RefilKey();
+        // }
     }
 }

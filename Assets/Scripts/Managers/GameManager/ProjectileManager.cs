@@ -2,6 +2,7 @@ using Controller.Projectiles.BaseAttack;
 using Controller.Projectiles.SkillAttack;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Module;
 using UnityEngine;
 

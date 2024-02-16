@@ -7,6 +7,7 @@ using Creature.CreatureClass.SquadClass;
 using Creature.Data;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.InventoryPanel;
 using Managers.BottomMenuManager.SquadPanel;

@@ -4,6 +4,7 @@ using Creature.CreatureClass.MonsterFSM;
 using Creature.CreatureClass.SquadClass;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers;
 using Managers.BattleManager;
 using Managers.GameManager;
@@ -109,10 +110,10 @@ namespace Creature.CreatureClass.MonsterClass
         public void MultiplyNormalMonsterStats(int stageLevel)
         {
             var increaseValue = MonsterManager.Instance.increaseMonsterStatValue;
-            maxHealth *= stageLevel * increaseValue / 100;
+            maxHealth = MonsterManager.Instance.normalMonsterBaseStats.maxHealth * increaseValue / 100 * stageLevel;
             currentHealth = maxHealth;
-            defence *= stageLevel * increaseValue / 100;
-            damage *= stageLevel * increaseValue / 100;
+            defence = MonsterManager.Instance.normalMonsterBaseStats.maxHealth * increaseValue / 100 * stageLevel;
+            damage = MonsterManager.Instance.normalMonsterBaseStats.maxHealth * increaseValue / 100 * stageLevel;
         }
 
         public override void TakeDamage(BigInteger inputDamage)

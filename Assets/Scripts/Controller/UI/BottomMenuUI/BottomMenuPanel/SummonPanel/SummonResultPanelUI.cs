@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Creature.Data;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SummonPanel;
 using Managers.GameManager;
@@ -54,7 +55,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
 
         public void UpdateSummonResultPanelExtraSummonButtonUI()
         {
-            var requiredDia = Convert.ToInt32(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Dia));
+            var requiredDia = new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Dia));
 
             if (requiredDia >= 300)
             {

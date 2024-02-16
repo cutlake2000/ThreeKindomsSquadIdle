@@ -57,6 +57,8 @@ namespace Managers.GameManager
         public string targetQuestRewardText;
         public string targetQuestDescriptionText;
 
+        [Header("일회성 퀘스트 개수")] public int oneTimeQuest;
+
         private const string QUEST_SAVE_KEY = "QUEST";
 
         private void Awake()
@@ -76,14 +78,14 @@ namespace Managers.GameManager
         {
             Firebase.Analytics.FirebaseAnalytics.LogEvent($"current_quest_{(questLevel)}");
             
-            if (questLevel > 43)
+            if (questLevel > oneTimeQuest)
             {
-                targetQuestLevel = (questLevel - 43) % 9 + 43;
+                targetQuestLevel = (questLevel - oneTimeQuest) % 9 + oneTimeQuest;
                 currentQuest = quests[targetQuestLevel];
 
-                var targetProcess = 30 + 5 * ((questLevel - 43) / 9);
+                var targetProcess = 30 + 5 * ((questLevel - oneTimeQuest) / 9);
                 
-                switch ((questLevel - 43) % 9)
+                switch ((questLevel - oneTimeQuest) % 9)
                 {
                     case 0:
                         break;
@@ -100,8 +102,8 @@ namespace Managers.GameManager
                     case 4:
                         break;
                     case 5:
-                        currentQuest.name = ParsingIncreaseStageLevel((questLevel - 43) / 9);
-                        currentQuest.targetProgress = 20 + 5 * ((questLevel - 43) / 9 + 1);
+                        currentQuest.name = ParsingIncreaseStageLevel((questLevel - oneTimeQuest) / 9);
+                        currentQuest.targetProgress = 20 + 5 * ((questLevel - oneTimeQuest) / 9 + 1);
                         break;
                     case 6:
                         break;
@@ -208,6 +210,8 @@ namespace Managers.GameManager
                 case Enums.QuestType.SummonGear100:
                     break;
                 case Enums.QuestType.LevelUpSquad:
+                    break;
+                case Enums.QuestType.InitialQuest:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -319,6 +323,8 @@ namespace Managers.GameManager
                             isLoopQuest = fields[6].Trim() == "Loop"
                         };
 
+                        if (quest.isLoopQuest == false) oneTimeQuest++;
+                        
                         quests.Add(quest);
                     }
                     else

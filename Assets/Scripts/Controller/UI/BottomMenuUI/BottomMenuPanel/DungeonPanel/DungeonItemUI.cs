@@ -4,7 +4,7 @@ using Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using BigInteger = Function.BigInteger;
+using BigInteger = Keiwando.BigInteger.BigInteger;
 
 namespace Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel
 {

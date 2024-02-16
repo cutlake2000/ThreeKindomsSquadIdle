@@ -5,8 +5,10 @@ using Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel;
 using Creature.Data;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
+using Managers.BottomMenuManager.TalentPanel;
 using Module;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -176,7 +178,7 @@ namespace Managers.GameManager
                 case Enums.CurrencyType.Gold:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.Gold);
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.Gold}>    {BigInteger.ChangeMoney(amount)}";
-                    UIManager.Instance.talentPanelUI.CheckRequiredCurrencyOfMagnificationAllButton();
+                    UIManager.Instance.talentPanelUI.CheckRequiredCurrencyOfMagnificationAllButton(TalentManager.Instance.levelUpMagnification);
                     break;
                 case Enums.CurrencyType.Dia:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.Dia);

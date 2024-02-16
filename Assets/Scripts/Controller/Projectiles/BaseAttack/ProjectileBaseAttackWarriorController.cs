@@ -1,5 +1,6 @@
 using Creature.CreatureClass.MonsterClass;
 using Function;
+using Keiwando.BigInteger;
 using UnityEngine;
 
 namespace Controller.Projectiles.BaseAttack

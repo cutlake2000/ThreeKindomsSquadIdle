@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BottomMenuManager.InventoryPanel;
 using Managers.GameManager;
 using UnityEngine;

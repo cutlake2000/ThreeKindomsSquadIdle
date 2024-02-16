@@ -2,6 +2,7 @@ using System;
 using Creature.Data;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.TalentPanel;
 using Managers.GameManager;
@@ -25,7 +26,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         [Header("최대 스탯 레벨")] public int maxLevel = 10000;
         [Header("초기 강화 비용 레벨")] public int initialLevelUpCost;
         [Header("추가 강화 비용 레벨")] public int extraLevelUpCost;
-        [Header("현재 스탯 강화 비용")] public BigInteger currentLevelUpCost;
+        [Header("x1 / x10 / x100 스탯 강화 비용")] public BigInteger[] currentLevelUpCost;
         [Header("현재 스탯 증가량")] public int currentIncreasedStat;
         [Header("UI")] public Image squadTalentImage;
 
@@ -46,7 +47,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         }
 
         // 스텟 UI 업데이트 하는 메서드
-        public void UpdateSquadTalentUI()
+        public void UpdateSquadTalentUI(int levelMagnification)
         {
             squadTalentLevelText.text = $"Lv. {currentLevel}";
 
@@ -56,12 +57,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
                     squadCurrentIncreasedStatText.text = currentIncreasedStat == 0 ? "0" : $"{currentIncreasedStat}";
                     break;
                 case Enums.IncreaseStatValueType.PercentStat:
-                    squadCurrentIncreasedStatText.text =
-                        currentIncreasedStat == 0 ? "0%" : $"{(double)currentIncreasedStat / 100}%";
+                    squadCurrentIncreasedStatText.text = currentIncreasedStat == 0 ? "0%" : $"{(double)currentIncreasedStat / 100}%";
                     break;
             }
 
-            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.Gold}> {(currentLevelUpCost * TalentManager.Instance.levelUpMagnification).ChangeMoney()}";
+            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.Gold}> {currentLevelUpCost[(int)Mathf.Log10(levelMagnification)].ChangeMoney()}";
         }
     }
 }

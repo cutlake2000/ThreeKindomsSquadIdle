@@ -1,6 +1,7 @@
 using System.Collections;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.GameManager;
 using UnityEngine;
@@ -25,18 +26,18 @@ namespace Creature.CreatureClass.MonsterClass
         
         protected override void OnEnable(){}
         
-        public void InitializeBossMonsterData(int dungeonLevel)
+        public void InitializeBossMonsterData(BigInteger increaseStatPercent)
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-            maxBossHealth = MonsterManager.Instance.bossMonsterBaseStats.maxHealth * dungeonLevel;
-            currentBossHealth = maxBossHealth;
-            currentBossDefence = MonsterManager.Instance.bossMonsterBaseStats.defence * dungeonLevel;
+            maxBossHealth = MonsterManager.Instance.bossMonsterBaseStats.maxHealth * increaseStatPercent;
+            currentBossHealth = MonsterManager.Instance.bossMonsterBaseStats.maxHealth * increaseStatPercent;
+            currentBossDefence = MonsterManager.Instance.bossMonsterBaseStats.defence * increaseStatPercent;
         }
 
         public override void TakeDamage(BigInteger inputDamage)
         {
             var randomDamage = Random.Range(-MonsterManager.Instance.totalAttackAdjustValue, MonsterManager.Instance.totalAttackAdjustValue + 1) + 100;
-            var reduction = defence * 100 / (currentBossDefence + MonsterManager.Instance.damageReduction) + 100;
+            var reduction = currentBossDefence * 100 / (currentBossDefence + MonsterManager.Instance.damageReduction) + 100;
             var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
             
             currentBossHealth -= adjustDamage;

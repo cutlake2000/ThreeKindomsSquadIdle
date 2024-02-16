@@ -4,6 +4,7 @@ using Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel;
 using Creature.Data;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.GameManager;
 using Module;
@@ -53,6 +54,7 @@ namespace Managers.BottomMenuManager.TalentPanel
         {
             for (var i = 0; i < squadTalentSo.Length; i++)
             {
+                talentItem[i].currentLevelUpCost = new BigInteger[3];
                 talentItem[i].squadTalentName = squadTalentSo[i].squadTalentName;
                 talentItem[i].statTypeFromSquadTalentPanel = squadTalentSo[i].statTypeFromSquadTalentPanel;
                 talentItem[i].increaseTalentValueType = squadTalentSo[i].increaseTalentValueType;
@@ -60,7 +62,9 @@ namespace Managers.BottomMenuManager.TalentPanel
                 talentItem[i].extraLevelUpCost = squadTalentSo[i].levelUpCost;
                 talentItem[i].increaseTalentValue = squadTalentSo[i].increaseTalentValue;
                 talentItem[i].currentLevel = ES3.Load($"{nameof(SquadTalentSo)}/{talentItem[i].statTypeFromSquadTalentPanel}/currentLevel : ", 0);
-                talentItem[i].currentLevelUpCost = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost);
+                talentItem[i].currentLevelUpCost[0] = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost, 1);
+                talentItem[i].currentLevelUpCost[1] = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost, 10);
+                talentItem[i].currentLevelUpCost[2] = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost, 100);
                 talentItem[i].currentIncreasedStat = talentItem[i].currentLevel * talentItem[i].increaseTalentValue;
                 talentItem[i].squadTalentSprite = squadTalentSo[i].squadTalentImage;
                 talentItem[i].UpgradeTotalSquadStatBySquadTalentItem = OnUpgradeTotalSquadStatFromSquadTalentPanel;
@@ -74,15 +78,14 @@ namespace Managers.BottomMenuManager.TalentPanel
         // 모든 스텟 UI 업데이트
         private void UpdateAllSquadTalentUI()
         {
-            foreach (var squadTalent in talentItem) squadTalent.UpdateSquadTalentUI();
+            foreach (var squadTalent in talentItem) squadTalent.UpdateSquadTalentUI(levelUpMagnification);
         }
 
         public void UpgradeSquadTalentPanelStat(int index)
         {
             var talent = talentItem[index];
             
-            if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.Gold,
-                    talent.currentLevelUpCost * levelUpMagnification)) return;
+            if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.Gold, talent.currentLevelUpCost[(int)Mathf.Log10(levelUpMagnification)])) return;
             if (talentItem[index].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
 
             var effect = objectPool.SpawnFromPool(Enums.PoolType.EffectEnhance);
@@ -90,10 +93,10 @@ namespace Managers.BottomMenuManager.TalentPanel
             effect.SetActive(true);
             effect.GetComponent<ParticleSystem>().Play();
             
-            talent.currentLevelUpCost = CalculateLevelUpCostOfTalent(talent.initialLevelUpCost, talent.currentLevel, talent.extraLevelUpCost);
-            
             talent.currentLevel += levelUpMagnification;
             talent.currentIncreasedStat += talent.increaseTalentValue * levelUpMagnification;
+            
+            UpdateCurrentTalentItemLevelUpCost(talent);
 
             ES3.Save($"{nameof(SquadTalentSo)}/{talent.statTypeFromSquadTalentPanel}/currentLevel : ", talent.currentLevel);
             var isBaseStat = talent.increaseTalentValueType == Enums.IncreaseStatValueType.BaseStat;
@@ -110,20 +113,36 @@ namespace Managers.BottomMenuManager.TalentPanel
             }
             
             SetUpgradeUI(talentItem[index]);
-            TalentPanelUI.CheckRequiredCurrencyOfMagnificationButton(index);
+            TalentPanelUI.CheckRequiredCurrencyOfMagnificationButton(index, levelUpMagnification);
 
             // AchievementManager.Instance.IncreaseAchievementValue(Enum.AchieveType.Stat, 1);
         }
 
-        private BigInteger CalculateLevelUpCostOfTalent(int initialCost, int currentLevel, int extraCost)
+        private static void UpdateCurrentTalentItemLevelUpCost(TalentItemUI currentTalentItem)
         {
-            return initialCost + currentLevel * extraCost;
+            for (var i = 0; i < currentTalentItem.currentLevelUpCost.Length; i++)
+            {
+                currentTalentItem.currentLevelUpCost[i] = CalculateLevelUpCostOfTalent(currentTalentItem.initialLevelUpCost, currentTalentItem.currentLevel, currentTalentItem.extraLevelUpCost, (int) Mathf.Pow(10, i));   
+            }
+        }
+
+        private static BigInteger CalculateLevelUpCostOfTalent(int initialCost, int currentLevel, int extraCost, int levelMagnification)
+        {
+            BigInteger returnCost = 0;
+
+            for (var i = 0; i < levelMagnification; i++)
+            {
+                var currentPrice = initialCost + (currentLevel + i) * extraCost;
+                returnCost += currentPrice;
+            }
+
+            return returnCost;
         }
 
         // 스텟 UI 업데이트
-        private static void SetUpgradeUI(TalentItemUI talentItemUI)
+        private void SetUpgradeUI(TalentItemUI talentItemUI)
         {
-            talentItemUI.UpdateSquadTalentUI();
+            talentItemUI.UpdateSquadTalentUI(levelUpMagnification);
         }
     }
 }

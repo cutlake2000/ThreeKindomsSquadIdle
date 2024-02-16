@@ -26,12 +26,12 @@ namespace Controller.UI.BattleMenuUI
         public void OnClickStageProgressButton(bool challenge)
         {
             StageManager.CheckStageProgressType.Invoke(challenge);
-            ES3.Save($"CheckStageProgressType", challenge);
+            ES3.Save($"{nameof(StageManager.Instance.challengeProgress)}", challenge);
         }
 
         public void SetStageProgressButton(bool challenge)
         {
-            loopButton.gameObject.SetActive(!challenge);
+            loopButton.gameObject.SetActive(challenge == false);
             challengeButton.gameObject.SetActive(challenge);
         }
 

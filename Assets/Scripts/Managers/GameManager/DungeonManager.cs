@@ -6,6 +6,7 @@ using Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel;
 using Creature.CreatureClass.MonsterClass;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
 using ScriptableObjects.Scripts;
 using UnityEngine;
@@ -88,18 +89,9 @@ namespace Managers.GameManager
                 var index = i;
                 dungeonItems[index].enterDungeonButton.onClick.AddListener(() =>
                 {
-                    switch (dungeonItems[index].dungeonType)
-                    {
-                        case Enums.DungeonType.GoldDungeon:
-                            if (int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) < 1) return;
-                            AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.GoldDungeonTicket, 1);
-                            break;
-                        case Enums.DungeonType.SquadEnhanceStoneDungeon:
-                            if (int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EnhanceDungeonTicket)) < 1) return;
-                            AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.EnhanceDungeonTicket, 1);
-                            break;
-                    }
-                    
+                    if (dungeonItems[index].dungeonType == Enums.DungeonType.GoldDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) < 1) return;
+                    if (dungeonItems[index].dungeonType == Enums.DungeonType.SquadEnhanceStoneDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EnhanceDungeonTicket)) < 1) return;
+
                     UpdateDungeonPanelScrollViewAllItemUI();
                     
                     StageManager.Instance.StopStageRunner();
@@ -127,7 +119,7 @@ namespace Managers.GameManager
                     {
                         CheckRemainedBossHealth += UpdateBossKillUI;
                         bossMonster = Instantiate(bossMonsterPrefab, bossMonsterSpawnPosition);
-                        bossMonster.GetComponent<BossMonster>().InitializeBossMonsterData(currentDungeonLevel * increaseBossMonsterStatValuePercent / 100);
+                        bossMonster.GetComponent<BossMonster>().InitializeBossMonsterData(increaseBossMonsterStatValuePercent / 100 * currentDungeonLevel);
                         
                         QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayEnhanceStoneDungeon, 1);
 
@@ -264,11 +256,24 @@ namespace Managers.GameManager
             if (isClear)
             {
                 currentDungeonLevel++;
+                
+                switch (currentDungeonType)
+                {
+                    case Enums.DungeonType.GoldDungeon:
+                        AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.GoldDungeonTicket, 1);
+                        break;
+                    case Enums.DungeonType.SquadEnhanceStoneDungeon:
+                        AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.EnhanceDungeonTicket, 1);
+                        break;
+                }
+                
                 AccountManager.Instance.AddCurrency(currentDungeonRewardType, currentDungeonReward);
+                
                 UpdateDungeonPanelScrollViewItemUI();
+                
                 ES3.Save($"{currentDungeonType}/{nameof(currentDungeonLevel)}", currentDungeonLevel);
             }
-
+            
             yield return new WaitForSeconds(1.5f);
 
             dungeonRewardResultUI.GetComponent<DungeonRewardPanelUI>().gameObject.SetActive(false);
@@ -334,7 +339,8 @@ namespace Managers.GameManager
 
         private void UpdateBossKillUI(BigInteger currentHealth, BigInteger maxHealth)
         {
-            dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{currentHealth.ChangeMoney()} / {maxHealth.ChangeMoney()}", int.Parse((currentHealth * 100 / maxHealth).ToString()));
+            // dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{currentHealth.ChangeMoney()} / {maxHealth.ChangeMoney()}", BigInteger.ToInt32(currentHealth * 100 / maxHealth));
+            dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{BigInteger.ToInt32(currentHealth * 100 / maxHealth).ToString()} %", BigInteger.ToInt32(currentHealth * 100 / maxHealth));
         }
         
         private void SpawnSquad()
@@ -352,7 +358,7 @@ namespace Managers.GameManager
         {
             currentRemainedMonsterCount = monsterSpawnCountsPerSubStage;
             
-            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human, level * increaseNormalMonsterStatValuePercent / 100, monsterSpawnCountsPerSubStage);
+            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human, increaseNormalMonsterStatValuePercent / 100 * level, monsterSpawnCountsPerSubStage);
         }
 
         private void DespawnMonster()

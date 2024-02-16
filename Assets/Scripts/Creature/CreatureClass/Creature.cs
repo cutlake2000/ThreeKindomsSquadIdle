@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Creature.Data;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Module;
 using UnityEngine;
 using UnityEngine.UI;

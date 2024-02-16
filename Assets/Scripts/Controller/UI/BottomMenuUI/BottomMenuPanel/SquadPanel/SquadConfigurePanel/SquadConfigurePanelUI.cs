@@ -5,6 +5,7 @@ using System.Text;
 using Creature.Data;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
@@ -258,7 +259,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         public void UpdateSquadScrollViewPanelButtonUI(int index, bool active)
         {
             squadScrollViewPanelButtons[index].gameObject.SetActive(active);
-            squadScrollViewPanelLockButtons[index].gameObject.SetActive(active);
+            squadScrollViewPanelLockButtons[index].gameObject.SetActive(!active);
         }
 
         /// <summary>
@@ -351,8 +352,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             
             newCharacter.isEquipped = true;
             newCharacter.SaveCharacterDataIntoES3Loader();
-            
-            Debug.Log($"{newCharacter.characterId} 장착 {newCharacter.isEquipped}");
             
             UpdateSquadConfigureScrollViewItemUI(newCharacter.characterType, false);
             SquadConfigureManager.Instance.InstantiateModelOfConfigureUnderParent(newCharacter.characterType, newCharacter.characterModel);

@@ -2,6 +2,13 @@ namespace Data
 {
     public static class Enums
     {
+        public enum RewardType
+        {
+            Dia,
+            Rare_5_Sword,
+            None
+        }
+        
         public enum AchievementProperty
         {
             Name,
@@ -84,7 +91,9 @@ namespace Data
             SquadEnhanceStone,
             GoldDungeonTicket,
             EnhanceDungeonTicket,
-            Exp
+            Exp,
+            Rare_5_Sword,
+            None
         }
 
         public enum QuestType
@@ -113,7 +122,8 @@ namespace Data
             CompositeArmor,
             CompositeGauntlet,
             LevelUpCharacter,
-            LevelUpSquad
+            LevelUpSquad,
+            InitialQuest
         }
         
         public enum QuestRewardType

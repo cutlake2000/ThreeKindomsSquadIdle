@@ -6,6 +6,7 @@ using Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel;
 using Controller.UI.TopMenuUI.PlayerInfoPanelUI;
 using Controller.UI.TopMenuUI.QuestPanel;
 using Controller.UI.TopMenuUI.SkillPanel;
+using UI;
 using UnityEngine;
 
 namespace Managers.GameManager
@@ -29,6 +30,8 @@ namespace Managers.GameManager
         [Space(5)] [Header("=== 퀘스트 패널 ===")] public QuestPanelUI questPanelUI;
         
         [Space(5)] [Header("=== 소환 패널 ===")] public SummonPanelUI summonPanelUI;
+      
+        // [Space(5)] [Header("=== 오프라인 보상 패널 ===")] public UI_OffLineReward UIOffLineReward;
 
         private void Awake()
         {

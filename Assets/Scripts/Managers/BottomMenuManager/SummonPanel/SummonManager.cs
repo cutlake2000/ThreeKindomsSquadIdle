@@ -41,7 +41,8 @@ namespace Managers.BottomMenuManager.SummonPanel
         private WeightedRandomPicker<string> gearSummoner;
         
         private readonly WaitForSeconds summonWaitForSeconds = new(0.05f);
-
+        private readonly WaitForSeconds extraSummonButtonWaitForSeconds = new(0.5f);
+        
         private bool initialSquadSummon;
 
         private void Awake()
@@ -158,7 +159,17 @@ namespace Managers.BottomMenuManager.SummonPanel
                 }
                 else
                 {
-                    var randomTier = Random.Range(1, 6);
+                    var randomTierIndex = Random.Range(1, 16);
+
+                    var randomTier = randomTierIndex switch
+                    {
+                        15 => 1,
+                        >= 13 => 2,
+                        >= 10 => 3,
+                        >= 6 => 4,
+                        _ => 5
+                    };
+
                     switch (type)
                     {
                         case Enums.SummonType.Squad:
@@ -357,6 +368,8 @@ namespace Managers.BottomMenuManager.SummonPanel
                 UIManager.Instance.summonPanelUI.summonResultPanelUI.summonResultPanelItems[i].StartSummonEffect();
                 yield return summonWaitForSeconds;
             }
+            
+            yield return extraSummonButtonWaitForSeconds;
             
             UIManager.Instance.summonPanelUI.summonResultPanelUI.UpdateSummonResultPanelExtraSummonButtonUI();
         }
