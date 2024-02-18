@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI;
 using Data;
@@ -8,6 +9,7 @@ using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using ScriptableObjects.Scripts;
+using UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -164,6 +166,7 @@ namespace Managers.GameManager
                 }
             }
             
+            currentRemainedMonsterCount = 0;
             StartCoroutine(StageRunner());
         }
 
@@ -198,6 +201,8 @@ namespace Managers.GameManager
             ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
             ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
             CheckStageProgressType.Invoke(challengeProgress);
+            
+            currentRemainedMonsterCount = 0;
             
             StartCoroutine(StageRunner());
         }
@@ -257,7 +262,6 @@ namespace Managers.GameManager
                 }
                 
                 DespawnSquad();
-                DespawnMonster();
 
                 if (initStageResult == false)
                 {
@@ -295,6 +299,19 @@ namespace Managers.GameManager
             UpdateAllStageUI();
             SpawnMonster();
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
+        }
+
+        public List<Reward> GetCurrentStageClearReward(int clearCount)
+        {
+            var rewards = new List<Reward>();
+
+            foreach (var stageReward in stageRewards)
+            {
+                var reward = new Reward((Enums.RewardType) Enum.Parse(typeof(Enums.RewardType), stageReward.rewardType.ToString()), stageReward.GetStageReward(currentAccumulatedStage) * clearCount);
+                rewards.Add(reward);
+            }
+
+            return rewards;
         }
 
         private void UpdateAllStageUI()

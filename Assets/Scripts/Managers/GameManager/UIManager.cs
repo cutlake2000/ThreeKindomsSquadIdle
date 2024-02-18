@@ -8,30 +8,23 @@ using Controller.UI.TopMenuUI.QuestPanel;
 using Controller.UI.TopMenuUI.SkillPanel;
 using UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Managers.GameManager
 {
     public class UIManager : MonoBehaviour
     {
         public static UIManager Instance;
-
-        [Space(5)] [Header("=== 탑 메뉴 패널 ===")]
-        [Header("--- 스쿼드 아이콘 패널 ---")] public PlayerInfoPanelUI playerInfoPanelUI;
-        [Header("--- 스킬 쿨타임 ---")] public SquadSkillCoolTimerUI squadSkillCoolTimerUI;
-
+        
+        [Space(5)] [Header("=== 스쿼드 아이콘 패널 ===")] public PlayerInfoPanelUI playerInfoPanelUI;
+        [Space(5)] [Header("=== 스킬 쿨타임 ===")] public SquadSkillCoolTimerUI squadSkillCoolTimerUI;
         [Space(5)] [Header("=== 바텀 메뉴 패널 ===")] public BottomMenuPanelUI bottomMenuPanelUI;
-        
         [Space(5)] [Header("=== 스쿼드 패널 ===")] public SquadPanelUI squadPanelUI;
-
         [Space(5)] [Header("=== 인벤토리 패널 ===")] public InventoryPanelUI inventoryPanelUI;
-        
         [Space(5)] [Header("=== 재능 패널 ===")] public TalentPanelUI talentPanelUI;
-        
         [Space(5)] [Header("=== 퀘스트 패널 ===")] public QuestPanelUI questPanelUI;
-        
         [Space(5)] [Header("=== 소환 패널 ===")] public SummonPanelUI summonPanelUI;
-      
-        // [Space(5)] [Header("=== 오프라인 보상 패널 ===")] public UI_OffLineReward UIOffLineReward;
+        [Space(5)] [Header("=== 오프라인 보상 패널 ===")] public OffLineRewardUI offLineRewardUI;
 
         private void Awake()
         {
@@ -52,6 +45,7 @@ namespace Managers.GameManager
             talentPanelUI.InitializeEventListeners();
             questPanelUI.InitializeEventListeners();
             summonPanelUI.InitializeEventListeners();
+            offLineRewardUI.InitializeEventListener();
         }
         
         public static string FormatCurrency(int value)

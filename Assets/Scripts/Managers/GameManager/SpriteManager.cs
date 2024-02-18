@@ -94,7 +94,7 @@ namespace Managers.BattleManager
             {
                 Enums.CurrencyType.Gold => currencySprite[0],
                 Enums.CurrencyType.Dia => currencySprite[1],
-                Enums.CurrencyType.WeaponEnhanceStone => currencySprite[2],
+                Enums.CurrencyType.Exp => currencySprite[2],
                 Enums.CurrencyType.GearEnhanceStone => currencySprite[3],
                 Enums.CurrencyType.SquadEnhanceStone => currencySprite[4],
                 Enums.CurrencyType.GoldDungeonTicket => currencySprite[5],

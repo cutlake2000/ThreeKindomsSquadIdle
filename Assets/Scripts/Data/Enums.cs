@@ -5,8 +5,9 @@ namespace Data
         public enum RewardType
         {
             Dia,
-            Rare_5_Sword,
-            None
+            Gold,
+            Exp,
+            Rare_5_Sword
         }
         
         public enum AchievementProperty

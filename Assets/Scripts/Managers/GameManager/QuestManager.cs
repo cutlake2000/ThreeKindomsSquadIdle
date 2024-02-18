@@ -137,84 +137,88 @@ namespace Managers.GameManager
             targetQuestRewardSprite = SpriteManager.Instance.GetCurrencySprite((Enums.CurrencyType)Enum.Parse(typeof(Enums.CurrencyType), $"{quests[targetQuestLevel].questRewardType}"));
             targetQuestRewardText = $"{quests[targetQuestLevel].reward}";
             targetQuestDescriptionText = $"{quests[targetQuestLevel].name}";
-
-            switch (currentQuest.questType)
+            
+            if (isCurrentQuestClear) UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+            else
             {
-                case Enums.QuestType.AttackTalentLevel:
-                    if (TalentManager.Instance.talentItem[0].currentLevel >= currentQuest.targetProgress)
-                    {
-                        currentQuest.progress = currentQuest.targetProgress;
-                        isCurrentQuestClear = true;
-                        ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
-                        UIManager.Instance.questPanelUI.completedMark.SetActive(true);
-                    }
-                    break;
-                case Enums.QuestType.HealthTalentLevel:
-                    if (TalentManager.Instance.talentItem[1].currentLevel >= currentQuest.targetProgress)
-                    {
-                        currentQuest.progress = currentQuest.targetProgress;
-                        isCurrentQuestClear = true;
-                        ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
-                        UIManager.Instance.questPanelUI.completedMark.SetActive(true);
-                    }
-                    break;
-                case Enums.QuestType.SummonWeapon10:
-                    break;
-                case Enums.QuestType.AutoEquipSword:
-                    break;
-                case Enums.QuestType.AutoEquipBow:
-                    break;
-                case Enums.QuestType.AutoEquipStaff:
-                    break;
-                case Enums.QuestType.StageClear:
-                    if (StageManager.Instance.currentAccumulatedStage >= currentQuest.targetProgress)
-                    {
-                        currentQuest.progress = currentQuest.targetProgress;
-                        isCurrentQuestClear = true;
-                        ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
-                        UIManager.Instance.questPanelUI.completedMark.SetActive(true);
-                    }
-                    break;
-                case Enums.QuestType.SummonGear10:
-                    break;
-                case Enums.QuestType.AutoEquipHelmet:
-                    break;
-                case Enums.QuestType.AutoEquipArmor:
-                    break;
-                case Enums.QuestType.AutoEquipGauntlet:
-                    break;
-                case Enums.QuestType.SummonSquad10:
-                    break;
-                case Enums.QuestType.EquipSquad:
-                    break;
-                case Enums.QuestType.PlayGoldDungeon:
-                    break;
-                case Enums.QuestType.CompositeSword:
-                    break;
-                case Enums.QuestType.CompositeBow:
-                    break;
-                case Enums.QuestType.CompositeStaff:
-                    break;
-                case Enums.QuestType.CompositeHelmet:
-                    break;
-                case Enums.QuestType.CompositeArmor:
-                    break;
-                case Enums.QuestType.CompositeGauntlet:
-                    break;
-                case Enums.QuestType.PlayEnhanceStoneDungeon:
-                    break;
-                case Enums.QuestType.LevelUpCharacter:
-                    break;
-                case Enums.QuestType.SummonWeapon100:
-                    break;
-                case Enums.QuestType.SummonGear100:
-                    break;
-                case Enums.QuestType.LevelUpSquad:
-                    break;
-                case Enums.QuestType.InitialQuest:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (currentQuest.questType)
+                {
+                    case Enums.QuestType.AttackTalentLevel: 
+                        if (TalentManager.Instance.talentItem[0].currentLevel >= currentQuest.targetProgress)
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.HealthTalentLevel:
+                        if (TalentManager.Instance.talentItem[1].currentLevel >= currentQuest.targetProgress)
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.SummonWeapon10:
+                        break;
+                    case Enums.QuestType.AutoEquipSword:
+                        break;
+                    case Enums.QuestType.AutoEquipBow:
+                        break;
+                    case Enums.QuestType.AutoEquipStaff:
+                        break;
+                    case Enums.QuestType.StageClear:
+                        if (StageManager.Instance.currentAccumulatedStage >= currentQuest.targetProgress)
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.SummonGear10:
+                        break;
+                    case Enums.QuestType.AutoEquipHelmet:
+                        break;
+                    case Enums.QuestType.AutoEquipArmor:
+                        break;
+                    case Enums.QuestType.AutoEquipGauntlet:
+                        break;
+                    case Enums.QuestType.SummonSquad10:
+                        break;
+                    case Enums.QuestType.EquipSquad:
+                        break;
+                    case Enums.QuestType.PlayGoldDungeon:
+                        break;
+                    case Enums.QuestType.CompositeSword:
+                        break;
+                    case Enums.QuestType.CompositeBow:
+                        break;
+                    case Enums.QuestType.CompositeStaff:
+                        break;
+                    case Enums.QuestType.CompositeHelmet:
+                        break;
+                    case Enums.QuestType.CompositeArmor:
+                        break;
+                    case Enums.QuestType.CompositeGauntlet:
+                        break;
+                    case Enums.QuestType.PlayEnhanceStoneDungeon:
+                        break;
+                    case Enums.QuestType.LevelUpCharacter:
+                        break;
+                    case Enums.QuestType.SummonWeapon100:
+                        break;
+                    case Enums.QuestType.SummonGear100:
+                        break;
+                    case Enums.QuestType.LevelUpSquad:
+                        break;
+                    case Enums.QuestType.InitialQuest:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }   
             }
 
             UpdateQuestPanelUI();

@@ -63,9 +63,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         public Button[] squadScrollViewPanelButtons;
         public Button[] squadScrollViewPanelLockButtons;
 
-        [FormerlySerializedAs("previousWarriorEquippedEffect")] public Character previousWarrior;
-        [FormerlySerializedAs("previousArcherEquippedEffect")] public Character previousArcher;
-        [FormerlySerializedAs("previousWizardEquippedEffect")] public Character previousWizard;
+        public Character previousWarrior;
+        public Character previousArcher;
+        public Character previousWizard;
 
         private void OnEnable()
         {
@@ -254,6 +254,16 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
 
                 UpdateSquadScrollViewPanelButtonUI(i, i == index);
             }
+
+            var selectedCharacter = index switch
+            {
+                0 => SquadConfigureManager.Instance.WarriorDictionary[SquadConfigureManager.Instance.targetWarrior],
+                1 => SquadConfigureManager.Instance.ArchersDictionary[SquadConfigureManager.Instance.targetArcher],
+                2 => SquadConfigureManager.Instance.WizardsDictionary[SquadConfigureManager.Instance.targetWizard],
+                _ => throw new ArgumentOutOfRangeException(nameof(index), index, null)
+            };
+
+            UpdateSquadConfigurePanelSelectedCharacterInfoUI(selectedCharacter);
         }
 
         public void UpdateSquadScrollViewPanelButtonUI(int index, bool active)

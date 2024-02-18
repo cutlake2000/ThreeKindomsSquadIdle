@@ -103,10 +103,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             for (var i = 0; i < spawnTargetPosition.Count; i++)
             {
                 spawnTargetPosition[i].SetActive(i == index);
-                
-                UpdateEquipmentTypeUI(index);
-                UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[index]);
-                UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[index]);
             }
         }
 
@@ -115,11 +111,24 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             for (var i = 0; i < scrollViewEquipmentPanel.Length; i++)
             {
                 scrollViewEquipmentPanel[i].SetActive(i == index);
-
-                UpdateEquipmentTypeUI(index);
-                UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[index]);
-                UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[index]);
             }
+            
+            UpdateEquipmentTypeUI(index);
+            UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[index]);
+            UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[index]);
+            
+            var equippedEquipment = index switch
+            {
+                0 => InventoryManager.Instance.equippedSword,
+                1 => InventoryManager.Instance.equippedBow,
+                2 => InventoryManager.Instance.equippedStaff,
+                3 => InventoryManager.Instance.equippedHelmet,
+                4 => InventoryManager.Instance.equippedArmor,
+                5 => InventoryManager.Instance.equippedGauntlet,
+                _ => null
+            };
+
+            SelectEquipment(equippedEquipment);
         }
 
         public void UpdateEquipmentTypeUI(int index)

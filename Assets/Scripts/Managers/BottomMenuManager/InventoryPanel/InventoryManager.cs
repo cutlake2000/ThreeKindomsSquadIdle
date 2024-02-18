@@ -207,6 +207,30 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         if (equipment.isEquipped)
                         {
                             if (isExistHighValueEquipment == 0) isExistHighValueEquipment = -1; // 장착 중인 장비를 찾았다면 마킹
+
+                            switch (equipmentType)
+                            {
+                                case Enums.EquipmentType.Sword:
+                                    equippedSword = equipment;
+                                    break;
+                                case Enums.EquipmentType.Bow:
+                                    equippedBow = equipment;
+                                    break;
+                                case Enums.EquipmentType.Staff:
+                                    equippedStaff = equipment;
+                                    break;
+                                case Enums.EquipmentType.Helmet:
+                                    equippedHelmet = equipment;
+                                    break;
+                                case Enums.EquipmentType.Armor:
+                                    equippedArmor = equipment;
+                                    break;
+                                case Enums.EquipmentType.Gauntlet:
+                                    equippedGauntlet = equipment;
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
                                 
                             UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipmentType]
                                 .GetComponent<InventoryPanelSelectedItemUI>()
@@ -345,6 +369,30 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                 .GetComponent<InventoryPanelSelectedItemUI>()
                                 .UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon,
                                     equipmentBackgroundEffect, equipmentBackground);
+                            
+                            switch (equipmentType)
+                            {
+                                case Enums.EquipmentType.Sword:
+                                    equippedSword = equipment;
+                                    break;
+                                case Enums.EquipmentType.Bow:
+                                    equippedBow = equipment;
+                                    break;
+                                case Enums.EquipmentType.Staff:
+                                    equippedStaff = equipment;
+                                    break;
+                                case Enums.EquipmentType.Helmet:
+                                    equippedHelmet = equipment;
+                                    break;
+                                case Enums.EquipmentType.Armor:
+                                    equippedArmor = equipment;
+                                    break;
+                                case Enums.EquipmentType.Gauntlet:
+                                    equippedGauntlet = equipment;
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
          
                             SquadBattleManager.EquipAction?.Invoke(equipment);
                         }

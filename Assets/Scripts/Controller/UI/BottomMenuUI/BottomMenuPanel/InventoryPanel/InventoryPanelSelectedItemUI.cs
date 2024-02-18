@@ -15,8 +15,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         {
             equipmentTier.text = $"{tier}티어";
             equipmentIcon.sprite = icon;
-            equipmentBackgroundEffect.sprite = background;
-            equipmentBackground.sprite = backgroundEffect;
+            equipmentBackgroundEffect.sprite = backgroundEffect;
+            equipmentBackground.sprite = background;
         }
     }
 }
