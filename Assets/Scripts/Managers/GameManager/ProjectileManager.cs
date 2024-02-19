@@ -23,8 +23,7 @@ namespace Managers.GameManager
             objectPool = GetComponent<ObjectPool>();
         }
 
-        public void InstantiateBaseAttack(BigInteger damage, Vector2 startPosition, Vector2 direction,
-            Enums.PoolType poolType)
+        public void InstantiateBaseAttack(BigInteger damage, Vector2 startPosition, Vector2 direction, Enums.PoolType poolType, bool isCritical)
         {
             var obj = objectPool.SpawnFromPool(poolType);
 

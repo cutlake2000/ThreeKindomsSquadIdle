@@ -1,4 +1,5 @@
 using Controller.UI.BottomMenuUI;
+using Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel;
@@ -22,6 +23,7 @@ namespace Managers.GameManager
         [Space(5)] [Header("=== 스쿼드 패널 ===")] public SquadPanelUI squadPanelUI;
         [Space(5)] [Header("=== 인벤토리 패널 ===")] public InventoryPanelUI inventoryPanelUI;
         [Space(5)] [Header("=== 재능 패널 ===")] public TalentPanelUI talentPanelUI;
+        [Space(5)] [Header("=== 던전 패널 ===")] public DungeonPanelUI dungeonPanelUI;
         [Space(5)] [Header("=== 퀘스트 패널 ===")] public QuestPanelUI questPanelUI;
         [Space(5)] [Header("=== 소환 패널 ===")] public SummonPanelUI summonPanelUI;
         [Space(5)] [Header("=== 오프라인 보상 패널 ===")] public OffLineRewardUI offLineRewardUI;

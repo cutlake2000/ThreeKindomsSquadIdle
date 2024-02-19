@@ -14,6 +14,7 @@ namespace Controller.UI.BottomMenuUI
         [Header("버튼과 패널")]
         [SerializeField] private Button[] openButtons;
         [SerializeField] private Button[] closeButtons;
+        [SerializeField] private Button[] lockButtons;
         [SerializeField] private GameObject[] panels;
         
         [Header("백보드")]

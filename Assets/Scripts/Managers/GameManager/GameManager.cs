@@ -27,7 +27,6 @@ namespace Managers.GameManager
             
             UIManager.Instance.InitUIManager();
             
-            PushManager.Instance.InitializePushManager();
             offlineRewardController.InitKey();
 
             StageManager.Instance.StartStageRunner();

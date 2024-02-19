@@ -69,7 +69,6 @@ namespace Managers.GameManager
         [Header("=== 던전 보상 증가량 (%) ===")] public int increaseRewardPercent = 20;
 
         public int baseClearReward = 2000;
-        public DungeonItemUI[] dungeonItems;
 
         private void Awake()
         {
@@ -84,13 +83,13 @@ namespace Managers.GameManager
 
         private void InitializeEventListeners()
         {
-            for (var i = 0; i < dungeonItems.Length; i++)
+            for (var i = 0; i < UIManager.Instance.dungeonPanelUI.dungeonItems.Length; i++)
             {
                 var index = i;
-                dungeonItems[index].enterDungeonButton.onClick.AddListener(() =>
+                UIManager.Instance.dungeonPanelUI.dungeonItems[index].enterDungeonButton.onClick.AddListener(() =>
                 {
-                    if (dungeonItems[index].dungeonType == Enums.DungeonType.GoldDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) < 1) return;
-                    if (dungeonItems[index].dungeonType == Enums.DungeonType.SquadEnhanceStoneDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EnhanceDungeonTicket)) < 1) return;
+                    if (UIManager.Instance.dungeonPanelUI.dungeonItems[index].dungeonType == Enums.DungeonType.GoldDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) < 1) return;
+                    if (UIManager.Instance.dungeonPanelUI.dungeonItems[index].dungeonType == Enums.DungeonType.SquadEnhanceStoneDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EnhanceDungeonTicket)) < 1) return;
 
                     UpdateDungeonPanelScrollViewAllItemUI();
                     
@@ -115,7 +114,7 @@ namespace Managers.GameManager
                     dungeonUIs[index].SetActive(true);
                     dungeonMap[index].SetActive(true);
 
-                    if (dungeonItems[index].dungeonType == Enums.DungeonType.SquadEnhanceStoneDungeon)
+                    if (UIManager.Instance.dungeonPanelUI.dungeonItems[index].dungeonType == Enums.DungeonType.SquadEnhanceStoneDungeon)
                     {
                         CheckRemainedBossHealth += UpdateBossKillUI;
                         bossMonster = Instantiate(bossMonsterPrefab, bossMonsterSpawnPosition);
@@ -156,29 +155,29 @@ namespace Managers.GameManager
 
         private void UpdateDungeonPanelScrollViewAllItemUI()
         {
-            for (var i = 0; i < dungeonItems.Length; i++)
+            for (var i = 0; i < UIManager.Instance.dungeonPanelUI.dungeonItems.Length; i++)
             {
                 var level = ES3.Load($"{dungeonSo[i].dungeonType}/{nameof(currentDungeonLevel)}", 1);
                 BigInteger rewardCal = dungeonSo[i].reward * (increaseRewardPercent + 100) * level / 100;
                 
-                switch (dungeonItems[i].dungeonType)
+                switch (UIManager.Instance.dungeonPanelUI.dungeonItems[i].dungeonType)
                 {
                     case Enums.DungeonType.GoldDungeon:
-                        dungeonItems[i].UpdateButtonUI(int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) >= 1);
+                        UIManager.Instance.dungeonPanelUI.dungeonItems[i].UpdateButtonUI(int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) >= 1);
                         break;
                     case Enums.DungeonType.SquadEnhanceStoneDungeon:
-                        dungeonItems[i].UpdateButtonUI(int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EnhanceDungeonTicket)) >= 1);
+                        UIManager.Instance.dungeonPanelUI.dungeonItems[i].UpdateButtonUI(int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EnhanceDungeonTicket)) >= 1);
                         break;
                 }
                 
-                dungeonItems[i].UpdateDungeonItemUI(level, rewardCal);
+                UIManager.Instance.dungeonPanelUI.dungeonItems[i].UpdateDungeonItemUI(level, rewardCal);
             }
         }
         
         private void UpdateDungeonPanelScrollViewItemUI()
         {
             BigInteger rewardCal = dungeonSo[(int) currentDungeonType].reward * (increaseRewardPercent + 100) * currentDungeonLevel / 100;
-            dungeonItems[(int) currentDungeonType].UpdateDungeonItemUI(currentDungeonLevel, rewardCal);
+            UIManager.Instance.dungeonPanelUI.dungeonItems[(int) currentDungeonType].UpdateDungeonItemUI(currentDungeonLevel, rewardCal);
         }
 
         private void CalculateRemainedMonster()
@@ -287,7 +286,7 @@ namespace Managers.GameManager
             
             SetTimerUI(60);
 
-            StageManager.Instance.goToNextSubStage = true;
+            StageManager.Instance.prepareNewSubStage = true;
             StageManager.Instance.currentWave = 1;
             StageManager.Instance.isWaveTimerRunning = false;
             StageManager.Instance.initStageResult = true;
@@ -339,8 +338,8 @@ namespace Managers.GameManager
 
         private void UpdateBossKillUI(BigInteger currentHealth, BigInteger maxHealth)
         {
-            // dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{currentHealth.ChangeMoney()} / {maxHealth.ChangeMoney()}", BigInteger.ToInt32(currentHealth * 100 / maxHealth));
-            dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{BigInteger.ToInt32(currentHealth * 100 / maxHealth).ToString()} %", BigInteger.ToInt32(currentHealth * 100 / maxHealth));
+            // dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{BigInteger.ToInt32(currentHealth * 100 / maxHealth).ToString()} %", BigInteger.ToInt32(currentHealth * 100 / maxHealth));
+            dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{currentHealth.ChangeMoney()} / {maxHealth.ChangeMoney()} %", BigInteger.ToInt32(currentHealth * 100 / maxHealth));
         }
         
         private void SpawnSquad()

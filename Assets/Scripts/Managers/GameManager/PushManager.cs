@@ -27,7 +27,7 @@ namespace Managers.GameManager
             Instance = this;
         }
         
-        public void InitializePushManager()
+        private void Start()
         {
             dataDic = new Dictionary<string, PushNotesDataSO>();
             rewardRecieved = new Dictionary<string, bool>();
@@ -113,7 +113,7 @@ namespace Managers.GameManager
             foreach (var kvp in dataDic.Where(kvp => !rewardRecieved[kvp.Key]))
             {
                 Debug.Log($"Push: {kvp.Key}");
-                AndroidNotificationCenter.SendNotification(new AndroidNotification(kvp.Value.Title, kvp.Value.Desc, DateTime.Now.AddSeconds(kvp.Value.PushTime)), "channel_id");
+                AndroidNotificationCenter.SendNotification(new AndroidNotification(kvp.Value.Title, kvp.Value.Desc, DateTime.Now.AddMinutes(kvp.Value.PushTime)), "channel_id");
             }
         }
 #endif

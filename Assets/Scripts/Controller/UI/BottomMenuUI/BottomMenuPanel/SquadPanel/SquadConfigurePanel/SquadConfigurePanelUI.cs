@@ -105,7 +105,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             SquadConfigureManager.Instance.UpdateSquadConfigureModelOnMenu(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Wizard));
             
             StageManager.Instance.initStageResult = true;
-            StageManager.Instance.goToNextSubStage = true;
+            StageManager.Instance.prepareNewSubStage = true;
                 
             StageManager.Instance.StartStageRunner();
         }

@@ -7,7 +7,8 @@ namespace Data
             Dia,
             Gold,
             Exp,
-            Rare_5_Sword
+            Rare_5_Sword,
+            OfflineReward
         }
         
         public enum AchievementProperty

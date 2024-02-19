@@ -11,8 +11,7 @@ namespace Creature.CreatureClass.SquadClass
         protected override void SetCreatureStats()
         {
             base.SetCreatureStats();
-
-            damage = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardAtk);
+            
             attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.WizardAttackRange);
 
             animator.SetFloat(animationData.ClassTypeParameterHash, 2);
@@ -22,8 +21,10 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.OnNormalAttack();
             
-            ProjectileManager.Instance.InstantiateBaseAttack(damage, ProjectileSpawnPosition, Direction,
-                Enums.PoolType.ProjectileBaseAttackWizard);
+            ProjectileManager.Instance.InstantiateBaseAttack(Attack, ProjectileSpawnPosition, Direction,
+                Enums.PoolType.ProjectileBaseAttackWizard, isCriticalAttack);
+
+            isCriticalAttack = false;
         }
 
         protected override void OnSkillAttack()
@@ -40,7 +41,7 @@ namespace Creature.CreatureClass.SquadClass
 
                 SquadBattleManager.Instance.RunSkillCoolTimer(Enums.CharacterType.Wizard, i);
                 ProjectileManager.Instance.InstantiateSkillAttack(
-                    SquadBattleManager.Instance.wizardSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition,
+                    SquadBattleManager.Instance.wizardSkillCoolTimer[i].skill, ((Creature)this).Attack, ProjectileSpawnPosition,
                     currentTarget.transform.position);
                 SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate = false;
 

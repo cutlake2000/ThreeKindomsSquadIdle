@@ -28,12 +28,10 @@ namespace Creature.CreatureClass
         public Rigidbody2D rigid;
 
         public bool isDead;
-        public BigInteger damage;
-        public BigInteger currentHealth;
-        public BigInteger maxHealth;
-        public BigInteger defence;
-        // public BigInteger criticalRate;
-        // public BigInteger criticalDamage;
+        public BigInteger Attack;
+        protected BigInteger CurrentHealth;
+        protected BigInteger MaxHealth;
+        protected BigInteger Defence;
         public float attackSpeed;
         public float attackRange;
         public float moveSpeed;
@@ -131,8 +129,7 @@ namespace Creature.CreatureClass
 
         public void SetUIHealthBar()
         {
-            var sliderValue = currentHealth * 100 / maxHealth;
-            healthBar.value = int.Parse(sliderValue.ToString());
+            healthBar.value = BigInteger.ToInt32(CurrentHealth * 100 / MaxHealth);
         }
 
         public IEnumerator Fade(float start, float end)

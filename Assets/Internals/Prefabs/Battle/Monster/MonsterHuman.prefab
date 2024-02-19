@@ -146,6 +146,7 @@ MonoBehaviour:
   monsterSprites: []
   isEventHitRunning: 0
   effectHit: {fileID: 408973250710952138}
+  multiplierValue: 0
 --- !u!114 &1193017164611367188
 MonoBehaviour:
   m_ObjectHideFlags: 0

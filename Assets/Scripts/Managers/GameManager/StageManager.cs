@@ -45,10 +45,10 @@ namespace Managers.GameManager
         public GameObject stageResultUI;
 
         [Header("=== 스테이지 정보 ===")]
-        [SerializeField] private string currentMainStageName;
         public int currentStageIndex; // 누적 스테이지 정보
-        [SerializeField] private bool isClear;
         public int currentAccumulatedStage;
+        [SerializeField] private string currentMainStageName;
+        [SerializeField] private bool isClear;
         [SerializeField] private int currentMainStage;
         [SerializeField] private int currentSubStage;
         [SerializeField] public int currentWave;
@@ -58,15 +58,15 @@ namespace Managers.GameManager
         [SerializeField] private int currentSquadCount;
 
         [Header("--- 스테이지 러너 상태 ---")]
-        public bool challengeProgress;
+        public bool challengeProgress; // 돌파 / 반복 여부
         [SerializeField] private int maxSquadCount;
         [SerializeField] private int maxMainStageCounts;
         [SerializeField] private int subStageCountsPerMainStage;
         [SerializeField] private int waveCountsPerSubStage;
         [SerializeField] private int monsterSpawnCountsPerSubStage;
-        [SerializeField] public bool goToNextSubStage;
         [SerializeField] public bool isWaveTimerRunning;
         [SerializeField] private bool stopWaveTimer;
+        public bool prepareNewSubStage;
         public bool initStageResult;
 
         private void Awake()
@@ -87,13 +87,11 @@ namespace Managers.GameManager
             maxMainStageCounts = stageSo.MainStageInfos.Count;
             subStageCountsPerMainStage = stageSo.SubStageCountsPerMainStage;
             
-            // maxMainStageCounts = 1;
-            // subStageCountsPerMainStage = 3;
             waveCountsPerSubStage = stageSo.WaveCountsPerSubStage;
             monsterSpawnCountsPerSubStage = stageSo.MonsterSpawnCountsPerSubStage;
-            goToNextSubStage = true;
             stopWaveTimer = false;
             initStageResult = true;
+            prepareNewSubStage = true;
             
             maxSquadCount = 3;
             currentSquadCount = 3;
@@ -121,20 +119,19 @@ namespace Managers.GameManager
 
             if (currentRemainedMonsterCount > 0) return;
             
+            isClear = true;
             currentWave++;
 
             if (currentWave > waveCountsPerSubStage - 1)
             {
-                isClear = true;
+                stopWaveTimer = true;
+                prepareNewSubStage = true;
                 
                 if (challengeProgress)
                 {
                     currentSubStage++;
                     currentAccumulatedStage++;
                     QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.StageClear, currentAccumulatedStage);
-
-                    stopWaveTimer = true;
-                    goToNextSubStage = true;
 
                     if (currentSubStage > subStageCountsPerMainStage)
                     {
@@ -148,7 +145,6 @@ namespace Managers.GameManager
                             
                             stageUIController.SetStageProgressButton(false);
                             challengeProgress = false;
-                            goToNextSubStage = false;
                         }
                         
                         ES3.Save($"{nameof(StageManager)}/{nameof(currentMainStage)}", currentMainStage);
@@ -160,8 +156,6 @@ namespace Managers.GameManager
                 }
                 else
                 {
-                    goToNextSubStage = true;
-
                     ES3.Save($"{nameof(StageManager)}/{nameof(currentStageIndex)}", currentSubStage);
                 }
             }
@@ -177,7 +171,6 @@ namespace Managers.GameManager
             if (currentSquadCount > 0) return;
             isClear = false;
             stopWaveTimer = true;
-            goToNextSubStage = true;
             currentSquadCount = maxSquadCount;
             
             currentSubStage--;
@@ -193,16 +186,16 @@ namespace Managers.GameManager
                 else
                 {
                     currentSubStage = 1;
-                    currentAccumulatedStage++;
+                    currentAccumulatedStage = 1;
                 }
             }
 
             challengeProgress = false;
+            prepareNewSubStage = true;
+            
             ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
             ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
             CheckStageProgressType.Invoke(challengeProgress);
-            
-            currentRemainedMonsterCount = 0;
             
             StartCoroutine(StageRunner());
         }
@@ -212,7 +205,6 @@ namespace Managers.GameManager
             if (waveTime > 0) return;
             isClear = false;
             stopWaveTimer = true;
-            goToNextSubStage = true;
             
             currentSubStage--;
             currentAccumulatedStage--;
@@ -232,6 +224,8 @@ namespace Managers.GameManager
             }
             
             challengeProgress = false;
+            prepareNewSubStage = true;
+            
             ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
             ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
             CheckStageProgressType.Invoke(challengeProgress);
@@ -249,8 +243,8 @@ namespace Managers.GameManager
         {
             SetCurrentMainStageInfo();
             UpdateSliderUI();
-            
-            if (goToNextSubStage)
+
+            if (prepareNewSubStage)
             {
                 if (initStageResult == false)
                 {
@@ -261,6 +255,7 @@ namespace Managers.GameManager
                     yield return new WaitForSeconds(2f);
                 }
                 
+                DespawnMonster();
                 DespawnSquad();
 
                 if (initStageResult == false)
@@ -287,17 +282,19 @@ namespace Managers.GameManager
                 
                 SpawnSquad();
                 currentWave = 0;
-                goToNextSubStage = false;
                 initStageResult = false;
+                isClear = false;
+                prepareNewSubStage = false;
                 
                 UpdateAllStageUI();
                 SquadBattleManager.Instance.cameraController.SetCameraTarget(SquadConfigureManager.Instance.modelSpawnPoints[0].transform);
                 
                 yield return new WaitForSeconds(1.0f);
+                UpdateAllStageUI();
             }
-
-            UpdateAllStageUI();
+        
             SpawnMonster();
+            
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
         }
 

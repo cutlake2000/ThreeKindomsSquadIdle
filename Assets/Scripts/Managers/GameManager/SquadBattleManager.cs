@@ -40,9 +40,9 @@ namespace Managers.GameManager
 
         [SerializeField] private Vector3[] squadSpawnPosition;
 
-        [Space(5)] [Header("=== Squad Battle Info ===")] [Header("공격 범위")] [SerializeField]
-        private float warriorAttackRange;
-
+        [Space(5)] [Header("=== Squad Battle Info ===")]
+        [Header("공격 범위")]
+        [SerializeField] private float warriorAttackRange;
         [SerializeField] private float archerAttackRange;
         [SerializeField] private float wizardAttackRange;
 
@@ -52,18 +52,14 @@ namespace Managers.GameManager
 
         [Space(3)]
         [Header("=== 스킬 쿨타임 ===")] //TODO: 스킬 쿨 다운을 ScriptableObject에서 긁어와야 함
-        [Header("Auto")]
-        public bool autoSkill;
-
+        [Header("자동 스킬 여부")] public bool autoSkill;
         [Header("워리어")] public SkillCoolTimer[] warriorSkillCoolTimer;
-
         [Header("아처")] public SkillCoolTimer[] archerSkillCoolTimer;
-
         [Header("위자드")] public SkillCoolTimer[] wizardSkillCoolTimer;
 
-        [Space(5)] [Header("=== Squad Stats Info ===")] [Header("스킬 데미지")] [SerializeField]
-        public List<int> warriorSkillDamagePercent;
-
+        [Space(5)] [Header("=== Squad Stats Info ===")]
+        [Header("스킬 데미지")]
+        [SerializeField] public List<int> warriorSkillDamagePercent;
         [SerializeField] public List<int> archerSkillDamagePercent;
         [SerializeField] public List<int> wizardSkillDamagePercent;
 
@@ -88,7 +84,9 @@ namespace Managers.GameManager
         [Header("워리어 공격력 보정치 (%)")] public int warriorTotalAttackAdjustValue;
         [Header("아처 공격력 보정치 (%)")] public int archerTotalAttackAdjustValue;
         [Header("위자드 공격력 보정치 (%)")] public int wizardTotalAttackAdjustValue;
-        [Header("데미지 감소 보정치 (높을수록 더 낮은 감소 수치)")] public int damageReduction;
+        [Header("워리어 데미지 감소 보정치 (%)")] public int warriorDamageReduction;
+        [Header("아처 데미지 감소 보정치 (%)")] public int archerDamageReduction;
+        [Header("위자드 데미지 감소 보정치 (%)")] public int wizardDamageReduction;
 
         public SquadLevel SquadLevel;
 
@@ -208,7 +206,7 @@ namespace Managers.GameManager
                     totalArcherAttack = statValue;
                     totalWizardAttack = statValue;
 
-                    foreach (var squad in squads) squad.GetComponent<Squad>().damage = statValue;
+                    foreach (var squad in squads) squad.GetComponent<Squad>().Attack = statValue;
 
                     break;
                 case Enums.SquadStatType.Health:

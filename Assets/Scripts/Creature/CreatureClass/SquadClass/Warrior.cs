@@ -11,8 +11,7 @@ namespace Creature.CreatureClass.SquadClass
         protected override void SetCreatureStats()
         {
             base.SetCreatureStats();
-
-            damage = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorAtk);
+            
             attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.WarriorAttackRange);
 
             animator.SetFloat(animationData.ClassTypeParameterHash, 0);
@@ -24,8 +23,10 @@ namespace Creature.CreatureClass.SquadClass
             
             // Debug.Log("워리어 공격");
 
-            ProjectileManager.Instance.InstantiateBaseAttack(damage, Vector2.zero, Direction,
-                Enums.PoolType.ProjectileBaseAttackWarrior);
+            ProjectileManager.Instance.InstantiateBaseAttack(Attack, Vector2.zero, Direction,
+                Enums.PoolType.ProjectileBaseAttackWarrior, isCriticalAttack);
+
+            isCriticalAttack = false;
         }
 
         protected override void OnSkillAttack()
@@ -42,7 +43,7 @@ namespace Creature.CreatureClass.SquadClass
 
                 SquadBattleManager.Instance.RunSkillCoolTimer(Enums.CharacterType.Warrior, i);
                 ProjectileManager.Instance.InstantiateSkillAttack(
-                    SquadBattleManager.Instance.warriorSkillCoolTimer[i].skill, damage, ProjectileSpawnPosition,
+                    SquadBattleManager.Instance.warriorSkillCoolTimer[i].skill, ((Creature)this).Attack, ProjectileSpawnPosition,
                     currentTarget.transform.position);
                 SquadBattleManager.Instance.warriorSkillCoolTimer[i].orderToInstantiate = false;
 

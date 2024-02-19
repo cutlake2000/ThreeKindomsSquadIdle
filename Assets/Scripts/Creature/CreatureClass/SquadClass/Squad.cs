@@ -16,16 +16,20 @@ namespace Creature.CreatureClass.SquadClass
     public class Squad : Creature
     {
         [Header("Class")] [SerializeField] public Enums.CharacterType characterType;
-
         [Header("Sprite")] [SerializeField] public SPUM_SpriteList spumSprite;
-
+        [Header("Model")] public GameObject characterModel;
+        [Header("Projectile")] protected Vector2 ProjectileSpawnPosition;
+        [Header("StateMachine")] private SquadStateMachine squadStateMachine;
+        
         protected Vector2 Direction;
 
-        [Header("Projectile")] protected Vector2 ProjectileSpawnPosition;
+        protected BigInteger attack;
+        protected BigInteger criticalRate;
+        protected BigInteger criticalDamage;
+        protected BigInteger penetration;
+        protected BigInteger accuracy;
 
-        [Header("StateMachine")] private SquadStateMachine squadStateMachine;
-
-        [Header("Model")] public GameObject characterModel;
+        protected bool isCriticalAttack;
 
         protected override void OnEnable()
         {
@@ -96,29 +100,50 @@ namespace Creature.CreatureClass.SquadClass
 
         protected override void SetCreatureStats()
         {
-            maxHealth = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Health);
-            defence = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Defence);
+            attack = characterType switch
+            {
+                Enums.CharacterType.Warrior => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorAtk),
+                Enums.CharacterType.Archer => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherAtk),
+                Enums.CharacterType.Wizard => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardAtk),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            MaxHealth = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Health);
+            Defence = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Defence);
+            criticalRate = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.CriticalRate);
+            criticalDamage = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.CriticalDamage);
+            accuracy = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Accuracy);
+            penetration = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Penetration);
+            
             moveSpeed = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.MoveSpeed);
             followRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.FollowRange);
 
-            currentHealth = maxHealth;
+            CurrentHealth = MaxHealth;
             isDead = false;
             currentTarget = null;
         }
 
         public void TakeDamage(BigInteger inputDamage)
         {
-            var randomDamage = Random.Range(-SquadBattleManager.Instance.totalAttackAdjustValue, SquadBattleManager.Instance.totalAttackAdjustValue + 1) + 100;
-            var reduction = defence * 100 / (defence + SquadBattleManager.Instance.damageReduction) + 100;
-            var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
-            currentHealth -= adjustDamage;
+            var damageReduction = characterType switch
+            {
+                Enums.CharacterType.Warrior => SquadBattleManager.Instance.warriorDamageReduction,
+                Enums.CharacterType.Archer => SquadBattleManager.Instance.archerDamageReduction,
+                Enums.CharacterType.Wizard => SquadBattleManager.Instance.wizardDamageReduction,
+                _ => throw new ArgumentOutOfRangeException()
+            };
             
-            currentHealth = currentHealth < 0 ? 0 : currentHealth;
+            var randomDamage = Random.Range(-SquadBattleManager.Instance.totalAttackAdjustValue, SquadBattleManager.Instance.totalAttackAdjustValue + 1) + 100;
+            var reduction = 100 * inputDamage / (inputDamage + Defence + damageReduction);
+            var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
+            
+            CurrentHealth -= adjustDamage;
+            
+            CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;
             SetUIHealthBar();
 
             // Debug.Log($"{gameObject.name} {damage} 데미지!");
 
-            if (currentHealth > 0 && !isDead) return;
+            if (CurrentHealth > 0 && !isDead) return;
             isDead = true;
             hpBar.gameObject.SetActive(false);
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
@@ -154,6 +179,20 @@ namespace Creature.CreatureClass.SquadClass
 
             ProjectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
             Direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
+            
+            var criticalRateCheck = Random.Range(0, 101);
+
+            attack += accuracy + penetration;
+            
+            if (criticalRate >= criticalRateCheck)
+            {
+                attack = attack * criticalDamage / 100;
+                isCriticalAttack = true;
+            }
+            else
+            {
+                isCriticalAttack = false;
+            }
         }
 
         protected virtual void OnNormalAttackEffect()

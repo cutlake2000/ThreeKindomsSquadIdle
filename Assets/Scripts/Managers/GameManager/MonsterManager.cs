@@ -31,14 +31,13 @@ namespace Managers.GameManager
         [SerializeField] private List<NormalMonster> activeMonsters = new();
 
         public int monsterNewCount = 20;
-
-        private readonly Dictionary<string, float> animationLengths = new();
+        
         private readonly int[] spawnXs = { -10, 10, 0 };
         private Dictionary<Enums.MonsterClassType, Queue<NormalMonster>> monsterNewPools;
         private int spawnCount;
         
-        [Header("피해량 보정 (+% / -%)")] public int totalAttackAdjustValue;
-        [Header("데미지 감소 보정치 (높을수록 더 낮은 감소 수치)")] public int damageReduction;
+        [Header("피해량 보정 (%)")] public int totalAttackAdjustValue;
+        [Header("데미지 감소 보정치 (%)")] public int damageReduction;
 
         private void Awake()
         {
@@ -97,12 +96,12 @@ namespace Managers.GameManager
             spawnCount = (spawnCount + 1) % spawnXs.Length;
         }
 
-        public void SpawnMonsters(Enums.MonsterClassType monsterNewClassType, int stageLevel, int count)
+        public void SpawnMonsters(Enums.MonsterClassType monsterNewClassType, int multiplierValue, int count)
         {
             for (var i = 0; i < count; i++)
             {
                 var monsterNew = GetMonster(monsterNewClassType);
-                monsterNew.GetComponent<NormalMonster>().MultiplyNormalMonsterStats(stageLevel);
+                monsterNew.GetComponent<NormalMonster>().multiplierValue = multiplierValue;
                 PositionMonster(monsterNew);
             }
         }

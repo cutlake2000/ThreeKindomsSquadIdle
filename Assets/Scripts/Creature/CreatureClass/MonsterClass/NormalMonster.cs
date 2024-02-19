@@ -31,6 +31,7 @@ namespace Creature.CreatureClass.MonsterClass
         [Header("StateMachine")] private MonsterStateMachine monsterStateMachine;
 
         [Header("Projectile")] private Vector2 projectileSpawnPosition;
+        [Header("MultiplierValue")] public int multiplierValue;
         
         protected void Start()
         {
@@ -94,12 +95,16 @@ namespace Creature.CreatureClass.MonsterClass
 
         protected override void SetCreatureStats()
         {
-            //TODO: 추후에 MonsterManager에서 가지고 오도록
-            maxHealth = MonsterManager.Instance.normalMonsterBaseStats.maxHealth;
-            currentHealth = maxHealth;
-            defence = MonsterManager.Instance.normalMonsterBaseStats.defence;
+            var increaseValue = MonsterManager.Instance.increaseMonsterStatValue;
+
+            if (multiplierValue == 0) multiplierValue = 1;
+            
+            MaxHealth = MonsterManager.Instance.normalMonsterBaseStats.maxHealth * increaseValue / 100 * multiplierValue;
+            CurrentHealth = MaxHealth;
+            Defence = MonsterManager.Instance.normalMonsterBaseStats.defence * increaseValue / 100 * multiplierValue;
+            Attack = MonsterManager.Instance.normalMonsterBaseStats.damage * increaseValue / 100 * multiplierValue;
+            
             moveSpeed = MonsterManager.Instance.normalMonsterBaseStats.moveSpeed;
-            damage = MonsterManager.Instance.normalMonsterBaseStats.damage;
             followRange = MonsterManager.Instance.normalMonsterBaseStats.followRange;
             
             isDead = false;
@@ -107,23 +112,16 @@ namespace Creature.CreatureClass.MonsterClass
             currentTarget = null;
         }
 
-        public void MultiplyNormalMonsterStats(int stageLevel)
-        {
-            var increaseValue = MonsterManager.Instance.increaseMonsterStatValue;
-            maxHealth = MonsterManager.Instance.normalMonsterBaseStats.maxHealth * increaseValue / 100 * stageLevel;
-            currentHealth = maxHealth;
-            defence = MonsterManager.Instance.normalMonsterBaseStats.maxHealth * increaseValue / 100 * stageLevel;
-            damage = MonsterManager.Instance.normalMonsterBaseStats.maxHealth * increaseValue / 100 * stageLevel;
-        }
-
         public override void TakeDamage(BigInteger inputDamage)
         {
             var randomDamage = Random.Range(-MonsterManager.Instance.totalAttackAdjustValue, MonsterManager.Instance.totalAttackAdjustValue + 1) + 100;
-            var reduction = defence * 100 / (defence + MonsterManager.Instance.damageReduction) + 100;
+            var damageReductionPercentage = MonsterManager.Instance.damageReduction;
+            var reduction = 100 * inputDamage / (inputDamage + Defence + damageReductionPercentage);
             var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
-            currentHealth -= adjustDamage;
             
-            currentHealth = currentHealth < 0 ? 0 : currentHealth;
+            CurrentHealth -= adjustDamage;
+            
+            CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;
             SetUIHealthBar();
 
             effectHit.Play();
@@ -136,7 +134,7 @@ namespace Creature.CreatureClass.MonsterClass
 
             if (isEventHitRunning == false && !isDead) StartCoroutine(EventHit());
 
-            if (currentHealth > 0 || isDead) return;
+            if (CurrentHealth > 0 || isDead) return;
             isDead = true;
             hpBar.gameObject.SetActive(false);
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
@@ -167,8 +165,8 @@ namespace Creature.CreatureClass.MonsterClass
             projectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
             direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
 
-            ProjectileManager.Instance.InstantiateBaseAttack(damage, projectileSpawnPosition, direction,
-                Enums.PoolType.ProjectileBaseAttackMonster);
+            ProjectileManager.Instance.InstantiateBaseAttack(Attack, projectileSpawnPosition, direction,
+                Enums.PoolType.ProjectileBaseAttackMonster, false);
         }
 
         private IEnumerator EventHit()

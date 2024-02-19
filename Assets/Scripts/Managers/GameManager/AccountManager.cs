@@ -198,12 +198,12 @@ namespace Managers.GameManager
                 case Enums.CurrencyType.GoldDungeonTicket:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.GoldDungeonTicket);
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyGold}>      {BigInteger.ChangeMoney(amount)}";
-                    DungeonManager.Instance.dungeonItems[0].UpdateButtonUI(int.Parse(currency.amount) >= 1);
+                    UIManager.Instance.dungeonPanelUI.dungeonItems[0].UpdateButtonUI(int.Parse(currency.amount) >= 1);
                     break;
                 case Enums.CurrencyType.EnhanceDungeonTicket:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.EnhanceDungeonTicket);
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyEnhanceStoneSquad}>     {BigInteger.ChangeMoney(amount)}";
-                    DungeonManager.Instance.dungeonItems[1].UpdateButtonUI(int.Parse(currency.amount) >= 1);
+                    UIManager.Instance.dungeonPanelUI.dungeonItems[1].UpdateButtonUI(int.Parse(currency.amount) >= 1);
                     break;
             }
         }

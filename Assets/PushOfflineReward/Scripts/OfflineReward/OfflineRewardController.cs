@@ -39,8 +39,7 @@ namespace PushOfflineReward.Scripts.OfflineReward
     
             var ts = DateTime.Now - startTime;
             timePassed = (float)ts.TotalSeconds;
-
-            PushManager.Instance.InitializePushManager();
+            
             ManagePushRewards();
     
             if (timePassed >= minTime)   //10 Minutes 600  //30 Minutes 1800  // 3시간 10800  //4시간 14400
@@ -87,7 +86,8 @@ namespace PushOfflineReward.Scripts.OfflineReward
     
         private void ManagePushRewards()
         {
-            var pushDatas = PushManager.Instance.GetUnrecievedRewardDatas((int)timePassed / 3600);
+            const int timerSet = 60; // 0 - 초, 60 - 분, 3600 - 시간
+            var pushDatas = PushManager.Instance.GetUnrecievedRewardDatas((int)timePassed / timerSet);
             rewards = new List<Reward>();
     
             foreach (var data in pushDatas)
