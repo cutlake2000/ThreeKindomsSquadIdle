@@ -1,5 +1,6 @@
 using System;
 using Controller.Effects;
+using Controller.UI;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel;
 using Creature.Data;
 using Data;
@@ -47,6 +48,8 @@ namespace Managers.BottomMenuManager.SquadPanel
                 
                 squadStatItem[i].GetComponent<SquadStatPanelItemUI>().upgradeButton.GetComponent<HoldButton>().onHold
                     .AddListener(() => UpgradeSquadStatPanelStat(index));
+                
+                squadStatItem[i].GetComponent<SquadStatPanelItemUI>().upgradeBlockButton.GetComponent<LockButtonUI>().InitializeEventListener();
             }
         }
 

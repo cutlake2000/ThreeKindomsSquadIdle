@@ -98,7 +98,7 @@ namespace Managers.GameManager
 
             cameraController.InitCameraTarget(squads[0].transform);
 
-            autoSkill = true;
+            autoSkill = ES3.Load("AutoSkill", false);
         }
 
         public void InitSquadManager()
@@ -245,7 +245,7 @@ namespace Managers.GameManager
             // TODO: 장착 시 스탯 증가 반영해야 함
             foreach (var equippedEffect in equipment.equippedEffects)
             {
-                squadEntireStat.UpdateStat(equippedEffect.statType, equippedEffect.increaseValue, true);
+                squadEntireStat.UpdateStat(equippedEffect.statType, equippedEffect.increaseValue, equippedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
             }
             
             // foreach (var ownedEffect in equipment.ownedEffects)

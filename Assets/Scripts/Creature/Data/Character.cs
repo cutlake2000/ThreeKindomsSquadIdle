@@ -33,15 +33,16 @@ namespace Creature.Data
         [Header("장착 여부")] public bool isEquipped;
         [Header("보유 여부")] public bool isPossessed;
 
-        [field: Space(5)] [field: Header("스킬 효과")]
+        [field: Space(5)]
+        [field: Header("스킬 효과")]
         public CharacterSkill[] characterSkills;
 
-        [field: Space(5)] [field: Header("장착 효과")]
-        public List<CharacterEffect> characterEquippedEffects;
-
+        [field: Space(5)]
+        [field: Header("장착 효과")] public List<CharacterEffect> characterEquippedEffects;
         [field: Header("보유 효과")] public List<CharacterEffect> characterOwnedEffects;
 
-        [Space(5)] [Header("프리팹 모델")] public int characterModelIndex;
+        [Space(5)]
+        [Header("프리팹 모델")] public int characterModelIndex;
         [Header("ES3 Loader")] public CharacterES3Loader characterES3Loader;
 
         public GameObject characterModel;
@@ -202,9 +203,8 @@ namespace Creature.Data
 
             foreach (var ownedEffect in characterOwnedEffects)
             {
-                ownedEffect.increaseValue = ownedEffect.increaseValue + ownedEffect.increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
-                var isBaseStat = ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat;
-                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), ownedEffect.increaseValue, isBaseStat);
+                ownedEffect.increaseValue += ownedEffect.increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
             }
         }
     }

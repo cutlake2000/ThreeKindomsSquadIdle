@@ -31,8 +31,6 @@ namespace Controller.UI.TopMenuUI.QuestPanel
         {
             if (QuestManager.Instance.initialQuestMark.activeInHierarchy) QuestManager.Instance.initialQuestMark.SetActive(false);
             
-            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.InitialQuest, 1);
-            
             if (QuestManager.Instance.isCurrentQuestClear)
             {
                 if (QuestManager.Instance.currentQuestTarget.targetMarks != null)
@@ -43,10 +41,15 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                     }
                 }
                 
-                QuestManager.Instance.isCurrentQuestClear = false;
-                QuestManager.Instance.TargetQuestClear();
+                QuestManager.Instance.UpdateQuestRewardPanelUI();
             }
-            else if (QuestManager.Instance.currentQuest.questType != Enums.QuestType.StageClear)
+            else if (QuestManager.Instance.currentQuest.questType != Enums.QuestType.InitialQuest
+                     && QuestManager.Instance.currentQuest.questType != Enums.QuestType.StageClear
+                     && QuestManager.Instance.currentQuest.questType != Enums.QuestType.TouchChallengeButton
+                     && QuestManager.Instance.currentQuest.questType != Enums.QuestType.TouchLoopButton
+                     && QuestManager.Instance.currentQuest.questType != Enums.QuestType.TouchAutoSkillButton
+                     && QuestManager.Instance.currentQuest.questType != Enums.QuestType.ArcherCamera
+                     && QuestManager.Instance.currentQuest.questType != Enums.QuestType.WarriorCamera)
             {
                 QuestManager.Instance.backboardPanel.SetActive(true);
                 
@@ -151,23 +154,7 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                     case Enums.QuestType.LevelUpCharacter:
                         UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem = SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Warrior);
                         UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigurePanelSelectedCharacterInfoUI(UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem);
-                        //TODO : 레벨 업 버튼 업데이트
-                        
                         break;
-                    case Enums.QuestType.AttackTalentLevel:
-                        break;
-                    case Enums.QuestType.HealthTalentLevel:
-                        break;
-                    case Enums.QuestType.StageClear:
-                        break;
-                    case Enums.QuestType.PlayGoldDungeon:
-                        break;
-                    case Enums.QuestType.PlayEnhanceStoneDungeon:
-                        break;
-                    case Enums.QuestType.LevelUpSquad:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
                 
                 foreach (var target in QuestManager.Instance.currentQuestTarget.activeTarget)
@@ -179,6 +166,8 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                     target.SetActive(false);
                 }
             }
+            
+            QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.InitialQuest, 1);
         }
 
         public void UpdateQuestPanelUI(Sprite sprite, string reward, string description)

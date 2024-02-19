@@ -98,11 +98,14 @@ namespace Creature.CreatureClass.MonsterClass
             var increaseValue = MonsterManager.Instance.increaseMonsterStatValue;
 
             if (multiplierValue == 0) multiplierValue = 1;
+
+            var increaseValueToFloat = increaseValue / 100.0f;
+            var multiplier = Mathf.Pow(increaseValueToFloat, multiplierValue);
             
-            MaxHealth = MonsterManager.Instance.normalMonsterBaseStats.maxHealth * increaseValue / 100 * multiplierValue;
+            MaxHealth = MonsterManager.Instance.normalMonsterBaseStats.maxHealth * Mathf.FloorToInt(multiplier);
             CurrentHealth = MaxHealth;
-            Defence = MonsterManager.Instance.normalMonsterBaseStats.defence * increaseValue / 100 * multiplierValue;
-            Attack = MonsterManager.Instance.normalMonsterBaseStats.damage * increaseValue / 100 * multiplierValue;
+            Defence = MonsterManager.Instance.normalMonsterBaseStats.defence * Mathf.FloorToInt(multiplier);
+            Attack = MonsterManager.Instance.normalMonsterBaseStats.damage * Mathf.FloorToInt(multiplier);
             
             moveSpeed = MonsterManager.Instance.normalMonsterBaseStats.moveSpeed;
             followRange = MonsterManager.Instance.normalMonsterBaseStats.followRange;

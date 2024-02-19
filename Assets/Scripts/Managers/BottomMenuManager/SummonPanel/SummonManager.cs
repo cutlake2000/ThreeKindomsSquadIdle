@@ -255,7 +255,7 @@ namespace Managers.BottomMenuManager.SummonPanel
 
                         foreach (var ownedEffect in targetCharacter.characterOwnedEffects)
                         {
-                            SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, false);
+                            SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
                         }
                     }
                     

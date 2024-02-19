@@ -1585,6 +1585,24 @@ namespace Keiwando.BigInteger
 			}
 			return System.Int32.Parse(value.ToString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture);
 		}
+		
+		public static long ToInt64Safely(BigInteger value)
+		{
+			if (object.ReferenceEquals(value, null))
+			{
+				throw new ArgumentNullException("value");
+			}
+			return long.Parse(value.ToString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture);
+		}
+
+		public static ulong ToUInt64Safely(BigInteger value)
+		{
+			if (object.ReferenceEquals(value, null))
+			{
+				throw new ArgumentNullException("value");
+			}
+			return ulong.Parse(value.ToString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture);
+		}
 
 		/// <summary>
 		/// Returns BigInteger as System.UInt32 if possible.

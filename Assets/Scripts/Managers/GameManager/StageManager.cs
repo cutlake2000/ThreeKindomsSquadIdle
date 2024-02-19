@@ -131,7 +131,6 @@ namespace Managers.GameManager
                 {
                     currentSubStage++;
                     currentAccumulatedStage++;
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.StageClear, currentAccumulatedStage);
 
                     if (currentSubStage > subStageCountsPerMainStage)
                     {
@@ -151,16 +150,12 @@ namespace Managers.GameManager
                     }
                     
                     QuestManager.Instance.IncreaseQuestProgress(Enums.QuestType.StageClear, currentAccumulatedStage);
+                    
                     ES3.Save($"{nameof(StageManager)}/{nameof(currentSubStage)}", currentSubStage);
                     ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
                 }
-                else
-                {
-                    ES3.Save($"{nameof(StageManager)}/{nameof(currentStageIndex)}", currentSubStage);
-                }
             }
             
-            currentRemainedMonsterCount = 0;
             StartCoroutine(StageRunner());
         }
 
@@ -171,7 +166,6 @@ namespace Managers.GameManager
             if (currentSquadCount > 0) return;
             isClear = false;
             stopWaveTimer = true;
-            currentSquadCount = maxSquadCount;
             
             currentSubStage--;
             currentAccumulatedStage--;
@@ -182,11 +176,11 @@ namespace Managers.GameManager
                 {
                     currentMainStage--;
                     currentSubStage = subStageCountsPerMainStage;
+                    ES3.Save($"{nameof(StageManager)}/{nameof(currentMainStage)}", currentMainStage);
                 }
                 else
                 {
                     currentSubStage = 1;
-                    currentAccumulatedStage = 1;
                 }
             }
 
@@ -194,7 +188,10 @@ namespace Managers.GameManager
             prepareNewSubStage = true;
             
             ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
+            
+            ES3.Save($"{nameof(StageManager)}/{nameof(currentSubStage)}", currentSubStage);
             ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
+            
             CheckStageProgressType.Invoke(challengeProgress);
             
             StartCoroutine(StageRunner());
@@ -208,18 +205,18 @@ namespace Managers.GameManager
             
             currentSubStage--;
             currentAccumulatedStage--;
-
+            
             if (currentSubStage < 1)
             {
                 if (currentMainStage > 1)
                 {
                     currentMainStage--;
                     currentSubStage = subStageCountsPerMainStage;
+                    ES3.Save($"{nameof(StageManager)}/{nameof(currentMainStage)}", currentMainStage);
                 }
                 else
                 {
                     currentSubStage = 1;
-                    currentAccumulatedStage++;
                 }
             }
             
@@ -227,6 +224,8 @@ namespace Managers.GameManager
             prepareNewSubStage = true;
             
             ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
+            
+            ES3.Save($"{nameof(StageManager)}/{nameof(currentSubStage)}", currentSubStage);
             ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
             CheckStageProgressType.Invoke(challengeProgress);
             
@@ -326,23 +325,25 @@ namespace Managers.GameManager
 
         private void SpawnSquad()
         {
-            currentSquadCount = maxSquadCount;
+            currentSquadCount += maxSquadCount;
             SquadBattleManager.Instance.SpawnSquad();
         }
 
         private void DespawnSquad()
         {
+            currentSquadCount = 0;
             SquadBattleManager.Instance.DespawnSquad();
         }
 
         private void SpawnMonster()
         {
-            currentRemainedMonsterCount = monsterSpawnCountsPerSubStage;
+            currentRemainedMonsterCount += monsterSpawnCountsPerSubStage;
             MonsterManager.Instance.SpawnMonsters(stageSo.MainStageInfos[currentMainStage - 1].MainStageMonsterTypes, currentAccumulatedStage, monsterSpawnCountsPerSubStage);
         }
 
         private void DespawnMonster()
         {
+            currentRemainedMonsterCount = 0;
             MonsterManager.Instance.DespawnAllMonster();
         }
 

@@ -42,6 +42,9 @@ namespace Controller.UI.TopMenuUI.SkillPanel
 
         public void InitializeEventListener()
         {
+            runAutoSkill.SetActive(SquadBattleManager.Instance.autoSkill);
+            stopAutoSkill.SetActive(!SquadBattleManager.Instance.autoSkill);
+            
             skillAutoUseButton.onClick.AddListener(RunAutoSkill);
         }
 
@@ -51,14 +54,19 @@ namespace Controller.UI.TopMenuUI.SkillPanel
             {
                 stopAutoSkill.SetActive(true);
                 runAutoSkill.SetActive(false);
-
+                
+                ES3.Save("AutoSkill", false);
+                
                 SquadBattleManager.Instance.autoSkill = false;
             }
             else
             {
                 stopAutoSkill.SetActive(false);
                 runAutoSkill.SetActive(true);
+                
+                ES3.Save("AutoSkill", true);
 
+                QuestManager.Instance.IncreaseQuestProgressAction(Enums.QuestType.TouchAutoSkillButton, 1);
                 SquadBattleManager.Instance.autoSkill = true;
             }
         }
@@ -69,15 +77,14 @@ namespace Controller.UI.TopMenuUI.SkillPanel
     {
         [Header("=== Auto 버튼 ===")] public SkillAutoUseButtonUI skillAutoUseButton;
 
-        [Header("=== 스쿼드 스킬 쿨타임 UI ===")] [Header("--- 스쿼드 아이콘 ---")]
+        [Header("=== 스쿼드 스킬 쿨타임 UI ===")]
+        [Header("--- 스쿼드 아이콘 ---")]
         public Image warriorIcon;
-
         public Image archerIcon;
         public Image wizardIcon;
 
         [Space(5)] [Header("--- 스킬 쿨타임 UI ---")]
         public SkillSlotUI[] warriorSkillCoolTimerUI;
-
         public SkillSlotUI[] archerSkillCoolTimerUI;
         public SkillSlotUI[] wizardSkillCoolTimerUI;
 

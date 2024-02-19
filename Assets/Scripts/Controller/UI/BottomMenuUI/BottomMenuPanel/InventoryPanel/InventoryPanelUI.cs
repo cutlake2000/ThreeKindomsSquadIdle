@@ -207,29 +207,29 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
 
             selectEquipmentEquippedEffect1.text = equipment.equippedEffects[0].statType switch
             {
-                Enums.SquadStatType.Attack => $"공격력 {equipment.equippedEffects[0].increaseValue} 증가",
-                Enums.SquadStatType.Health => $"체력 {equipment.equippedEffects[0].increaseValue} 증가",
+                Enums.SquadStatType.Attack => $"공격력 {UIManager.FormatCurrency(equipment.equippedEffects[0].increaseValue)}% 증가",
+                Enums.SquadStatType.Health => $"체력 {UIManager.FormatCurrency(equipment.equippedEffects[0].increaseValue)}% 증가",
                 _ => throw new ArgumentOutOfRangeException()
             };
             
             selectEquipmentEquippedEffect2.text = equipment.equippedEffects[1].statType switch
             {
-                Enums.SquadStatType.Attack => $"공격력 {equipment.equippedEffects[1].increaseValue} 증가",
-                Enums.SquadStatType.Health => $"체력 {equipment.equippedEffects[1].increaseValue} 증가",
+                Enums.SquadStatType.Attack => $"공격력 {UIManager.FormatCurrency(equipment.equippedEffects[1].increaseValue)}% 증가",
+                Enums.SquadStatType.Health => $"체력 {UIManager.FormatCurrency(equipment.equippedEffects[1].increaseValue)}% 증가",
                 _ => throw new ArgumentOutOfRangeException()
             };
             
             selectEquipmentOwnedEffect1.text = equipment.ownedEffects[0].statType switch
             {
-                Enums.SquadStatType.Attack => $"공격력 {UIManager.FormatCurrency(equipment.ownedEffects[0].increaseValue)}% 증가",
-                Enums.SquadStatType.Health => $"체력 {UIManager.FormatCurrency(equipment.ownedEffects[0].increaseValue)}% 증가",
+                Enums.SquadStatType.Attack => $"공격력 {equipment.ownedEffects[0].increaseValue} 증가",
+                Enums.SquadStatType.Health => $"체력 {equipment.ownedEffects[0].increaseValue} 증가",
                 _ => throw new ArgumentOutOfRangeException()
             };
             
             selectEquipmentOwnedEffect2.text = equipment.ownedEffects[1].statType switch
             {
-                Enums.SquadStatType.Attack => $"공격력 {UIManager.FormatCurrency(equipment.ownedEffects[1].increaseValue)}% 증가",
-                Enums.SquadStatType.Health => $"체력 {UIManager.FormatCurrency(equipment.ownedEffects[1].increaseValue)}% 증가",
+                Enums.SquadStatType.Attack => $"공격력 {equipment.ownedEffects[1].increaseValue} 증가",
+                Enums.SquadStatType.Health => $"체력 {equipment.ownedEffects[1].increaseValue} 증가",
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

@@ -1,5 +1,6 @@
 using System;
 using Function;
+using Managers.GameManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,8 +27,9 @@ namespace Controller.UI.BottomMenuUI
             exitButton.onClick.AddListener(InactivePanel);
         }
         
-        public void UpdateQuestResultPanelUI(Sprite image, String value)
+        public void UpdateQuestResultPanelUI(Sprite image, String value, bool isClear)
         {
+            if (isClear) gameObject.SetActive(true);
             questResultImage.sprite = image;
             questResultValue.text = value;
         }
@@ -40,6 +42,8 @@ namespace Controller.UI.BottomMenuUI
         
         private void InactivePanel()
         {
+            QuestManager.Instance.TargetQuestClear();
+            
             gameObject.SetActive(false);
             exitButton.interactable = false;
         }

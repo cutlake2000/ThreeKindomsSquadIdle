@@ -132,8 +132,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             var equippedEffect = new EquipmentEffect
                             {
                                 statType = i == 0? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
-                                increaseStatType = Enums.IncreaseStatValueType.BaseStat,
-                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
+                                increaseStatType = Enums.IncreaseStatValueType.PercentStat,
+                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
                             };
                             equippedEffects.Add(equippedEffect);
                         }
@@ -143,8 +143,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             var ownedEffect = new EquipmentEffect
                             {
                                 statType = i == 0 ? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
-                                increaseStatType = Enums.IncreaseStatValueType.PercentStat,
-                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
+                                increaseStatType = Enums.IncreaseStatValueType.BaseStat,
+                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
                             };
                             ownedEffects.Add(ownedEffect);
                         }
@@ -194,20 +194,16 @@ namespace Managers.BottomMenuManager.InventoryPanel
 
                         equipmentIndex++;
                         
-                        if (equipment.isPossessed)
-                        {
-                            if (isExistHighValueEquipment == -1 && canAutoEquip[(int) equipmentType] == false) canAutoEquip[(int) equipmentType] = true; // 이전에 마킹된 장비가 있고, 보유 중인 상위 등급의 장비가 존재하기에 AutoEquipmentButton 활성화
-                            
-                            foreach (var effect in equipment.ownedEffects)
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, false);
-                            }
-                        }
-
                         if (equipment.isEquipped)
                         {
                             if (isExistHighValueEquipment == 0) isExistHighValueEquipment = -1; // 장착 중인 장비를 찾았다면 마킹
 
+                            UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipmentType]
+                                .GetComponent<InventoryPanelSelectedItemUI>()
+                                .UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon,
+                                    SpriteManager.Instance.GetEquipmentBackgroundEffect((int)equipmentRarity),
+                                    SpriteManager.Instance.GetEquipmentBackground((int)equipmentRarity));
+                            
                             switch (equipmentType)
                             {
                                 case Enums.EquipmentType.Sword:
@@ -232,13 +228,17 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                     throw new ArgumentOutOfRangeException();
                             }
                                 
-                            UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipmentType]
-                                .GetComponent<InventoryPanelSelectedItemUI>()
-                                .UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon,
-                                    SpriteManager.Instance.GetEquipmentBackgroundEffect((int)equipmentRarity),
-                                    SpriteManager.Instance.GetEquipmentBackground((int)equipmentRarity));
-
                             SquadBattleManager.EquipAction?.Invoke(equipment);
+                        }
+                        
+                        if (equipment.isPossessed)
+                        {
+                            if (isExistHighValueEquipment == -1 && canAutoEquip[(int) equipmentType] == false) canAutoEquip[(int) equipmentType] = true; // 이전에 마킹된 장비가 있고, 보유 중인 상위 등급의 장비가 존재하기에 AutoEquipmentButton 활성화
+                            
+                            foreach (var effect in equipment.ownedEffects)
+                            {
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                            }
                         }
                     }
                 }
@@ -300,24 +300,24 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         var equippedEffects = new List<EquipmentEffect>();
                         var ownedEffects =  new List<EquipmentEffect>();
 
-                        for (var i = 0 ; i < 2;i++)
+                        for (var i = 0 ; i < 2; i++)
                         {
                             var equippedEffect = new EquipmentEffect
                             {
                                 statType = i == 0? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
-                                increaseStatType = Enums.IncreaseStatValueType.BaseStat,
-                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
+                                increaseStatType = Enums.IncreaseStatValueType.PercentStat,
+                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
                             };
                             equippedEffects.Add(equippedEffect);
                         }
                         
-                        for (var i = 0 ; i < 2;i++)
+                        for (var i = 0 ; i < 2; i++)
                         {
                             var ownedEffect = new EquipmentEffect
                             {
                                 statType = i == 0 ? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
-                                increaseStatType = Enums.IncreaseStatValueType.PercentStat,
-                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
+                                increaseStatType = Enums.IncreaseStatValueType.BaseStat,
+                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
                             };
                             ownedEffects.Add(ownedEffect);
                         }
@@ -401,11 +401,9 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             foreach (var effect in equipment.ownedEffects)
                             {
-                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, false);
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
                             }
                         }
-
-                        InfiniteLoopDetector.Run();
                     }
                 }
             }
@@ -460,7 +458,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                     
                     foreach (var ownedEffect in nextEquipment.ownedEffects)
                     {
-                        SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, false);   
+                        SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
                     }
                 }
                 
@@ -660,7 +658,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
             
                 foreach (var effect in lowValueEquipment.equippedEffects)
                 {
-                    SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), -effect.increaseValue, true);
+                    SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), -effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
                 }
             
                 lowValueEquipment.SaveEquipmentDataIntoES3Loader();
@@ -669,10 +667,10 @@ namespace Managers.BottomMenuManager.InventoryPanel
                 var highValueEquipment = sortDictionary[0].Value;
                 highValueEquipment.isEquipped = true;
                 
-                foreach (var effect in highValueEquipment.equippedEffects)
-                {
-                    SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, true);
-                }
+                // foreach (var effect in highValueEquipment.equippedEffects)
+                // {
+                //     SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                // }
                 
                 highValueEquipment.SaveEquipmentDataIntoES3Loader();
             

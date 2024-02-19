@@ -188,7 +188,6 @@ namespace Managers.GameManager
                     {
                         summonPanelScrollViewItem.GetComponent<SummonPanelItemUI>().UpdateSummonPanelSummonButtonUI();
                     }
-                    UIManager.Instance.summonPanelUI.summonResultPanelUI.UpdateSummonResultPanelExtraSummonButtonUI();
                     
                     break;
                 case Enums.CurrencyType.SquadEnhanceStone:

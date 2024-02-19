@@ -38,10 +38,10 @@ namespace Creature.CreatureClass.MonsterClass
         {
             var randomDamage = Random.Range(-MonsterManager.Instance.totalAttackAdjustValue, MonsterManager.Instance.totalAttackAdjustValue + 1) + 100;
             var damageReductionPercentage = MonsterManager.Instance.damageReduction;
-            var reduction = 100 * inputDamage / (inputDamage + Defence + damageReductionPercentage);
+            var reduction = 100 * inputDamage / (inputDamage + currentBossDefence + damageReductionPercentage);
             var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
             
-            CurrentHealth -= adjustDamage;
+            currentBossHealth -= adjustDamage;
             currentBossHealth = currentBossHealth < 0 ? 0 : currentBossHealth;
             
             if (isEventHitRunning == false && !isDead)

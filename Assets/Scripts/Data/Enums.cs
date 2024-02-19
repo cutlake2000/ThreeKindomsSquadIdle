@@ -10,6 +10,63 @@ namespace Data
             Rare_5_Sword,
             OfflineReward
         }
+
+        public enum LockButtonType
+        {
+            TalentPanel,
+            InventoryPanel,
+            SquadConfigurePanel,
+            SummonPanel,
+            SummonCharacterPanel,
+            SummonWeaponPanel,
+            SummonGearPanel,
+            DungeonPanel,
+            GoldDungeonPanel,
+            SquadEnhanceStoneDungeonPanel,
+            WillBeUpdate,
+            NotEnoughSquadEnhanceStone,
+            NotEnoughExp,
+            NotEnoughGold,
+            NotEnoughStatPoint,
+            AlreadyAutoEquip,
+            AlreadyAllComposite,
+            NotEnoughDungeonTicket
+        }
+        
+        public static readonly LockButtonType[] lockButtonTypes =
+        {
+            LockButtonType.TalentPanel,
+            LockButtonType.InventoryPanel,
+            LockButtonType.SquadConfigurePanel,
+            LockButtonType.SummonPanel,
+            LockButtonType.SummonCharacterPanel,
+            LockButtonType.SummonWeaponPanel,
+            LockButtonType.SummonGearPanel,
+            LockButtonType.DungeonPanel,
+            LockButtonType.GoldDungeonPanel,
+            LockButtonType.SquadEnhanceStoneDungeonPanel,
+            LockButtonType.WillBeUpdate,
+            LockButtonType.NotEnoughSquadEnhanceStone,
+            LockButtonType.NotEnoughExp,
+            LockButtonType.NotEnoughGold,
+            LockButtonType.NotEnoughStatPoint,
+            LockButtonType.AlreadyAutoEquip,
+            LockButtonType.AlreadyAllComposite,
+            LockButtonType.NotEnoughDungeonTicket
+        };
+
+        public enum OpenContent
+        {
+            None,
+            TalentPanel,
+            InventoryPanel,
+            SquadConfigurePanel,
+            SummonWeaponPanel,
+            SummonGearPanel,
+            SummonCharacterPanel,
+            GoldDungeonPanel,
+            SquadEnhanceStoneDungeonPanel
+        }
         
         public enum AchievementProperty
         {
@@ -125,7 +182,12 @@ namespace Data
             CompositeGauntlet,
             LevelUpCharacter,
             LevelUpSquad,
-            InitialQuest
+            InitialQuest,
+            TouchChallengeButton,
+            TouchLoopButton,
+            ArcherCamera,
+            WarriorCamera,
+            TouchAutoSkillButton
         }
         
         public enum QuestRewardType
@@ -205,11 +267,8 @@ namespace Data
             ProjectileBaseAttackWizard,
             ProjectileBaseAttackMonster,
             EffectEnhance,
-            ProjectileSkillAttackWarrior,
-            ProjectileSkillAttackArcher,
-            ProjectileSkillAttackWizard,
             EffectDamage,
-            SummonEquipment
+            PopUpMessage
         }
 
         public enum SkillType

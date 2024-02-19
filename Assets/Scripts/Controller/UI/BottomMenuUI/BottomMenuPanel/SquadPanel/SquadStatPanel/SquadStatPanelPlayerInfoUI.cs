@@ -22,6 +22,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         public void InitializeEventListeners()
         {
             levelUpButton.onClick.AddListener(() => AccountManager.LevelUpAction?.Invoke());
+            levelUpLockButton.GetComponent<LockButtonUI>().InitializeEventListener();
         }
         
         public void UpdateSquadStatPanelSquadInfoAllUI(string nickName, int level, BigInteger currentExp, BigInteger maxExp, int statPoint)

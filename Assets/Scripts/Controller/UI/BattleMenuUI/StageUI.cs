@@ -18,8 +18,18 @@ namespace Controller.UI.BattleMenuUI
 
         private void Start()
         {
-            loopButton.onClick.AddListener(() => OnClickStageProgressButton(true));
-            challengeButton.onClick.AddListener(() => OnClickStageProgressButton(false));
+            loopButton.onClick.AddListener(() =>
+            {
+                OnClickStageProgressButton(true);
+                QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.TouchLoopButton, 1);
+            });
+              
+            challengeButton.onClick.AddListener(() =>
+            {
+                OnClickStageProgressButton(false);
+                QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.TouchChallengeButton, 1);
+            });
+            
             StageManager.CheckStageProgressType += SetStageProgressButton;
         }
 

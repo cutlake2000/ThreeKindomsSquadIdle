@@ -1,4 +1,5 @@
 using System;
+using Data;
 using Managers;
 using Managers.BattleManager;
 using Managers.GameManager;
@@ -18,11 +19,10 @@ namespace Controller.UI
         [SerializeField] private float cameraMoveSpeed;
         public Transform currentCameraTarget;
 
-        [Header("Button")] [SerializeField] private Button warriorButton;
-
+        [Header("Button")]
+        [SerializeField] private Button warriorButton;
         [SerializeField] private Button archerButton;
         [SerializeField] private Button wizardButton;
-        public Action<Transform> CameraTarget;
 
         private void LateUpdate()
         {
@@ -37,8 +37,16 @@ namespace Controller.UI
 
         private void SetButtonClickedListener()
         {
-            warriorButton.onClick.AddListener(() => SetCameraTarget(SquadBattleManager.Instance.squads[0].transform));
-            archerButton.onClick.AddListener(() => SetCameraTarget(SquadBattleManager.Instance.squads[1].transform));
+            warriorButton.onClick.AddListener(() =>
+            {
+                SetCameraTarget(SquadBattleManager.Instance.squads[0].transform);
+                QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.WarriorCamera, 1);
+            });
+            archerButton.onClick.AddListener(() =>
+            {
+                SetCameraTarget(SquadBattleManager.Instance.squads[1].transform);
+                QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.ArcherCamera, 1);
+            });
             wizardButton.onClick.AddListener(() => SetCameraTarget(SquadBattleManager.Instance.squads[2].transform));
         }
 

@@ -1,4 +1,6 @@
+using Controller.UI;
 using Controller.UI.BottomMenuUI;
+using Controller.UI.BottomMenuUI.BottomMenuPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel;
@@ -17,6 +19,7 @@ namespace Managers.GameManager
     {
         public static UIManager Instance;
         
+        [Space(5)] [Header("=== 팝업 메시지 패널 ===")] public PopUpMessagePanelUI popUpMessagePanelUI;
         [Space(5)] [Header("=== 스쿼드 아이콘 패널 ===")] public PlayerInfoPanelUI playerInfoPanelUI;
         [Space(5)] [Header("=== 스킬 쿨타임 ===")] public SquadSkillCoolTimerUI squadSkillCoolTimerUI;
         [Space(5)] [Header("=== 바텀 메뉴 패널 ===")] public BottomMenuPanelUI bottomMenuPanelUI;
@@ -40,6 +43,8 @@ namespace Managers.GameManager
 
         private void InitializeEventListeners()
         {
+            dungeonPanelUI.InitializeEventListener();
+            popUpMessagePanelUI.InitializeEventListener();
             bottomMenuPanelUI.InitializeEventListeners();
             squadSkillCoolTimerUI.InitializeEventListeners();
             squadPanelUI.InitializeEventListeners();

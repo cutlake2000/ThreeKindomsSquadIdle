@@ -28,11 +28,22 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
             }
             
             summonResultPanelUI.InitializeEventListener();
+
+            foreach (var t in summonLockItems)
+            {
+                t.GetComponent<LockButtonUI>().InitializeEventListener();
+            }
         }
         
         public void SetScrollViewVerticalPosition(float position)
         {
             scrollBar.verticalNormalizedPosition = Mathf.Clamp01(position);
+        }
+
+        public void UpdateLockItemUI(int targetSubIndex)
+        {
+            summonPanelScrollViewItems[targetSubIndex].SetActive(true);
+            summonLockItems[targetSubIndex].SetActive(false);
         }
     }
 }

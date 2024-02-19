@@ -13,17 +13,22 @@ namespace Managers.GameManager
         
         private void Start()
         {
-            SquadStatManager.Instance.InitSquadStatManager();
+  
             SquadConfigureManager.Instance.InitSquadConfigureManager();
+
+    
+            
+            SquadBattleManager.Instance.InitSquadManager();
+            SquadStatManager.Instance.InitSquadStatManager();
             TalentManager.Instance.InitSquadTalentManager();
+            
+            InventoryManager.Instance.InitEquipmentManager();
+            StageManager.Instance.InitStageManager();
+            QuestManager.Instance.InitQuestManager();
+            
             SummonManager.Instance.InitSummonManager();
             DungeonManager.Instance.InitDungeonManager();
             AccountManager.Instance.InitAccountManager();
-            InventoryManager.Instance.InitEquipmentManager();
-            
-            SquadBattleManager.Instance.InitSquadManager();
-            StageManager.Instance.InitStageManager();
-            QuestManager.Instance.InitQuestManager();
             
             UIManager.Instance.InitUIManager();
             

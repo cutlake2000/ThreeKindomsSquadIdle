@@ -1,5 +1,6 @@
 using System;
 using Controller.Effects;
+using Controller.UI;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel;
 using Creature.Data;
 using Data;
@@ -46,6 +47,8 @@ namespace Managers.BottomMenuManager.TalentPanel
                     UpgradeSquadTalentPanelStat(index));
                 talentItem[i].GetComponent<TalentItemUI>().upgradeButton.GetComponent<HoldButton>().onHold
                     .AddListener(() => UpgradeSquadTalentPanelStat(index));
+                
+                talentItem[i].GetComponent<TalentItemUI>().upgradeBlockButton.GetComponent<LockButtonUI>().InitializeEventListener();
             }
         }
 

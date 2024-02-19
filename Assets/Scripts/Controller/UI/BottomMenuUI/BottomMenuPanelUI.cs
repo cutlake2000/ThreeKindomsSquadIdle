@@ -37,6 +37,12 @@ namespace Controller.UI.BottomMenuUI
                 closeButtons[i].onClick.AddListener(() => OnClickClosePanel(index));
             }
             
+            for (var i = 0; i < lockButtons.Length; i++)
+            {
+                var index = i; // 현재 인덱스 캡처
+                lockButtons[i].GetComponent<LockButtonUI>().InitializeEventListener();
+            }
+            
             backboardPanel.onClick.AddListener(OnClickBackboardPanel);
         }
 
@@ -87,6 +93,12 @@ namespace Controller.UI.BottomMenuUI
             
             if (StageManager.Instance.initStageResult) StageManager.Instance.initStageResult = true;
             if (StageManager.Instance.stageResultUI.activeInHierarchy) StageManager.Instance.stageResultUI.SetActive(false);
+        }
+
+        public void UpdateLockButtonUI(int index)
+        {
+            lockButtons[index].gameObject.SetActive(false);
+            openButtons[index].gameObject.SetActive(true);
         }
     }
 }
