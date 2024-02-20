@@ -132,7 +132,7 @@ MonoBehaviour:
   rigid: {fileID: 6272459504870884609}
   isDead: 0
   attackSpeed: 0
-  attackRange: 1.5
+  attackRange: 1.2
   moveSpeed: 3
   allSprites:
   - {fileID: 7070744277028480964}

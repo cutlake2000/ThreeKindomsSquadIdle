@@ -3,6 +3,7 @@ using Function;
 using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.GameManager;
+using Module;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,6 +23,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadStatPanel
         public void InitializeEventListeners()
         {
             levelUpButton.onClick.AddListener(() => AccountManager.LevelUpAction?.Invoke());
+            levelUpButton.GetComponent<HoldButton>().onHold.AddListener(() => AccountManager.LevelUpAction?.Invoke());
+            
             levelUpLockButton.GetComponent<LockButtonUI>().InitializeEventListener();
         }
         

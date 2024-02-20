@@ -322,7 +322,7 @@ namespace Managers.BottomMenuManager.SummonPanel
                     {
                         targetEquipment.isPossessed = true;
 
-                        if (targetEquipment.equipmentRarity > equippedEquipment.equipmentRarity || (targetEquipment.equipmentRarity == equippedEquipment.equipmentRarity && targetEquipment.equipmentTier > equippedEquipment.equipmentTier))
+                        if (targetEquipment.equipmentRarity > equippedEquipment.equipmentRarity || (targetEquipment.equipmentRarity == equippedEquipment.equipmentRarity && targetEquipment.equipmentTier < equippedEquipment.equipmentTier))
                         {
                             InventoryManager.Instance.canAutoEquip[(int) targetEquipment.equipmentType] = true;
                         }

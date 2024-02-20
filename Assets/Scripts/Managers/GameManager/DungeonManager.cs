@@ -64,11 +64,9 @@ namespace Managers.GameManager
         [SerializeField] private int monsterSpawnCountsPerSubStage;
         [SerializeField] private bool isClear;
 
-        [Header("=== 던전 레벨 당 일반 몬스터 스탯 증가량 (%) ===")] public int increaseNormalMonsterStatValuePercent;
-        [Header("=== 던전 레벨 당 보스 몬스터 스탯 증가량 (%) ===")] public int increaseBossMonsterStatValuePercent;
+        [Header("=== 던전 레벨 당 일반 몬스터 스탯 증가량 ===")] public int increaseNormalMonsterStatValue;
+        [Header("=== 던전 레벨 당 보스 몬스터 스탯 증가량 (던전 레벨^(x/100)) ===")] public int increaseBossMonsterStatValuePercent;
         [Header("=== 던전 보상 증가량 (%) ===")] public int increaseRewardPercent = 20;
-
-        public int baseClearReward = 2000;
 
         private void Awake()
         {
@@ -118,7 +116,7 @@ namespace Managers.GameManager
                     {
                         CheckRemainedBossHealth += UpdateBossKillUI;
                         bossMonster = Instantiate(bossMonsterPrefab, bossMonsterSpawnPosition);
-                        bossMonster.GetComponent<BossMonster>().InitializeBossMonsterData(increaseBossMonsterStatValuePercent / 100 * currentDungeonLevel);
+                        bossMonster.GetComponent<BossMonster>().InitializeBossMonsterData(currentDungeonLevel);
                         
                         QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayEnhanceStoneDungeon, 1);
 
@@ -312,8 +310,10 @@ namespace Managers.GameManager
             SpawnSquad();
 
             yield return new WaitForSeconds(1.0f);
-
-            SpawnMonster(currentDungeonLevel);
+            
+            var targetMultiplier = Mathf.FloorToInt(Mathf.Pow(increaseNormalMonsterStatValue, currentDungeonLevel));
+            
+            SpawnMonster(targetMultiplier);
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
         }
         
@@ -339,7 +339,7 @@ namespace Managers.GameManager
         private void UpdateBossKillUI(BigInteger currentHealth, BigInteger maxHealth)
         {
             // dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{BigInteger.ToInt32(currentHealth * 100 / maxHealth).ToString()} %", BigInteger.ToInt32(currentHealth * 100 / maxHealth));
-            dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{currentHealth.ChangeMoney()} / {maxHealth.ChangeMoney()} %", BigInteger.ToInt32(currentHealth * 100 / maxHealth));
+            dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{currentHealth.ChangeMoney()} / {maxHealth.ChangeMoney()}", BigInteger.ToInt64Safely(currentHealth * 100 / maxHealth));
         }
         
         private void SpawnSquad()
@@ -357,7 +357,7 @@ namespace Managers.GameManager
         {
             currentRemainedMonsterCount = monsterSpawnCountsPerSubStage;
             
-            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human, increaseNormalMonsterStatValuePercent / 100 * level, monsterSpawnCountsPerSubStage);
+            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human, level, monsterSpawnCountsPerSubStage);
         }
 
         private void DespawnMonster()

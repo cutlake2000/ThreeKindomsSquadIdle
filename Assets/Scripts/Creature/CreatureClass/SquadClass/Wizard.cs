@@ -1,4 +1,5 @@
 using Data;
+using Keiwando.BigInteger;
 using Managers;
 using Managers.BattleManager;
 using Managers.GameManager;
@@ -21,10 +22,7 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.OnNormalAttack();
             
-            ProjectileManager.Instance.InstantiateBaseAttack(Attack, ProjectileSpawnPosition, Direction,
-                Enums.PoolType.ProjectileBaseAttackWizard, isCriticalAttack);
-
-            isCriticalAttack = false;
+            ProjectileManager.Instance.InstantiateBaseAttack(Attack, ProjectileSpawnPosition, Direction, Enums.PoolType.ProjectileBaseAttackWizard, BigInteger.ToInt32(CriticalRate) / 10000, BigInteger.ToInt32(CriticalDamage) / 10000);
         }
 
         protected override void OnSkillAttack()
@@ -41,7 +39,7 @@ namespace Creature.CreatureClass.SquadClass
 
                 SquadBattleManager.Instance.RunSkillCoolTimer(Enums.CharacterType.Wizard, i);
                 ProjectileManager.Instance.InstantiateSkillAttack(
-                    SquadBattleManager.Instance.wizardSkillCoolTimer[i].skill, ((Creature)this).Attack, ProjectileSpawnPosition,
+                    SquadBattleManager.Instance.wizardSkillCoolTimer[i].skill, Attack, ProjectileSpawnPosition,
                     currentTarget.transform.position);
                 SquadBattleManager.Instance.wizardSkillCoolTimer[i].orderToInstantiate = false;
 

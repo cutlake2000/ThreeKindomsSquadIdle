@@ -193,6 +193,7 @@ namespace Managers.GameManager
                 case Enums.CurrencyType.SquadEnhanceStone:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.SquadEnhanceStone);
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.EnhanceStoneSquad}> {BigInteger.ChangeMoney(amount)}";
+                    UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateLevelUpButtonUI();
                     break;
                 case Enums.CurrencyType.GoldDungeonTicket:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.GoldDungeonTicket);

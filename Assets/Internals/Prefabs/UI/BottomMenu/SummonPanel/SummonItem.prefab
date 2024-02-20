@@ -314,8 +314,8 @@ RectTransform:
   m_GameObject: {fileID: 1875495131126833685}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.02, y: 1.02, z: 1.02}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7058187791771558574}
   m_RootOrder: -1
@@ -712,7 +712,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7058187791771558574
 RectTransform:
   m_ObjectHideFlags: 0
@@ -764,6 +764,7 @@ MonoBehaviour:
   itemImage: {fileID: 2051552677000431444}
   itemRarity: 0
   itemBackgroundEffect: {fileID: 394632544089831969}
+  itemBackground: {fileID: 2251928178995412503}
   itemCount: {fileID: 2525912559475022986}
   summonEffectsAnimator: {fileID: 1955902062939861025}
 --- !u!114 &2251928178995412503
@@ -786,8 +787,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7a2331e2177ba4e49b0a77b2d0dcc239, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: ff100a43ed06046a4a7f73de3c05cb35, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

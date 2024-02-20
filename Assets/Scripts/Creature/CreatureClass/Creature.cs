@@ -29,9 +29,9 @@ namespace Creature.CreatureClass
 
         public bool isDead;
         public BigInteger Attack;
-        protected BigInteger CurrentHealth;
-        protected BigInteger MaxHealth;
-        protected BigInteger Defence;
+        public BigInteger CurrentHealth;
+        public BigInteger MaxHealth;
+        public BigInteger Defence;
         public float attackSpeed;
         public float attackRange;
         public float moveSpeed;
@@ -129,7 +129,7 @@ namespace Creature.CreatureClass
 
         public void SetUIHealthBar()
         {
-            healthBar.value = BigInteger.ToInt32(CurrentHealth * 100 / MaxHealth);
+            healthBar.value = BigInteger.ToInt64Safely(CurrentHealth * 100 / MaxHealth);
         }
 
         public IEnumerator Fade(float start, float end)

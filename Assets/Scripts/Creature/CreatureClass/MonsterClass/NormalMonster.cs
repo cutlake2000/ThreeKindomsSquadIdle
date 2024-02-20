@@ -115,12 +115,21 @@ namespace Creature.CreatureClass.MonsterClass
             currentTarget = null;
         }
 
-        public override void TakeDamage(BigInteger inputDamage)
+        public override void TakeDamage(BigInteger inputDamage, int criticalRate, int criticalDamage)
         {
+            var criticalCheckDamage = inputDamage;
+            
+            var randomPickCriticalRate = Random.Range(1, 10001);
+            var isCritical = false;
+            
+            if (criticalRate >= randomPickCriticalRate)
+            {
+                isCritical = true;
+                criticalCheckDamage = criticalCheckDamage * criticalDamage / 10000;
+            }
+            
             var randomDamage = Random.Range(-MonsterManager.Instance.totalAttackAdjustValue, MonsterManager.Instance.totalAttackAdjustValue + 1) + 100;
-            var damageReductionPercentage = MonsterManager.Instance.damageReduction;
-            var reduction = 100 * inputDamage / (inputDamage + Defence + damageReductionPercentage);
-            var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
+            var adjustDamage = criticalCheckDamage * randomDamage / 100;
             
             CurrentHealth -= adjustDamage;
             
@@ -131,9 +140,14 @@ namespace Creature.CreatureClass.MonsterClass
 
             var bounds = GetComponent<Collider2D>().bounds;
             var damageEffectSpawnPosition = bounds.center + new Vector3(0.0f, bounds.extents.y + 1f, 0.0f);
-
-            EffectManager.Instance.CreateEffectsAtPosition(FunctionManager.Vector3ToVector2(damageEffectSpawnPosition),
-                adjustDamage.ChangeMoney(), Enums.PoolType.EffectDamage);
+            
+            var criticalCheck = isCritical switch
+            {
+                true => Enums.PoolType.EffectDamageCritical,
+                false => Enums.PoolType.EffectDamageNormal
+            };
+            
+            EffectManager.Instance.CreateEffectsAtPosition(FunctionManager.Vector3ToVector2(damageEffectSpawnPosition), adjustDamage.ChangeMoney(), criticalCheck);
 
             if (isEventHitRunning == false && !isDead) StartCoroutine(EventHit());
 
@@ -169,7 +183,7 @@ namespace Creature.CreatureClass.MonsterClass
             direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
 
             ProjectileManager.Instance.InstantiateBaseAttack(Attack, projectileSpawnPosition, direction,
-                Enums.PoolType.ProjectileBaseAttackMonster, false);
+                Enums.PoolType.ProjectileBaseAttackMonster, 0, 0);
         }
 
         private IEnumerator EventHit()

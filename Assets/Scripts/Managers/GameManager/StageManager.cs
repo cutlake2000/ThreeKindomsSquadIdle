@@ -181,6 +181,7 @@ namespace Managers.GameManager
                 else
                 {
                     currentSubStage = 1;
+                    currentAccumulatedStage = 1;
                 }
             }
 
@@ -224,7 +225,6 @@ namespace Managers.GameManager
             prepareNewSubStage = true;
             
             ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
-            
             ES3.Save($"{nameof(StageManager)}/{nameof(currentSubStage)}", currentSubStage);
             ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
             CheckStageProgressType.Invoke(challengeProgress);
@@ -256,6 +256,7 @@ namespace Managers.GameManager
                 
                 DespawnMonster();
                 DespawnSquad();
+                ProjectileManager.Instance.DestroyAllProjectile();
 
                 if (initStageResult == false)
                 {

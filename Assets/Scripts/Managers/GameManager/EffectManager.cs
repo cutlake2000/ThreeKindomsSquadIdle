@@ -3,7 +3,7 @@ using Data;
 using Module;
 using UnityEngine;
 
-namespace Managers.BattleManager
+namespace Managers.GameManager
 {
     public class EffectManager : MonoBehaviour
     {
@@ -79,10 +79,16 @@ namespace Managers.BattleManager
             var obj = objectPool.SpawnFromPool(poolType);
             obj.transform.position = startPosition;
 
+            EffectDamageController effectDamageController;
+            
             switch (poolType)
             {
-                case Enums.PoolType.EffectDamage:
-                    var effectDamageController = obj.GetComponent<EffectDamageController>();
+                case Enums.PoolType.EffectDamageNormal:
+                    effectDamageController = obj.GetComponent<EffectDamageController>();
+                    effectDamageController.InitializeEffectDamage($"{damage}");
+                    break;
+                case Enums.PoolType.EffectDamageCritical:
+                    effectDamageController = obj.GetComponent<EffectDamageController>();
                     effectDamageController.InitializeEffectDamage($"{damage}");
                     break;
             }

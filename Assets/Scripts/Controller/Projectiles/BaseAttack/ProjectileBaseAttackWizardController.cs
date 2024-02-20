@@ -3,6 +3,7 @@ using Data;
 using Function;
 using Keiwando.BigInteger;
 using Managers.BattleManager;
+using Managers.GameManager;
 using Module;
 using UnityEngine;
 
@@ -18,6 +19,9 @@ namespace Controller.Projectiles.BaseAttack
 
         [SerializeField] protected Collider2D[] nearbyTargets;
         private TargetFinder targetFinder;
+        
+        public int criticalRate;
+        public int criticalDamage;
 
         protected void Awake()
         {
@@ -57,14 +61,18 @@ namespace Controller.Projectiles.BaseAttack
             FindNearbyEnemy();
         }
 
-        public void InitializeWizardBaseAttack(BigInteger damage, Vector3 direction)
+        public void InitializeWizardBaseAttack(BigInteger damage, Vector3 inputDirection, int criticalRatePercent, int criticalDamagePercent)
         {
-            base.direction = direction;
-            FlipLocalScaleY(base.direction.x);
+            direction = inputDirection;
+            FlipLocalScaleY(direction.x);
 
             Damage = damage;
+            
+            criticalRate = criticalRatePercent;
+            criticalDamage = criticalDamagePercent;
+            
             currentDuration = 0;
-            transform.right = base.direction;
+            transform.right = direction;
             readyToLaunch = true;
         }
 
@@ -85,7 +93,7 @@ namespace Controller.Projectiles.BaseAttack
             {
                 if (target.gameObject.layer != LayerMask.NameToLayer("Enemy")) continue;
 
-                target.GetComponent<Monster>().TakeDamage(Damage);
+                target.GetComponent<Monster>().TakeDamage(Damage, criticalRate, criticalDamage);
             }
 
             DestroyProjectile(transform.position);

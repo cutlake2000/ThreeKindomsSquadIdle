@@ -37,7 +37,6 @@ namespace Managers.GameManager
         private int spawnCount;
         
         [Header("피해량 보정 (%)")] public int totalAttackAdjustValue;
-        [Header("데미지 감소 보정치 (%)")] public int damageReduction;
 
         private void Awake()
         {

@@ -13,6 +13,8 @@ namespace Managers.GameManager
         public static ProjectileManager Instance;
         private ObjectPool objectPool;
 
+        public Transform spawnTarget;
+
         private void Awake()
         {
             Instance = this;
@@ -23,7 +25,7 @@ namespace Managers.GameManager
             objectPool = GetComponent<ObjectPool>();
         }
 
-        public void InstantiateBaseAttack(BigInteger damage, Vector2 startPosition, Vector2 direction, Enums.PoolType poolType, bool isCritical)
+        public void InstantiateBaseAttack(BigInteger damage, Vector2 startPosition, Vector2 direction, Enums.PoolType poolType, int isCritical, int criticalDamage)
         {
             var obj = objectPool.SpawnFromPool(poolType);
 
@@ -32,7 +34,7 @@ namespace Managers.GameManager
             if (poolType == Enums.PoolType.ProjectileBaseAttackWarrior)
             {
                 var warriorBaseAttackController = obj.GetComponent<ProjectileBaseAttackWarriorController>();
-                warriorBaseAttackController.InitializeWarriorBaseAttack(damage, direction);
+                warriorBaseAttackController.InitializeWarriorBaseAttack(damage, direction, isCritical, criticalDamage);
             }
             else
             {
@@ -42,11 +44,11 @@ namespace Managers.GameManager
                 {
                     case Enums.PoolType.ProjectileBaseAttackArcher:
                         var archerBaseAttackController = obj.GetComponent<ProjectileBaseAttackArcherController>();
-                        archerBaseAttackController.InitializeArcherBaseAttack(damage, direction);
+                        archerBaseAttackController.InitializeArcherBaseAttack(damage, direction, isCritical, criticalDamage);
                         break;
                     case Enums.PoolType.ProjectileBaseAttackWizard:
                         var wizardBaseAttackController = obj.GetComponent<ProjectileBaseAttackWizardController>();
-                        wizardBaseAttackController.InitializeWizardBaseAttack(damage, direction);
+                        wizardBaseAttackController.InitializeWizardBaseAttack(damage, direction, isCritical, criticalDamage);
                         break;
                     case Enums.PoolType.ProjectileBaseAttackMonster:
                         var monsterBaseAttackController = obj.GetComponent<ProjectileBaseAttackMonsterController>();
@@ -63,6 +65,14 @@ namespace Managers.GameManager
         {
             var skillAttackController = targetSkill.GetComponent<SkillAttackController>();
             skillAttackController.InitializeSkillAttack(damage, startPosition, targetPosition);
+        }
+
+        public void DestroyAllProjectile()
+        {
+            for (var i = 0; i < spawnTarget.transform.childCount; i++)
+            {
+                Destroy(spawnTarget.transform.GetChild(i).gameObject);
+            }
         }
     }
 }

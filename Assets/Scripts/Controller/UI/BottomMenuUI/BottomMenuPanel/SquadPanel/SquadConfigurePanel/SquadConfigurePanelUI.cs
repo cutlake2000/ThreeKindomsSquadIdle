@@ -48,9 +48,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         public TMP_Text selectedCharacter2SkillDescription;
         public TMP_Text selectedCharacter2SkillCoolTime;
         public Button selectedCharacterLevelUpButton;
+        public Button selectedCharacterLevelUpLockButton;
         public Button selectedCharacterSelectButton;
         public Button selectedCharacterAlreadySelectedButton;
         public TMP_Text requiredSquadEnhanceStoneText;
+        public TMP_Text requiredSquadEnhanceStoneTextLockButton;
 
         [Header("워리어 / 아처 / 위자드 스크롤뷰")] public GameObject[] squadScrollViewPanel;
 
@@ -115,6 +117,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             currentSelectedSquadConfigurePanelItem = character;
 
             requiredSquadEnhanceStoneText.text = $"<sprite={(int)Enums.IconType.EnhanceStoneSquad}>{character.RequiredCurrencyForLevelUp().ChangeMoney()}";
+            requiredSquadEnhanceStoneTextLockButton.text = requiredSquadEnhanceStoneText.text;
+            
             var skill1Description = currentSelectedSquadConfigurePanelItem.characterSkills[0].skillDescription;
             var skill2Description = currentSelectedSquadConfigurePanelItem.characterSkills[1].skillDescription;
 
@@ -242,6 +246,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             }
 
             selectedCharacterLevelUpButton.onClick.AddListener(OnClickCharacterLevelUp);
+            selectedCharacterLevelUpLockButton.GetComponent<LockButtonUI>().InitializeEventListener();
             selectedCharacterSelectButton.onClick.AddListener(OnClickCharacterEquip);
         }
 
@@ -264,6 +269,29 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             };
 
             UpdateSquadConfigurePanelSelectedCharacterInfoUI(selectedCharacter);
+        }
+
+        public void UpdateLevelUpButtonUI()
+        {
+            if (currentSelectedSquadConfigurePanelItem.characterId == string.Empty) return;
+            
+            var character = currentSelectedSquadConfigurePanelItem.characterType switch
+            {
+                Enums.CharacterType.Warrior => SquadConfigureManager.Instance.WarriorDictionary[
+                    currentSelectedSquadConfigurePanelItem.characterId],
+                Enums.CharacterType.Archer => SquadConfigureManager.Instance.ArchersDictionary[
+                    currentSelectedSquadConfigurePanelItem.characterId],
+                Enums.CharacterType.Wizard => SquadConfigureManager.Instance.WizardsDictionary[
+                    currentSelectedSquadConfigurePanelItem.characterId],
+                _ => null
+            };
+
+            if (character is not { isPossessed: true }) return;
+
+            var canLevelUp = character.characterLevel < SquadConfigureManager.CharacterMaxLevel && character.RequiredCurrencyForLevelUp() < new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.SquadEnhanceStone));
+
+            selectedCharacterLevelUpButton.gameObject.SetActive(canLevelUp);
+            selectedCharacterLevelUpLockButton.gameObject.SetActive(!canLevelUp);
         }
 
         public void UpdateSquadScrollViewPanelButtonUI(int index, bool active)

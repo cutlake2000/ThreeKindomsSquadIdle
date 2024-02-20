@@ -23,13 +23,10 @@ namespace Creature.CreatureClass.SquadClass
         
         protected Vector2 Direction;
 
-        protected BigInteger attack;
-        protected BigInteger criticalRate;
-        protected BigInteger criticalDamage;
-        protected BigInteger penetration;
-        protected BigInteger accuracy;
-
-        protected bool isCriticalAttack;
+        protected BigInteger CriticalRate;
+        protected BigInteger CriticalDamage;
+        protected BigInteger Penetration;
+        protected BigInteger Accuracy;
 
         protected override void OnEnable()
         {
@@ -100,22 +97,47 @@ namespace Creature.CreatureClass.SquadClass
 
         protected override void SetCreatureStats()
         {
-            attack = characterType switch
+            Attack = characterType switch
             {
                 Enums.CharacterType.Warrior => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorAtk),
                 Enums.CharacterType.Archer => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherAtk),
                 Enums.CharacterType.Wizard => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardAtk),
                 _ => throw new ArgumentOutOfRangeException()
             };
-            MaxHealth = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Health);
-            Defence = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Defence);
-            criticalRate = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.CriticalRate);
-            criticalDamage = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.CriticalDamage);
-            accuracy = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Accuracy);
-            penetration = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Penetration);
+            
+            MaxHealth = characterType switch
+            {
+                Enums.CharacterType.Warrior => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorHealth),
+                Enums.CharacterType.Archer => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherHealth),
+                Enums.CharacterType.Wizard => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardHealth),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            Defence = characterType switch
+            {
+                Enums.CharacterType.Warrior => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorDefence),
+                Enums.CharacterType.Archer => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherDefence),
+                Enums.CharacterType.Wizard => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardDefence),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            CriticalRate = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.CriticalRate);
+            CriticalDamage = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.CriticalDamage);
+            Accuracy = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Accuracy);
+            Penetration = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Penetration);
             
             moveSpeed = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.MoveSpeed);
             followRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.FollowRange);
+            
+            attackRange = characterType switch
+            {
+                Enums.CharacterType.Warrior => SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.WarriorAttackRange),
+                Enums.CharacterType.Archer => SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.ArcherAttackRange),
+                Enums.CharacterType.Wizard => SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.WizardAttackRange),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            animator.SetFloat(animationData.ClassTypeParameterHash, (int) characterType);
 
             CurrentHealth = MaxHealth;
             isDead = false;
@@ -124,17 +146,12 @@ namespace Creature.CreatureClass.SquadClass
 
         public void TakeDamage(BigInteger inputDamage)
         {
-            var damageReduction = characterType switch
-            {
-                Enums.CharacterType.Warrior => SquadBattleManager.Instance.warriorDamageReduction,
-                Enums.CharacterType.Archer => SquadBattleManager.Instance.archerDamageReduction,
-                Enums.CharacterType.Wizard => SquadBattleManager.Instance.wizardDamageReduction,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            
             var randomDamage = Random.Range(-SquadBattleManager.Instance.totalAttackAdjustValue, SquadBattleManager.Instance.totalAttackAdjustValue + 1) + 100;
-            var reduction = 100 * inputDamage / (inputDamage + Defence + damageReduction);
-            var adjustDamage = inputDamage * (randomDamage + reduction) / 100;
+            
+            var damageReduction = SquadBattleManager.Instance.totalDamageReduction;
+            var calculateReduction = 100 - Defence * 100 / (damageReduction + Defence);
+            var reduction = calculateReduction > 0 ? calculateReduction : 0;
+            var adjustDamage = inputDamage * randomDamage * reduction / 10000;
             
             CurrentHealth -= adjustDamage;
             
@@ -179,20 +196,8 @@ namespace Creature.CreatureClass.SquadClass
 
             ProjectileSpawnPosition = FunctionManager.Vector3ToVector2(projectileSpawn.position);
             Direction = (currentTarget.transform.position - projectileSpawn.transform.position).normalized;
-            
-            var criticalRateCheck = Random.Range(0, 101);
 
-            attack += accuracy + penetration;
-            
-            if (criticalRate >= criticalRateCheck)
-            {
-                attack = attack * criticalDamage / 100;
-                isCriticalAttack = true;
-            }
-            else
-            {
-                isCriticalAttack = false;
-            }
+            Attack += Accuracy + Penetration;
         }
 
         protected virtual void OnNormalAttackEffect()

@@ -4,7 +4,9 @@ using Data;
 using Function;
 using Keiwando.BigInteger;
 using Managers.BattleManager;
+using Managers.GameManager;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Controller.Projectiles.BaseAttack
 {
@@ -14,6 +16,10 @@ namespace Controller.Projectiles.BaseAttack
         [SerializeField] protected float currentDuration;
         [SerializeField] protected float projectileSpeed;
         [SerializeField] protected bool readyToLaunch;
+        [SerializeField] protected bool isHitSomeone;
+        
+        public int criticalRate;
+        public int criticalDamage;
 
         private void OnDisable()
         {
@@ -38,21 +44,27 @@ namespace Controller.Projectiles.BaseAttack
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject.layer != LayerMask.NameToLayer("Enemy")) return;
-
-            collision.GetComponent<Monster>().TakeDamage(Damage);
+            if (collision.gameObject.layer != LayerMask.NameToLayer("Enemy") || isHitSomeone) return;
+            isHitSomeone = true;
+            
+            collision.GetComponent<Monster>().TakeDamage(Damage, criticalRate, criticalDamage);
             DestroyProjectile(collision.transform.position);
         }
 
-        public void InitializeArcherBaseAttack(BigInteger damage, Vector3 direction)
+        public void InitializeArcherBaseAttack(BigInteger damage, Vector3 inputDirection, int criticalRatePercent, int criticalDamagePercent)
         {
-            base.direction = direction;
-            FlipLocalScaleY(base.direction.x);
+            direction = inputDirection;
+            FlipLocalScaleY(direction.x);
 
             Damage = damage;
+            
+            criticalRate = criticalRatePercent;
+            criticalDamage = criticalDamagePercent;
+            
             currentDuration = 0;
-            transform.right = base.direction;
+            transform.right = direction;
             readyToLaunch = true;
+            isHitSomeone = false;
         }
 
         private void DestroyProjectile(Vector3 position)

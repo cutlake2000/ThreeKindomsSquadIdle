@@ -10,9 +10,7 @@ namespace Controller.Projectiles.BaseAttack
         protected BigInteger Damage;
         [SerializeField] protected Vector3 direction;
 
-        protected virtual void AttackEnemy()
-        {
-        }
+        protected virtual void AttackEnemy() { }
         
         protected void FlipLocalScaleXY(float directionX)
         {

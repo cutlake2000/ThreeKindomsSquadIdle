@@ -1,4 +1,5 @@
 using Data;
+using Keiwando.BigInteger;
 using Managers;
 using Managers.BattleManager;
 using Managers.GameManager;
@@ -8,25 +9,13 @@ namespace Creature.CreatureClass.SquadClass
 {
     public class Warrior : Squad
     {
-        protected override void SetCreatureStats()
-        {
-            base.SetCreatureStats();
-            
-            attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.WarriorAttackRange);
-
-            animator.SetFloat(animationData.ClassTypeParameterHash, 0);
-        }
-
         protected override void OnNormalAttack()
         {
             base.OnNormalAttack();
             
             // Debug.Log("워리어 공격");
 
-            ProjectileManager.Instance.InstantiateBaseAttack(Attack, Vector2.zero, Direction,
-                Enums.PoolType.ProjectileBaseAttackWarrior, isCriticalAttack);
-
-            isCriticalAttack = false;
+            ProjectileManager.Instance.InstantiateBaseAttack(Attack, Vector2.zero, Direction, Enums.PoolType.ProjectileBaseAttackWarrior, BigInteger.ToInt32(CriticalRate) / 10000, BigInteger.ToInt32(CriticalDamage) / 10000);
         }
 
         protected override void OnSkillAttack()

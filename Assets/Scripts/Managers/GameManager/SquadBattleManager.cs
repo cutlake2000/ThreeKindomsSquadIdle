@@ -67,26 +67,33 @@ namespace Managers.GameManager
         public SquadEntireStat squadEntireStat;
 
         [Header("Total SquadStats")]
-        public BigInteger totalWarriorAttack;
-        public BigInteger totalArcherAttack;
-        public BigInteger totalWizardAttack;
-        public BigInteger totalAttack;
-        public BigInteger totalMaxHealth;
-        public BigInteger totalDefence;
-        public BigInteger totalPenetration;
-        public BigInteger totalAccuracy;
-        public BigInteger totalCriticalRate;
-        public BigInteger totalCriticalDamage;
-        public BigInteger totalAcquisitionGold;
-        public BigInteger totalAcquisitionExp;
+        public BigInteger TotalAttack;
+        public BigInteger TotalWarriorAttack;
+        public BigInteger TotalArcherAttack;
+        public BigInteger TotalWizardAttack;
+     
+        public BigInteger TotalMaxHealth;
+        public BigInteger TotalWarriorHealth;
+        public BigInteger TotalArcherHealth;
+        public BigInteger TotalWizardHealth;
+        
+        public BigInteger TotalDefence;
+        public BigInteger TotalWarriorDefence;
+        public BigInteger TotalArcherDefence;
+        public BigInteger TotalWizardDefence;
+        
+        public BigInteger TotalPenetration;
+        public BigInteger TotalAccuracy;
+        public BigInteger TotalCriticalRate;
+        public BigInteger TotalCriticalDamage;
+        public BigInteger TotalAcquisitionGold;
+        public BigInteger TotalAcquisitionExp;
 
-        [Header("피해량 보정 (+% / -%)")] public int totalAttackAdjustValue; 
-        [Header("워리어 공격력 보정치 (%)")] public int warriorTotalAttackAdjustValue;
-        [Header("아처 공격력 보정치 (%)")] public int archerTotalAttackAdjustValue;
-        [Header("위자드 공격력 보정치 (%)")] public int wizardTotalAttackAdjustValue;
-        [Header("워리어 데미지 감소 보정치 (%)")] public int warriorDamageReduction;
-        [Header("아처 데미지 감소 보정치 (%)")] public int archerDamageReduction;
-        [Header("위자드 데미지 감소 보정치 (%)")] public int wizardDamageReduction;
+        [Header("피해량 보정 (%) ")] public int totalAttackAdjustValue;
+        [Header("클래스 별 데미지 피해량 보정 (%) ")] public int totalDamageReduction;
+        [Header("워리어 공격력 / 체력 / 방어력 보정치 (%)")] public int[] warriorTotalStatAdjustValue;
+        [Header("아처 공격력 / 체력 / 방어력 보정치 보정치 (%)")] public int[] archerTotalStatAdjustValue;
+        [Header("위자드 공격력 / 체력 / 방어력 보정치 보정치 (%)")] public int[] wizardTotalStatAdjustValue;
 
         public SquadLevel SquadLevel;
 
@@ -121,19 +128,27 @@ namespace Managers.GameManager
 
         private void SetSquadStatsFromBaseStats()
         {
-            totalWarriorAttack = squadEntireStat.baseAttack * warriorTotalAttackAdjustValue / 100;
-            totalArcherAttack = squadEntireStat.baseAttack * archerTotalAttackAdjustValue / 100;
-            totalWizardAttack = squadEntireStat.baseAttack * wizardTotalAttackAdjustValue / 100;
-            totalAttack = squadEntireStat.baseAttack;
+            TotalAttack = squadEntireStat.baseAttack;
+            TotalWarriorAttack = TotalAttack * warriorTotalStatAdjustValue[0] / 100;
+            TotalArcherAttack = TotalAttack * archerTotalStatAdjustValue[0] / 100;
+            TotalWizardAttack = TotalAttack * wizardTotalStatAdjustValue[0] / 100;
 
-            totalMaxHealth = squadEntireStat.baseHealth;
-            totalDefence = squadEntireStat.baseDefense;
-            totalPenetration = squadEntireStat.basePenetration;
-            totalAccuracy = squadEntireStat.baseAccuracy;
-            totalCriticalRate = squadEntireStat.baseCriticalRate;
-            totalCriticalDamage = squadEntireStat.baseCriticalDamage;
-            totalAcquisitionGold = squadEntireStat.baseAcquisitionGold;
-            totalAcquisitionExp = squadEntireStat.baseAcquisitionExp;
+            TotalMaxHealth = squadEntireStat.baseHealth;
+            TotalWarriorHealth = TotalMaxHealth * warriorTotalStatAdjustValue[1] / 100;
+            TotalArcherHealth = TotalMaxHealth * archerTotalStatAdjustValue[1] / 100;
+            TotalWizardHealth = TotalMaxHealth * wizardTotalStatAdjustValue[1] / 100;
+            
+            TotalDefence = squadEntireStat.baseDefense;
+            TotalWarriorDefence = TotalDefence * warriorTotalStatAdjustValue[2] / 100;
+            TotalArcherDefence = TotalDefence * archerTotalStatAdjustValue[2] / 100;
+            TotalWizardDefence = TotalDefence * wizardTotalStatAdjustValue[2] / 100;
+            
+            TotalPenetration = squadEntireStat.basePenetration;
+            TotalAccuracy = squadEntireStat.baseAccuracy;
+            TotalCriticalRate = squadEntireStat.baseCriticalRate;
+            TotalCriticalDamage = squadEntireStat.baseCriticalDamage;
+            TotalAcquisitionGold = squadEntireStat.baseAcquisitionGold;
+            TotalAcquisitionExp = squadEntireStat.baseAcquisitionExp;
         }
 
         // 이벤트 설정하는 메서드
@@ -149,28 +164,45 @@ namespace Managers.GameManager
         {
             switch (statusType)
             {
+                case Enums.SquadStatType.Attack:
+                    return TotalAttack;
                 case Enums.SquadStatType.WarriorAtk:
-                    return totalWarriorAttack * warriorTotalAttackAdjustValue; 
+                    return TotalWarriorAttack * warriorTotalStatAdjustValue[0] / 100;
                 case Enums.SquadStatType.ArcherAtk:
-                    return totalArcherAttack * archerTotalAttackAdjustValue;
+                    return TotalArcherAttack * archerTotalStatAdjustValue[0] / 100;
                 case Enums.SquadStatType.WizardAtk:
-                    return totalWizardAttack * wizardTotalAttackAdjustValue;
+                    return TotalWizardAttack * wizardTotalStatAdjustValue[0] / 100;
+                
                 case Enums.SquadStatType.Health:
-                    return totalMaxHealth;
+                    return TotalMaxHealth;
+                case Enums.SquadStatType.WarriorHealth:
+                    return TotalMaxHealth * warriorTotalStatAdjustValue[1] / 100;
+                case Enums.SquadStatType.ArcherHealth:
+                    return TotalMaxHealth * archerTotalStatAdjustValue[1] / 100;
+                case Enums.SquadStatType.WizardHealth:
+                    return TotalMaxHealth * wizardTotalStatAdjustValue[1] / 100;
+                
                 case Enums.SquadStatType.Defence:
-                    return totalDefence;
+                    return TotalDefence;
+                case Enums.SquadStatType.WarriorDefence:
+                    return TotalDefence * warriorTotalStatAdjustValue[2] / 100;
+                case Enums.SquadStatType.ArcherDefence:
+                    return TotalDefence * archerTotalStatAdjustValue[2] / 100;
+                case Enums.SquadStatType.WizardDefence:
+                    return TotalDefence * wizardTotalStatAdjustValue[2] / 100;
+                
                 case Enums.SquadStatType.Penetration:
-                    return totalPenetration;
+                    return TotalPenetration;
                 case Enums.SquadStatType.Accuracy:
-                    return totalAccuracy;
+                    return TotalAccuracy;
                 case Enums.SquadStatType.CriticalRate:
-                    return totalCriticalRate;
+                    return TotalCriticalRate;
                 case Enums.SquadStatType.CriticalDamage:
-                    return totalCriticalDamage;
+                    return TotalCriticalDamage;
                 case Enums.SquadStatType.AcquisitionGold:
-                    return totalAcquisitionGold;
+                    return TotalAcquisitionGold;
                 case Enums.SquadStatType.AcquisitionExp:
-                    return totalAcquisitionExp;
+                    return TotalAcquisitionExp;
             }
 
             return 0;
@@ -199,39 +231,41 @@ namespace Managers.GameManager
         {
             switch (squadStatType)
             {
-                //TODO : 워리어, 아처, 마법사 공격력을 따로 계산하는 산식 작성 요망
+                case Enums.SquadStatType.WarriorAtk:
+                    TotalWarriorAttack = statValue;
+                    break;
+                case Enums.SquadStatType.ArcherAtk:
+                    TotalArcherAttack = statValue;
+                    break;
+                case Enums.SquadStatType.WizardAtk:
+                    TotalWizardAttack = statValue;
+                    break;
                 case Enums.SquadStatType.Attack:
-                    totalAttack = statValue;
-                    totalWarriorAttack = statValue;
-                    totalArcherAttack = statValue;
-                    totalWizardAttack = statValue;
-
-                    foreach (var squad in squads) squad.GetComponent<Squad>().Attack = statValue;
-
+                    TotalAttack = statValue;
                     break;
                 case Enums.SquadStatType.Health:
-                    totalMaxHealth = statValue;
+                    TotalMaxHealth = statValue;
                     break;
                 case Enums.SquadStatType.Defence:
-                    totalDefence = statValue;
+                    TotalDefence = statValue;
                     break;
                 case Enums.SquadStatType.Penetration:
-                    totalPenetration = statValue;
+                    TotalPenetration = statValue;
                     break;
                 case Enums.SquadStatType.Accuracy:
-                    totalAccuracy = statValue;
+                    TotalAccuracy = statValue;
                     break;
                 case Enums.SquadStatType.CriticalRate:
-                    totalCriticalRate = statValue;
+                    TotalCriticalRate = statValue;
                     break;
                 case Enums.SquadStatType.CriticalDamage:
-                    totalCriticalDamage = statValue;
+                    TotalCriticalDamage = statValue;
                     break;
                 case Enums.SquadStatType.AcquisitionGold:
-                    totalAcquisitionGold = statValue;
+                    TotalAcquisitionGold = statValue;
                     break;
                 case Enums.SquadStatType.AcquisitionExp:
-                    totalAcquisitionExp = statValue;
+                    TotalAcquisitionExp = statValue;
                     break;
             }
         }

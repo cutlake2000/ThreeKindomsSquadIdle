@@ -70,8 +70,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
         public readonly Dictionary<string, Equipment> ArmorsDictionary = new();
         public readonly Dictionary<string, Equipment> GauntletsDictionary = new();
 
-        public bool[] canAllComposite = new bool[] { false, false, false, false, false, false};
-        public bool[] canAutoEquip = new bool[] { false, false, false, false, false, false};
+        public bool[] canAllComposite = { false, false, false, false, false, false};
+        public bool[] canAutoEquip = { false, false, false, false, false, false};
 
         private void Awake()
         {
@@ -110,6 +110,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                     for (var equipmentTier = 5; equipmentTier >= MaxTier; equipmentTier--)
                     {
                         var equipmentId = $"{rarity}_{equipmentTier}_{equipmentType}";
+                        
                         var equipmentName = equipmentType switch
                         {
                             Enums.EquipmentType.Sword => $"{swordNames[rarityIntValue]} {6 - equipmentTier}",
@@ -120,34 +121,52 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             Enums.EquipmentType.Gauntlet => $"{gauntletNames[rarityIntValue]} {6 - equipmentTier}",
                             _ => null
                         };
+                        
                         var equipmentIconIndex = equipmentIndex;
                         var equipmentIcon = SpriteManager.Instance.GetEquipmentSprite(equipmentType, equipmentIndex);
                         var equipmentRarity = rarity;
 
                         var equippedEffects = new List<EquipmentEffect>();
                         var ownedEffects =  new List<EquipmentEffect>();
-
-                        for (var i = 0 ; i < 2;i++)
-                        {
-                            var equippedEffect = new EquipmentEffect
-                            {
-                                statType = i == 0? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
-                                increaseStatType = Enums.IncreaseStatValueType.PercentStat,
-                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
-                            };
-                            equippedEffects.Add(equippedEffect);
-                        }
                         
-                        for (var i = 0 ; i < 2;i++)
+                        var equippedEffectSquadStatType =  equipmentType switch
                         {
-                            var ownedEffect = new EquipmentEffect
-                            {
-                                statType = i == 0 ? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
-                                increaseStatType = Enums.IncreaseStatValueType.BaseStat,
-                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
-                            };
-                            ownedEffects.Add(ownedEffect);
-                        }
+                            Enums.EquipmentType.Sword => Enums.SquadStatType.WarriorAtk,
+                            Enums.EquipmentType.Bow => Enums.SquadStatType.ArcherAtk,
+                            Enums.EquipmentType.Staff => Enums.SquadStatType.WizardAtk,
+                            Enums.EquipmentType.Helmet => Enums.SquadStatType.Defence,
+                            Enums.EquipmentType.Armor => Enums.SquadStatType.Health,
+                            Enums.EquipmentType.Gauntlet => Enums.SquadStatType.Attack,
+                            _ => throw new ArgumentOutOfRangeException()
+                        };
+                        
+                        var equippedEffect = new EquipmentEffect
+                        {
+                            statType = equippedEffectSquadStatType,
+                            increaseStatType = Enums.IncreaseStatValueType.PercentStat,
+                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue) * 100
+                        };
+                        
+                        var ownedEffectSquadStatType = equipmentType switch
+                        {
+                            Enums.EquipmentType.Sword => Enums.SquadStatType.WarriorAtk,
+                            Enums.EquipmentType.Bow => Enums.SquadStatType.ArcherAtk,
+                            Enums.EquipmentType.Staff => Enums.SquadStatType.WizardAtk,
+                            Enums.EquipmentType.Helmet => Enums.SquadStatType.Defence,
+                            Enums.EquipmentType.Armor => Enums.SquadStatType.Health,
+                            Enums.EquipmentType.Gauntlet => Enums.SquadStatType.Attack,
+                            _ => throw new ArgumentOutOfRangeException()
+                        };
+               
+                        var ownedEffect = new EquipmentEffect
+                        {
+                            statType = ownedEffectSquadStatType,
+                            increaseStatType = Enums.IncreaseStatValueType.BaseStat,
+                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
+                        };
+                        
+                        equippedEffects.Add(equippedEffect);
+                        ownedEffects.Add(ownedEffect);
                         
                         var equipment = new Equipment(equipmentId, equipmentName, equipmentIconIndex, equipmentIcon,
                             equipmentType, equipmentRarity, equipmentTier, equippedEffects, ownedEffects);
@@ -161,17 +180,12 @@ namespace Managers.BottomMenuManager.InventoryPanel
 
                         var targetScrollViewItem = equipmentType switch
                         {
-                            Enums.EquipmentType.Sword => UIManager.Instance.inventoryPanelUI
-                                .inventoryScrollViewItemSwords,
+                            Enums.EquipmentType.Sword => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords,
                             Enums.EquipmentType.Bow => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows,
-                            Enums.EquipmentType.Staff => UIManager.Instance.inventoryPanelUI
-                                .inventoryScrollViewItemStaffs,
-                            Enums.EquipmentType.Helmet => UIManager.Instance.inventoryPanelUI
-                                .inventoryScrollViewItemHelmets,
-                            Enums.EquipmentType.Armor => UIManager.Instance.inventoryPanelUI
-                                .inventoryScrollViewItemArmors,
-                            Enums.EquipmentType.Gauntlet => UIManager.Instance.inventoryPanelUI
-                                .inventoryScrollViewItemGauntlets,
+                            Enums.EquipmentType.Staff => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemStaffs,
+                            Enums.EquipmentType.Helmet => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemHelmets,
+                            Enums.EquipmentType.Armor => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemArmors,
+                            Enums.EquipmentType.Gauntlet => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 
@@ -194,15 +208,23 @@ namespace Managers.BottomMenuManager.InventoryPanel
 
                         equipmentIndex++;
                         
+                        if (equipment.isPossessed)
+                        {
+                            if (isExistHighValueEquipment == -1 && canAutoEquip[(int) equipmentType] == false) canAutoEquip[(int) equipmentType] = true; // 이전에 마킹된 장비가 있고, 보유 중인 상위 등급의 장비가 존재하기에 AutoEquipmentButton 활성화
+                            
+                            foreach (var effect in equipment.ownedEffects)
+                            {
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                            }
+                        }
+                        
                         if (equipment.isEquipped)
                         {
                             if (isExistHighValueEquipment == 0) isExistHighValueEquipment = -1; // 장착 중인 장비를 찾았다면 마킹
 
                             UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipmentType]
                                 .GetComponent<InventoryPanelSelectedItemUI>()
-                                .UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon,
-                                    SpriteManager.Instance.GetEquipmentBackgroundEffect((int)equipmentRarity),
-                                    SpriteManager.Instance.GetEquipmentBackground((int)equipmentRarity));
+                                .UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon, SpriteManager.Instance.GetEquipmentBackground((int)equipmentRarity), SpriteManager.Instance.GetEquipmentBackgroundEffect((int)equipmentRarity));
                             
                             switch (equipmentType)
                             {
@@ -229,16 +251,6 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             }
                                 
                             SquadBattleManager.EquipAction?.Invoke(equipment);
-                        }
-                        
-                        if (equipment.isPossessed)
-                        {
-                            if (isExistHighValueEquipment == -1 && canAutoEquip[(int) equipmentType] == false) canAutoEquip[(int) equipmentType] = true; // 이전에 마킹된 장비가 있고, 보유 중인 상위 등급의 장비가 존재하기에 AutoEquipmentButton 활성화
-                            
-                            foreach (var effect in equipment.ownedEffects)
-                            {
-                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
-                            }
                         }
                     }
                 }
@@ -296,31 +308,48 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         var equipmentBackground = SpriteManager.Instance.GetEquipmentBackground(rarityIntValue);
                         var equipmentBackgroundEffect =
                             SpriteManager.Instance.GetEquipmentBackgroundEffect(rarityIntValue);
-
+                        
                         var equippedEffects = new List<EquipmentEffect>();
                         var ownedEffects =  new List<EquipmentEffect>();
-
-                        for (var i = 0 ; i < 2; i++)
-                        {
-                            var equippedEffect = new EquipmentEffect
-                            {
-                                statType = i == 0? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
-                                increaseStatType = Enums.IncreaseStatValueType.PercentStat,
-                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
-                            };
-                            equippedEffects.Add(equippedEffect);
-                        }
                         
-                        for (var i = 0 ; i < 2; i++)
+                        var equippedEffectSquadStatType =  equipmentType switch
                         {
-                            var ownedEffect = new EquipmentEffect
-                            {
-                                statType = i == 0 ? Enums.SquadStatType.Attack : Enums.SquadStatType.Health,
-                                increaseStatType = Enums.IncreaseStatValueType.BaseStat,
-                                increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
-                            };
-                            ownedEffects.Add(ownedEffect);
-                        }
+                            Enums.EquipmentType.Sword => Enums.SquadStatType.WarriorAtk,
+                            Enums.EquipmentType.Bow => Enums.SquadStatType.ArcherAtk,
+                            Enums.EquipmentType.Staff => Enums.SquadStatType.WizardAtk,
+                            Enums.EquipmentType.Helmet => Enums.SquadStatType.Defence,
+                            Enums.EquipmentType.Armor => Enums.SquadStatType.Health,
+                            Enums.EquipmentType.Gauntlet => Enums.SquadStatType.Attack,
+                            _ => throw new ArgumentOutOfRangeException()
+                        };
+                        
+                        var equippedEffect = new EquipmentEffect
+                        {
+                            statType = equippedEffectSquadStatType,
+                            increaseStatType = Enums.IncreaseStatValueType.PercentStat,
+                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue) * 100
+                        };
+                        
+                        var ownedEffectSquadStatType = equipmentType switch
+                        {
+                            Enums.EquipmentType.Sword => Enums.SquadStatType.WarriorAtk,
+                            Enums.EquipmentType.Bow => Enums.SquadStatType.ArcherAtk,
+                            Enums.EquipmentType.Staff => Enums.SquadStatType.WizardAtk,
+                            Enums.EquipmentType.Helmet => Enums.SquadStatType.Defence,
+                            Enums.EquipmentType.Armor => Enums.SquadStatType.Health,
+                            Enums.EquipmentType.Gauntlet => Enums.SquadStatType.Attack,
+                            _ => throw new ArgumentOutOfRangeException()
+                        };
+               
+                        var ownedEffect = new EquipmentEffect
+                        {
+                            statType = ownedEffectSquadStatType,
+                            increaseStatType = Enums.IncreaseStatValueType.BaseStat,
+                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
+                        };
+                        
+                        equippedEffects.Add(equippedEffect);
+                        ownedEffects.Add(ownedEffect);
 
                         var equipment = new Equipment(equipmentId, equipmentName, equipmentIconIndex, equipmentLevel,
                             equipmentType, rarity, equipmentTier, equipmentQuantity, isEquipped, isPossessed,
@@ -330,17 +359,12 @@ namespace Managers.BottomMenuManager.InventoryPanel
 
                         var targetScrollViewItem = equipmentType switch
                         {
-                            Enums.EquipmentType.Sword => UIManager.Instance.inventoryPanelUI
-                                .inventoryScrollViewItemSwords,
+                            Enums.EquipmentType.Sword => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords,
                             Enums.EquipmentType.Bow => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemBows,
-                            Enums.EquipmentType.Staff => UIManager.Instance.inventoryPanelUI
-                                .inventoryScrollViewItemStaffs,
-                            Enums.EquipmentType.Helmet => UIManager.Instance.inventoryPanelUI
-                                .inventoryScrollViewItemHelmets,
-                            Enums.EquipmentType.Armor => UIManager.Instance.inventoryPanelUI
-                                .inventoryScrollViewItemArmors,
-                            Enums.EquipmentType.Gauntlet => UIManager.Instance.inventoryPanelUI
-                                .inventoryScrollViewItemGauntlets,
+                            Enums.EquipmentType.Staff => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemStaffs,
+                            Enums.EquipmentType.Helmet => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemHelmets,
+                            Enums.EquipmentType.Armor => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemArmors,
+                            Enums.EquipmentType.Gauntlet => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

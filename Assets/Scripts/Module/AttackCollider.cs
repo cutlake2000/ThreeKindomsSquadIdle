@@ -13,7 +13,7 @@ namespace Module
         {
             if (!collision.CompareTag(Strings.TAG_ENEMY)) return;
 
-            collision.GetComponent<Monster>().TakeDamage(damage);
+            collision.GetComponent<Monster>().TakeDamage(damage, 0, 0);
         }
 
         private void OnTriggerExit2D(Collider2D collision)

@@ -1,4 +1,5 @@
 using Data;
+using Keiwando.BigInteger;
 using Managers;
 using Managers.BattleManager;
 using Managers.GameManager;
@@ -21,10 +22,7 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.OnNormalAttack();
             
-            ProjectileManager.Instance.InstantiateBaseAttack(Attack, ProjectileSpawnPosition, Direction,
-                Enums.PoolType.ProjectileBaseAttackArcher, isCriticalAttack);
-
-            isCriticalAttack = false;
+            ProjectileManager.Instance.InstantiateBaseAttack(Attack, ProjectileSpawnPosition, Direction, Enums.PoolType.ProjectileBaseAttackArcher, BigInteger.ToInt32(CriticalRate) / 10000, BigInteger.ToInt32(CriticalDamage) / 10000);
         }
 
         protected override void OnNormalAttackEffect()

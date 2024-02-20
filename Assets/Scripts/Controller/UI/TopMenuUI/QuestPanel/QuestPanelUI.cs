@@ -29,10 +29,13 @@ namespace Controller.UI.TopMenuUI.QuestPanel
 
         private void CheckQuestClear()
         {
-            if (QuestManager.Instance.initialQuestMark.activeInHierarchy) QuestManager.Instance.initialQuestMark.SetActive(false);
-            
             if (QuestManager.Instance.isCurrentQuestClear)
             {
+                if (QuestManager.Instance.initialQuestMark.activeInHierarchy)
+                {
+                    QuestManager.Instance.initialQuestMark.SetActive(false);
+                }
+                
                 if (QuestManager.Instance.currentQuestTarget.targetMarks != null)
                 {
                     foreach (var tm in QuestManager.Instance.currentQuestTarget.targetMarks)

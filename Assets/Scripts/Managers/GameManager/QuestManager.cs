@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Controller.UI.TopMenuUI.QuestPanel;
 using Data;
 using Managers.BattleManager;
+using Managers.BottomMenuManager.InventoryPanel;
 using Managers.BottomMenuManager.TalentPanel;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -162,6 +163,87 @@ namespace Managers.GameManager
                         break;
                     case Enums.QuestType.StageClear:
                         if (StageManager.Instance.currentAccumulatedStage >= currentQuest.targetProgress)
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.AutoEquipSword:
+                        if (!(InventoryManager.Instance.equippedSword.equipmentRarity == Enums.EquipmentRarity.Common && InventoryManager.Instance.equippedSword.equipmentTier == 5))
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.AutoEquipBow:
+                        if (!(InventoryManager.Instance.equippedBow.equipmentRarity == Enums.EquipmentRarity.Common && InventoryManager.Instance.equippedBow.equipmentTier == 5))
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.AutoEquipStaff:
+                        if (!(InventoryManager.Instance.equippedStaff.equipmentRarity == Enums.EquipmentRarity.Common && InventoryManager.Instance.equippedStaff.equipmentTier == 5))
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.AutoEquipHelmet:
+                        if (!(InventoryManager.Instance.equippedHelmet.equipmentRarity == Enums.EquipmentRarity.Common && InventoryManager.Instance.equippedHelmet.equipmentTier == 5))
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.AutoEquipArmor:
+                        if (!(InventoryManager.Instance.equippedArmor.equipmentRarity == Enums.EquipmentRarity.Common && InventoryManager.Instance.equippedArmor.equipmentTier == 5))
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.AutoEquipGauntlet:
+                        if (!(InventoryManager.Instance.equippedGauntlet.equipmentRarity == Enums.EquipmentRarity.Common && InventoryManager.Instance.equippedGauntlet.equipmentTier == 5))
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.TouchLoopButton:
+                        if (StageManager.Instance.challengeProgress)
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.TouchChallengeButton:
+                        if (StageManager.Instance.challengeProgress == false)
+                        {
+                            currentQuest.progress = currentQuest.targetProgress;
+                            isCurrentQuestClear = true;
+                            ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
+                            UIManager.Instance.questPanelUI.completedMark.SetActive(true);
+                        }
+                        break;
+                    case Enums.QuestType.TouchAutoSkillButton:
+                        if (SquadBattleManager.Instance.autoSkill)
                         {
                             currentQuest.progress = currentQuest.targetProgress;
                             isCurrentQuestClear = true;
@@ -352,8 +434,11 @@ namespace Managers.GameManager
                 false => "메인 퀘스트"
             };
 
-            var questDescription = $"{questType}-{questLevel + 1}\n{targetQuestDescriptionText}";
-            UIManager.Instance.questPanelUI.UpdateQuestPanelUI(targetQuestRewardSprite, targetQuestRewardText, questDescription);
+            var questName = $"<color=#D7AB56><b>{questType} {questLevel + 1}</b></color>";
+            var questDescription = $"{targetQuestDescriptionText}";
+            var questPanelText = $"{questName}\n{questDescription}";
+            
+            UIManager.Instance.questPanelUI.UpdateQuestPanelUI(targetQuestRewardSprite, targetQuestRewardText, questPanelText);
         }
 
         public void UpdateQuestRewardPanelUI()

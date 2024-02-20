@@ -267,7 +267,8 @@ namespace Data
             ProjectileBaseAttackWizard,
             ProjectileBaseAttackMonster,
             EffectEnhance,
-            EffectDamage,
+            EffectDamageNormal,
+            EffectDamageCritical,
             PopUpMessage
         }
 
@@ -280,12 +281,21 @@ namespace Data
 
         public enum SquadStatType
         {
+            Attack, // 공격력 (Attack)
             WarriorAtk, // 전사 공격력
             WizardAtk, // 마법사 공격력
             ArcherAtk, // 궁수 공격력
+            
             Health, // 체력 (Health Points)
-            Attack, // 공격력 (Attack)
+            WarriorHealth, // 전사 공격력
+            WizardHealth, // 마법사 공격력
+            ArcherHealth, // 궁수 공격력
+            
             Defence, // 방어력 (Defense)
+            WarriorDefence, // 전사 공격력
+            WizardDefence, // 마법사 공격력
+            ArcherDefence, // 궁수 공격력
+            
             CriticalRate, // 치명타 확률 (Critical Hit Rate)
             CriticalDamage, // 치명타 피해량 (Critical Hit Damage)
             Accuracy, // 명중률 (Accuracy)
