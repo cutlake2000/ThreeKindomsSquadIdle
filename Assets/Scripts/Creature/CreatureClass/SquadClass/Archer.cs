@@ -45,7 +45,7 @@ namespace Creature.CreatureClass.SquadClass
 
                 SquadBattleManager.Instance.RunSkillCoolTimer(Enums.CharacterType.Archer, i);
                 ProjectileManager.Instance.InstantiateSkillAttack(
-                    SquadBattleManager.Instance.archerSkillCoolTimer[i].skill, ((Creature)this).Attack, ProjectileSpawnPosition,
+                    SquadBattleManager.Instance.archerSkillCoolTimer[i].skill, Attack, ProjectileSpawnPosition,
                     currentTarget.transform.position);
                 SquadBattleManager.Instance.archerSkillCoolTimer[i].orderToInstantiate = false;
 

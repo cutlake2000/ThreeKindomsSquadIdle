@@ -110,8 +110,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   equipmentTier: {fileID: 6328038166338063205}
   equipmentIcon: {fileID: 1692443039503690403}
-  equipmentBackgroundEffect: {fileID: 5483882288924161033}
-  equipmentBackground: {fileID: 8361649522216329661}
+  equipmentBackgroundEffect: {fileID: 8361649522216329661}
+  equipmentBackground: {fileID: 5483882288924161033}
 --- !u!1 &1528312137416012966
 GameObject:
   m_ObjectHideFlags: 0

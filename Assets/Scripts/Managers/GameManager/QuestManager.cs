@@ -376,7 +376,7 @@ namespace Managers.GameManager
 
         private void CreateQuestsFromCsv()
         {
-            questCsv = Resources.Load<TextAsset>("CSV/GuideQuest");
+            questCsv = UnityEngine.Resources.Load<TextAsset>("CSV/GuideQuest");
             questLevel = ES3.Load($"{nameof(questLevel)}", 0);
             
             if (questLevel == 0) initialQuestMark.SetActive(true);

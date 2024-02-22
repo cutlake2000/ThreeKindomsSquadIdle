@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Controller.UI;
 using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI;
 using Data;
@@ -9,7 +10,6 @@ using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using ScriptableObjects.Scripts;
-using UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -273,10 +273,14 @@ namespace Managers.GameManager
                                 AccountManager.Instance.AddExp(reward.GetStageReward(currentAccumulatedStage));
                             }
                         }
+                        
+                        stageResultUI.SetActive(false);
                     }
-                    
-                    stageResultUI.GetComponent<StageRewardPanelUI>().gameObject.SetActive(false);
-                    
+                    else if (QuestManager.Instance.questLevel < 18)
+                    {
+                        stageResultUI.SetActive(false);
+                    }
+                        
                     yield return new WaitForSeconds(1.0f);
                 }
                 
@@ -339,7 +343,7 @@ namespace Managers.GameManager
         private void SpawnMonster()
         {
             currentRemainedMonsterCount += monsterSpawnCountsPerSubStage;
-            MonsterManager.Instance.SpawnMonsters(stageSo.MainStageInfos[currentMainStage - 1].MainStageMonsterTypes, currentAccumulatedStage, monsterSpawnCountsPerSubStage);
+            MonsterManager.Instance.SpawnMonsters(stageSo.MainStageInfos[currentMainStage - 1].MainStageMonsterTypes, monsterSpawnCountsPerSubStage);
         }
 
         private void DespawnMonster()

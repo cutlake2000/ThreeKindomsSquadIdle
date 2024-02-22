@@ -31,7 +31,7 @@ namespace Creature.CreatureClass.MonsterClass
             var increaseValue = DungeonManager.Instance.increaseBossMonsterStatValuePercent;
 
             var increaseValueToFloat = increaseValue / 100.0f;
-            var multiplier = Mathf.Pow(dungeonLevel, increaseValueToFloat);
+            var multiplier = Mathf.Pow(increaseValueToFloat, (dungeonLevel - 1) * 10);
             var finalMultiplier = Mathf.FloorToInt(multiplier);
             
             if (finalMultiplier <= 0) Debug.Log("또잉?");

@@ -29,11 +29,13 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel
             squadStatPanelUI.InitializeEventListeners();
             squadConfigurePanelUI.InitializeEventListeners();
 
-            for (var i = 0; i < squadPanel.Length; i++)
+            for (var i = 0; i < 2; i++) // TODO : 스쿼드 등급 기능 업데이트 시, squadPanel.Length로 변경
             {
                 var index = i;
                 squadPanelOffButton[i].GetComponent<Button>().onClick.AddListener(() => InitializeSquadPanelButton(index));
             }
+            
+            squadPanelOffButton[2].GetComponent<LockButtonUI>().InitializeEventListener();
         }
 
         private void InitializeSquadPanelButton(int index)

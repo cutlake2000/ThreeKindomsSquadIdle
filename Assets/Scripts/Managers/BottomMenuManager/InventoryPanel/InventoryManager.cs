@@ -392,7 +392,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipmentType]
                                 .GetComponent<InventoryPanelSelectedItemUI>()
                                 .UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon,
-                                    equipmentBackgroundEffect, equipmentBackground);
+                                    equipmentBackground, equipmentBackgroundEffect);
                             
                             switch (equipmentType)
                             {

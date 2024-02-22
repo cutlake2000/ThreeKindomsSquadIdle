@@ -33,6 +33,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         public List<GameObject> inventoryScrollViewItemGauntlets = new();
 
         [Header("캐릭터 스폰 위치")] public List<GameObject> spawnTargetPosition;
+        
+        [Header("장비 스크롤뷰 / 스킨 전환 버튼")] public List<Button> equipmentViewButtons;
 
         [Space(5)]
         [Header("=== 장비 선택 팝업 창 ===")]
@@ -96,6 +98,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             allCompositeLockButton.GetComponent<LockButtonUI>().InitializeEventListener();
             autoEquipLockButton.GetComponent<LockButtonUI>().InitializeEventListener();
             levelUpLockButton.GetComponent<LockButtonUI>().InitializeEventListener();
+            
+            equipmentViewButtons[1].GetComponent<LockButtonUI>().InitializeEventListener();
         }
 
         private void OnClockSelectedEquipmentPanelExit()

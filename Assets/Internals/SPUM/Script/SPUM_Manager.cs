@@ -170,7 +170,7 @@ public class SPUM_Manager : MonoBehaviour
 
         if(num!=9)
         {
-            Object[] tObj = Resources.LoadAll("SPUM/SPUM_Sprites/Items/"+path+"/",typeof(Texture2D));
+            Object[] tObj = UnityEngine.Resources.LoadAll("SPUM/SPUM_Sprites/Items/"+path+"/",typeof(Texture2D));
             for(var i = 0 ; i < tObj.Length; i++)
             {
                 if(tObj[i].GetType() == typeof(Texture2D))
@@ -285,7 +285,7 @@ public class SPUM_Manager : MonoBehaviour
 
     public void SetSpritePackageList(int num, string path, string package)
     {
-        Object[] tObj = Resources.LoadAll("SPUM/SPUM_Sprites/Packages/"+package+"/"+path+"/",typeof(Texture2D));
+        Object[] tObj = UnityEngine.Resources.LoadAll("SPUM/SPUM_Sprites/Packages/"+package+"/"+path+"/",typeof(Texture2D));
         for(var i = 0 ; i < tObj.Length; i++)
         {
             if(tObj[i].GetType() == typeof(Texture2D))
@@ -322,8 +322,8 @@ public class SPUM_Manager : MonoBehaviour
                 int value = (rand) ? Random.Range(0,_textureList[listNum]._textureList.Count) : num; 
                 bool textureChk = (listNum == 3||listNum == 4||listNum == 5 || listNum ==9) ? false : true;
 
-                if(textureChk) tSprite = Resources.Load<Sprite>(_textureList[listNum]._textureList[value]);
-                else tObj = Resources.LoadAll<Sprite>(_textureList[listNum]._textureList[value]);
+                if(textureChk) tSprite = UnityEngine.Resources.Load<Sprite>(_textureList[listNum]._textureList[value]);
+                else tObj = UnityEngine.Resources.LoadAll<Sprite>(_textureList[listNum]._textureList[value]);
             }
             else
             {
@@ -1205,7 +1205,7 @@ public class SPUM_Manager : MonoBehaviour
                 List<Sprite> tObj = new List<Sprite>();
                 for(var i = 0 ; i < _textureList[_drawItemIndex]._textureList.Count;i++ )
                 {
-                    Sprite tSP = Resources.Load<Sprite>(_textureList[_drawItemIndex]._textureList[i]);
+                    Sprite tSP = UnityEngine.Resources.Load<Sprite>(_textureList[_drawItemIndex]._textureList[i]);
                     tObj.Add(tSP);
                 }
                 for(var i = 0 ; i < tObj.Count; i++)
@@ -1238,7 +1238,7 @@ public class SPUM_Manager : MonoBehaviour
                 List<Texture2D> tObj = new List<Texture2D>();
                 for(var i = 0 ; i < _textureList[_drawItemIndex]._textureList.Count;i++ )
                 {
-                    Texture2D tSP = Resources.Load<Texture2D>(_textureList[_drawItemIndex]._textureList[i]);
+                    Texture2D tSP = UnityEngine.Resources.Load<Texture2D>(_textureList[_drawItemIndex]._textureList[i]);
                     tObj.Add(tSP);
                 }
                 
@@ -1259,7 +1259,7 @@ public class SPUM_Manager : MonoBehaviour
                             ttObjST._clothList[1].gameObject.SetActive(false);
                             ttObjST._clothList[2].gameObject.SetActive(false);
 
-                            Sprite[] tSpriteCloth = Resources.LoadAll<Sprite>( _textureList[_drawItemIndex]._textureList[i]);
+                            Sprite[] tSpriteCloth = UnityEngine.Resources.LoadAll<Sprite>( _textureList[_drawItemIndex]._textureList[i]);
                             for(var j = 0; j < tSpriteCloth.Length;j++)
                             {
                                 switch(tSpriteCloth[j].name)
@@ -1292,7 +1292,7 @@ public class SPUM_Manager : MonoBehaviour
                             ttObjST._pantList[0].sprite=null;
                             ttObjST._pantList[1].sprite=null;
                             //바지
-                            Sprite[] tSpritePant = Resources.LoadAll<Sprite>( _textureList[_drawItemIndex]._textureList[i]);
+                            Sprite[] tSpritePant = UnityEngine.Resources.LoadAll<Sprite>( _textureList[_drawItemIndex]._textureList[i]);
                             for(var j = 0; j < tSpritePant.Length;j++)
                             {
                                 switch(tSpritePant[j].name)
@@ -1317,7 +1317,7 @@ public class SPUM_Manager : MonoBehaviour
                             ttObjST._armorList[1].gameObject.SetActive(false);
                             ttObjST._armorList[2].gameObject.SetActive(false);
 
-                            Sprite[] tSpriteArmor = Resources.LoadAll<Sprite>( _textureList[_drawItemIndex]._textureList[i]);
+                            Sprite[] tSpriteArmor = UnityEngine.Resources.LoadAll<Sprite>( _textureList[_drawItemIndex]._textureList[i]);
 
                             for(var j = 0; j < tSpriteArmor.Length;j++)
                             {
@@ -1435,7 +1435,7 @@ public class SPUM_Manager : MonoBehaviour
 
             if(name.Length > 0)
             {
-                Sprite[] tSpriteCloth = Resources.LoadAll<Sprite>(name);
+                Sprite[] tSpriteCloth = UnityEngine.Resources.LoadAll<Sprite>(name);
                 for(var i = 0; i < tSpriteCloth.Length;i++)
                 {
                     switch(tSpriteCloth[i].name)
@@ -1464,7 +1464,7 @@ public class SPUM_Manager : MonoBehaviour
             _spriteObj._pantList[1].sprite = null;
             if(name.Length > 0)
             {
-                Sprite[] tSpritePant = Resources.LoadAll<Sprite>(name);
+                Sprite[] tSpritePant = UnityEngine.Resources.LoadAll<Sprite>(name);
                 for(var i = 0; i < tSpritePant.Length;i++)
                 {
                     switch(tSpritePant[i].name)
@@ -1488,7 +1488,7 @@ public class SPUM_Manager : MonoBehaviour
             _spriteObj._armorList[2].sprite = null;
             if(name.Length > 0)
             {
-                Sprite[] tSpriteCloth = Resources.LoadAll<Sprite>(name);
+                Sprite[] tSpriteCloth = UnityEngine.Resources.LoadAll<Sprite>(name);
                 for(var i = 0; i < tSpriteCloth.Length;i++)
                 {
                     switch(tSpriteCloth[i].name)

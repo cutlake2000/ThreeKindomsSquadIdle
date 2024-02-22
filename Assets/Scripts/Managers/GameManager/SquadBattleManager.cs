@@ -128,6 +128,11 @@ namespace Managers.GameManager
 
         private void SetSquadStatsFromBaseStats()
         {
+            squadEntireStat.UpdatePercentStat(Enums.SquadStatType.CriticalRate, 0);
+            squadEntireStat.UpdatePercentStat(Enums.SquadStatType.CriticalDamage, 0);
+            squadEntireStat.UpdatePercentStat(Enums.SquadStatType.AcquisitionGold, 0);
+            squadEntireStat.UpdatePercentStat(Enums.SquadStatType.AcquisitionExp, 0);
+            
             TotalAttack = squadEntireStat.baseAttack;
             TotalWarriorAttack = TotalAttack * warriorTotalStatAdjustValue[0] / 100;
             TotalArcherAttack = TotalAttack * archerTotalStatAdjustValue[0] / 100;
@@ -146,7 +151,7 @@ namespace Managers.GameManager
             TotalPenetration = squadEntireStat.basePenetration;
             TotalAccuracy = squadEntireStat.baseAccuracy;
             TotalCriticalRate = squadEntireStat.baseCriticalRate;
-            TotalCriticalDamage = squadEntireStat.baseCriticalDamage;
+            TotalCriticalDamage = squadEntireStat.baseCriticalRate;
             TotalAcquisitionGold = squadEntireStat.baseAcquisitionGold;
             TotalAcquisitionExp = squadEntireStat.baseAcquisitionExp;
         }

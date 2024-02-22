@@ -97,7 +97,7 @@ namespace Creature.CreatureClass.MonsterClass
         {
             var increaseValue = MonsterManager.Instance.increaseMonsterStatValue;
 
-            if (multiplierValue == 0) multiplierValue = 1;
+            multiplierValue = DungeonManager.Instance.isDungeonRunnerRunning ? DungeonManager.Instance.increaseNormalMonsterStatValue : StageManager.Instance.currentAccumulatedStage;
 
             var increaseValueToFloat = increaseValue / 100.0f;
             var multiplier = Mathf.Pow(increaseValueToFloat, multiplierValue);
@@ -121,7 +121,7 @@ namespace Creature.CreatureClass.MonsterClass
             
             var randomPickCriticalRate = Random.Range(1, 10001);
             var isCritical = false;
-            
+             
             if (criticalRate >= randomPickCriticalRate)
             {
                 isCritical = true;

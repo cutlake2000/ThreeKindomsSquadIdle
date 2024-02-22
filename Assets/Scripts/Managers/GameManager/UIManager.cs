@@ -9,7 +9,6 @@ using Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel;
 using Controller.UI.TopMenuUI.PlayerInfoPanelUI;
 using Controller.UI.TopMenuUI.QuestPanel;
 using Controller.UI.TopMenuUI.SkillPanel;
-using UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -19,6 +18,7 @@ namespace Managers.GameManager
     {
         public static UIManager Instance;
         
+        [Space(5)] [Header("=== 스테이지 결과창 UI ===")] public StageRewardPanelUI stageRewardPanelUI;
         [Space(5)] [Header("=== 팝업 메시지 패널 ===")] public PopUpMessagePanelUI popUpMessagePanelUI;
         [Space(5)] [Header("=== 스쿼드 아이콘 패널 ===")] public PlayerInfoPanelUI playerInfoPanelUI;
         [Space(5)] [Header("=== 스킬 쿨타임 ===")] public SquadSkillCoolTimerUI squadSkillCoolTimerUI;
@@ -30,6 +30,7 @@ namespace Managers.GameManager
         [Space(5)] [Header("=== 퀘스트 패널 ===")] public QuestPanelUI questPanelUI;
         [Space(5)] [Header("=== 소환 패널 ===")] public SummonPanelUI summonPanelUI;
         [Space(5)] [Header("=== 오프라인 보상 패널 ===")] public OffLineRewardUI offLineRewardUI;
+        [Space(5)] [Header("=== 푸쉬 보상 패널 ===")] public PushRewardUI pushRewardUI;
 
         private void Awake()
         {
@@ -43,6 +44,7 @@ namespace Managers.GameManager
 
         private void InitializeEventListeners()
         {
+            stageRewardPanelUI.InitializeEventListener();
             dungeonPanelUI.InitializeEventListener();
             popUpMessagePanelUI.InitializeEventListener();
             bottomMenuPanelUI.InitializeEventListeners();
@@ -53,6 +55,7 @@ namespace Managers.GameManager
             questPanelUI.InitializeEventListeners();
             summonPanelUI.InitializeEventListeners();
             offLineRewardUI.InitializeEventListener();
+            pushRewardUI.InitializeEventListener();
         }
         
         public static string FormatCurrency(int value)

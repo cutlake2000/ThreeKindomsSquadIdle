@@ -152,7 +152,7 @@ public class SPUM_SpriteList : MonoBehaviour
                 tPath = tPath.Replace("Assets/Resources/","");
                 tPath = tPath.Replace(".png","");
                 
-                Sprite[] tSP = Resources.LoadAll<Sprite>(tPath);
+                Sprite[] tSP = UnityEngine.Resources.LoadAll<Sprite>(tPath);
                 if(tSP.Length > 1)
                 {
                     _objList[i].sprite = tSP[i];

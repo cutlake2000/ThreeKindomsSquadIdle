@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Resources.ScriptableObjects.Scripts;
 using Unity.Notifications.Android;
 using UnityEngine;
 using UnityEngine.Android;
@@ -11,10 +11,10 @@ namespace Managers.GameManager
     {
         public static PushManager Instance;
 
-        private Dictionary<string, PushNotesDataSO> dataDic;
+        private Dictionary<string, PushNotesDataSo> dataDic;
         private Dictionary<string, bool> rewardRecieved;
 
-        public static int HasPermissionChecked
+        private static int HasPermissionChecked
         {
             get => PlayerPrefs.GetInt("hasPermissionChecked_" + Application.productName, 0);
             set => PlayerPrefs.SetInt("hasPermissionChecked_" + Application.productName, value);
@@ -26,11 +26,10 @@ namespace Managers.GameManager
         {
             Instance = this;
         }
-        
+
         private void Start()
         {
-            dataDic = new Dictionary<string, PushNotesDataSO>();
-            rewardRecieved = new Dictionary<string, bool>();
+            SetCollections();
 
             // 최초 한 번만 권한 체크
             if (HasPermissionChecked == 0)
@@ -46,14 +45,17 @@ namespace Managers.GameManager
             LoadDatas();
         }
 
+        private void SetCollections()
+        {
+            dataDic = new Dictionary<string, PushNotesDataSo>();
+            rewardRecieved = new Dictionary<string, bool>();
+        }
+
         private void LoadDatas()
         {
-            var datas = Resources.LoadAll<PushNotesDataSO>("ScriptableObjects/Datas");
+            var datas = UnityEngine.Resources.LoadAll<PushNotesDataSo>("ScriptableObjects/Data/PushMessage");
 
-            foreach(var data in datas)
-            {
-                dataDic[data.name] = data;
-            }
+            foreach (var data in datas) dataDic[data.name] = data;
 
             LoadRewardRecieved();
         }
@@ -61,19 +63,17 @@ namespace Managers.GameManager
         private void LoadRewardRecieved()
         {
             foreach (var kvp in dataDic)
-            {
-                rewardRecieved[kvp.Key] = ES3.KeyExists($"PushRewardRecieved_{kvp.Key}") ? ES3.Load<bool>($"PushRewardRecieved_{kvp.Key}") : false;
-            }
+                rewardRecieved[kvp.Key] = ES3.KeyExists($"PushRewardRecieved_{kvp.Key}")
+                    ? ES3.Load<bool>($"PushRewardRecieved_{kvp.Key}")
+                    : false;
         }
 
         private void CheckNotificationPermission()
         {
             // 푸시 알림 권한이 허용되어 있는지 확인
             if (!Permission.HasUserAuthorizedPermission("android.permission.POST_NOTIFICATIONS"))
-            {
                 // 권한이 허용되지 않은 경우 권한 요청
                 Permission.RequestUserPermission("android.permission.POST_NOTIFICATIONS");
-            }
         }
 
         private void OnApplicationPause(bool pause)
@@ -82,20 +82,19 @@ namespace Managers.GameManager
             {
                 // 알림 예약
                 if (Permission.HasUserAuthorizedPermission("android.permission.POST_NOTIFICATIONS"))
-                {
                     SendLocalNotification();
-                }
 
                 SaveRewardRecieved();
             }
             else
             {
+                // Debug.Log(AndroidNotificationCenter.CheckScheduledNotificationStatus());
+                
                 // 알림 예약 제거
                 AndroidNotificationCenter.CancelAllNotifications();
                 AndroidNotificationCenter.CancelAllScheduledNotifications();
             }
         }
-
 
         private void SendLocalNotification()
         {
@@ -110,25 +109,24 @@ namespace Managers.GameManager
 
             AndroidNotificationCenter.RegisterNotificationChannel(channel);
 
-            foreach (var kvp in dataDic.Where(kvp => !rewardRecieved[kvp.Key]))
+            foreach(KeyValuePair<string, PushNotesDataSo> kvp in dataDic)
             {
+                if (rewardRecieved[kvp.Key]) continue;
+
                 Debug.Log($"Push: {kvp.Key}");
-                AndroidNotificationCenter.SendNotification(new AndroidNotification(kvp.Value.Title, kvp.Value.Desc, DateTime.Now.AddMinutes(kvp.Value.PushTime)), "channel_id");
+                AndroidNotificationCenter.SendNotification(
+                    new AndroidNotification(kvp.Value.Title, kvp.Value.Desc, DateTime.Now.AddHours(kvp.Value.PushTime)), "channel_id");
             }
         }
 #endif
 
-        public List<PushNotesDataSO> GetUnrecievedRewardDatas(int hour)
+        public List<PushNotesDataSo> GetUnrecievedRewardDatas(int hour)
         {
-            var pushDatas = new List<PushNotesDataSO>();
+            var pushDatas = new List<PushNotesDataSo>();
 
-            foreach(var kvp in dataDic)
-            {
+            foreach (var kvp in dataDic)
                 if (!rewardRecieved[kvp.Key] && kvp.Value.PushTime <= hour)
-                {
                     pushDatas.Add(kvp.Value);
-                }
-            }
 
             return pushDatas;
         }
@@ -140,10 +138,7 @@ namespace Managers.GameManager
 
         private void SaveRewardRecieved()
         {
-            foreach (var kvp in rewardRecieved)
-            {
-                ES3.Save($"PushRewardRecieved_{kvp.Key}", kvp.Value);
-            }
+            foreach (var kvp in rewardRecieved) ES3.Save($"PushRewardRecieved_{kvp.Key}", kvp.Value);
         }
     }
 }

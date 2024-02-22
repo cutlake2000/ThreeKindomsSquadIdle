@@ -12,10 +12,11 @@ namespace Creature.Data
     [Serializable]
     public class SquadEntireStat : BaseStat
     {
+        [Header("깡옵")]
         [Tooltip("기본 공격력")] public int baseAttack;
-        [Tooltip("기본 공격력")] public int baseWarriorAttack;
-        [Tooltip("기본 공격력")] public int baseArcherAttack;
-        [Tooltip("기본 공격력")] public int baseWizardAttack;
+        [Tooltip("기본 워리어 공격력")] public int baseWarriorAttack;
+        [Tooltip("기본 아처 공격력")] public int baseArcherAttack;
+        [Tooltip("기본 위자드 공격력")] public int baseWizardAttack;
         [Tooltip("기본 체력")] public int baseHealth;
         [Tooltip("기본 방어력")] public int baseDefense;
         [Tooltip("기본 관통력")] public int basePenetration;
@@ -25,18 +26,20 @@ namespace Creature.Data
         [Tooltip("기본 골드 획득량")] public int baseAcquisitionGold;
         [Tooltip("기본 골드 획득량")] public int baseAcquisitionExp;
 
-        [SerializeField] private int percentAttack = 10000;
-        [SerializeField] private int percentWarriorAttack = 10000;
-        [SerializeField] private int percentArcherAttack = 10000;
-        [SerializeField] private int percentWizardAttack = 10000;
-        [SerializeField] private int percentHealth = 10000;
-        [SerializeField] private int percentDefence = 10000;
-        [SerializeField] private int percentCriticalRate = 10000;
-        [SerializeField] private int percentCriticalDamage = 10000;
-        [SerializeField] private int percentPenetration = 10000;
-        [SerializeField] private int percentAccuracy = 10000;
-        [SerializeField] private int percentAcquisitionGold = 10000;
-        [SerializeField] private int percentAcquisitionExp = 10000;
+        [Space(5)]
+        [Header("깡옵")]
+        public int percentAttack = 10000;
+        public int percentWarriorAttack = 10000;
+        public int percentArcherAttack = 10000;
+        public int percentWizardAttack = 10000;
+        public int percentHealth = 10000;
+        public int percentDefence = 10000;
+        public int percentCriticalRate = 10000;
+        public int percentCriticalDamage = 10000;
+        public int percentPenetration = 10000;
+        public int percentAccuracy = 10000;
+        public int percentAcquisitionGold = 10000;
+        public int percentAcquisitionExp = 10000;
 
         // 스텟 증가 메서드
         public void UpdateTotalStat(Enums.SquadStatType squadStatType, int adjustValue)
@@ -150,7 +153,7 @@ namespace Creature.Data
                     SquadBattleManager.Instance.SetTotalSquadStat(statType, AdjustTotalStat(ref baseHealth, adjustValue, ref percentHealth, 0));
                     break;
                 case Enums.SquadStatType.Defence:
-                    SquadBattleManager.Instance.SetTotalSquadStat(Enums.SquadStatType.Defence, AdjustTotalStat(ref baseHealth, adjustValue, ref percentHealth, 0));
+                    SquadBattleManager.Instance.SetTotalSquadStat(Enums.SquadStatType.Defence, AdjustTotalStat(ref baseDefense, adjustValue, ref percentDefence, 0));
                     break;
                 case Enums.SquadStatType.Penetration:
                     SquadBattleManager.Instance.SetTotalSquadStat(statType, AdjustTotalStat(ref basePenetration, adjustValue, ref percentPenetration, 0));
@@ -164,9 +167,25 @@ namespace Creature.Data
                 case Enums.SquadStatType.AcquisitionExp:
                     SquadBattleManager.Instance.SetTotalSquadStat(statType, AdjustTotalStat(ref baseAcquisitionExp, adjustValue, ref percentAcquisitionExp, 0));
                     break;
+                case Enums.SquadStatType.CriticalRate:
+                    SquadBattleManager.Instance.SetTotalSquadStat(statType, AdjustTotalStat(ref baseCriticalRate, adjustValue, ref percentCriticalRate, 0));
+                    break;
                 case Enums.SquadStatType.CriticalDamage:
                     SquadBattleManager.Instance.SetTotalSquadStat(statType, AdjustTotalStat(ref baseCriticalDamage, adjustValue, ref percentCriticalDamage, 0));
                     break;
+                case Enums.SquadStatType.WarriorHealth:
+                case Enums.SquadStatType.WizardHealth:
+                case Enums.SquadStatType.ArcherHealth:
+                case Enums.SquadStatType.WarriorDefence:
+                case Enums.SquadStatType.WizardDefence:
+                case Enums.SquadStatType.ArcherDefence:
+                case Enums.SquadStatType.Evasion:
+                case Enums.SquadStatType.MoveSpeed:
+                case Enums.SquadStatType.AmplificationSkillEffects:
+                case Enums.SquadStatType.WarriorAttackRange:
+                case Enums.SquadStatType.ArcherAttackRange:
+                case Enums.SquadStatType.WizardAttackRange:
+                case Enums.SquadStatType.FollowRange:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(statType), statType, null);
             }

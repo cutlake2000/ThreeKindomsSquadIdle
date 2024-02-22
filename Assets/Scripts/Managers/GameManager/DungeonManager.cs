@@ -10,6 +10,7 @@ using Keiwando.BigInteger;
 using Managers.BattleManager;
 using ScriptableObjects.Scripts;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Managers.GameManager
 {
@@ -20,7 +21,7 @@ namespace Managers.GameManager
         public static Action<BigInteger, BigInteger> CheckRemainedBossHealth;
 
         [SerializeField] private DungeonSo[] dungeonSo;
-        [SerializeField] private StageUI stageUIController;
+        [SerializeField] private StageUI stageUI;
 
         [Header("=== 스테이지 UI 목록 ===")] [SerializeField]
         private GameObject[] stageUIs;
@@ -56,8 +57,7 @@ namespace Managers.GameManager
         [SerializeField] private BigInteger currentDungeonReward;
 
         [Header("--- 던전 러너 상태 ---")]
-        [SerializeField] private bool nextStageChallenge;
-
+        public bool isDungeonRunnerRunning;
         [SerializeField] private int maxSquadCount;
         [SerializeField] private bool isWaveTimerRunning;
         [SerializeField] private bool stopWaveTimer;
@@ -75,6 +75,8 @@ namespace Managers.GameManager
 
         public void InitDungeonManager()
         {
+            isDungeonRunnerRunning = false;
+            
             InitializeEventListeners();
             UpdateDungeonPanelScrollViewAllItemUI();
         }
@@ -108,6 +110,7 @@ namespace Managers.GameManager
                     currentDungeonReward = dungeonSo[index].reward * (increaseRewardPercent + 100) * currentDungeonLevel / 100;
                     waveTime = dungeonSo[index].waveTime;
                     stageMap.SetActive(false);
+                    ProjectileManager.Instance.DestroyAllProjectile();
                     
                     dungeonUIs[index].SetActive(true);
                     dungeonMap[index].SetActive(true);
@@ -133,6 +136,7 @@ namespace Managers.GameManager
                     StageManager.CheckRemainedMonsterAction += CalculateRemainedMonster;
                     StageManager.CheckRemainedSquadAction += CalculateRemainedSquad;
 
+                    isDungeonRunnerRunning = true;
                     StartDungeonRunner(index);
                 });
             }
@@ -188,7 +192,7 @@ namespace Managers.GameManager
             if (currentRemainedMonsterCount <= 0)
             {
                 if (currentScore < targetScore)
-                    SpawnMonster(currentDungeonLevel);
+                    SpawnMonster();
                 else
                 {
                     isClear = true;
@@ -219,6 +223,7 @@ namespace Managers.GameManager
         private IEnumerator RunStageRunner()
         {
             currentSquadCount = 3;
+            isDungeonRunnerRunning = false;
 
             foreach (var dungeonUI in dungeonUIs)
             {
@@ -280,6 +285,7 @@ namespace Managers.GameManager
             DespawnSquad();
             DespawnMonster();
             
+            ProjectileManager.Instance.DestroyAllProjectile();
             if (currentDungeonType == Enums.DungeonType.SquadEnhanceStoneDungeon) Destroy(bossMonster);
             
             SetTimerUI(60);
@@ -294,7 +300,7 @@ namespace Managers.GameManager
             
             foreach (var map in dungeonMap) map.SetActive(false);
             foreach (var stageUI in stageUIs) stageUI.SetActive(true);
-            
+            UIManager.Instance.stageRewardPanelUI.gameObject.SetActive(false);
             StageManager.Instance.StartStageRunner();
         }
 
@@ -307,13 +313,12 @@ namespace Managers.GameManager
 
             DespawnSquad();
             DespawnMonster();
+            ProjectileManager.Instance.DestroyAllProjectile();
             SpawnSquad();
 
             yield return new WaitForSeconds(1.0f);
             
-            var targetMultiplier = Mathf.FloorToInt(Mathf.Pow(increaseNormalMonsterStatValue, currentDungeonLevel));
-            
-            SpawnMonster(targetMultiplier);
+            SpawnMonster();
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
         }
         
@@ -326,6 +331,7 @@ namespace Managers.GameManager
             
             DespawnSquad();
             DespawnMonster();
+            ProjectileManager.Instance.DestroyAllProjectile();
             SpawnSquad();
             
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
@@ -353,11 +359,11 @@ namespace Managers.GameManager
             SquadBattleManager.Instance.DespawnSquad();
         }
 
-        private void SpawnMonster(int level)
+        private void SpawnMonster()
         {
             currentRemainedMonsterCount = monsterSpawnCountsPerSubStage;
             
-            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human, level, monsterSpawnCountsPerSubStage);
+            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human, monsterSpawnCountsPerSubStage);
         }
 
         private void DespawnMonster()
@@ -398,7 +404,7 @@ namespace Managers.GameManager
 
         private void SetTimerUI(int currentTime)
         {
-            stageUIController.SetUIText(Enums.UITextType.Timer, $"{currentTime}");
+            stageUI.SetUIText(Enums.UITextType.Timer, $"{currentTime}");
         }
     }
 }

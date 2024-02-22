@@ -17,6 +17,7 @@ namespace Managers.GameManager
         private string[] testDeviceIds = { "f70fe41fb0676ca6a5f502abde7de006",
             "cOfe1516826c70f45a169f38a3ab2fcd",
             "c71d0c9e4ba81bf162d5e9c88c1aba92",
+            "109fcd783d2c3e3fa6febf10acb3f4b3",
             "d57f06fe7ee09848dde7ea36f0eb97be",
             "c53e390c198ea335d5434c076b104df0",
             "654b99b1de9dee6125719a283b24d614"};
@@ -35,11 +36,12 @@ namespace Managers.GameManager
             SummonManager.Instance.InitSummonManager();
             DungeonManager.Instance.InitDungeonManager();
             AccountManager.Instance.InitAccountManager();
+            MonsterManager.Instance.InitMonsterManager();
             
             UIManager.Instance.InitUIManager();
             
             offlineRewardController.InitKey();
-
+            
             StageManager.Instance.StartStageRunner();
             ES3.Save("Init_Game", true);
             

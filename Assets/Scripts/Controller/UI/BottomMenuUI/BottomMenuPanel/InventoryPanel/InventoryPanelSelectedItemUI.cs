@@ -8,15 +8,15 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
     {
         [Header("장비 티어")] public TMP_Text equipmentTier;
         [Header("장비 이미지")] public Image equipmentIcon;
-        [Header("장비 배경 효과")] public Image equipmentBackgroundEffect;
-        [Header("장비 배경")] public Image equipmentBackground;
+        [Header("장비 배경 효과")] public Image equipmentBackground;
+        [Header("장비 배경")] public Image equipmentBackgroundEffect;
 
-        public void UpdateInventoryPanelSelectedItem(int tier, Sprite icon, Sprite backgroundEffect, Sprite background)
+        public void UpdateInventoryPanelSelectedItem(int tier, Sprite icon, Sprite background, Sprite backgroundEffect)
         {
             equipmentTier.text = $"{tier}티어";
             equipmentIcon.sprite = icon;
-            equipmentBackgroundEffect.sprite = backgroundEffect;
-            equipmentBackground.sprite = background;
+            equipmentBackground.sprite = backgroundEffect;
+            equipmentBackgroundEffect.sprite = background;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Controller.Projectiles.BaseAttack;
 using Controller.Projectiles.SkillAttack;
 using Data;
@@ -13,7 +14,9 @@ namespace Managers.GameManager
         public static ProjectileManager Instance;
         private ObjectPool objectPool;
 
-        public Transform spawnTarget;
+        public Transform spawnedProjectile;
+        public List<Transform> spawnedSkill;
+        public Transform spawnedAttack;
 
         private void Awake()
         {
@@ -25,7 +28,7 @@ namespace Managers.GameManager
             objectPool = GetComponent<ObjectPool>();
         }
 
-        public void InstantiateBaseAttack(BigInteger damage, Vector2 startPosition, Vector2 direction, Enums.PoolType poolType, int isCritical, int criticalDamage)
+        public void InstantiateBaseAttack(BigInteger damage, Vector2 startPosition, Vector2 direction, Enums.PoolType poolType, int criticalRate, int criticalDamage)
         {
             var obj = objectPool.SpawnFromPool(poolType);
 
@@ -34,7 +37,7 @@ namespace Managers.GameManager
             if (poolType == Enums.PoolType.ProjectileBaseAttackWarrior)
             {
                 var warriorBaseAttackController = obj.GetComponent<ProjectileBaseAttackWarriorController>();
-                warriorBaseAttackController.InitializeWarriorBaseAttack(damage, direction, isCritical, criticalDamage);
+                warriorBaseAttackController.InitializeWarriorBaseAttack(damage, direction, criticalRate, criticalDamage);
             }
             else
             {
@@ -44,11 +47,11 @@ namespace Managers.GameManager
                 {
                     case Enums.PoolType.ProjectileBaseAttackArcher:
                         var archerBaseAttackController = obj.GetComponent<ProjectileBaseAttackArcherController>();
-                        archerBaseAttackController.InitializeArcherBaseAttack(damage, direction, isCritical, criticalDamage);
+                        archerBaseAttackController.InitializeArcherBaseAttack(damage, direction, criticalRate, criticalDamage);
                         break;
                     case Enums.PoolType.ProjectileBaseAttackWizard:
                         var wizardBaseAttackController = obj.GetComponent<ProjectileBaseAttackWizardController>();
-                        wizardBaseAttackController.InitializeWizardBaseAttack(damage, direction, isCritical, criticalDamage);
+                        wizardBaseAttackController.InitializeWizardBaseAttack(damage, direction, criticalRate, criticalDamage);
                         break;
                     case Enums.PoolType.ProjectileBaseAttackMonster:
                         var monsterBaseAttackController = obj.GetComponent<ProjectileBaseAttackMonsterController>();
@@ -63,15 +66,31 @@ namespace Managers.GameManager
         public void InstantiateSkillAttack(GameObject targetSkill, BigInteger damage, Vector2 startPosition,
             Vector2 targetPosition)
         {
+            targetSkill.SetActive(true);
             var skillAttackController = targetSkill.GetComponent<SkillAttackController>();
             skillAttackController.InitializeSkillAttack(damage, startPosition, targetPosition);
         }
 
         public void DestroyAllProjectile()
         {
-            for (var i = 0; i < spawnTarget.transform.childCount; i++)
+            for (var i = 0; i < spawnedProjectile.transform.childCount; i++)
             {
-                Destroy(spawnTarget.transform.GetChild(i).gameObject);
+                Destroy(spawnedProjectile.transform.GetChild(i).gameObject);
+            }
+
+            foreach (var t in spawnedSkill)
+            {
+                for (var j = 0; j < t.transform.childCount; j++)
+                {
+                    var target = t.GetChild(j).gameObject;
+                    if (target.activeInHierarchy) target.SetActive(false);
+                }
+            }
+            
+            for (var i = 0; i < spawnedAttack.transform.childCount; i++)
+            {
+                var target = spawnedAttack.GetChild(i).gameObject;
+                if (target.activeInHierarchy) target.SetActive(false);
             }
         }
     }

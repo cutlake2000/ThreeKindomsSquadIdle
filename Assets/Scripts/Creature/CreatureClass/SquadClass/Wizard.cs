@@ -22,7 +22,7 @@ namespace Creature.CreatureClass.SquadClass
         {
             base.OnNormalAttack();
             
-            ProjectileManager.Instance.InstantiateBaseAttack(Attack, ProjectileSpawnPosition, Direction, Enums.PoolType.ProjectileBaseAttackWizard, BigInteger.ToInt32(CriticalRate) / 10000, BigInteger.ToInt32(CriticalDamage) / 10000);
+            ProjectileManager.Instance.InstantiateBaseAttack(Attack, ProjectileSpawnPosition, Direction, Enums.PoolType.ProjectileBaseAttackWizard, BigInteger.ToInt32(CriticalRate), BigInteger.ToInt32(CriticalDamage));
         }
 
         protected override void OnSkillAttack()

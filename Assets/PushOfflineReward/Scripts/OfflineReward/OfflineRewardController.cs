@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Controller.UI;
 using Data;
 using Managers.GameManager;
-using UI;
 using UnityEngine;
 
 namespace PushOfflineReward.Scripts.OfflineReward
 {
     public class OfflineRewardController : MonoBehaviour
     {
-        [SerializeField] private float minTime = 5;
+        [SerializeField] private float minTime;
         [SerializeField] private float maxTime = 10800;
         [SerializeField] private float killCountPerSecond = 0.1f;
-
-        [SerializeField] public List<Reward> rewards;
+        
+        private List<Reward> rewards;
 
         private float timePassed;
     
@@ -73,7 +73,7 @@ namespace PushOfflineReward.Scripts.OfflineReward
             timePassed = Mathf.Min(timePassed, maxTime);
             var stageClearCount = (int) timePassed / 60;
     
-            UIManager.Instance.offLineRewardUI.SetUI(stageClearCount, (int)timePassed);
+            UIManager.Instance.offLineRewardUI.SetUI(stageClearCount, (int)timePassed, (int)maxTime);
             UIManager.Instance.offLineRewardUI.gameObject.SetActive(true);
         }
     
@@ -86,25 +86,28 @@ namespace PushOfflineReward.Scripts.OfflineReward
     
         private void ManagePushRewards()
         {
-            const int timerSet = 60; // 0 - 초, 60 - 분, 3600 - 시간
+            const int timerSet = 1; // 0 - 초, 60 - 분, 3600 - 시간
 
             var pushDatas = PushManager.Instance.GetUnrecievedRewardDatas((int)timePassed / timerSet);
+            
             rewards = new List<Reward>();
     
             foreach (var data in pushDatas)
             {
                 PushManager.Instance.SetRewardRecieved(data.name);
-                if (data.RewardType == Enums.RewardType.Dia || data.RewardType == Enums.RewardType.Gold || data.RewardType == Enums.RewardType.Exp) continue;
+                if (data.RewardType == Enums.RewardType.OfflineReward) continue;
     
                 rewards.Add(new Reward(data.RewardType, data.Amount));
             }
 
             if (rewards.Count > 0)
             {
-                // rewardManager.GiveReward(rewards, "특별 보상");
-
-                // TempList = rewards;
-                Debug.Log($"{rewards}");
+                UIManager.Instance.pushRewardUI.SetUI(rewards);
+                
+                foreach (var reward in rewards)
+                {
+                    Debug.Log($"푸쉬 알림 보상 : {reward.rewardType}");   
+                }
             }
         }
     }

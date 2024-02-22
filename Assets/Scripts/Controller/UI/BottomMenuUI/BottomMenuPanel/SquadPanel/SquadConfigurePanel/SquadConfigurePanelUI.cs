@@ -10,6 +10,7 @@ using Managers;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
 using Managers.GameManager;
+using Module;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -68,6 +69,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         public Character previousWarrior;
         public Character previousArcher;
         public Character previousWizard;
+        
+        [Header("업데이트 예정 캐릭터 알림 버튼")]
+        public Button[] willBeUpdatedAlertButtons;
 
         private void OnEnable()
         {
@@ -246,8 +250,14 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             }
 
             selectedCharacterLevelUpButton.onClick.AddListener(OnClickCharacterLevelUp);
+            selectedCharacterLevelUpButton.GetComponent<HoldButton>().onHold.AddListener(OnClickCharacterLevelUp);
             selectedCharacterLevelUpLockButton.GetComponent<LockButtonUI>().InitializeEventListener();
             selectedCharacterSelectButton.onClick.AddListener(OnClickCharacterEquip);
+
+            foreach (var button in willBeUpdatedAlertButtons)
+            {
+                button.GetComponent<LockButtonUI>().InitializeEventListener();
+            }
         }
 
         private void InitializeSquadPanelButton(int index)

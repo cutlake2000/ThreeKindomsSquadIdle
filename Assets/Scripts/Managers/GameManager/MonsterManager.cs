@@ -37,11 +37,14 @@ namespace Managers.GameManager
         private int spawnCount;
         
         [Header("피해량 보정 (%)")] public int totalAttackAdjustValue;
-
+        
         private void Awake()
         {
             Instance = this;
+        }
 
+        public void InitMonsterManager()
+        {
             InitializeMonsterPools();
         }
 
@@ -68,7 +71,7 @@ namespace Managers.GameManager
             }
         }
 
-        public void SpawnMonsters(Enums.MonsterClassType[] monsterNewTypes, int stageLevel, int totalCount)
+        public void SpawnMonsters(Enums.MonsterClassType[] monsterNewTypes, int totalCount)
         {
             var remainingCount = totalCount;
             var typesCount = monsterNewTypes.Length;
@@ -89,18 +92,17 @@ namespace Managers.GameManager
                     remainingCount -= countForType;
                 }
 
-                SpawnMonsters(monsterNewTypes[i], stageLevel, countForType);
+                SpawnMonsters(monsterNewTypes[i], countForType);
             }
 
             spawnCount = (spawnCount + 1) % spawnXs.Length;
         }
 
-        public void SpawnMonsters(Enums.MonsterClassType monsterNewClassType, int multiplierValue, int count)
+        public void SpawnMonsters(Enums.MonsterClassType monsterNewClassType, int count)
         {
             for (var i = 0; i < count; i++)
             {
                 var monsterNew = GetMonster(monsterNewClassType);
-                monsterNew.GetComponent<NormalMonster>().multiplierValue = multiplierValue;
                 PositionMonster(monsterNew);
             }
         }

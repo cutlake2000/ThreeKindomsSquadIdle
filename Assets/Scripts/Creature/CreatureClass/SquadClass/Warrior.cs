@@ -15,7 +15,7 @@ namespace Creature.CreatureClass.SquadClass
             
             // Debug.Log("워리어 공격");
 
-            ProjectileManager.Instance.InstantiateBaseAttack(Attack, Vector2.zero, Direction, Enums.PoolType.ProjectileBaseAttackWarrior, BigInteger.ToInt32(CriticalRate) / 10000, BigInteger.ToInt32(CriticalDamage) / 10000);
+            ProjectileManager.Instance.InstantiateBaseAttack(Attack, Vector2.zero, Direction, Enums.PoolType.ProjectileBaseAttackWarrior, BigInteger.ToInt32(CriticalRate), BigInteger.ToInt32(CriticalDamage));
         }
 
         protected override void OnSkillAttack()

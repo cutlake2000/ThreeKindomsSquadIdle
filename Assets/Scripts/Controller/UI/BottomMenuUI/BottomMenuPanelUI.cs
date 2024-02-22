@@ -92,7 +92,7 @@ namespace Controller.UI.BottomMenuUI
             openButtons[index].gameObject.SetActive(true);
             
             if (StageManager.Instance.initStageResult) StageManager.Instance.initStageResult = true;
-            if (StageManager.Instance.stageResultUI.activeInHierarchy) StageManager.Instance.stageResultUI.SetActive(false);
+            // if (StageManager.Instance.stageResultUI.activeInHierarchy) StageManager.Instance.stageResultUI.SetActive(false);
         }
 
         public void UpdateLockButtonUI(int index)
