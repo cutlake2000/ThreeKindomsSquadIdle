@@ -81,7 +81,7 @@ namespace Controller.UI
                 };
                 var amount = reward.amount.ChangeMoney();
 
-                rewardSlots[i].UpdateRewardItemUI(reward.rewardType, SpriteManager.Instance.GetCurrencySprite(type), typeString, amount);
+                rewardSlots[i].UpdateRewardItemUI(reward.rewardType, SpriteManager.Instance.GetCurrencySprite(type), typeString, amount, false);
                 rewardSlots[i].gameObject.SetActive(true);
             }
         }

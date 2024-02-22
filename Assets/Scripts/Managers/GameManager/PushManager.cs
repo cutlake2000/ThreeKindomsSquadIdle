@@ -96,26 +96,32 @@ namespace Managers.GameManager
             }
         }
 
+
         private void SendLocalNotification()
         {
             // Android에서만 사용되는 푸시 채널 설정
             var channel = new AndroidNotificationChannel()
             {
-                Id = "channel_id",
-                Name = "Channel",
+                Id = "samI",
+                Name = "samN",
                 Importance = Importance.Default,
-                Description = "Description",
+                Description = "samD"
             };
 
             AndroidNotificationCenter.RegisterNotificationChannel(channel);
-
-            foreach(KeyValuePair<string, PushNotesDataSo> kvp in dataDic)
+            AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송", "테스트 발송", DateTime.Now) ,"samI");
+            AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송10", "테스트 발송10", DateTime.Now.AddSeconds(10)) ,"samI");
+            AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송30", "테스트 발송30", DateTime.Now.AddSeconds(30)) ,"samI");
+            AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송60", "테스트 발송60", DateTime.Now.AddSeconds(60)) ,"samI");
+            AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송120", "테스트 발송120", DateTime.Now.AddMinutes(2)) ,"samI");
+            
+            foreach (var kvp in dataDic)
             {
                 if (rewardRecieved[kvp.Key]) continue;
 
-                Debug.Log($"Push: {kvp.Key}");
-                AndroidNotificationCenter.SendNotification(
-                    new AndroidNotification(kvp.Value.Title, kvp.Value.Desc, DateTime.Now.AddHours(kvp.Value.PushTime)), "channel_id");
+                Debug.Log($"Push: {kvp.Key} / {kvp.Value.PushTime} / {DateTime.Now.AddMinutes(kvp.Value.PushTime)}");
+                
+                AndroidNotificationCenter.SendNotification(new AndroidNotification(kvp.Value.Title, kvp.Value.Desc, DateTime.Now.AddMinutes(kvp.Value.PushTime)), "samI");
             }
         }
 #endif

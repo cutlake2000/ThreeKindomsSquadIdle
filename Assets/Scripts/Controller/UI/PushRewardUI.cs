@@ -24,6 +24,8 @@ namespace Controller.UI
 
         public void SetUI(List<Reward> targetRewards)
         {
+            gameObject.SetActive(true);
+            
             SetReward(targetRewards);
             SetSlots();
         }
@@ -46,11 +48,11 @@ namespace Controller.UI
                 {
                     case Enums.RewardType.Dia:
                         targetTypeString = "다이아";
-                        rewardSlots[i].UpdateRewardItemUI(reward.rewardType, SpriteManager.Instance.GetCurrencySprite(Enums.CurrencyType.Dia), targetTypeString, targetAmount.ChangeMoney());
+                        rewardSlots[i].UpdateRewardItemUI(reward.rewardType, SpriteManager.Instance.GetCurrencySprite(Enums.CurrencyType.Dia), targetTypeString, targetAmount.ChangeMoney(), false);
                         break;
                     case Enums.RewardType.Rare_5_Sword:
                         targetTypeString = "모험자의 검 5";
-                        rewardSlots[i].UpdateRewardItemUI(reward.rewardType, SpriteManager.Instance.GetEquipmentSprite(Enums.EquipmentType.Sword, 15), targetTypeString, BigInteger.ToInt32(targetAmount).ToString());
+                        rewardSlots[i].UpdateRewardItemUI(reward.rewardType, SpriteManager.Instance.GetEquipmentSprite(Enums.EquipmentType.Sword, 15), targetTypeString, BigInteger.ToInt32(targetAmount).ToString(), true);
                         break;
                 }
                 

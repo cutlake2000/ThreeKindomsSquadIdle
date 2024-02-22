@@ -11,11 +11,16 @@ namespace Controller.UI
         [SerializeField] private Image rewardIcon;
         [SerializeField] private TMP_Text rewardAmountText;
 
-        public void UpdateRewardItemUI(Enums.RewardType type, Sprite icon, string typeString, string amount)
+        public void UpdateRewardItemUI(Enums.RewardType type, Sprite icon, string typeString, string amount, bool multiply)
         {
             rewardType = type;
             rewardIcon.sprite = icon;
-            rewardAmountText.text = $"+{amount}\n{typeString}";
+            var operatorString = multiply switch
+            {
+                true => "x",
+                false => "+"
+            };
+            rewardAmountText.text = $"{typeString}\n{operatorString}{amount}";
         }
     }
 }

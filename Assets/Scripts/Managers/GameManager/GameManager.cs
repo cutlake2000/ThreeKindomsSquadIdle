@@ -64,6 +64,10 @@ namespace Managers.GameManager
 
         private void OnApplicationPause(bool pause)
         {
+            var initGame = ES3.Load("Init_Game", false);
+            
+            if (initGame == false) return;
+            
             if (pause) offlineRewardController.TimeReset();
             else offlineRewardController.ResetKey();
         }
