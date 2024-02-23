@@ -86,7 +86,7 @@ namespace PushOfflineReward.Scripts.OfflineReward
     
         private void ManagePushRewards()
         {
-            const int timerSet = 1; // 0 - 초, 60 - 분, 3600 - 시간
+            const int timerSet = 1; // 1 - 초, 60 - 분, 3600 - 시간
 
             var pushDatas = PushManager.Instance.GetUnrecievedRewardDatas((int)timePassed / timerSet);
             
@@ -103,11 +103,6 @@ namespace PushOfflineReward.Scripts.OfflineReward
             if (rewards.Count > 0)
             {
                 UIManager.Instance.pushRewardUI.SetUI(rewards);
-                
-                foreach (var reward in rewards)
-                {
-                    Debug.Log($"푸쉬 알림 보상 : {reward.rewardType}");   
-                }
             }
         }
     }

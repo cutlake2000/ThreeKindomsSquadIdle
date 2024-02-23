@@ -64,12 +64,20 @@ namespace Managers.GameManager
 
         private void OnApplicationPause(bool pause)
         {
-            var initGame = ES3.Load("Init_Game", false);
-            
-            if (initGame == false) return;
-            
-            if (pause) offlineRewardController.TimeReset();
-            else offlineRewardController.ResetKey();
+            // var initGame = ES3.Load("Init_Game", false);
+            //
+            // if (initGame == false) return;
+
+            if (pause)
+            {
+                offlineRewardController.TimeReset();
+                Debug.Log("TimeReset");
+            }
+            else
+            {
+                offlineRewardController.ResetKey();
+                Debug.Log("ResetKey");
+            }
         }
         
         // 특정 고유 ID를 가진 기기인지 확인

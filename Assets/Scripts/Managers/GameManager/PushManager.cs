@@ -63,9 +63,9 @@ namespace Managers.GameManager
         private void LoadRewardRecieved()
         {
             foreach (var kvp in dataDic)
-                rewardRecieved[kvp.Key] = ES3.KeyExists($"PushRewardRecieved_{kvp.Key}")
-                    ? ES3.Load<bool>($"PushRewardRecieved_{kvp.Key}")
-                    : false;
+            {            
+                rewardRecieved[kvp.Key] = ES3.KeyExists($"PushRewardRecieved_{kvp.Key}") ? ES3.Load<bool>($"PushRewardRecieved_{kvp.Key}") : false;
+            }
         }
 
         private void CheckNotificationPermission()
@@ -82,14 +82,15 @@ namespace Managers.GameManager
             {
                 // 알림 예약
                 if (Permission.HasUserAuthorizedPermission("android.permission.POST_NOTIFICATIONS"))
+                {
                     SendLocalNotification();
+                }
+
 
                 SaveRewardRecieved();
             }
             else
             {
-                // Debug.Log(AndroidNotificationCenter.CheckScheduledNotificationStatus());
-                
                 // 알림 예약 제거
                 AndroidNotificationCenter.CancelAllNotifications();
                 AndroidNotificationCenter.CancelAllScheduledNotifications();
@@ -115,13 +116,17 @@ namespace Managers.GameManager
             AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송60", "테스트 발송60", DateTime.Now.AddSeconds(60)) ,"samI");
             AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송120", "테스트 발송120", DateTime.Now.AddMinutes(2)) ,"samI");
             
+            Debug.Log("테스트 발송");
+            
             foreach (var kvp in dataDic)
             {
+                Debug.Log("rewardRecieved Check");
                 if (rewardRecieved[kvp.Key]) continue;
+                Debug.Log("rewardRecieved X");
 
                 Debug.Log($"Push: {kvp.Key} / {kvp.Value.PushTime} / {DateTime.Now.AddMinutes(kvp.Value.PushTime)}");
                 
-                AndroidNotificationCenter.SendNotification(new AndroidNotification(kvp.Value.Title, kvp.Value.Desc, DateTime.Now.AddMinutes(kvp.Value.PushTime)), "samI");
+                AndroidNotificationCenter.SendNotification(new AndroidNotification(kvp.Value.Title, kvp.Value.Desc, DateTime.Now.AddSeconds(kvp.Value.PushTime)), "samI");
             }
         }
 #endif
