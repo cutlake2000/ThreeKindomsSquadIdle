@@ -1,4 +1,5 @@
 using System.Collections;
+using Module;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -11,9 +12,8 @@ namespace Managers.GameManager
     {
         public Slider sliderUI;
 
-        public GameObject splashImage;
         public GameObject touchToStartButton;
-        public GameObject accountGenerationPanel;
+        public IdGenerator IdGenerator;
 
         [SerializeField] private string accountName; 
 
@@ -41,6 +41,8 @@ namespace Managers.GameManager
             // UI를 처리 한다.
             sliderUI.gameObject.SetActive(true);
             touchToStartButton.SetActive(false);
+
+            IdGenerator = IdGenerator.GetComponent<IdGenerator>();
 
             // 로딩을 즉시 실행
             StartCoroutine(LoadAsynchronously(1));
@@ -99,16 +101,13 @@ namespace Managers.GameManager
                     // 로딩 이후의 처리 , 버튼을 누르면 씬 이동이 처리 된다.
                     // UI를 반전 처리 한다.
                     sliderUI.gameObject.SetActive(false);
-                    splashImage.gameObject.SetActive(false);
 
-                    if (ES3.KeyExists($"{nameof(accountName)}"))
+                    if (ES3.KeyExists($"{nameof(accountName)}") == false)
                     {
-                        touchToStartButton.SetActive(true);   
+                        ES3.Save("accountName", IdGenerator.GenerateRandomId());
                     }
-                    else
-                    {
-                        accountGenerationPanel.SetActive(true);
-                    }
+                    
+                    touchToStartButton.SetActive(true);
                 }
                 
                 yield return null;

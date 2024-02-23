@@ -1,23 +1,21 @@
 using UnityEngine;
 
-public class IdGenerator : MonoBehaviour
+namespace Module
 {
-    void Start()
+    public class IdGenerator : MonoBehaviour
     {
-        // 로컬로 랜덤 ID 생성
-        string randomId = GenerateRandomId();
-        Debug.Log("Random ID: " + randomId);
-    }
+        public string GenerateRandomId()
+        {
+            // 유저ID 생성
+            var guid = System.Guid.NewGuid().ToString();
+            var cleanedGuid = guid.Replace("-", "").ToLower();
 
-    string GenerateRandomId()
-    {
-        // 유저ID 생성
-        string guid = System.Guid.NewGuid().ToString();
-        string cleanedGuid = guid.Replace("-", "").ToLower();
+            var desiredLength = 8;
+            var randomId = cleanedGuid.Substring(0, Mathf.Min(cleanedGuid.Length, desiredLength));
+        
+            Debug.Log("Random ID: " + randomId);
 
-        int desiredLength = 8;
-        string randomId = cleanedGuid.Substring(0, Mathf.Min(cleanedGuid.Length, desiredLength));
-
-        return "Userid_" + randomId;
+            return "Userid_" + randomId;
+        }
     }
 }

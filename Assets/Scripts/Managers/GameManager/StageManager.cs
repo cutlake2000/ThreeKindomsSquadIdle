@@ -67,7 +67,7 @@ namespace Managers.GameManager
         [SerializeField] public bool isWaveTimerRunning;
         [SerializeField] private bool stopWaveTimer;
         public bool prepareNewSubStage;
-        public bool initStageResult;
+        public bool initializeStageResultChecker;
 
         private void Awake()
         {
@@ -90,7 +90,7 @@ namespace Managers.GameManager
             waveCountsPerSubStage = stageSo.WaveCountsPerSubStage;
             monsterSpawnCountsPerSubStage = stageSo.MonsterSpawnCountsPerSubStage;
             stopWaveTimer = false;
-            initStageResult = true;
+            initializeStageResultChecker = true;
             prepareNewSubStage = true;
             
             maxSquadCount = 3;
@@ -164,6 +164,7 @@ namespace Managers.GameManager
             currentSquadCount--;
 
             if (currentSquadCount > 0) return;
+            
             isClear = false;
             stopWaveTimer = true;
             
@@ -245,7 +246,7 @@ namespace Managers.GameManager
 
             if (prepareNewSubStage)
             {
-                if (initStageResult == false)
+                if (initializeStageResultChecker == false)
                 {
                     stageResultUI.GetComponent<StageRewardPanelUI>().UpdateRewardUI(SpriteManager.Instance.GetCurrencySprite(stageRewards[0].rewardType), $"+ {stageRewards[0].GetStageReward(currentAccumulatedStage).ChangeMoney()}", SpriteManager.Instance.GetCurrencySprite(stageRewards[1].rewardType), $"+ {stageRewards[1].GetStageReward(currentAccumulatedStage).ChangeMoney()}");
                     stageResultUI.GetComponent<StageRewardPanelUI>().PopUpStageClearMessage(isClear);
@@ -257,8 +258,9 @@ namespace Managers.GameManager
                 DespawnMonster();
                 DespawnSquad();
                 ProjectileManager.Instance.DestroyAllProjectile();
+                SquadBattleManager.Instance.cameraController.InitializeCameraPosition();
 
-                if (initStageResult == false)
+                if (initializeStageResultChecker == false)
                 {
                     if (isClear)
                     {
@@ -286,7 +288,7 @@ namespace Managers.GameManager
                 
                 SpawnSquad();
                 currentWave = 0;
-                initStageResult = false;
+                initializeStageResultChecker = false;
                 isClear = false;
                 prepareNewSubStage = false;
                 

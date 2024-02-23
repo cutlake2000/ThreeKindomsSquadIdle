@@ -144,6 +144,8 @@ namespace Managers.GameManager
 
         private void StartDungeonRunner(int index)
         {
+            SquadBattleManager.Instance.cameraController.InitializeCameraPosition();
+            
             switch (index)
             {
                 case 0:
@@ -286,6 +288,8 @@ namespace Managers.GameManager
             DespawnMonster();
             
             ProjectileManager.Instance.DestroyAllProjectile();
+            SquadBattleManager.Instance.cameraController.InitializeCameraPosition();
+            
             if (currentDungeonType == Enums.DungeonType.SquadEnhanceStoneDungeon) Destroy(bossMonster);
             
             SetTimerUI(60);
@@ -293,7 +297,7 @@ namespace Managers.GameManager
             StageManager.Instance.prepareNewSubStage = true;
             StageManager.Instance.currentWave = 1;
             StageManager.Instance.isWaveTimerRunning = false;
-            StageManager.Instance.initStageResult = true;
+            StageManager.Instance.initializeStageResultChecker = true;
             StageManager.Instance.SetCurrentMainStageInfo();
             
             stageMap.SetActive(true);

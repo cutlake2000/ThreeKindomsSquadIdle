@@ -36,8 +36,6 @@ namespace Managers.BottomMenuManager.SquadPanel
     {
         public const int CharacterMaxLevel = 100;
         public static SquadConfigureManager Instance;
-        private static readonly Dictionary<string, Character> AllCharactersDictionary = new();
-
         
         [Header("스쿼드 구성 변화 여부")]public bool isSquadConfigureChanged;
         
@@ -48,16 +46,19 @@ namespace Managers.BottomMenuManager.SquadPanel
         [SerializeField] private SquadEffectSo[] squadOwnedEffectValueSoByRarity;
         [SerializeField] private SquadEffectSo[] squadEquippedEffectValueSoByRarity;
 
-        [Header("캐릭터 정보 컨테이너")] public List<Character> warriors = new();
+        [Header("캐릭터 정보 컨테이너")]
+        public List<Character> warriors = new();
         public List<Character> archers = new();
         public List<Character> wizards = new();
 
-        [Header("캐릭터 모델 컨테이너")] public List<GameObject> warriorModels = new();
+        [Header("캐릭터 모델 컨테이너")]
+        public List<GameObject> warriorModels = new();
         public List<GameObject> archerModels = new();
         public List<GameObject> wizardModels = new();
 
         [Header("캐릭터 모델 스폰 좌표")] public GameObject[] modelSpawnPoints;
         [Header("캐릭터 스킬 스폰 좌표")] public GameObject[] skillSpawnPoints;
+        
         public readonly Dictionary<string, Character> ArchersDictionary = new();
         public readonly Dictionary<string, Character> WarriorDictionary = new();
         public readonly Dictionary<string, Character> WizardsDictionary = new();

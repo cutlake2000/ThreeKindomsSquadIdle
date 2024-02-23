@@ -86,7 +86,7 @@ namespace PushOfflineReward.Scripts.OfflineReward
     
         private void ManagePushRewards()
         {
-            const int timerSet = 1; // 1 - 초, 60 - 분, 3600 - 시간
+            const int timerSet = 3600; // 1 - 초, 60 - 분, 3600 - 시간
 
             var pushDatas = PushManager.Instance.GetUnrecievedRewardDatas((int)timePassed / timerSet);
             

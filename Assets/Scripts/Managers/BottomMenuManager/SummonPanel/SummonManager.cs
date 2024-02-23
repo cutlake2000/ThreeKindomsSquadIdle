@@ -159,14 +159,14 @@ namespace Managers.BottomMenuManager.SummonPanel
                 }
                 else
                 {
-                    var randomTierIndex = Random.Range(1, 16);
+                    var randomTierIndex = Random.Range(1, 31);
 
                     var randomTier = randomTierIndex switch
                     {
-                        15 => 1,
-                        >= 13 => 2,
-                        >= 10 => 3,
-                        >= 6 => 4,
+                        30 => 1,
+                        >= 28 => 2,
+                        >= 25 => 3,
+                        >= 21 => 4,
                         _ => 5
                     };
 

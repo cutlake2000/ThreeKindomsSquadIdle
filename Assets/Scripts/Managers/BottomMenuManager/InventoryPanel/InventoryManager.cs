@@ -100,7 +100,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
             
             foreach (var equipmentType in Enums.equipmentTypes)
             {
-                var isExistHighValueEquipment = 0;
+                var checkEquippedEquipment = false;
                 var equipmentIndex = 0;
 
                 foreach (var rarity in Enums.equipmentRarities)
@@ -210,7 +210,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         
                         if (equipment.isPossessed)
                         {
-                            if (isExistHighValueEquipment == -1 && canAutoEquip[(int) equipmentType] == false) canAutoEquip[(int) equipmentType] = true; // 이전에 마킹된 장비가 있고, 보유 중인 상위 등급의 장비가 존재하기에 AutoEquipmentButton 활성화
+                            if (checkEquippedEquipment) canAutoEquip[(int) equipmentType] = true; // 이전에 마킹된 장비가 있고, 보유 중인 상위 등급의 장비가 존재하기에 AutoEquipmentButton 활성화
                             
                             foreach (var effect in equipment.ownedEffects)
                             {
@@ -220,7 +220,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         
                         if (equipment.isEquipped)
                         {
-                            if (isExistHighValueEquipment == 0) isExistHighValueEquipment = -1; // 장착 중인 장비를 찾았다면 마킹
+                            if (checkEquippedEquipment == false) checkEquippedEquipment = true; // 장착 중인 장비를 찾았다면 마킹
 
                             UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipmentType]
                                 .GetComponent<InventoryPanelSelectedItemUI>()

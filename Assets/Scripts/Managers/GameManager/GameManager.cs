@@ -7,6 +7,7 @@ using Managers.BottomMenuManager.SummonPanel;
 using Managers.BottomMenuManager.TalentPanel;
 using PushOfflineReward.Scripts.OfflineReward;
 using UnityEngine;
+using UnityEngine.Android;
 
 namespace Managers.GameManager
 {
@@ -64,14 +65,21 @@ namespace Managers.GameManager
 
         private void OnApplicationPause(bool pause)
         {
-            // var initGame = ES3.Load("Init_Game", false);
-            //
-            // if (initGame == false) return;
-
+            var initGame = ES3.Load("Init_Game", false);
+                
+            if (initGame == false) return;
+            
             if (pause)
             {
                 offlineRewardController.TimeReset();
-                Debug.Log("TimeReset");
+                
+                // 알림 예약
+                if (Permission.HasUserAuthorizedPermission("android.permission.POST_NOTIFICATIONS"))
+                {
+                    PushManager.Instance.SendLocalNotification();
+                }
+                
+                PushManager.Instance.SaveRewardRecieved();
             }
             else
             {

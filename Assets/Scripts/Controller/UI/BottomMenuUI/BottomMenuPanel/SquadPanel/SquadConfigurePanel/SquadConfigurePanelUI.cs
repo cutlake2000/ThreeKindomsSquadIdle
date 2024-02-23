@@ -36,10 +36,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         public TMP_Text selectedCharacterName;
         public TMP_Text selectedCharacterRarity;
         public TMP_Text selectedCharacterLevel;
+        public TMP_Text selectedCharacterEquippedEffect1; 
+        public TMP_Text selectedCharacterEquippedEffect2;
         public TMP_Text selectedCharacterOwnedEffect1;
         public TMP_Text selectedCharacterOwnedEffect2;
-        public TMP_Text selectedCharacterEquippedEffect1;
-        public TMP_Text selectedCharacterEquippedEffect2;
         public Image selectedCharacter1SkillIcon;
         public TMP_Text selectedCharacter1SkillName;
         public TMP_Text selectedCharacter1SkillDescription;
@@ -110,7 +110,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             SquadConfigureManager.Instance.UpdateSquadConfigureModelOnMenu(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Archer));
             SquadConfigureManager.Instance.UpdateSquadConfigureModelOnMenu(SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Wizard));
             
-            StageManager.Instance.initStageResult = true;
+            StageManager.Instance.initializeStageResultChecker = true;
             StageManager.Instance.prepareNewSubStage = true;
                 
             StageManager.Instance.StartStageRunner();

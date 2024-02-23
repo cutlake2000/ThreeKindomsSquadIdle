@@ -1,12 +1,9 @@
-using System;
 using Data;
-using Managers;
-using Managers.BattleManager;
 using Managers.GameManager;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Controller.UI
+namespace Controller.UI.BattleMenuUI
 {
     public class CameraController : MonoBehaviour
     {
@@ -23,6 +20,9 @@ namespace Controller.UI
         [SerializeField] private Button warriorButton;
         [SerializeField] private Button archerButton;
         [SerializeField] private Button wizardButton;
+        
+        [Header("Base Camera Target")]
+        [SerializeField] private Transform baseTarget;
 
         private void LateUpdate()
         {
@@ -64,6 +64,11 @@ namespace Controller.UI
             var position = currentCameraTarget.transform.position;
             mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position,
                 new Vector3(position.x, position.y, cameraZOffset), cameraMoveSpeed * Time.deltaTime);
+        }
+
+        public void InitializeCameraPosition()
+        {
+            currentCameraTarget = baseTarget;
         }
     }
 }

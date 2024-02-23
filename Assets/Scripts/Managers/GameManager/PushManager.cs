@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Resources.ScriptableObjects.Scripts;
 using Unity.Notifications.Android;
 using UnityEngine;
@@ -78,27 +79,15 @@ namespace Managers.GameManager
 
         private void OnApplicationPause(bool pause)
         {
-            if (pause)
-            {
-                // 알림 예약
-                if (Permission.HasUserAuthorizedPermission("android.permission.POST_NOTIFICATIONS"))
-                {
-                    SendLocalNotification();
-                }
-
-
-                SaveRewardRecieved();
-            }
-            else
-            {
-                // 알림 예약 제거
-                AndroidNotificationCenter.CancelAllNotifications();
-                AndroidNotificationCenter.CancelAllScheduledNotifications();
-            }
+            if (pause) return;
+            
+            // 알림 예약 제거
+            AndroidNotificationCenter.CancelAllNotifications();
+            AndroidNotificationCenter.CancelAllScheduledNotifications();
         }
 
 
-        private void SendLocalNotification()
+        public void SendLocalNotification()
         {
             // Android에서만 사용되는 푸시 채널 설정
             var channel = new AndroidNotificationChannel()
@@ -118,15 +107,9 @@ namespace Managers.GameManager
             
             Debug.Log("테스트 발송");
             
-            foreach (var kvp in dataDic)
+            foreach (var kvp in dataDic.Where(kvp => !rewardRecieved[kvp.Key]))
             {
-                Debug.Log("rewardRecieved Check");
-                if (rewardRecieved[kvp.Key]) continue;
-                Debug.Log("rewardRecieved X");
-
-                Debug.Log($"Push: {kvp.Key} / {kvp.Value.PushTime} / {DateTime.Now.AddMinutes(kvp.Value.PushTime)}");
-                
-                AndroidNotificationCenter.SendNotification(new AndroidNotification(kvp.Value.Title, kvp.Value.Desc, DateTime.Now.AddSeconds(kvp.Value.PushTime)), "samI");
+                AndroidNotificationCenter.SendNotification(new AndroidNotification(kvp.Value.Title, kvp.Value.Desc, DateTime.Now.AddHours(kvp.Value.PushTime)), "samI");
             }
         }
 #endif
@@ -147,7 +130,7 @@ namespace Managers.GameManager
             rewardRecieved[dataName] = true;
         }
 
-        private void SaveRewardRecieved()
+        public void SaveRewardRecieved()
         {
             foreach (var kvp in rewardRecieved) ES3.Save($"PushRewardRecieved_{kvp.Key}", kvp.Value);
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Controller.UI;
+using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
 using Creature.CreatureClass.SquadClass;
 using Creature.Data;

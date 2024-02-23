@@ -395,16 +395,25 @@ namespace Managers.GameManager
 
                     if (fields.Length >= 6)
                     {
+                        var questName = fields[1].Trim();
+                        var questTargetProgress = int.Parse(fields[2].Trim());
+                        var questProgress = 0;
+                        var questRewardType = (Enums.QuestRewardType)Enum.Parse(typeof(Enums.QuestRewardType), fields[3].Trim());
+                        var questReward = int.Parse(fields[4].Trim());
+                        var questType = (Enums.QuestType)Enum.Parse(typeof(Enums.QuestType), fields[5].Trim());
+                        var questIsLoop = fields[6].Trim() == "Loop";
+                        var questOpenContent= (Enums.OpenContent)Enum.Parse(typeof(Enums.OpenContent), fields[7].Trim());
+                        
                         var quest = new Quest
                         {
-                            name = fields[1].Trim(),
-                            targetProgress = int.Parse(fields[2].Trim()),
-                            progress = 0,
-                            questRewardType = (Enums.QuestRewardType)Enum.Parse(typeof(Enums.QuestRewardType), fields[3].Trim()),
-                            reward = int.Parse(fields[4].Trim()),
-                            questType = (Enums.QuestType)Enum.Parse(typeof(Enums.QuestType), fields[5].Trim()),
-                            isLoopQuest = fields[6].Trim() == "Loop",
-                            openContent = (Enums.OpenContent)Enum.Parse(typeof(Enums.OpenContent), fields[7].Trim())
+                            name = questName,
+                            targetProgress = questTargetProgress,
+                            progress = questProgress,
+                            questRewardType = questRewardType,
+                            reward = questReward,
+                            questType = questType,
+                            isLoopQuest = questIsLoop,
+                            openContent = questOpenContent
                         };
 
                         if (quest.openContent != Enums.OpenContent.None) contentsOpenIndex.Add(i - 1);
