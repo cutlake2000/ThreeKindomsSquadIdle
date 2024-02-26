@@ -8,6 +8,7 @@ using Data;
 using Function;
 using Keiwando.BigInteger;
 using Managers.BattleManager;
+using Managers.BottomMenuManager.SquadPanel;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -145,6 +146,7 @@ namespace Managers.GameManager
         private void StartDungeonRunner(int index)
         {
             SquadBattleManager.Instance.cameraController.InitializeCameraPosition();
+            dungeonUIs[(int) currentDungeonType].GetComponent<DungeonUI>().UpdateDungeonTimerUI($"{(int)waveTime}");
             
             switch (index)
             {
@@ -305,6 +307,8 @@ namespace Managers.GameManager
             foreach (var map in dungeonMap) map.SetActive(false);
             foreach (var stageUI in stageUIs) stageUI.SetActive(true);
             UIManager.Instance.stageRewardPanelUI.gameObject.SetActive(false);
+            
+            StopAllCoroutines();
             StageManager.Instance.StartStageRunner();
         }
 
@@ -319,6 +323,7 @@ namespace Managers.GameManager
             DespawnMonster();
             ProjectileManager.Instance.DestroyAllProjectile();
             SpawnSquad();
+            SquadBattleManager.Instance.cameraController.SetCameraTarget(SquadConfigureManager.Instance.modelSpawnPoints[0].transform);
 
             yield return new WaitForSeconds(1.0f);
             
@@ -337,6 +342,7 @@ namespace Managers.GameManager
             DespawnMonster();
             ProjectileManager.Instance.DestroyAllProjectile();
             SpawnSquad();
+            SquadBattleManager.Instance.cameraController.SetCameraTarget(SquadConfigureManager.Instance.modelSpawnPoints[0].transform);
             
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
         }

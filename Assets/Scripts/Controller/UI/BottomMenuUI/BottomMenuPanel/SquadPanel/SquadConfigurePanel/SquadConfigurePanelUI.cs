@@ -210,7 +210,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-
                 stringBuilder.Append(statType);
                 stringBuilder.Append(increaseStatType);
             }

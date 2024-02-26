@@ -126,7 +126,7 @@ namespace Creature.CreatureClass.SquadClass
             Accuracy = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Accuracy);
             Penetration = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Penetration);
             
-            moveSpeed = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.MoveSpeed);
+            moveSpeed = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.MoveSpeed) * SquadBattleManager.Instance.squadMoveSpeedMultiplier[(int) characterType];
             followRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.FollowRange);
             
             attackRange = characterType switch

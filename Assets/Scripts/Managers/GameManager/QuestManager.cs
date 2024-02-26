@@ -84,7 +84,7 @@ namespace Managers.GameManager
 
         private void UpdateAllQuestProgress()
         {
-            Firebase.Analytics.FirebaseAnalytics.LogEvent($"current_quest_{(questLevel)}");
+            Firebase.Analytics.FirebaseAnalytics.LogEvent($"current_quest_{questLevel}");
             
             if (questLevel > oneTimeQuest) // 메인 퀘스트가 아닌 반복 퀘스트인 경우
             {

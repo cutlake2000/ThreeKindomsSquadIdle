@@ -337,6 +337,7 @@ namespace Managers.BottomMenuManager.SummonPanel
 
                     inventoryScrollViewItem.UpdateInventoryPanelItemQuantityUI(targetEquipment.equipmentQuantity);
                     inventoryScrollViewItem.UpdateInventoryPanelItemPossessMark(targetEquipment.isPossessed);
+                    UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[(int) targetEquipment.equipmentType]);
                     
                     UIManager.Instance.summonPanelUI.summonResultPanelUI.summonResultPanelItems[i]
                         .GetComponent<SummonResultPanelItemUI>().UpdateSummonResultPanelEquipmentItemUI(

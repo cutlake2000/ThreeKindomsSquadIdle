@@ -31,7 +31,6 @@ namespace Managers.GameManager
     public class SquadBattleManager : MonoBehaviour
     {
         public static SquadBattleManager Instance;
-        public static Action<Equipment> EquipAction;
 
         [Header("=== Camera Settings=== ")] [SerializeField]
         public CameraController cameraController;
@@ -50,6 +49,7 @@ namespace Managers.GameManager
         [Header("적 탐지 범위")] [SerializeField] private float followRange;
 
         [Header("이동 속도")] [SerializeField] private float moveSpeed;
+        [Header("이동 Multiplier")] public int[] squadMoveSpeedMultiplier;
 
         [Space(3)]
         [Header("=== 스킬 쿨타임 ===")] //TODO: 스킬 쿨 다운을 ScriptableObject에서 긁어와야 함
@@ -162,8 +162,6 @@ namespace Managers.GameManager
         {
             SquadStatManager.Instance.OnUpgradeTotalSquadStatFromSquadStatPanel += squadEntireStat.UpdateStat;
             TalentManager.Instance.OnUpgradeTotalSquadStatFromSquadTalentPanel += squadEntireStat.UpdateStat; //TODO : 재능 스탯 증가
-
-            EquipAction += Equip;
         }
 
         public BigInteger GetTotalSquadStat(Enums.SquadStatType statusType)
@@ -276,7 +274,7 @@ namespace Managers.GameManager
             }
         }
 
-        private void Equip(Equipment equipment)
+        public void Equip(Equipment equipment)
         {
             // TODO : 이전 장비 장착 해제
             equipment.isEquipped = true;

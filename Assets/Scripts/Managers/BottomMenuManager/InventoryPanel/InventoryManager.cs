@@ -250,7 +250,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                     throw new ArgumentOutOfRangeException();
                             }
                                 
-                            SquadBattleManager.EquipAction?.Invoke(equipment);
+                            SquadBattleManager.Instance.Equip(equipment);
                         }
                     }
                 }
@@ -418,7 +418,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                     throw new ArgumentOutOfRangeException();
                             }
          
-                            SquadBattleManager.EquipAction?.Invoke(equipment);
+                            SquadBattleManager.Instance.Equip(equipment);
                         }
 
                         if (equipment.isPossessed)
@@ -436,7 +436,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
         }
 
         // 매개변수로 받은 장비 합성하는 메서드
-        private void CompositeAllEquipment(Equipment equipment)
+        private void CompositeAllEquipment(Equipment equipment, ref bool checkEquippedEquipment)
         {
             isComposited = false;
             if (equipment.equipmentQuantity < 5) return;
@@ -471,23 +471,26 @@ namespace Managers.BottomMenuManager.InventoryPanel
 
             nextEquipment.equipmentQuantity += compositeCount;
             
-            if (nextEquipment.equipmentQuantity < 5)
+            UIManager.Instance.inventoryPanelUI.FindInventoryItemList(nextEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemQuantityUI(nextEquipment.equipmentQuantity);
+                
+            if (nextEquipment.isPossessed == false)
             {
-                UIManager.Instance.inventoryPanelUI.FindInventoryItemList(nextEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemQuantityUI(nextEquipment.equipmentQuantity);
-                
-                if (nextEquipment.isPossessed == false)
+                nextEquipment.isPossessed = true;
+
+                if (checkEquippedEquipment && canAutoEquip[(int) targetType] == false)
                 {
-                    nextEquipment.isPossessed = true;
-                    UIManager.Instance.inventoryPanelUI.FindInventoryItemList(nextEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemPossessMark(nextEquipment.isPossessed);
-                    
-                    foreach (var ownedEffect in nextEquipment.ownedEffects)
-                    {
-                        SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
-                    }
+                    canAutoEquip[(int)targetType] = true;
                 }
-                
-                nextEquipment.SaveEquipmentDataIntoES3Loader();
+                    
+                UIManager.Instance.inventoryPanelUI.FindInventoryItemList(nextEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemPossessMark(nextEquipment.isPossessed);
+                    
+                foreach (var ownedEffect in nextEquipment.ownedEffects)
+                {
+                    SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
+                }
             }
+                
+            nextEquipment.SaveEquipmentDataIntoES3Loader();
 
             if (isComposited)
             {
@@ -730,7 +733,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
             
                 UIManager.Instance.inventoryPanelUI.FindInventoryItemList(highValueEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemEquipMark(true);
 
-                SquadBattleManager.EquipAction?.Invoke(highValueEquipment);
+                SquadBattleManager.Instance.Equip(highValueEquipment);
                 UIManager.Instance.inventoryPanelUI.SelectEquipment(highValueEquipment);
             }
             
@@ -753,11 +756,16 @@ namespace Managers.BottomMenuManager.InventoryPanel
             };
 
             if (equipments == null) return;
-
+            canAllComposite[(int)currentEquipmentType] = false;
+            
             var index = 0;
 
+            var checkEquippedEquipment = false;
+            
             foreach (var equipment in equipments)
             {
+                if (equipment.Value.isEquipped && checkEquippedEquipment == false) checkEquippedEquipment = true;
+                
                 if (index == equipments.Count - 1)
                 {
                     var splitString = equipment.Value.equipmentId.Split('_');
@@ -782,13 +790,13 @@ namespace Managers.BottomMenuManager.InventoryPanel
                 }
                 else
                 {
-                    CompositeAllEquipment(equipment.Value);
+                    CompositeAllEquipment(equipment.Value, ref checkEquippedEquipment);
                     index++;
                 }
             }
-
-            canAllComposite[(int)currentEquipmentType] = false;
-            UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(false);
+            
+            UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(canAllComposite[(int) currentEquipmentType]);
+            UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(canAutoEquip[(int) currentEquipmentType]);
             SaveAllEquipmentInfo();
         }
         

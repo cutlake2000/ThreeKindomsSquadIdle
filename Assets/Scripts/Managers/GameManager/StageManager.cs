@@ -110,6 +110,9 @@ namespace Managers.GameManager
 
         public void StartStageRunner()
         {
+            isWaveTimerRunning = false;
+            
+            StopAllCoroutines();
             StartCoroutine(StageRunner());
         }
 
@@ -190,7 +193,6 @@ namespace Managers.GameManager
             prepareNewSubStage = true;
             
             ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
-            
             ES3.Save($"{nameof(StageManager)}/{nameof(currentSubStage)}", currentSubStage);
             ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
             
@@ -228,6 +230,7 @@ namespace Managers.GameManager
             ES3.Save($"{nameof(challengeProgress)}", challengeProgress);
             ES3.Save($"{nameof(StageManager)}/{nameof(currentSubStage)}", currentSubStage);
             ES3.Save($"{nameof(StageManager)}/{nameof(currentAccumulatedStage)}", currentAccumulatedStage);
+            
             CheckStageProgressType.Invoke(challengeProgress);
             
             StartCoroutine(StageRunner());
@@ -243,9 +246,13 @@ namespace Managers.GameManager
         {
             SetCurrentMainStageInfo();
             UpdateSliderUI();
+            
+            if (stageResultUI.activeInHierarchy) stageResultUI.SetActive(false);
 
             if (prepareNewSubStage)
             {
+                isWaveTimerRunning = false;
+                
                 if (initializeStageResultChecker == false)
                 {
                     stageResultUI.GetComponent<StageRewardPanelUI>().UpdateRewardUI(SpriteManager.Instance.GetCurrencySprite(stageRewards[0].rewardType), $"+ {stageRewards[0].GetStageReward(currentAccumulatedStage).ChangeMoney()}", SpriteManager.Instance.GetCurrencySprite(stageRewards[1].rewardType), $"+ {stageRewards[1].GetStageReward(currentAccumulatedStage).ChangeMoney()}");
@@ -259,6 +266,7 @@ namespace Managers.GameManager
                 DespawnSquad();
                 ProjectileManager.Instance.DestroyAllProjectile();
                 SquadBattleManager.Instance.cameraController.InitializeCameraPosition();
+                SetTimerUI((int)waveTime);
 
                 if (initializeStageResultChecker == false)
                 {
@@ -276,10 +284,12 @@ namespace Managers.GameManager
                             }
                         }
                         
+                        UpdateAllStageUI();
                         stageResultUI.SetActive(false);
                     }
                     else if (QuestManager.Instance.questLevel < 18)
                     {
+                        UpdateAllStageUI();
                         stageResultUI.SetActive(false);
                     }
                         
@@ -292,7 +302,6 @@ namespace Managers.GameManager
                 isClear = false;
                 prepareNewSubStage = false;
                 
-                UpdateAllStageUI();
                 SquadBattleManager.Instance.cameraController.SetCameraTarget(SquadConfigureManager.Instance.modelSpawnPoints[0].transform);
                 
                 yield return new WaitForSeconds(1.0f);

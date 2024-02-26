@@ -33,8 +33,7 @@ namespace Module
                     for (var i = 0; i < pool.size; i++)
                     {
                         var obj = Instantiate(pool.prefab, pool.parentTransform, false);
-                    
-                        obj.transform.position = new Vector3(2.3f, pool.adjustPosition.y,0);
+                        obj.transform.localPosition = pool.adjustPosition;
                         
                         obj.SetActive(false);
                         objectPool.Enqueue(obj);

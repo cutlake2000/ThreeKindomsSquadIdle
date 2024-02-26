@@ -243,14 +243,14 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             
             for (var i = 0; i < equipment.ownedEffects.Count; i++)
             {
-                selectEquipmentOwnedEffect[i].text = equipment.equippedEffects[i].statType switch
+                selectEquipmentOwnedEffect[i].text = equipment.ownedEffects[i].statType switch
                 {
                     Enums.SquadStatType.WarriorAtk => $"(근접) 공격력 {UIManager.FormatCurrency(equipment.ownedEffects[i].increaseValue)} 증가",
                     Enums.SquadStatType.ArcherAtk => $"(원거리) 공격력 {UIManager.FormatCurrency(equipment.ownedEffects[i].increaseValue)} 증가",
                     Enums.SquadStatType.WizardAtk => $"(마법) 공격력 {UIManager.FormatCurrency(equipment.ownedEffects[i].increaseValue)} 증가",
-                    Enums.SquadStatType.Attack => $"공격력 {UIManager.FormatCurrency(equipment.equippedEffects[i].increaseValue)}% 증가",
-                    Enums.SquadStatType.Health => $"체력 {UIManager.FormatCurrency(equipment.equippedEffects[i].increaseValue)}% 증가",
-                    Enums.SquadStatType.Defence => $"방어력 {UIManager.FormatCurrency(equipment.equippedEffects[i].increaseValue)}% 증가",
+                    Enums.SquadStatType.Attack => $"공격력 {UIManager.FormatCurrency(equipment.ownedEffects[i].increaseValue)} 증가",
+                    Enums.SquadStatType.Health => $"체력 {UIManager.FormatCurrency(equipment.ownedEffects[i].increaseValue)} 증가",
+                    Enums.SquadStatType.Defence => $"방어력 {UIManager.FormatCurrency(equipment.ownedEffects[i].increaseValue)} 증가",
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 selectEquipmentOwnedEffect[i].gameObject.SetActive(true);

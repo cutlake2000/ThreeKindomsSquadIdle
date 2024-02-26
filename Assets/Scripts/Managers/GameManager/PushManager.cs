@@ -99,11 +99,12 @@ namespace Managers.GameManager
             };
 
             AndroidNotificationCenter.RegisterNotificationChannel(channel);
-            AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송", "테스트 발송", DateTime.Now) ,"samI");
-            AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송10", "테스트 발송10", DateTime.Now.AddSeconds(10)) ,"samI");
-            AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송30", "테스트 발송30", DateTime.Now.AddSeconds(30)) ,"samI");
-            AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송60", "테스트 발송60", DateTime.Now.AddSeconds(60)) ,"samI");
-            AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송120", "테스트 발송120", DateTime.Now.AddMinutes(2)) ,"samI");
+            
+            // AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송", "테스트 발송", DateTime.Now) ,"samI");
+            // AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송10", "테스트 발송10", DateTime.Now.AddSeconds(10)) ,"samI");
+            // AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송30", "테스트 발송30", DateTime.Now.AddSeconds(30)) ,"samI");
+            // AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송60", "테스트 발송60", DateTime.Now.AddSeconds(60)) ,"samI");
+            // AndroidNotificationCenter.SendNotification(new AndroidNotification("테스트 발송120", "테스트 발송120", DateTime.Now.AddMinutes(2)) ,"samI");
             
             Debug.Log("테스트 발송");
             
