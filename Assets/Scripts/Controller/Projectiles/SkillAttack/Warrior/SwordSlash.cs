@@ -14,7 +14,7 @@ namespace Controller.Projectiles.SkillAttack.Warrior
         {
             foreach (var ac in attackColliders)
             {
-                ac.GetComponent<AttackCollider>().damage = skillDamage * 2;
+                ac.GetComponent<AttackCollider>().Damage = skillDamage * 2;
             }
             
             projectileTransform.position = startPosition;

@@ -30,7 +30,8 @@ namespace Data
             NotEnoughStatPoint,
             AlreadyAutoEquip,
             AlreadyAllComposite,
-            NotEnoughDungeonTicket
+            NotEnoughDungeonTicket,
+            NotEnoughEquipmentEnhanceStone
         }
         
         public static readonly LockButtonType[] lockButtonTypes =
@@ -98,25 +99,26 @@ namespace Data
         }
 
         public enum IconType
-        {      
-            EquipmentTypeSword,
-            EquipmentTypeGauntlet,
-            DungeonKeyEnhanceStoneSquad,
-            DungeonKeyEnhanceStoneEquipment,
-            SquadTypeWarrior,
-            SquadTypeArcher,
-            EquipmentTypeHelmet,
-            EquipmentTypeArmor,
-            DungeonKeyExp,
-            EnhanceStoneSquad,
-            SquadTypeWizard,
-            EnhanceStoneGear,
-            EquipmentTypeStaff,
-            EquipmentTypeBow,
-            DungeonKeyGold,
-            Gold,
-            Dia,
-            EnhanceStoneWeapon
+        {
+            SquadType_Archer,
+            EquipmentType_Helmet,
+            SquadType_Wizard,
+            DungeonKeyType_EnhanceStoneGear,
+            Temp1,
+            SquadType_Warrior,
+            EquipmentType_Staff,
+            EquipmentType_Bow,
+            DungeonKeyType_Gold,
+            CurrencyType_EnhanceStoneSquad,
+            DungeonKeyType_EnhanceStoneSquad,
+            EquipmentType_Armor,
+            EquipmentType_Sword,
+            EquipmentType_Gauntlet,
+            Temp2,
+            CurrencyType_Gold,
+            CurrencyType_Dia,
+            CurrencyType_Exp,
+            CurrencyType_EnhanceStoneEquipment
         }
 
         public enum CharacterRarity
@@ -145,14 +147,11 @@ namespace Data
             Gold,
             Dia,
             StatPoint,
-            WeaponEnhanceStone,
-            GearEnhanceStone,
+            EquipmentEnhanceStone,
             SquadEnhanceStone,
             GoldDungeonTicket,
             EnhanceDungeonTicket,
-            Exp,
-            Rare_5_Sword,
-            None
+            Exp
         }
 
         public enum QuestType

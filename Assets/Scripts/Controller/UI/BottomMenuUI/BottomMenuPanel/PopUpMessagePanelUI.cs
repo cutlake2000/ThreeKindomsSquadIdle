@@ -26,10 +26,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel
 
         public void UpdatePopUpMessagePanelUI(Enums.LockButtonType type)
         {
-            if (activePopUpMessagePanelItems[(int)type]) return;
+            if (activePopUpMessagePanelItems[(int)type - 1]) return;
             
             var message = objectPool.SpawnFromPool(Enums.PoolType.PopUpMessage);
-            activePopUpMessagePanelItems[(int)type] = true;
+            activePopUpMessagePanelItems[(int)type - 1] = true;
             message.GetComponent<PopUpMessagePanelItemUI>().SetMessage(PopUpMessageString(type));
             message.SetActive(true);
             message.GetComponent<PopUpMessagePanelItemUI>().StartCoroutine(type);
@@ -50,7 +50,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel
                 Enums.LockButtonType.DungeonPanel => "메인 퀘스트 23 도달 시 해금",
                 Enums.LockButtonType.GoldDungeonPanel => "메인 퀘스트 23 도달 시 해금",
                 Enums.LockButtonType.SquadEnhanceStoneDungeonPanel => "메인 퀘스트 37 도달 시 해금",
-                Enums.LockButtonType.NotEnoughSquadEnhanceStone => "강화석이 부족합니다",
+                Enums.LockButtonType.NotEnoughSquadEnhanceStone => "영웅 강화석이 부족합니다",
+                Enums.LockButtonType.NotEnoughEquipmentEnhanceStone => "장비 강화석이 부족합니다",
                 Enums.LockButtonType.NotEnoughDungeonTicket => "입장권이 부족합니다",
                 Enums.LockButtonType.NotEnoughGold => "골드가 부족합니다",
                 Enums.LockButtonType.NotEnoughExp => "경험치가 부족합니다",

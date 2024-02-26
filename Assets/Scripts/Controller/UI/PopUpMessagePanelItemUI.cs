@@ -69,7 +69,7 @@ namespace Controller.UI
             yield return waitForSeconds;
         
             gameObject.SetActive(false);
-            UIManager.Instance.popUpMessagePanelUI.activePopUpMessagePanelItems[(int)type] = false;
+            UIManager.Instance.popUpMessagePanelUI.activePopUpMessagePanelItems[(int)type - 1] = false;
         }
     }
 }

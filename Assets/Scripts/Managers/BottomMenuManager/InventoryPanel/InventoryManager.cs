@@ -162,14 +162,14 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             statType = ownedEffectSquadStatType,
                             increaseStatType = Enums.IncreaseStatValueType.BaseStat,
-                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
+                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
                         };
                         
                         equippedEffects.Add(equippedEffect);
                         ownedEffects.Add(ownedEffect);
                         
                         var equipment = new Equipment(equipmentId, equipmentName, equipmentIconIndex, equipmentIcon,
-                            equipmentType, equipmentRarity, equipmentTier, equippedEffects, ownedEffects);
+                            equipmentType, equipmentRarity, equipmentTier, equippedEffects, ownedEffects, equipmentIndex);
                         
                         AddEquipment(equipmentId, equipment);
                         
@@ -188,25 +188,8 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             Enums.EquipmentType.Gauntlet => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets,
                             _ => throw new ArgumentOutOfRangeException()
                         };
-
-                        targetScrollViewItem[equipmentIndex]
-                            .GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemUI(
-                                1,
-                                EquipmentMaxLevel,
-                                equipment.equipmentQuantity,
-                                MaxQuantity,
-                                equipment.isEquipped,
-                                equipment.isPossessed,
-                                equipmentTier,
-                                SpriteManager.Instance.GetEquipmentSprite(
-                                    equipmentType,
-                                    equipmentIconIndex),
-                                SpriteManager.Instance.GetEquipmentBackgroundEffect((int)equipmentRarity),
-                                SpriteManager.Instance.GetEquipmentBackground((int)equipmentRarity));
                         
                         targetScrollViewItem[equipmentIndex].GetComponent<Button>().onClick.AddListener(() => InventoryPanelUI.SelectEquipmentAction(equipment));
-
-                        equipmentIndex++;
                         
                         if (equipment.isPossessed)
                         {
@@ -252,6 +235,21 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                 
                             SquadBattleManager.Instance.Equip(equipment);
                         }
+                        
+                        targetScrollViewItem[equipmentIndex]
+                            .GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemUI(
+                                equipment.equipmentLevel,
+                                EquipmentMaxLevel,
+                                equipment.equipmentQuantity,
+                                MaxQuantity,
+                                equipment.isEquipped,
+                                equipment.isPossessed,
+                                equipmentTier,
+                                SpriteManager.Instance.GetEquipmentSprite(equipmentType, equipmentIconIndex),
+                                SpriteManager.Instance.GetEquipmentBackgroundEffect((int)equipmentRarity),
+                                SpriteManager.Instance.GetEquipmentBackground((int)equipmentRarity));
+                        
+                        equipmentIndex++;
                     }
                 }
             }
@@ -345,7 +343,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             statType = ownedEffectSquadStatType,
                             increaseStatType = Enums.IncreaseStatValueType.BaseStat,
-                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
+                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
                         };
                         
                         equippedEffects.Add(equippedEffect);
@@ -353,7 +351,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
 
                         var equipment = new Equipment(equipmentId, equipmentName, equipmentIconIndex, equipmentLevel,
                             equipmentType, rarity, equipmentTier, equipmentQuantity, isEquipped, isPossessed,
-                            equippedEffects, ownedEffects);
+                            equippedEffects, ownedEffects, equipmentIndex);
                         
                         AddEquipment(equipmentId, equipment);
 
@@ -367,32 +365,12 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             Enums.EquipmentType.Gauntlet => UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemGauntlets,
                             _ => throw new ArgumentOutOfRangeException()
                         };
-
-                        targetScrollViewItem[equipmentIndex]
-                            .GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemUI(
-                                1,
-                                EquipmentMaxLevel,
-                                equipmentQuantity,
-                                MaxQuantity,
-                                isEquipped,
-                                isEquipped,
-                                equipmentTier,
-                                SpriteManager.Instance.GetEquipmentSprite(
-                                    equipmentType,
-                                    equipmentIconIndex),
-                                SpriteManager.Instance.GetEquipmentBackgroundEffect((int)rarity),
-                                SpriteManager.Instance.GetEquipmentBackground((int)rarity));
                         
                         targetScrollViewItem[equipmentIndex].GetComponent<Button>().onClick.AddListener(() => InventoryPanelUI.SelectEquipmentAction(equipment));
 
-                        equipmentIndex++;
-
                         if (equipment.isEquipped)
                         {
-                            UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipmentType]
-                                .GetComponent<InventoryPanelSelectedItemUI>()
-                                .UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon,
-                                    equipmentBackground, equipmentBackgroundEffect);
+                            UIManager.Instance.inventoryPanelUI.equipmentButton[(int)equipmentType].GetComponent<InventoryPanelSelectedItemUI>().UpdateInventoryPanelSelectedItem(equipmentTier, equipmentIcon, equipmentBackground, equipmentBackgroundEffect);
                             
                             switch (equipmentType)
                             {
@@ -428,6 +406,21 @@ namespace Managers.BottomMenuManager.InventoryPanel
                                 SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
                             }
                         }
+                        
+                        targetScrollViewItem[equipmentIndex]
+                            .GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemUI(
+                                equipment.equipmentLevel,
+                                EquipmentMaxLevel,
+                                equipmentQuantity,
+                                MaxQuantity,
+                                isEquipped,
+                                isEquipped,
+                                equipmentTier,
+                                SpriteManager.Instance.GetEquipmentSprite(equipmentType, equipmentIconIndex),
+                                SpriteManager.Instance.GetEquipmentBackgroundEffect((int)rarity),
+                                SpriteManager.Instance.GetEquipmentBackground((int)rarity));
+                        
+                        equipmentIndex++;
                     }
                 }
             }

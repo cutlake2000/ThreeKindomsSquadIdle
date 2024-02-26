@@ -24,7 +24,7 @@ namespace Creature.Data
         [Header("이름")] public string equipmentName;
         [Header("스프라이트 인덱스")] public int equipmentIconIndex;
         [Header("레벨")] public int equipmentLevel;
-        [Header("요구 강화석")] public BigInteger equipmentRequiredCurrency;
+        [Header("요구 강화석")] public BigInteger EquipmentRequiredCurrency;
         [Header("장비 타입")] public Enums.EquipmentType equipmentType;
         [Header("장비 등급")] public Enums.EquipmentRarity equipmentRarity;
         [Header("장비 티어")] public int equipmentTier;
@@ -33,8 +33,10 @@ namespace Creature.Data
         [Header("보유 여부")] public bool isPossessed;
         [Space(5)]
         [Header("장착 효과 타입")] public List<EquipmentEffect> equippedEffects;
+        [Header("보유 효과 베이스")] public List<EquipmentEffect> ownedBaseEffects;
         [Header("보유 효과 타입")] public List<EquipmentEffect> ownedEffects;
-
+        [Space(5)]
+        [Header("보유 효과 타입")] public int dictionaryIndex;
         [Header("ES3 Loader")] public EquipmentES3Loader equipmentES3Loader;
         
         /// <summary>
@@ -55,7 +57,7 @@ namespace Creature.Data
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public Equipment(string id, string name, int iconIndex, int level, Enums.EquipmentType type,
             Enums.EquipmentRarity rarity, int tier, int quantity, bool isEquipped, bool isPossessed,
-            List<EquipmentEffect> equippedEffects, List<EquipmentEffect> ownedEffects)
+            List<EquipmentEffect> equippedEffects, List<EquipmentEffect> ownedEffects, int dictionaryIndex)
         {
             equipmentId = id;
             equipmentName = name;
@@ -69,25 +71,37 @@ namespace Creature.Data
             this.isPossessed = isPossessed;
 
             this.equippedEffects = equippedEffects;
-            this.ownedEffects = ownedEffects;
+            ownedBaseEffects = ownedEffects;
+            this.ownedEffects = ownedBaseEffects;
 
-            equipmentRequiredCurrency = rarity switch
+            this.dictionaryIndex = dictionaryIndex;
+
+            EquipmentRequiredCurrency = equipmentRarity switch
             {
-                Enums.EquipmentRarity.Common => 10,
-                Enums.EquipmentRarity.Uncommon => 20,
-                Enums.EquipmentRarity.Magic => 80,
-                Enums.EquipmentRarity.Rare => 160,
-                Enums.EquipmentRarity.Unique => 320,
-                // Enums.EquipmentRarity.Legend => 640,
-                // Enums.EquipmentRarity.Epic => 1280,
-                // Enums.EquipmentRarity.Ancient => 2560,
-                // Enums.EquipmentRarity.Legendary => 5120,
-                // Enums.EquipmentRarity.Mythology => 10240,
+                Enums.EquipmentRarity.Common => 100,
+                Enums.EquipmentRarity.Uncommon => 200,
+                Enums.EquipmentRarity.Magic => 800,
+                Enums.EquipmentRarity.Rare => 1600,
+                Enums.EquipmentRarity.Unique => 3200,
+                // Enums.EquipmentRarity.Legend => 6400,
+                // Enums.EquipmentRarity.Epic => 12800,
+                // Enums.EquipmentRarity.Ancient => 25600,
+                // Enums.EquipmentRarity.Legendary => 51200,
+                // Enums.EquipmentRarity.Mythology => 102400,
                 // Enums.EquipmentRarity.Null => 0,
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
             
             SaveEquipmentDataIntoES3Loader();
+            
+            for (var index = 0; index < ownedBaseEffects.Count; index++)
+            {
+                var ownedBaseEffect = ownedBaseEffects[index];
+
+                ownedEffects[index].statType = ownedBaseEffect.statType;
+                ownedEffects[index].increaseStatType = ownedBaseEffect.increaseStatType;
+                ownedEffects[index].increaseValue = ownedBaseEffect.increaseValue * equipmentLevel;
+            }
         }
 
         /// <summary>
@@ -99,7 +113,7 @@ namespace Creature.Data
         /// <param name="icon"></param>
         /// <param name="rarity"></param>
         public Equipment(string id, string name, int iconIndex, Sprite icon, Enums.EquipmentType type, Enums.EquipmentRarity rarity, int tier,
-            List<EquipmentEffect> equippedEffects, List<EquipmentEffect> ownedEffects)
+            List<EquipmentEffect> equippedEffects, List<EquipmentEffect> ownedEffects, int dictionaryIndex)
         {
             equipmentId = id;
             equipmentName = name;
@@ -108,34 +122,43 @@ namespace Creature.Data
             equipmentRarity = rarity;
             equipmentTier = tier;
             this.equippedEffects = equippedEffects;
-            this.ownedEffects = ownedEffects;
+            ownedBaseEffects = ownedEffects;
+            this.ownedEffects = ownedBaseEffects;
+            this.dictionaryIndex = dictionaryIndex;
+            
+            EquipmentRequiredCurrency = equipmentRarity switch
+            {
+                Enums.EquipmentRarity.Common => 100,
+                Enums.EquipmentRarity.Uncommon => 200,
+                Enums.EquipmentRarity.Magic => 800,
+                Enums.EquipmentRarity.Rare => 1600,
+                Enums.EquipmentRarity.Unique => 3200,
+                // Enums.EquipmentRarity.Legend => 6400,
+                // Enums.EquipmentRarity.Epic => 12800,
+                // Enums.EquipmentRarity.Ancient => 25600,
+                // Enums.EquipmentRarity.Legendary => 51200,
+                // Enums.EquipmentRarity.Mythology => 102400,
+                // Enums.EquipmentRarity.Null => 0,
+                _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
+            };
 
             LoadEquipmentDataFromES3Loader();
+
+            for (var index = 0; index < ownedBaseEffects.Count; index++)
+            {
+                var ownedBaseEffect = ownedBaseEffects[index];
+
+                ownedEffects[index].statType = ownedBaseEffects[index].statType;
+                ownedEffects[index].increaseStatType = ownedBaseEffects[index].increaseStatType;
+                ownedEffects[index].increaseValue = ownedBaseEffect.increaseValue * equipmentLevel;
+            }
         }
         
-        // 강화 메서드
-        public void Enhance()
+        public BigInteger RequiredCurrencyForLevelUp()
         {
-            // 강화 로직...
-            foreach (var t in equippedEffects)
-            {
-                t.increaseValue += t.increaseValue;
-            }
-            
-            foreach (var t in ownedEffects)
-            {
-                t.increaseValue += t.increaseValue;
-            }
+            var requiredCurrency = EquipmentRequiredCurrency * (int)Mathf.Pow(1.8f, equipmentLevel);
 
-            equipmentLevel = Mathf.Min(equipmentLevel++, InventoryManager.EquipmentMaxLevel);
-        }
-
-        // 강화할 때 필요한 강화석 return 시키는 메서드
-        public BigInteger GetEnhanceStone()
-        {
-            // var requiredEnhanceStone = equippedEffect - basicOwnedEffect;
-
-            return 100;
+            return requiredCurrency;
         }
 
         // 장비 데이터를 ES3 파일에 저장
@@ -226,6 +249,23 @@ namespace Creature.Data
             isEquipped = equipment.isEquipped;
             equipmentType = equipment.equipmentType;
             equipmentRarity = equipment.equipmentRarity;
+        }
+        
+        public void EquipmentLevelUp()
+        {
+            const int equipmentMaxLevel = InventoryManager.EquipmentMaxLevel;
+            equipmentLevel++;
+            equipmentLevel = Mathf.Min(equipmentLevel, equipmentMaxLevel);
+
+            for (var index = 0; index < ownedEffects.Count; index++)
+            {
+                var ownedEffect = ownedEffects[index];
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), -ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                ownedEffect.increaseValue = ownedBaseEffects[index].increaseValue * equipmentLevel;
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+            }
+
+            UIManager.Instance.inventoryPanelUI.UpdateOwnedEffectsText();
         }
     }
 }

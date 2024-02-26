@@ -7,13 +7,22 @@ namespace Module
 {
     public class AttackCollider : MonoBehaviour
     {
-        public BigInteger damage;
+        public BigInteger Damage;
+        public int criticalRate;
+        public int criticalDamage;
+
+        public void InitializeAttackColliderData(BigInteger damage, int criticalRate, int criticalDamage)
+        {
+            Damage = damage;
+            this.criticalRate = criticalRate;
+            this.criticalDamage = criticalDamage;
+        }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (!collision.CompareTag(Strings.TAG_ENEMY)) return;
 
-            collision.GetComponent<Monster>().TakeDamage(damage, 0, 0);
+            collision.GetComponent<Monster>().TakeDamage(Damage, criticalRate, criticalDamage);
         }
 
         private void OnTriggerExit2D(Collider2D collision)

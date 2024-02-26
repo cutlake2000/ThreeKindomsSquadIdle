@@ -49,5 +49,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         {
             equipMark.SetActive(isEquipped);
         }
+        
+        public void UpdateInventoryPanelItemLevelUI(int level, int maxLevel)
+        {
+            equipmentLevel.text = $"Lv.{level} / {maxLevel}";
+        }
     }
 }

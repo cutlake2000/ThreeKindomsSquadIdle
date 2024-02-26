@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using Creature.Data;
 using Data;
 using Function;
+using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.InventoryPanel;
+using Managers.BottomMenuManager.SquadPanel;
 using Managers.GameManager;
+using Module;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -45,9 +48,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         [Header("자동 장착 잠금 버튼")] public Button autoEquipLockButton;
         [Header("레벨 업 버튼")] public Button levelUpButton;
         [Header("레벨 업 잠금 버튼")] public Button levelUpLockButton;
-
+        [Header("요구 재화")] public TMP_Text requiredCurrencyText;
         [Header("선택 장비")] public Equipment selectEquipment;
-        [Header("선택 장비 인덱스")] public int currentSelectedInventoryITemIndex;
+        [Header("선택 장비 인덱스")] public int currentSelectedInventoryItemIndex;
 
         [Header("선택 장비 정보")]
         public TMP_Text selectEquipmentTier;
@@ -97,6 +100,9 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             
             allCompositeLockButton.GetComponent<LockButtonUI>().InitializeEventListener();
             autoEquipLockButton.GetComponent<LockButtonUI>().InitializeEventListener();
+            
+            levelUpButton.onClick.AddListener(OnClickEquipmentLevelUp);
+            levelUpButton.GetComponent<HoldButton>().onHold.AddListener(OnClickEquipmentLevelUp);
             levelUpLockButton.GetComponent<LockButtonUI>().InitializeEventListener();
             
             equipmentViewButtons[1].GetComponent<LockButtonUI>().InitializeEventListener();
@@ -147,24 +153,32 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
             switch (index)
             {
                 case 0:
-                    currentSelectedEquipmentType.text = "<sprite=0 color=#000000> 근접 무기";
+                    currentSelectedEquipmentType.text = $"<sprite={(int)Enums.IconType.EquipmentType_Sword} color=#000000> 근접 무기";
                     break;
                 case 1:
-                    currentSelectedEquipmentType.text = "<sprite=13 color=#000000> 원거리 무기";
+                    currentSelectedEquipmentType.text = $"<sprite={(int)Enums.IconType.EquipmentType_Bow} color=#000000> 원거리 무기";
                     break;
                 case 2:
-                    currentSelectedEquipmentType.text = "<sprite=12 color=#000000> 마법 무기";
+                    currentSelectedEquipmentType.text = $"<sprite={(int)Enums.IconType.EquipmentType_Staff} color=#000000> 마법 무기";
                     break;
                 case 3:
-                    currentSelectedEquipmentType.text = "<sprite=6 color=#000000> 투구";
+                    currentSelectedEquipmentType.text = $"<sprite={(int)Enums.IconType.EquipmentType_Helmet} color=#000000> 투구";
                     break;
                 case 4:
-                    currentSelectedEquipmentType.text = "<sprite=7 color=#000000> 갑옷";
+                    currentSelectedEquipmentType.text = $"<sprite={(int)Enums.IconType.EquipmentType_Armor} color=#000000> 갑옷";
                     break;
                 case 5:
-                    currentSelectedEquipmentType.text = "<sprite=1 color=#000000> 장갑";
+                    currentSelectedEquipmentType.text = $"<sprite={(int)Enums.IconType.EquipmentType_Gauntlet} color=#000000> 장갑";
                     break;
             }
+        }
+
+        public void UpdateLevelUpButtonUI()
+        {
+            var canLevelUp = selectEquipment is { isPossessed: true, equipmentLevel: < InventoryManager.EquipmentMaxLevel } && selectEquipment.RequiredCurrencyForLevelUp() < new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EquipmentEnhanceStone));
+            
+            levelUpButton.gameObject.SetActive(canLevelUp);
+            levelUpLockButton.gameObject.SetActive(!canLevelUp);
         }
 
         // 장비 선택 이벤트 트리거 하는 메서드 
@@ -191,6 +205,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
                 selectEquipment = equipment;
             
                 UpdateSelectedEquipmentUI(selectEquipment);
+                
+                UIManager.Instance.inventoryPanelUI.UpdateLevelUpButtonUI();
                 UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[(int) equipment.equipmentType]);
                 UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[(int) equipment.equipmentType]);
             }
@@ -255,6 +271,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
                 };
                 selectEquipmentOwnedEffect[i].gameObject.SetActive(true);
             }
+
+            UpdateRequiredCurrencyUI(selectEquipment.RequiredCurrencyForLevelUp().ChangeMoney());
         }
 
         public GameObject FindInventoryItemList(string id)
@@ -282,6 +300,25 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void OnClickEquipmentLevelUp()
+        {
+            if (selectEquipment is not { isPossessed: true } || selectEquipment.equipmentLevel >= InventoryManager.EquipmentMaxLevel) return;
+            
+            if (selectEquipment.RequiredCurrencyForLevelUp() >
+                new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EquipmentEnhanceStone))) return;
+
+            AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.EquipmentEnhanceStone,
+                selectEquipment.RequiredCurrencyForLevelUp());
+            
+            selectEquipment.EquipmentLevelUp();
+            selectEquipment.SaveEquipmentDataIntoES3Loader();
+            
+            UpdateSelectedEquipmentUI(selectEquipment);
+            UpdateLevelUpButtonUI();
+            FindInventoryItemList(selectEquipment.equipmentId).GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemLevelUI(selectEquipment.equipmentLevel, InventoryManager.EquipmentMaxLevel);
+            InventoryManager.Instance.SaveAllEquipmentInfo();
         }
 
         // 강화 판넬 버튼 눌렸을 때 불리는 메서드
@@ -349,6 +386,29 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         {
             autoEquipButton.gameObject.SetActive(canAutoEquip);
             autoEquipLockButton.gameObject.SetActive(!canAutoEquip);
+        }
+
+        public void UpdateRequiredCurrencyUI(string currency)
+        {
+            requiredCurrencyText.text = $"<size=18><sprite={(int)Enums.IconType.CurrencyType_EnhanceStoneEquipment}></size>  {currency}";
+        }
+
+        public void UpdateOwnedEffectsText()
+        {
+            for (var i = 0; i < selectEquipment.ownedEffects.Count; i++)
+            {
+                selectEquipmentOwnedEffect[i].text = selectEquipment.ownedEffects[i].statType switch
+                {
+                    Enums.SquadStatType.WarriorAtk => $"(근접) 공격력 {UIManager.FormatCurrency(selectEquipment.ownedEffects[i].increaseValue)} 증가",
+                    Enums.SquadStatType.ArcherAtk => $"(원거리) 공격력 {UIManager.FormatCurrency(selectEquipment.ownedEffects[i].increaseValue)} 증가",
+                    Enums.SquadStatType.WizardAtk => $"(마법) 공격력 {UIManager.FormatCurrency(selectEquipment.ownedEffects[i].increaseValue)} 증가",
+                    Enums.SquadStatType.Attack => $"공격력 {UIManager.FormatCurrency(selectEquipment.ownedEffects[i].increaseValue)} 증가",
+                    Enums.SquadStatType.Health => $"체력 {UIManager.FormatCurrency(selectEquipment.ownedEffects[i].increaseValue)} 증가",
+                    Enums.SquadStatType.Defence => $"방어력 {UIManager.FormatCurrency(selectEquipment.ownedEffects[i].increaseValue)} 증가",
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                selectEquipmentOwnedEffect[i].gameObject.SetActive(true);
+            }
         }
 
         // // 선택한 장비 데이터 업데이트 (저장한다고 생각하면 편함)

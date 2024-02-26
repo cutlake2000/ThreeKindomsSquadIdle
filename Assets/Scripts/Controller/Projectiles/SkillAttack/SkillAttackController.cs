@@ -44,7 +44,7 @@ namespace Controller.Projectiles.SkillAttack
 
             foreach (var ac in attackColliders)
             {
-                ac.GetComponent<Collider2D>().GetComponent<AttackCollider>().damage = skillDamage * 2;    
+                ac.GetComponent<Collider2D>().GetComponent<AttackCollider>().Damage = skillDamage * 2;    
             }
             
             gameObject.GetComponent<ParticleSystem>().Play(true);

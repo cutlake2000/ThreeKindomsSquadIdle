@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uACF5\uC131\uC804"
+  m_text: "\uD638\uB85C\uAD00 \uC804\uD22C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 15899c92d954543258bfbf128931ea4f, type: 2}
   m_sharedMaterial: {fileID: -6383768301819024731, guid: 15899c92d954543258bfbf128931ea4f, type: 2}
@@ -506,7 +506,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dungeonType: 1
-  rewardType: 5
+  rewardType: 4
   clearDungeonButton: {fileID: 203472112897571418}
   enterDungeonButton: {fileID: 8473409428539421055}
   enterLockDungeonButton: {fileID: 7474790314991188154}
@@ -1981,7 +1981,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24cf6efe41e844e187413a7648aaf224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lockButtonType: 11
+  lockButtonType: 10
 --- !u!1 &7940798279379102200
 GameObject:
   m_ObjectHideFlags: 0

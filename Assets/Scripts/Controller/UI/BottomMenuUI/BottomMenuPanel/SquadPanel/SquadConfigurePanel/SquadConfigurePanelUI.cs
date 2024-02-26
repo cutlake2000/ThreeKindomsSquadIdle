@@ -120,7 +120,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
         {
             currentSelectedSquadConfigurePanelItem = character;
 
-            requiredSquadEnhanceStoneText.text = $"<sprite={(int)Enums.IconType.EnhanceStoneSquad}>{character.RequiredCurrencyForLevelUp().ChangeMoney()}";
+            requiredSquadEnhanceStoneText.text = $"<sprite={(int)Enums.IconType.CurrencyType_EnhanceStoneSquad}>{character.RequiredCurrencyForLevelUp().ChangeMoney()}";
             requiredSquadEnhanceStoneTextLockButton.text = requiredSquadEnhanceStoneText.text;
             
             var skill1Description = currentSelectedSquadConfigurePanelItem.characterSkills[0].skillDescription;
@@ -325,9 +325,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                 _ => null
             };
 
-            if (character == null || !character.isPossessed) return;
-
-            if (character.characterLevel >= SquadConfigureManager.CharacterMaxLevel) return;
+            if (character is not { isPossessed: true } || character.characterLevel >= SquadConfigureManager.CharacterMaxLevel) return;
 
             if (character.RequiredCurrencyForLevelUp() >
                 new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.SquadEnhanceStone))) return;
@@ -445,7 +443,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                             
                             UIManager.Instance.squadPanelUI.squadConfigurePanelUI
                                 .currentSelectedSquadConfigurePanelItemIndex = index;
-                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI.SelectSquadConfigureItem(characterType, characterId);
+                            SelectSquadConfigureItem(characterType, characterId);
                         });
                     }
 
@@ -487,7 +485,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                             
                             UIManager.Instance.squadPanelUI.squadConfigurePanelUI
                                 .currentSelectedSquadConfigurePanelItemIndex = index;
-                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI.SelectSquadConfigureItem(
+                            SelectSquadConfigureItem(
                                 characterType, characterId);
                         });
                     
@@ -531,7 +529,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                             
                             UIManager.Instance.squadPanelUI.squadConfigurePanelUI
                                 .currentSelectedSquadConfigurePanelItemIndex = index;
-                            UIManager.Instance.squadPanelUI.squadConfigurePanelUI.SelectSquadConfigureItem(
+                            SelectSquadConfigureItem(
                                 characterType, characterId);
                         });
                     }
@@ -542,7 +540,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
             }
         }
 
-        public void SelectSquadConfigureItem(Enums.CharacterType type, string key)
+        private static void SelectSquadConfigureItem(Enums.CharacterType type, string key)
         {
             switch (type)
             {

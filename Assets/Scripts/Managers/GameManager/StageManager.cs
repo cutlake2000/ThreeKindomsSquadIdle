@@ -266,7 +266,9 @@ namespace Managers.GameManager
                 DespawnSquad();
                 ProjectileManager.Instance.DestroyAllProjectile();
                 SquadBattleManager.Instance.cameraController.InitializeCameraPosition();
-                SetTimerUI((int)waveTime);
+                SetTimerUI((int)stageLimitedTime);
+                
+                currentWave = 0;
 
                 if (initializeStageResultChecker == false)
                 {
@@ -283,21 +285,21 @@ namespace Managers.GameManager
                                 AccountManager.Instance.AddExp(reward.GetStageReward(currentAccumulatedStage));
                             }
                         }
-                        
-                        UpdateAllStageUI();
-                        stageResultUI.SetActive(false);
                     }
-                    else if (QuestManager.Instance.questLevel < 18)
-                    {
-                        UpdateAllStageUI();
-                        stageResultUI.SetActive(false);
-                    }
+                    // else if (QuestManager.Instance.questLevel < 18)
+                    // {
+                    //     UpdateAllStageUI();
+                    //     stageResultUI.SetActive(false);
+                    // }
+                    
+                    UpdateAllStageUI();
+                    stageResultUI.SetActive(false);
                         
                     yield return new WaitForSeconds(1.0f);
                 }
                 
                 SpawnSquad();
-                currentWave = 0;
+                
                 initializeStageResultChecker = false;
                 isClear = false;
                 prepareNewSubStage = false;

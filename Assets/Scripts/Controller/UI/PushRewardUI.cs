@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
 using Data;
 using Keiwando.BigInteger;
 using Managers.BattleManager;
@@ -72,9 +73,16 @@ namespace Controller.UI
                     case Enums.RewardType.Rare_5_Sword:
                         var targetEquipment = InventoryManager.Instance.SwordsDictionary["Rare_5_Sword"];
 
-                        if (targetEquipment.isPossessed == false) targetEquipment.isPossessed = true;
+                        if (targetEquipment.isPossessed == false)
+                        {
+                            targetEquipment.isPossessed = true;
+                            
+                            UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords[15].GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemPossessMark(targetEquipment.isPossessed);
+                        }
+                        
                         targetEquipment.equipmentQuantity++;
                         
+                        UIManager.Instance.inventoryPanelUI.inventoryScrollViewItemSwords[15].GetComponent<InventoryPanelItemUI>().UpdateInventoryPanelItemQuantityUI(targetEquipment.equipmentQuantity);
                         InventoryManager.Instance.SaveAllEquipmentInfo();
                         break;
                 }

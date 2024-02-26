@@ -103,7 +103,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            currentDia.text = $"<sprite={(int)Enums.IconType.Dia}> {BigInteger.ChangeMoney(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Dia))}";
+            currentDia.text = $"<sprite={(int)Enums.IconType.CurrencyType_Dia}> {BigInteger.ChangeMoney(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Dia))}";
             currentSummonLevel.text = $"소환 레벨 {targetSummonLevel.CurrentSummonLevel}";
             currentSummonExp.text = $"{targetSummonLevel.CurrentSummonExp} / {targetSummonLevel.TargetSummonExp}";
             currentSummonExpSlider.value = targetSummonLevel.CurrentSummonExp / targetSummonLevel.TargetSummonExp;

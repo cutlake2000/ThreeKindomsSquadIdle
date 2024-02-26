@@ -1,17 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Controller.Effects;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel;
 using Creature.Data;
 using Data;
-using Function;
 using Keiwando.BigInteger;
-using Managers.BattleManager;
-using Managers.BottomMenuManager.SquadPanel;
 using Managers.BottomMenuManager.TalentPanel;
 using Module;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Managers.GameManager
 {
@@ -177,12 +172,12 @@ namespace Managers.GameManager
                     break;
                 case Enums.CurrencyType.Gold:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.Gold);
-                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.Gold}>    {BigInteger.ChangeMoney(amount)}";
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.CurrencyType_Gold}>    {BigInteger.ChangeMoney(amount)}";
                     UIManager.Instance.talentPanelUI.CheckRequiredCurrencyOfMagnificationAllButton(TalentManager.Instance.levelUpMagnification);
                     break;
                 case Enums.CurrencyType.Dia:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.Dia);
-                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.Dia}>    {BigInteger.ChangeMoney(amount)}";
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.CurrencyType_Dia}>    {BigInteger.ChangeMoney(amount)}";
                     
                     foreach (var summonPanelScrollViewItem in UIManager.Instance.summonPanelUI.summonPanelScrollViewItems)
                     {
@@ -192,17 +187,22 @@ namespace Managers.GameManager
                     break;
                 case Enums.CurrencyType.SquadEnhanceStone:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.SquadEnhanceStone);
-                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.EnhanceStoneSquad}> {BigInteger.ChangeMoney(amount)}";
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.CurrencyType_EnhanceStoneSquad}> {BigInteger.ChangeMoney(amount)}";
                     UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateLevelUpButtonUI();
+                    break;
+                case Enums.CurrencyType.EquipmentEnhanceStone:
+                    currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.EquipmentEnhanceStone);
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.CurrencyType_EnhanceStoneEquipment}> {BigInteger.ChangeMoney(amount)}";
+                    UIManager.Instance.inventoryPanelUI.UpdateLevelUpButtonUI();
                     break;
                 case Enums.CurrencyType.GoldDungeonTicket:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.GoldDungeonTicket);
-                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyGold}>      {BigInteger.ChangeMoney(amount)}";
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyType_Gold}>      {BigInteger.ChangeMoney(amount)}";
                     UIManager.Instance.dungeonPanelUI.dungeonItems[0].UpdateButtonUI(int.Parse(currency.amount) >= 1);
                     break;
                 case Enums.CurrencyType.EnhanceDungeonTicket:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.EnhanceDungeonTicket);
-                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyEnhanceStoneSquad}>     {BigInteger.ChangeMoney(amount)}";
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyType_EnhanceStoneGear}>     {BigInteger.ChangeMoney(amount)}";
                     UIManager.Instance.dungeonPanelUI.dungeonItems[1].UpdateButtonUI(int.Parse(currency.amount) >= 1);
                     break;
             }

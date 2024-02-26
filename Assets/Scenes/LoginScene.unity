@@ -474,7 +474,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &494992227
 RectTransform:
   m_ObjectHideFlags: 0
@@ -989,9 +989,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sliderUI: {fileID: 1693146270}
-  touchToStartButton: {fileID: 494992226}
-  IdGenerator: {fileID: 1473297608}
-  accountName: 
+  touchToStartButton: {fileID: 494992228}
+  userName: 
 --- !u!4 &1473297607
 Transform:
   m_ObjectHideFlags: 0
@@ -2271,7 +2270,6 @@ MonoBehaviour:
   accountGenerationPanel: {fileID: 5928270058446655964}
   touchToStartButton: {fileID: 494992226}
   nameInputField: {fileID: 6112597999450122973}
-  loadingSceneManager: {fileID: 1473297606}
 --- !u!224 &8110387727742035511
 RectTransform:
   m_ObjectHideFlags: 0

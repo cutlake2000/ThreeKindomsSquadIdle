@@ -61,7 +61,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
                     break;
             }
 
-            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.Gold}> {currentLevelUpCost[(int)Mathf.Log10(levelMagnification)].ChangeMoney()}";
+            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.CurrencyType_Gold}> {currentLevelUpCost[(int)Mathf.Log10(levelMagnification)].ChangeMoney()}";
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Module
             var guid = System.Guid.NewGuid().ToString();
             var cleanedGuid = guid.Replace("-", "").ToLower();
 
-            var desiredLength = 8;
+            const int desiredLength = 8;
             var randomId = cleanedGuid.Substring(0, Mathf.Min(cleanedGuid.Length, desiredLength));
         
             Debug.Log("Random ID: " + randomId);

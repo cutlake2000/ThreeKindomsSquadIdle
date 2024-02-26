@@ -16,7 +16,7 @@ namespace Controller.UI.LoginUI
         private const int minNameLength = 3;
         private const int maxNameLength = 12;
 
-        [SerializeField] private LoadingSceneManager loadingSceneManager;
+        // [SerializeField] private LoadingSceneManager loadingSceneManager;
 
         public void Start()
         {
@@ -48,13 +48,13 @@ namespace Controller.UI.LoginUI
             //     return;
             // }
 
-            // TODO: 중복 닉네임 확인 로직 추가 (서버와의 통신이 필요할 수 있음)
-
-            // 입력된 이름을 저장
-            ES3.Save("accountName", playerName);
-            
-            accountGenerationPanel.SetActive(false);
-            loadingSceneManager.ToPlayButton();
+            // // TODO: 중복 닉네임 확인 로직 추가 (서버와의 통신이 필요할 수 있음)
+            //
+            // // 입력된 이름을 저장
+            // ES3.Save("accountName", playerName);
+            //
+            // accountGenerationPanel.SetActive(false);
+            // loadingSceneManager.ToPlayButton();
         }
     }
 }

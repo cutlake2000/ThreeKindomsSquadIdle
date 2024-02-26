@@ -25,10 +25,10 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel
             switch (rewardType)
             {
                 case Enums.CurrencyType.Gold:
-                    currentDungeonRewardText.text = $"+ <sprite={(int)Enums.IconType.Gold}> {reward.ChangeMoney()}";
+                    currentDungeonRewardText.text = $"+ <sprite={(int)Enums.IconType.CurrencyType_Gold}> {reward.ChangeMoney()}";
                     break;
                 case Enums.CurrencyType.SquadEnhanceStone:
-                    currentDungeonRewardText.text = $"+ <sprite={(int)Enums.IconType.EnhanceStoneSquad}> {reward.ChangeMoney()}";
+                    currentDungeonRewardText.text = $"+ <sprite={(int)Enums.IconType.CurrencyType_EnhanceStoneSquad}> {reward.ChangeMoney()}";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

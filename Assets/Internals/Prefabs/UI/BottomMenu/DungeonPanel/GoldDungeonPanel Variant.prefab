@@ -142,7 +142,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC78A\uD600\uC9C4 \uACE0\uB300 \uC0AC\uC6D0"
+  m_text: "\uB3D9\uD0C1\uC758 \uBE44\uBC00 \uCC3D\uACE0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 15899c92d954543258bfbf128931ea4f, type: 2}
   m_sharedMaterial: {fileID: -6383768301819024731, guid: 15899c92d954543258bfbf128931ea4f, type: 2}
@@ -2057,7 +2057,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24cf6efe41e844e187413a7648aaf224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lockButtonType: 11
+  lockButtonType: 10
 --- !u!1001 &2933023716211464083
 PrefabInstance:
   m_ObjectHideFlags: 0
