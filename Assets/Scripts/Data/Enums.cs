@@ -214,8 +214,8 @@ namespace Data
         public enum DungeonType
         {
             GoldDungeon,
-            SquadEnhanceStoneDungeon,
-            EquipmentEnhanceStoneDungeon
+            EquipmentEnhanceStoneDungeon,
+            SquadEnhanceStoneDungeon
         }
 
         /// <summary>
