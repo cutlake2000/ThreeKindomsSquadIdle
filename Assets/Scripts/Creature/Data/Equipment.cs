@@ -6,6 +6,7 @@ using Keiwando.BigInteger;
 using Managers.BottomMenuManager.InventoryPanel;
 using Managers.GameManager;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Creature.Data
 {
@@ -14,7 +15,8 @@ namespace Creature.Data
     {
         public Enums.SquadStatType statType;
         public Enums.IncreaseStatValueType increaseStatType;
-        public int increaseValue;
+        public int baseIncreaseValue;
+        public int CurrentIncreaseValue;
     }
     
     [Serializable]
@@ -32,9 +34,8 @@ namespace Creature.Data
         [Header("장착 여부")] public bool isEquipped;
         [Header("보유 여부")] public bool isPossessed;
         [Space(5)]
-        [Header("장착 효과 타입")] public List<EquipmentEffect> equippedEffects;
-        [Header("보유 효과 베이스")] public List<EquipmentEffect> ownedBaseEffects;
-        [Header("보유 효과 타입")] public List<EquipmentEffect> ownedEffects;
+        [Header("장착 효과")] public List<EquipmentEffect> equippedEffects;
+        [Header("보유 효과")] public List<EquipmentEffect> ownedEffects;
         [Space(5)]
         [Header("보유 효과 타입")] public int dictionaryIndex;
         [Header("ES3 Loader")] public EquipmentES3Loader equipmentES3Loader;
@@ -71,18 +72,17 @@ namespace Creature.Data
             this.isPossessed = isPossessed;
 
             this.equippedEffects = equippedEffects;
-            ownedBaseEffects = ownedEffects;
-            this.ownedEffects = ownedBaseEffects;
+            this.ownedEffects = ownedEffects;
 
             this.dictionaryIndex = dictionaryIndex;
 
             EquipmentRequiredCurrency = equipmentRarity switch
             {
-                Enums.EquipmentRarity.Common => 100,
-                Enums.EquipmentRarity.Uncommon => 200,
-                Enums.EquipmentRarity.Magic => 800,
-                Enums.EquipmentRarity.Rare => 1600,
-                Enums.EquipmentRarity.Unique => 3200,
+                Enums.EquipmentRarity.Common => 100 + 100 * (5 - equipmentTier) / 100,
+                Enums.EquipmentRarity.Uncommon => 200 + 200 * (5 - equipmentTier) / 100,
+                Enums.EquipmentRarity.Magic => 800 + 800 * (5 - equipmentTier) / 100,
+                Enums.EquipmentRarity.Rare => 1600 + 1600 * (5 - equipmentTier) / 100,
+                Enums.EquipmentRarity.Unique => 3200 + 3200 * (5 - equipmentTier) / 100,
                 // Enums.EquipmentRarity.Legend => 6400,
                 // Enums.EquipmentRarity.Epic => 12800,
                 // Enums.EquipmentRarity.Ancient => 25600,
@@ -94,13 +94,14 @@ namespace Creature.Data
             
             SaveEquipmentDataIntoES3Loader();
             
-            for (var index = 0; index < ownedBaseEffects.Count; index++)
+            for (var index = 0; index < this.equippedEffects.Count; index++)
             {
-                var ownedBaseEffect = ownedBaseEffects[index];
+                equippedEffects[index].CurrentIncreaseValue = equippedEffects[index].baseIncreaseValue;
+            }
 
-                ownedEffects[index].statType = ownedBaseEffect.statType;
-                ownedEffects[index].increaseStatType = ownedBaseEffect.increaseStatType;
-                ownedEffects[index].increaseValue = ownedBaseEffect.increaseValue * equipmentLevel;
+            for (var index = 0; index < this.ownedEffects.Count; index++)
+            {
+                ownedEffects[index].CurrentIncreaseValue = ownedEffects[index].baseIncreaseValue;
             }
         }
 
@@ -122,17 +123,16 @@ namespace Creature.Data
             equipmentRarity = rarity;
             equipmentTier = tier;
             this.equippedEffects = equippedEffects;
-            ownedBaseEffects = ownedEffects;
-            this.ownedEffects = ownedBaseEffects;
+            this.ownedEffects = ownedEffects;
             this.dictionaryIndex = dictionaryIndex;
             
             EquipmentRequiredCurrency = equipmentRarity switch
             {
-                Enums.EquipmentRarity.Common => 100,
-                Enums.EquipmentRarity.Uncommon => 200,
-                Enums.EquipmentRarity.Magic => 800,
-                Enums.EquipmentRarity.Rare => 1600,
-                Enums.EquipmentRarity.Unique => 3200,
+                Enums.EquipmentRarity.Common => 100 + 100 * (5 - equipmentTier) / 100,
+                Enums.EquipmentRarity.Uncommon => 200 + 200 * (5 - equipmentTier) / 100,
+                Enums.EquipmentRarity.Magic => 800 + 800 * (5 - equipmentTier) / 100,
+                Enums.EquipmentRarity.Rare => 1600 + 1600 * (5 - equipmentTier) / 100,
+                Enums.EquipmentRarity.Unique => 3200 + 3200 * (5 - equipmentTier) / 100,
                 // Enums.EquipmentRarity.Legend => 6400,
                 // Enums.EquipmentRarity.Epic => 12800,
                 // Enums.EquipmentRarity.Ancient => 25600,
@@ -144,19 +144,20 @@ namespace Creature.Data
 
             LoadEquipmentDataFromES3Loader();
 
-            for (var index = 0; index < ownedBaseEffects.Count; index++)
+            for (var index = 0; index < this.equippedEffects.Count; index++)
             {
-                var ownedBaseEffect = ownedBaseEffects[index];
+                equippedEffects[index].CurrentIncreaseValue = equippedEffects[index].baseIncreaseValue;
+            }
 
-                ownedEffects[index].statType = ownedBaseEffects[index].statType;
-                ownedEffects[index].increaseStatType = ownedBaseEffects[index].increaseStatType;
-                ownedEffects[index].increaseValue = ownedBaseEffect.increaseValue * equipmentLevel;
+            for (var index = 0; index < this.ownedEffects.Count; index++)
+            {
+                ownedEffects[index].CurrentIncreaseValue = IncreaseOwnedEffectValue(index);
             }
         }
         
         public BigInteger RequiredCurrencyForLevelUp()
         {
-            var requiredCurrency = EquipmentRequiredCurrency * (int)Mathf.Pow(1.8f, equipmentLevel);
+            var requiredCurrency = EquipmentRequiredCurrency * (int)Mathf.Pow(1.5f, equipmentLevel);
 
             return requiredCurrency;
         }
@@ -260,12 +261,19 @@ namespace Creature.Data
             for (var index = 0; index < ownedEffects.Count; index++)
             {
                 var ownedEffect = ownedEffects[index];
-                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), -ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
-                ownedEffect.increaseValue = ownedBaseEffects[index].increaseValue * equipmentLevel;
-                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), -ownedEffect.CurrentIncreaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                ownedEffect.CurrentIncreaseValue = IncreaseOwnedEffectValue(index);
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), ownedEffect.CurrentIncreaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
             }
 
             UIManager.Instance.inventoryPanelUI.UpdateOwnedEffectsText();
+        }
+
+        public int IncreaseOwnedEffectValue(int index)
+        {
+            var targetValue = ownedEffects[index].baseIncreaseValue * (int) (100 * Mathf.Pow(1.2f, equipmentLevel)) / 100;
+
+            return targetValue;
         }
     }
 }

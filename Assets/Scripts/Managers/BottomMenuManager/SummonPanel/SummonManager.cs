@@ -329,7 +329,7 @@ namespace Managers.BottomMenuManager.SummonPanel
 
                         foreach (var ownedEffect in targetEquipment.ownedEffects)
                         {
-                            SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
+                            SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.CurrentIncreaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
                         }
                     }
                     

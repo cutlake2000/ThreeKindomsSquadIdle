@@ -283,7 +283,7 @@ namespace Managers.GameManager
             // TODO: 장착 시 스탯 증가 반영해야 함
             foreach (var equippedEffect in equipment.equippedEffects)
             {
-                squadEntireStat.UpdateStat(equippedEffect.statType, equippedEffect.increaseValue, equippedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                squadEntireStat.UpdateStat(equippedEffect.statType, equippedEffect.baseIncreaseValue, equippedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
             }
             
             // foreach (var ownedEffect in equipment.ownedEffects)

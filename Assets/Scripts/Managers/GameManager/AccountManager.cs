@@ -178,12 +178,10 @@ namespace Managers.GameManager
                 case Enums.CurrencyType.Dia:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.Dia);
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.CurrencyType_Dia}>    {BigInteger.ChangeMoney(amount)}";
-                    
                     foreach (var summonPanelScrollViewItem in UIManager.Instance.summonPanelUI.summonPanelScrollViewItems)
                     {
                         summonPanelScrollViewItem.GetComponent<SummonPanelItemUI>().UpdateSummonPanelSummonButtonUI();
                     }
-                    
                     break;
                 case Enums.CurrencyType.SquadEnhanceStone:
                     currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.SquadEnhanceStone);
@@ -200,10 +198,15 @@ namespace Managers.GameManager
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyType_Gold}>      {BigInteger.ChangeMoney(amount)}";
                     UIManager.Instance.dungeonPanelUI.dungeonItems[0].UpdateButtonUI(int.Parse(currency.amount) >= 1);
                     break;
-                case Enums.CurrencyType.EnhanceDungeonTicket:
-                    currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.EnhanceDungeonTicket);
+                case Enums.CurrencyType.EquipmentEnhanceStoneDungeonTicket:
+                    currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.EquipmentEnhanceStoneDungeonTicket);
                     currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyType_EnhanceStoneGear}>     {BigInteger.ChangeMoney(amount)}";
                     UIManager.Instance.dungeonPanelUI.dungeonItems[1].UpdateButtonUI(int.Parse(currency.amount) >= 1);
+                    break;
+                case Enums.CurrencyType.SquadEnhanceStoneDungeonTicket:
+                    currency = currencies.Find(c => c.currencyType == Enums.CurrencyType.SquadEnhanceStoneDungeonTicket);
+                    currency.currencyUI.text = $"<sprite={(int)Enums.IconType.DungeonKeyType_EnhanceStoneSquad}>     {BigInteger.ChangeMoney(amount)}";
+                    UIManager.Instance.dungeonPanelUI.dungeonItems[2].UpdateButtonUI(int.Parse(currency.amount) >= 1);
                     break;
             }
         }

@@ -144,7 +144,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             statType = equippedEffectSquadStatType,
                             increaseStatType = Enums.IncreaseStatValueType.PercentStat,
-                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue) * 100
+                            baseIncreaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue) * 100
                         };
                         
                         var ownedEffectSquadStatType = equipmentType switch
@@ -162,7 +162,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             statType = ownedEffectSquadStatType,
                             increaseStatType = Enums.IncreaseStatValueType.BaseStat,
-                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
+                            baseIncreaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
                         };
                         
                         equippedEffects.Add(equippedEffect);
@@ -197,7 +197,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                             
                             foreach (var effect in equipment.ownedEffects)
                             {
-                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.CurrentIncreaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
                             }
                         }
                         
@@ -325,7 +325,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             statType = equippedEffectSquadStatType,
                             increaseStatType = Enums.IncreaseStatValueType.PercentStat,
-                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue) * 100
+                            baseIncreaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue) * 100
                         };
                         
                         var ownedEffectSquadStatType = equipmentType switch
@@ -343,7 +343,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             statType = ownedEffectSquadStatType,
                             increaseStatType = Enums.IncreaseStatValueType.BaseStat,
-                            increaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1) * 100
+                            baseIncreaseValue = (6 - equipmentTier) * (int)Mathf.Pow(10, rarityIntValue + 1)
                         };
                         
                         equippedEffects.Add(equippedEffect);
@@ -403,7 +403,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                         {
                             foreach (var effect in equipment.ownedEffects)
                             {
-                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                                SquadBattleManager.Instance.squadEntireStat.UpdateStat(effect.statType, effect.CurrentIncreaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
                             }
                         }
                         
@@ -479,7 +479,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
                     
                 foreach (var ownedEffect in nextEquipment.ownedEffects)
                 {
-                    SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
+                    SquadBattleManager.Instance.squadEntireStat.UpdateStat(ownedEffect.statType, ownedEffect.CurrentIncreaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);   
                 }
             }
                 
@@ -678,7 +678,7 @@ namespace Managers.BottomMenuManager.InventoryPanel
             
                 foreach (var effect in lowValueEquipment.equippedEffects)
                 {
-                    SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), -effect.increaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                    SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType)Enum.Parse(typeof(Enums.SquadStatType), effect.statType.ToString()), -effect.baseIncreaseValue, effect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
                 }
             
                 lowValueEquipment.SaveEquipmentDataIntoES3Loader();

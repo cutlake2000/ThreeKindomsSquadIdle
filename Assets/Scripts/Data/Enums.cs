@@ -31,7 +31,8 @@ namespace Data
             AlreadyAutoEquip,
             AlreadyAllComposite,
             NotEnoughDungeonTicket,
-            NotEnoughEquipmentEnhanceStone
+            NotEnoughEquipmentEnhanceStone,
+            EquipmentEnhanceStoneDungeonPanel
         }
         
         public static readonly LockButtonType[] lockButtonTypes =
@@ -66,7 +67,8 @@ namespace Data
             SummonGearPanel,
             SummonCharacterPanel,
             GoldDungeonPanel,
-            SquadEnhanceStoneDungeonPanel
+            SquadEnhanceStoneDungeonPanel,
+            EquipmentEnhanceStoneDungeonPanel
         }
         
         public enum AchievementProperty
@@ -150,8 +152,9 @@ namespace Data
             EquipmentEnhanceStone,
             SquadEnhanceStone,
             GoldDungeonTicket,
-            EnhanceDungeonTicket,
-            Exp
+            SquadEnhanceStoneDungeonTicket,
+            Exp,
+            EquipmentEnhanceStoneDungeonTicket
         }
 
         public enum QuestType
@@ -172,7 +175,7 @@ namespace Data
             StageClear,
             EquipSquad,
             PlayGoldDungeon,
-            PlayEnhanceStoneDungeon,
+            PlaySquadEnhanceStoneDungeon,
             CompositeSword,
             CompositeBow,
             CompositeStaff,
@@ -186,7 +189,9 @@ namespace Data
             TouchLoopButton,
             ArcherCamera,
             WarriorCamera,
-            TouchAutoSkillButton
+            TouchAutoSkillButton,
+            LevelUpEquipment,
+            PlayEquipmentEnhanceStoneDungeon
         }
         
         public enum QuestRewardType
@@ -195,7 +200,9 @@ namespace Data
             Dia,
             SquadEnhanceStone,
             GoldDungeonTicket,
-            EnhanceDungeonTicket
+            SquadEnhanceStoneDungeonTicket,
+            EquipmentEnhanceStone,
+            EquipmentEnhanceStoneDungeonTicket
         }
 
         public enum DungeonClearType
@@ -207,7 +214,8 @@ namespace Data
         public enum DungeonType
         {
             GoldDungeon,
-            SquadEnhanceStoneDungeon
+            SquadEnhanceStoneDungeon,
+            EquipmentEnhanceStoneDungeon
         }
 
         /// <summary>
@@ -256,7 +264,8 @@ namespace Data
         public enum MonsterClassType
         {
             Human,
-            Indian
+            Indian,
+            General
         }
 
         public enum PoolType

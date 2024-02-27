@@ -89,8 +89,7 @@ namespace Managers.GameManager
                 var index = i;
                 UIManager.Instance.dungeonPanelUI.dungeonItems[index].enterDungeonButton.onClick.AddListener(() =>
                 {
-                    if (UIManager.Instance.dungeonPanelUI.dungeonItems[index].dungeonType == Enums.DungeonType.GoldDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) < 1) return;
-                    if (UIManager.Instance.dungeonPanelUI.dungeonItems[index].dungeonType == Enums.DungeonType.SquadEnhanceStoneDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EnhanceDungeonTicket)) < 1) return;
+                    if (int.Parse(AccountManager.Instance.GetCurrencyAmount(UIManager.Instance.dungeonPanelUI.dungeonItems[index].rewardType)) < 1) return;
 
                     UpdateDungeonPanelScrollViewAllItemUI();
                     
@@ -122,7 +121,7 @@ namespace Managers.GameManager
                         bossMonster = Instantiate(bossMonsterPrefab, bossMonsterSpawnPosition);
                         bossMonster.GetComponent<BossMonster>().InitializeBossMonsterData(currentDungeonLevel);
                         
-                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayEnhanceStoneDungeon, 1);
+                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlaySquadEnhanceStoneDungeon, 1);
 
                         targetScore = 1;
                     }
@@ -130,32 +129,51 @@ namespace Managers.GameManager
                     {
                         monsterSpawnCountsPerSubStage = dungeonSo[index].monsterSpawnCountsPerSubStage;
                         targetScore = dungeonSo[index].targetScore;
-                        
-                        QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayGoldDungeon, 1);
+
+                        switch (dungeonSo[index].dungeonType)
+                        {
+                            case Enums.DungeonType.GoldDungeon:
+                                QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayGoldDungeon, 1);
+                                break;
+                            case Enums.DungeonType.SquadEnhanceStoneDungeon:
+                                QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlaySquadEnhanceStoneDungeon, 1);
+                                break;
+                            case Enums.DungeonType.EquipmentEnhanceStoneDungeon:
+                                QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayEquipmentEnhanceStoneDungeon, 1);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+             
                     }
                     
                     StageManager.CheckRemainedMonsterAction += CalculateRemainedMonster;
                     StageManager.CheckRemainedSquadAction += CalculateRemainedSquad;
 
                     isDungeonRunnerRunning = true;
-                    StartDungeonRunner(index);
+                    StartDungeonRunner();
                 });
             }
         }
 
-        private void StartDungeonRunner(int index)
+        private void StartDungeonRunner()
         {
             SquadBattleManager.Instance.cameraController.InitializeCameraPosition();
             dungeonUIs[(int) currentDungeonType].GetComponent<DungeonUI>().UpdateDungeonTimerUI($"{(int)waveTime}");
             
-            switch (index)
+            switch (currentDungeonType)
             {
-                case 0:
+                case Enums.DungeonType.GoldDungeon:
                     StartCoroutine(KillCountDungeonRunner());
                     break;
-                case 1:
+                case Enums.DungeonType.SquadEnhanceStoneDungeon:
                     StartCoroutine(BossKillDungeonRunner());
                     break;
+                case Enums.DungeonType.EquipmentEnhanceStoneDungeon:
+                    StartCoroutine(KillCountDungeonRunner());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -172,7 +190,7 @@ namespace Managers.GameManager
                         UIManager.Instance.dungeonPanelUI.dungeonItems[i].UpdateButtonUI(int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) >= 1);
                         break;
                     case Enums.DungeonType.SquadEnhanceStoneDungeon:
-                        UIManager.Instance.dungeonPanelUI.dungeonItems[i].UpdateButtonUI(int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EnhanceDungeonTicket)) >= 1);
+                        UIManager.Instance.dungeonPanelUI.dungeonItems[i].UpdateButtonUI(int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.SquadEnhanceStoneDungeonTicket)) >= 1);
                         break;
                 }
                 
@@ -196,7 +214,18 @@ namespace Managers.GameManager
             if (currentRemainedMonsterCount <= 0)
             {
                 if (currentScore < targetScore)
-                    SpawnMonster();
+                {
+                    switch (currentDungeonType)
+                    {
+                        case Enums.DungeonType.GoldDungeon:
+                            SpawnMonster(Enums.MonsterClassType.Human);
+                            break;
+                        case Enums.DungeonType.EquipmentEnhanceStoneDungeon:
+                            SpawnMonster(Enums.MonsterClassType.General);
+                            break;
+                    }
+                }
+        
                 else
                 {
                     isClear = true;
@@ -240,7 +269,10 @@ namespace Managers.GameManager
                     QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayGoldDungeon, 1);
                     break;
                 case Enums.DungeonType.SquadEnhanceStoneDungeon:
-                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayEnhanceStoneDungeon, 1);
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlaySquadEnhanceStoneDungeon, 1);
+                    break;
+                case Enums.DungeonType.EquipmentEnhanceStoneDungeon:
+                    QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayEquipmentEnhanceStoneDungeon, 1);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -269,7 +301,7 @@ namespace Managers.GameManager
                         AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.GoldDungeonTicket, 1);
                         break;
                     case Enums.DungeonType.SquadEnhanceStoneDungeon:
-                        AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.EnhanceDungeonTicket, 1);
+                        AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.SquadEnhanceStoneDungeonTicket, 1);
                         break;
                 }
                 
@@ -314,7 +346,7 @@ namespace Managers.GameManager
 
         private IEnumerator KillCountDungeonRunner()
         {
-            currentRemainedMonsterCount = dungeonSo[0].targetScore;
+            currentRemainedMonsterCount = targetScore;
             UpdateKillCountUI();
 
             yield return new WaitForSeconds(1.0f);
@@ -326,8 +358,19 @@ namespace Managers.GameManager
             SquadBattleManager.Instance.cameraController.SetCameraTarget(SquadConfigureManager.Instance.modelSpawnPoints[0].transform);
 
             yield return new WaitForSeconds(1.0f);
+
+            switch (currentDungeonType)
+            {
+                case Enums.DungeonType.GoldDungeon:
+                    SpawnMonster(Enums.MonsterClassType.Human);
+                    break;
+                case Enums.DungeonType.EquipmentEnhanceStoneDungeon:
+                    SpawnMonster(Enums.MonsterClassType.General);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             
-            SpawnMonster();
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
         }
         
@@ -369,11 +412,11 @@ namespace Managers.GameManager
             SquadBattleManager.Instance.DespawnSquad();
         }
 
-        private void SpawnMonster()
+        private void SpawnMonster(Enums.MonsterClassType monsterClassType)
         {
             currentRemainedMonsterCount = monsterSpawnCountsPerSubStage;
             
-            MonsterManager.Instance.SpawnMonsters(Enums.MonsterClassType.Human, monsterSpawnCountsPerSubStage);
+            MonsterManager.Instance.SpawnMonsters(monsterClassType, monsterSpawnCountsPerSubStage);
         }
 
         private void DespawnMonster()

@@ -158,6 +158,12 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                         UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem = SquadConfigureManager.Instance.FindEquippedCharacter(Enums.CharacterType.Warrior);
                         UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigurePanelSelectedCharacterInfoUI(UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem);
                         break;
+                    case Enums.QuestType.LevelUpEquipment:
+                        UIManager.Instance.inventoryPanelUI.selectEquipment = InventoryManager.Instance.SwordsDictionary.Where(keyValuePair => keyValuePair.Value.isEquipped).ToList()[0].Value;
+                        UIManager.Instance.inventoryPanelUI.UpdateLevelUpButtonUI();
+                        UIManager.Instance.inventoryPanelUI.UpdateEquipmentTypeUI(0);
+                        UIManager.Instance.inventoryPanelUI.UpdateSelectedEquipmentUI(UIManager.Instance.inventoryPanelUI.selectEquipment);
+                        break;
                 }
                 
                 foreach (var target in QuestManager.Instance.currentQuestTarget.activeTarget)

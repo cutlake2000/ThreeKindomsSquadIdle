@@ -325,6 +325,10 @@ namespace Managers.GameManager
                     UIManager.Instance.dungeonPanelUI.UpdateLockItemUI(targetSubIndex);
                     break;
                 case Enums.OpenContent.SquadEnhanceStoneDungeonPanel:
+                    targetSubIndex = 2;
+                    UIManager.Instance.dungeonPanelUI.UpdateLockItemUI(targetSubIndex);
+                    break;
+                case Enums.OpenContent.EquipmentEnhanceStoneDungeonPanel:
                     targetSubIndex = 1;
                     UIManager.Instance.dungeonPanelUI.UpdateLockItemUI(targetSubIndex);
                     break;

@@ -98,7 +98,8 @@ namespace Managers.BattleManager
                 Enums.CurrencyType.EquipmentEnhanceStone => currencySprite[3],
                 Enums.CurrencyType.SquadEnhanceStone => currencySprite[4],
                 Enums.CurrencyType.GoldDungeonTicket => currencySprite[5],
-                Enums.CurrencyType.EnhanceDungeonTicket => currencySprite[6],
+                Enums.CurrencyType.SquadEnhanceStoneDungeonTicket => currencySprite[6],
+                Enums.CurrencyType.EquipmentEnhanceStoneDungeonTicket => currencySprite[7],
                 _ => throw new ArgumentOutOfRangeException(nameof(currencyType), currencyType, null)
             };
         }
