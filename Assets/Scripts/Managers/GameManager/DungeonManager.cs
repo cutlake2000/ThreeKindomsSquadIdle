@@ -30,9 +30,6 @@ namespace Managers.GameManager
         
         [Header("=== 던전 UI 목록 ===")] [SerializeField]
         private GameObject[] dungeonUIs;
-
-        [Header("=== 스테이지 맵 ===")] [SerializeField]
-        private GameObject stageMap;
         
         [Header("=== 던전 맵 목록 ===")] [SerializeField]
         private GameObject[] dungeonMap;
@@ -112,7 +109,8 @@ namespace Managers.GameManager
                     currentScore = 0;
                     currentDungeonReward = dungeonSo[index].reward * (increaseRewardPercent + 100) * currentDungeonLevel / 100;
                     waveTime = dungeonSo[index].waveTime;
-                    stageMap.SetActive(false);
+
+                    StageManager.Instance.InactivateStageMap();
                     ProjectileManager.Instance.DestroyAllProjectile();
                     
                     dungeonUIs[index].SetActive(true);
@@ -303,6 +301,9 @@ namespace Managers.GameManager
                     case Enums.DungeonType.SquadEnhanceStoneDungeon:
                         AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.SquadEnhanceStoneDungeonTicket, 1);
                         break;
+                    case Enums.DungeonType.EquipmentEnhanceStoneDungeon:
+                        AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.EquipmentEnhanceStoneDungeonTicket, 1);
+                        break;
                 }
                 
                 AccountManager.Instance.AddCurrency(currentDungeonRewardType, currentDungeonReward);
@@ -334,7 +335,7 @@ namespace Managers.GameManager
             StageManager.Instance.initializeStageResultChecker = true;
             StageManager.Instance.SetCurrentMainStageInfo();
             
-            stageMap.SetActive(true);
+            // stageMap.SetActive(true);
             
             foreach (var map in dungeonMap) map.SetActive(false);
             foreach (var stageUI in stageUIs) stageUI.SetActive(true);
@@ -355,7 +356,7 @@ namespace Managers.GameManager
             DespawnMonster();
             ProjectileManager.Instance.DestroyAllProjectile();
             SpawnSquad();
-            SquadBattleManager.Instance.cameraController.SetCameraTarget(SquadConfigureManager.Instance.modelSpawnPoints[0].transform);
+            SquadBattleManager.Instance.cameraController.SetCameraTarget(0);
 
             yield return new WaitForSeconds(1.0f);
 
@@ -385,7 +386,7 @@ namespace Managers.GameManager
             DespawnMonster();
             ProjectileManager.Instance.DestroyAllProjectile();
             SpawnSquad();
-            SquadBattleManager.Instance.cameraController.SetCameraTarget(SquadConfigureManager.Instance.modelSpawnPoints[0].transform);
+            SquadBattleManager.Instance.cameraController.SetCameraTarget(0);
             
             if (isWaveTimerRunning == false) StartCoroutine(WaveTimer());
         }

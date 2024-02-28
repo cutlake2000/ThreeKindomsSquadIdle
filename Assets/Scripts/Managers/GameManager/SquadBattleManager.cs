@@ -101,16 +101,14 @@ namespace Managers.GameManager
         private void Awake()
         {
             Instance = this;
-            
             SquadLevel = new SquadLevel();
-
-            cameraController.InitCameraTarget(squads[0].transform);
-
             autoSkill = ES3.Load("AutoSkill", false);
         }
 
-        public void InitSquadManager()
+        public void InitSquadBattleManager()
         {
+            cameraController.InitCameraTarget();
+            
             InitializeEventListeners();
             SetSquadStatsFromBaseStats();
             SetSkillCoolTimer();

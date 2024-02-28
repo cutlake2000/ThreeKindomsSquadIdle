@@ -26,7 +26,7 @@ namespace Managers.GameManager
         private void Start()
         {
             SquadConfigureManager.Instance.InitSquadConfigureManager();
-            SquadBattleManager.Instance.InitSquadManager();
+            SquadBattleManager.Instance.InitSquadBattleManager();
             SquadStatManager.Instance.InitSquadStatManager();
             TalentManager.Instance.InitSquadTalentManager();
             

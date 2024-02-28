@@ -17,6 +17,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         [Header("장비 배경")] public Image equipmentBackground;
         [Header("장비 장착 여부")] public GameObject equipMark;
         [Header("장비 보유 여부")] public GameObject possessMark;
+        [Header("장비 선택 이펙트")] public GameObject selectFrame;
+        [Header("장비 미선택 프레임")] public GameObject defaultFrame;
 
         public void UpdateInventoryPanelItemUI(int level, int maxLevel, int quantity, int maxQuantity, bool isEquipped, bool isPossessed, int tier, Sprite icon,
             Sprite backgroundEffect, Sprite background)
@@ -53,6 +55,12 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         public void UpdateInventoryPanelItemLevelUI(int level, int maxLevel)
         {
             equipmentLevel.text = $"Lv.{level} / {maxLevel}";
+        }
+
+        public void UpdateSelectFrame(bool active)
+        {
+            selectFrame.SetActive(active);
+            defaultFrame.SetActive(!active);
         }
     }
 }

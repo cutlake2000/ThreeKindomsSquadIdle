@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel
 {
@@ -6,6 +7,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel
     {
         public DungeonItemUI[] dungeonItems;
         public GameObject[] dungeonLockItems;
+        public ScrollRect scrollBar;
 
         public void InitializeEventListener()
         {
@@ -24,6 +26,11 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel
         {
             dungeonItems[index].gameObject.SetActive(true);
             dungeonLockItems[index].gameObject.SetActive(false);
+        }
+        
+        public void SetScrollViewVerticalPosition(float position)
+        {
+            scrollBar.verticalNormalizedPosition = Mathf.Clamp01(position);
         }
     }
 }

@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 3642672123259341615}
   - component: {fileID: 2362632115263784246}
   - component: {fileID: 6689036673495802219}
+  - component: {fileID: 1084256711332037654}
   m_Layer: 5
   m_Name: UpgradeBlockButton
   m_TagString: Untagged
@@ -275,6 +276,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pauseUpgrade: 0
+--- !u!114 &1084256711332037654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549143103102737275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24cf6efe41e844e187413a7648aaf224, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockButtonType: 14
 --- !u!1 &1456525183315586759
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,14 +817,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.59607846, g: 0.5294118, b: 0.5803922, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 72fe1b22dc90347e8b2dff8609aee358, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 597fefa1a379a44d7814141e8a25ea49, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -888,7 +902,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b8f52373e65e04af2990213f329f1599, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5ff94e9d4600c40b0b627dbc17b7570d, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

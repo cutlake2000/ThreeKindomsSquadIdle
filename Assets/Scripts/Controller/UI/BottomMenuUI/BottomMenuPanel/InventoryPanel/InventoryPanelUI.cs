@@ -201,14 +201,13 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
                 if (squadEquipmentStatusPanel.activeInHierarchy) squadEquipmentStatusPanel.SetActive(false);
                 if (!selectedEquipmentPanel.activeInHierarchy) selectedEquipmentPanel.SetActive(true);
                 if (selectedEquipmentPanelExitButton.gameObject.activeInHierarchy == false) selectedEquipmentPanelExitButton.gameObject.SetActive(true);
-
-                selectEquipment = equipment;
-            
-                UpdateSelectedEquipmentUI(selectEquipment);
                 
-                UIManager.Instance.inventoryPanelUI.UpdateLevelUpButtonUI();
-                UIManager.Instance.inventoryPanelUI.UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[(int) equipment.equipmentType]);
-                UIManager.Instance.inventoryPanelUI.UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[(int) equipment.equipmentType]);
+                selectEquipment = equipment;
+                
+                UpdateSelectedEquipmentUI(selectEquipment);
+                UpdateLevelUpButtonUI();
+                UpdateAutoEquipButton(InventoryManager.Instance.canAutoEquip[(int) equipment.equipmentType]);
+                UpdateAllCompositeButton(InventoryManager.Instance.canAllComposite[(int) equipment.equipmentType]);
             }
         }
 

@@ -114,6 +114,15 @@ namespace Controller.UI.TopMenuUI.QuestPanel
                     case Enums.QuestType.SummonGear100:
                         UIManager.Instance.summonPanelUI.SetScrollViewVerticalPosition(0f);
                         break;
+                    case Enums.QuestType.PlayGoldDungeon:
+                        UIManager.Instance.dungeonPanelUI.SetScrollViewVerticalPosition(1f);
+                        break;
+                    case Enums.QuestType.PlayEquipmentEnhanceStoneDungeon:
+                        UIManager.Instance.dungeonPanelUI.SetScrollViewVerticalPosition(0.5f);
+                        break;
+                    case Enums.QuestType.PlaySquadEnhanceStoneDungeon:
+                        UIManager.Instance.dungeonPanelUI.SetScrollViewVerticalPosition(0f);
+                        break;
                     case Enums.QuestType.EquipSquad:
                         UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem = SquadConfigureManager.Instance.WarriorDictionary.Where(keyValuePair => keyValuePair.Value.characterId == "Rare_Warrior").ToList()[0].Value;
                         UIManager.Instance.squadPanelUI.squadConfigurePanelUI.UpdateSquadConfigurePanelSelectedCharacterInfoUI(UIManager.Instance.squadPanelUI.squadConfigurePanelUI.currentSelectedSquadConfigurePanelItem);

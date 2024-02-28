@@ -990,7 +990,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderUI: {fileID: 1693146270}
   touchToStartButton: {fileID: 494992228}
-  userName: 
+  accountName: 
 --- !u!4 &1473297607
 Transform:
   m_ObjectHideFlags: 0

@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Data;
+using Managers.BottomMenuManager.SquadPanel;
 using Managers.GameManager;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,36 +26,46 @@ namespace Controller.UI.BattleMenuUI
         [Header("Base Camera Target")]
         [SerializeField] private Transform baseTarget;
 
+        [Header("SelectEffects")]
+        [SerializeField] private List<GameObject> selectEffects;
+
         private void LateUpdate()
         {
             MoveCameraToTarget();
         }
 
-        public void InitCameraTarget(Component position)
+        public void InitCameraTarget()
         {
             SetButtonClickedListener();
-            SetCameraTarget(position);
+            SetCameraTarget(0);
         }
 
         private void SetButtonClickedListener()
         {
             warriorButton.onClick.AddListener(() =>
             {
-                SetCameraTarget(SquadBattleManager.Instance.squads[0].transform);
+                SetCameraTarget(0);
                 QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.WarriorCamera, 1);
             });
             archerButton.onClick.AddListener(() =>
             {
-                SetCameraTarget(SquadBattleManager.Instance.squads[1].transform);
+                SetCameraTarget(1);
                 QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.ArcherCamera, 1);
             });
-            wizardButton.onClick.AddListener(() => SetCameraTarget(SquadBattleManager.Instance.squads[2].transform));
+            wizardButton.onClick.AddListener(() =>
+            {
+                SetCameraTarget(2);
+            });
         }
 
-        public void SetCameraTarget(Component target)
+        public void SetCameraTarget(int targetIndex)
         {
+            var target = SquadConfigureManager.Instance.modelSpawnPoints[targetIndex].transform;
+            
             if (currentCameraTarget == target || target.gameObject.activeInHierarchy == false) return;
-
+            
+            UpdateSelectEffect(targetIndex);
+            
             currentCameraTarget = target.transform;
         }
 
@@ -69,6 +81,14 @@ namespace Controller.UI.BattleMenuUI
         public void InitializeCameraPosition()
         {
             currentCameraTarget = baseTarget;
+        }
+
+        private void UpdateSelectEffect(int index)
+        {
+            for (var i = 0; i < selectEffects.Count; i++)
+            {
+                selectEffects[i].SetActive(i == index);
+            }
         }
     }
 }

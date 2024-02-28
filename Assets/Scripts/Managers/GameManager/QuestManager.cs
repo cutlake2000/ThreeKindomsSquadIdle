@@ -60,6 +60,7 @@ namespace Managers.GameManager
         public string targetQuestDescriptionText;
 
         [Header("일회성 퀘스트 개수")] public int oneTimeQuest;
+        [Header("반복성 퀘스트 개수")] public int loopQuest;
         [Header("콘텐츠 오픈 인덱스")] public List<int> contentsOpenIndex;
 
         private const string QUEST_SAVE_KEY = "QUEST";
@@ -88,24 +89,24 @@ namespace Managers.GameManager
             
             if (questLevel > oneTimeQuest) // 메인 퀘스트가 아닌 반복 퀘스트인 경우
             {
-                targetQuestLevel = (questLevel - oneTimeQuest) % 9 + oneTimeQuest;
+                targetQuestLevel = (questLevel - oneTimeQuest) % loopQuest + oneTimeQuest;
                 currentQuest = quests[targetQuestLevel];
 
-                var targetProcess = 30 + 5 * ((questLevel - oneTimeQuest) / 9);
+                var targetProcess = 50 + 10 * ((questLevel - oneTimeQuest) / loopQuest + 1);
                 
-                switch ((questLevel - oneTimeQuest) % 9)
+                switch (currentQuest.questType)
                 {
-                    case 1:
+                    case Enums.QuestType.AttackTalentLevel:
                         currentQuest.name = ParsingIncreaseTalentStatType(currentQuest.name, targetProcess);
                         currentQuest.targetProgress = targetProcess;
                         break;
-                    case 2:
+                    case Enums.QuestType.HealthTalentLevel:
                         currentQuest.name = ParsingIncreaseTalentStatType(currentQuest.name, targetProcess);
                         currentQuest.targetProgress = targetProcess;
                         break;
-                    case 5:
-                        currentQuest.name = ParsingIncreaseStageLevel((questLevel - oneTimeQuest) / 9);
-                        currentQuest.targetProgress = 20 + 5 * ((questLevel - oneTimeQuest) / 9 + 1) + 1;
+                    case Enums.QuestType.StageClear:
+                        currentQuest.name = ParsingIncreaseStageLevel((questLevel - oneTimeQuest) / loopQuest);
+                        currentQuest.targetProgress = 20 + 5 * ((questLevel - oneTimeQuest) / loopQuest + 1) + 1;
                         break;
                 }
             }
@@ -421,7 +422,14 @@ namespace Managers.GameManager
                         };
 
                         if (quest.openContent != Enums.OpenContent.None) contentsOpenIndex.Add(i - 1);
-                        if (quest.isLoopQuest == false) oneTimeQuest++;
+                        if (quest.isLoopQuest == false)
+                        {
+                            oneTimeQuest++;
+                        }
+                        else
+                        {
+                            loopQuest++;
+                        }
                         
                         quests.Add(quest);
                     }

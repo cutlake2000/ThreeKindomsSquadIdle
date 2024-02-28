@@ -15,6 +15,7 @@ namespace Controller.UI.BattleMenuUI
         [SerializeField] private Slider currentWaveSlider;
         [SerializeField] private Button loopButton;
         [SerializeField] private Button challengeButton;
+        [SerializeField] private GameObject finalStageEffect;
 
         private void Start()
         {
@@ -69,6 +70,11 @@ namespace Controller.UI.BattleMenuUI
                     currentWaveSlider.value = value;
                     break;
             }
+        }
+
+        public void UpdateFinalStageEffect(bool active)
+        {
+            finalStageEffect.SetActive(active);
         }
     }
 }

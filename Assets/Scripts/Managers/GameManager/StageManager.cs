@@ -36,14 +36,14 @@ namespace Managers.GameManager
         public static Action CheckRemainedSquadAction;
         public static Action<bool> CheckStageProgressType;
 
-        [SerializeField] private StageUI stageUIController;
         [SerializeField] private StageSo stageSo;
-
-        public StageReward[] stageRewards;
         
+        [Header("=== 스테이지 UI ===")]
+        [SerializeField] private StageUI stageUIController;
+
         [Header("=== 전투 결과창 UI ===")]
         public GameObject stageResultUI;
-
+        
         [Header("=== 스테이지 정보 ===")]
         public int currentStageIndex; // 누적 스테이지 정보
         public int currentAccumulatedStage;
@@ -57,7 +57,13 @@ namespace Managers.GameManager
         [SerializeField] private float stageLimitedTime = 60.0f;
         [SerializeField] private int currentSquadCount;
 
-        [Header("--- 스테이지 러너 상태 ---")]
+        [Header("=== 스테이지 보상 ===")]
+        public StageReward[] stageRewards;
+        
+        [Header("=== 스테이지 맵 ===")]
+        [SerializeField] private List<GameObject> stageMaps;
+        
+        [Header("=== 스테이지 러너 상태 ===")]
         public bool challengeProgress; // 돌파 / 반복 여부
         [SerializeField] private int maxSquadCount;
         [SerializeField] private int maxMainStageCounts;
@@ -66,6 +72,7 @@ namespace Managers.GameManager
         [SerializeField] private int monsterSpawnCountsPerSubStage;
         [SerializeField] public bool isWaveTimerRunning;
         [SerializeField] private bool stopWaveTimer;
+        [SerializeField] private bool isFinalStage;
         public bool prepareNewSubStage;
         public bool initializeStageResultChecker;
 
@@ -92,6 +99,7 @@ namespace Managers.GameManager
             stopWaveTimer = false;
             initializeStageResultChecker = true;
             prepareNewSubStage = true;
+            isFinalStage = false;
             
             maxSquadCount = 3;
             currentSquadCount = 3;
@@ -101,11 +109,14 @@ namespace Managers.GameManager
             currentWave = 0;
             
             SetCurrentMainStageInfo();
+            UpdateAllStageUI();
         }
 
         public void SetCurrentMainStageInfo()
         {
             currentMainStageName = $"{stageSo.MainStageInfos[currentMainStage - 1].MainStageName} {currentMainStage}-";
+            
+            if (!stageUIController.gameObject.activeInHierarchy) stageUIController.gameObject.SetActive(true);
         }
 
         public void StartStageRunner()
@@ -144,6 +155,8 @@ namespace Managers.GameManager
                         {
                             currentMainStage = maxMainStageCounts;
                             currentSubStage = subStageCountsPerMainStage;
+                            
+                            currentAccumulatedStage--;
                             
                             stageUIController.SetStageProgressButton(false);
                             challengeProgress = false;
@@ -244,6 +257,8 @@ namespace Managers.GameManager
 
         private IEnumerator StageRunner()
         {
+            var temp = currentMainStage % stageMaps.Count == 0 ? stageMaps.Count - 1 : currentMainStage % stageMaps.Count - 1;
+
             SetCurrentMainStageInfo();
             UpdateSliderUI();
             
@@ -267,6 +282,13 @@ namespace Managers.GameManager
                 ProjectileManager.Instance.DestroyAllProjectile();
                 SquadBattleManager.Instance.cameraController.InitializeCameraPosition();
                 SetTimerUI((int)stageLimitedTime);
+                
+                for (var index = 0; index < stageMaps.Count; index++)
+                {
+                    var stageMap = stageMaps[index];
+                
+                    stageMap.SetActive(temp == index);
+                }
                 
                 currentWave = 0;
 
@@ -304,7 +326,7 @@ namespace Managers.GameManager
                 isClear = false;
                 prepareNewSubStage = false;
                 
-                SquadBattleManager.Instance.cameraController.SetCameraTarget(SquadConfigureManager.Instance.modelSpawnPoints[0].transform);
+                SquadBattleManager.Instance.cameraController.SetCameraTarget(0);
                 
                 yield return new WaitForSeconds(1.0f);
                 UpdateAllStageUI();
@@ -333,6 +355,10 @@ namespace Managers.GameManager
             stageUIController.SetUIText(Enums.UITextType.CurrentStageName, $"{currentMainStageName}{currentSubStage}");
             stageUIController.SetUIText(Enums.UITextType.CurrentWave, $"{currentWave} / {waveCountsPerSubStage}");
             stageUIController.SetUISlider(Enums.UISliderType.CurrentWaveSlider, 1.0f * currentWave / waveCountsPerSubStage);
+            
+            isFinalStage = currentMainStage == maxMainStageCounts && currentSubStage == subStageCountsPerMainStage;
+            stageUIController.UpdateFinalStageEffect(isFinalStage);
+            if (isFinalStage) stageUIController.SetStageProgressButton(false);
         }
 
         private void UpdateSliderUI()
@@ -406,6 +432,14 @@ namespace Managers.GameManager
             
             DespawnSquad();
             DespawnMonster();
+        }
+
+        public void InactivateStageMap()
+        {
+            foreach (var stageMap in stageMaps)
+            {
+                stageMap.SetActive(false);
+            }
         }
     }
 }

@@ -168,10 +168,15 @@ namespace Creature.CreatureClass.SquadClass
             squadStateMachine.ChangeState(squadStateMachine.SquadDieState);
 
             if (SquadBattleManager.Instance.cameraController.currentCameraTarget != gameObject.transform) return;
-            foreach (var squad in SquadBattleManager.Instance.squads)
+            
+            for (var index = 0; index < SquadBattleManager.Instance.squads.Length; index++)
             {
+                var squad = SquadBattleManager.Instance.squads[index];
+                
                 if (!squad.GetComponent<Squad>().isDead)
-                    SquadBattleManager.Instance.cameraController.SetCameraTarget(squad.transform);
+                {
+                    SquadBattleManager.Instance.cameraController.SetCameraTarget(index);   
+                }
             }
         }
 
