@@ -505,7 +505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f3b7c155834f91aab0e9d1dd1b9cf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dungeonType: 1
+  dungeonType: 2
   rewardType: 4
   clearDungeonButton: {fileID: 203472112897571418}
   enterDungeonButton: {fileID: 8473409428539421055}
@@ -1262,7 +1262,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<sprite=2>\t\uC785\uC7A5\uD558\uAE30"
+  m_text: "<sprite=10>\t\uC785\uC7A5\uD558\uAE30"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5153c493f84784d74a6012245b73b1ac, type: 2}
   m_sharedMaterial: {fileID: 6846561199706340938, guid: 5153c493f84784d74a6012245b73b1ac, type: 2}

@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2826317551989116006
 Transform:
   m_ObjectHideFlags: 0
@@ -37,7 +37,7 @@ Transform:
   - {fileID: 5911716039017602370}
   - {fileID: 4559210765691445020}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &3744443068968667933
 Rigidbody2D:
@@ -142,7 +142,7 @@ MonoBehaviour:
   - {fileID: 2960990799326858126}
   - {fileID: 5068979942922555373}
   hpBar: {fileID: 4476057759084836025}
-  monsterClassType: 0
+  monsterClassType: 2
   monsterSprites: []
   isEventHitRunning: 0
   effectHit: {fileID: 444488686229621862}
@@ -372,11 +372,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7024561907568747354, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.002
       objectReference: {fileID: 0}
     - target: {fileID: 7024561907568747354, guid: dc49b84cbce8b45469edb56666a06d8e, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

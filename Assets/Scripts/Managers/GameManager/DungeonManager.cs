@@ -9,6 +9,7 @@ using Function;
 using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.BottomMenuManager.SquadPanel;
+using Resources.ScriptableObjects.Scripts;
 using ScriptableObjects.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -44,7 +45,7 @@ namespace Managers.GameManager
         [Header("보스 몬스터")] [SerializeField] private GameObject bossMonster;
         
         [Header("=== 던전 정보 ===")]
-        [SerializeField] private Enums.DungeonClearType dungeonClearType;
+        // [SerializeField] private Enums.DungeonClearType dungeonClearType;
         [SerializeField] private string currentDungeonName;
         [SerializeField] private int currentDungeonLevel;
         [SerializeField] private Enums.DungeonType currentDungeonType;
@@ -57,7 +58,7 @@ namespace Managers.GameManager
         [SerializeField] private float currentRemainedMonsterCount;
         [SerializeField] private BigInteger currentDungeonReward;
 
-        [Header("--- 던전 러너 상태 ---")]
+        [Header("=== 던전 러너 상태 ===")]
         public bool isDungeonRunnerRunning;
         [SerializeField] private int maxSquadCount;
         [SerializeField] private bool isWaveTimerRunning;
@@ -89,7 +90,9 @@ namespace Managers.GameManager
                 var index = i;
                 UIManager.Instance.dungeonPanelUI.dungeonItems[index].enterDungeonButton.onClick.AddListener(() =>
                 {
-                    if (int.Parse(AccountManager.Instance.GetCurrencyAmount(UIManager.Instance.dungeonPanelUI.dungeonItems[index].rewardType)) < 1) return;
+                    if (UIManager.Instance.dungeonPanelUI.dungeonItems[index].dungeonType == Enums.DungeonType.GoldDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) < 1) return;
+                    if (UIManager.Instance.dungeonPanelUI.dungeonItems[index].dungeonType == Enums.DungeonType.EquipmentEnhanceStoneDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.EquipmentEnhanceStoneDungeonTicket)) < 1) return;
+                    if (UIManager.Instance.dungeonPanelUI.dungeonItems[index].dungeonType == Enums.DungeonType.SquadEnhanceStoneDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.SquadEnhanceStoneDungeonTicket)) < 1) return;
 
                     UpdateDungeonPanelScrollViewAllItemUI();
                     
@@ -135,9 +138,6 @@ namespace Managers.GameManager
                             case Enums.DungeonType.GoldDungeon:
                                 QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayGoldDungeon, 1);
                                 break;
-                            case Enums.DungeonType.SquadEnhanceStoneDungeon:
-                                QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlaySquadEnhanceStoneDungeon, 1);
-                                break;
                             case Enums.DungeonType.EquipmentEnhanceStoneDungeon:
                                 QuestManager.Instance.IncreaseQuestProgressAction.Invoke(Enums.QuestType.PlayEquipmentEnhanceStoneDungeon, 1);
                                 break;
@@ -159,6 +159,7 @@ namespace Managers.GameManager
         private void StartDungeonRunner()
         {
             SquadBattleManager.Instance.cameraController.InitializeCameraPosition();
+
             dungeonUIs[(int) currentDungeonType].GetComponent<DungeonUI>().UpdateDungeonTimerUI($"{(int)waveTime}");
             
             switch (currentDungeonType)
@@ -225,7 +226,6 @@ namespace Managers.GameManager
                             break;
                     }
                 }
-        
                 else
                 {
                     isClear = true;
@@ -376,7 +376,7 @@ namespace Managers.GameManager
         
         private IEnumerator BossKillDungeonRunner()
         {
-            currentRemainedMonsterCount = dungeonSo[1].targetScore;
+            currentRemainedMonsterCount = dungeonSo[2].targetScore;
             UpdateBossKillUI(bossMonster.GetComponent<BossMonster>().currentBossHealth, bossMonster.GetComponent<BossMonster>().maxBossHealth);
 
             yield return new WaitForSeconds(1.0f);
@@ -392,13 +392,13 @@ namespace Managers.GameManager
 
         private void UpdateKillCountUI()
         {
-            dungeonUIs[0].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[0].dungeonName, $"{currentScore} / {targetScore}", int.Parse((currentScore * 100 / targetScore).ToString()));
+            dungeonUIs[(int) currentDungeonType].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[(int) currentDungeonType].dungeonName, $"{currentScore} / {targetScore}", int.Parse((currentScore * 100 / targetScore).ToString()));
         }
 
         private void UpdateBossKillUI(BigInteger currentHealth, BigInteger maxHealth)
         {
             // dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{BigInteger.ToInt32(currentHealth * 100 / maxHealth).ToString()} %", BigInteger.ToInt32(currentHealth * 100 / maxHealth));
-            dungeonUIs[1].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[1].dungeonName, $"{currentHealth.ChangeMoney()} / {maxHealth.ChangeMoney()}", BigInteger.ToInt64Safely(currentHealth * 100 / maxHealth));
+            dungeonUIs[2].GetComponent<DungeonUI>().UpdateDungeonAllUI(dungeonSo[2].dungeonName, $"{currentHealth.ChangeMoney()} / {maxHealth.ChangeMoney()}", BigInteger.ToInt64Safely(currentHealth * 100 / maxHealth));
         }
         
         private void SpawnSquad()
