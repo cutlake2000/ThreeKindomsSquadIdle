@@ -1,9 +1,8 @@
 using System;
 using Data;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace ScriptableObjects.Scripts
+namespace Resources.ScriptableObjects.Scripts
 {
     [CreateAssetMenu(fileName = "Summon", menuName = "ScriptableObjects/Summon")]
     public class SummonSo : ScriptableObject

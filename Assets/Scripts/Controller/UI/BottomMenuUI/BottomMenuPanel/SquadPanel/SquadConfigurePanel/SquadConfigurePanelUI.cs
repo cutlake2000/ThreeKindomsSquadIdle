@@ -186,6 +186,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                 selectedCharacterSelectButton.gameObject.SetActive(false);
                 selectedCharacterAlreadySelectedButton.gameObject.SetActive(false);   
             }
+            
+            UpdateLevelUpButtonUI();
         }
 
         private string SetCharacterEffectDescriptionToString(Character character, bool isOwnedEffect, int index)
@@ -276,7 +278,8 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel.SquadConfigurePa
                 2 => SquadConfigureManager.Instance.WizardsDictionary[SquadConfigureManager.Instance.targetWizard],
                 _ => throw new ArgumentOutOfRangeException(nameof(index), index, null)
             };
-
+            
+            UpdateLevelUpButtonUI();
             UpdateSquadConfigurePanelSelectedCharacterInfoUI(selectedCharacter);
         }
 

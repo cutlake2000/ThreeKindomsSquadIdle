@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /** Based on BigInteger.cs by ScottGarland from http://biginteger.codeplex.com/ */
 namespace Keiwando.BigInteger
@@ -36,8 +37,8 @@ namespace Keiwando.BigInteger
 
 		private DType[] m_data;
 
-		internal static readonly DType AllBits;		// = ~((DType)0);
-		internal static readonly DType HiBitSet;	// = 0x80000000;
+		internal static readonly DType AllBits;     // = ~((DType)0);
+		internal static readonly DType HiBitSet;    // = 0x80000000;
 		internal static int DataSizeOf
 		{
 			get { return sizeof(DType); }
@@ -113,7 +114,8 @@ namespace Keiwando.BigInteger
 		internal string GetDataAsString()
 		{
 			string result = "";
-			foreach (DType data in m_data) {
+			foreach (DType data in m_data)
+			{
 				result += data + " ";
 			}
 			return result;
@@ -309,6 +311,8 @@ namespace Keiwando.BigInteger
 	public class BigInteger
 	{
 		private DigitsArray m_digits;
+		private int m_decimalPointIndex;
+		private bool m_isDecimalPoint = false;
 
 		#region Constructors
 		/// <summary>
@@ -407,7 +411,7 @@ namespace Keiwando.BigInteger
 
 			for (int i = offset + length - 1, j = 0; (i - offset) >= 3; i -= 4, j++)
 			{
-				m_digits[j] = (DType)((array[i - 3] << 24) + (array[i - 2] << 16) + (array[i - 1] <<  8) + array[i]);
+				m_digits[j] = (DType)((array[i - 3] << 24) + (array[i - 2] << 16) + (array[i - 1] << 8) + array[i]);
 				m_digits.DataUsed++;
 			}
 
@@ -450,18 +454,30 @@ namespace Keiwando.BigInteger
 
 		private void Construct(string digits, int radix)
 		{
-			if (digits == null)
+			if (string.IsNullOrEmpty(digits))
 			{
 				throw new ArgumentNullException("digits");
+			}
+			// 소수점 계산
+			if (digits.Split(".").Length > 1)
+			{
+				Debug.Log("소수점 계산 " + digits);
+				int decimalPointIndex = digits.IndexOf("."); // 0.1
+				m_decimalPointIndex = digits.Length - decimalPointIndex - 1; // 1 = 3 - 2
+				m_isDecimalPoint = true;
+				digits = digits.Replace(".", ""); // 0.1 -> 01
 			}
 
 			BigInteger multiplier = new BigInteger(1);
 			BigInteger result = new BigInteger();
 			digits = digits.ToUpper(System.Globalization.CultureInfo.CurrentCulture).Trim();
+			if (digits.Length == 0)
+			{
+				throw new ArgumentException("digits cannot be an empty string after trim.", nameof(digits));
+			}
+			int nDigits = digits[0] == '-' ? 1 : 0;
 
-            int nDigits = (digits[0] == '-' ? 1 : 0);
-
-			for (int idx = digits.Length - 1; idx >= nDigits ; idx--)
+			for (int idx = digits.Length - 1; idx >= nDigits; idx--)
 			{
 				int d = (int)digits[idx];
 				if (d >= '0' && d <= '9')
@@ -474,7 +490,7 @@ namespace Keiwando.BigInteger
 				}
 				else
 				{
-					throw new ArgumentOutOfRangeException("digits");
+					throw new ArgumentOutOfRangeException("digits", digits);
 				}
 
 				if (d >= radix)
@@ -491,6 +507,9 @@ namespace Keiwando.BigInteger
 			}
 
 			this.m_digits = result.m_digits;
+
+			if (m_isDecimalPoint)
+				Debug.Log("Biginteger !!! " + this.m_digits.ToString());
 		}
 
 		/// <summary>
@@ -573,21 +592,49 @@ namespace Keiwando.BigInteger
 		/// <param name="leftSide">A BigInteger</param>
 		/// <param name="rightSide">A BigInteger</param>
 		/// <returns>The BigInteger result of adding <paramref name="leftSide" /> and <paramref name="rightSide" />.</returns>
-		public static BigInteger operator + (BigInteger leftSide, BigInteger rightSide)
+		public static BigInteger operator +(BigInteger leftSide, BigInteger rightSide)
 		{
-			int size = System.Math.Max(leftSide.m_digits.DataUsed, rightSide.m_digits.DataUsed);
+			if (leftSide.m_isDecimalPoint || rightSide.m_isDecimalPoint)
+			{
+				float leftFloat = leftSide.ToFloat();
+				float rightFloat = rightSide.ToFloat();
+
+				return new BigInteger((leftFloat + rightFloat).ToString());
+			}
+			
+			int size = Math.Max(leftSide.m_digits.DataUsed, rightSide.m_digits.DataUsed);
 			DigitsArray da = new DigitsArray(size + 1);
 
 			long carry = 0;
 			for (int i = 0; i < da.Count; i++)
 			{
 				long sum = (long)leftSide.m_digits[i] + (long)rightSide.m_digits[i] + carry;
-				carry  = (long)(sum >> DigitsArray.DataSizeBits);
+				carry = (long)(sum >> DigitsArray.DataSizeBits);
 				da[i] = (DType)(sum & DigitsArray.AllBits);
 			}
 
 			return new BigInteger(da);
 		}
+
+
+		// 소수점 정렬을 위한 0의 패딩 추가 메소드
+		// private static BigInteger PadWithZeros(BigInteger value, int zerosCount)
+		// {
+		// 	// 여기에 value의 앞부분에 zerosCount만큼 0을 추가하는 로직 구현
+		// 	// 예를 들어, 소수점을 처리하는 경우, 소수점 이하의 숫자 앞에 0을 추가해야 할 수 있습니다.
+		// 	// 실제 구현은 BigInteger 객체의 내부 구조에 따라 달라질 것입니다.
+
+		// 	// 가상의 구현 예시:
+		// 	string paddedNumber = new string('0', zerosCount) + value.ToString();
+		// 	BigInteger newValue = new BigInteger(paddedNumber);
+		// 	newValue.m_decimalPointIndex = value.m_decimalPointIndex + zerosCount;
+		// 	newValue.m_isDecimalPoint = value.m_isDecimalPoint;
+
+		// 	Debug.Log("어디보자이이이 " + value + " / " + zerosCount + " / " + newValue);
+
+		// 	return newValue;
+		// }
+
 
 		/// <summary>
 		/// Adds two BigIntegers and returns a new BigInteger that represents the sum.
@@ -597,7 +644,7 @@ namespace Keiwando.BigInteger
 		/// <returns>The BigInteger result of adding <paramref name="leftSide" /> and <paramref name="rightSide" />.</returns>
 		public static BigInteger Add(BigInteger leftSide, BigInteger rightSide)
 		{
-			return leftSide + rightSide;	
+			return leftSide + rightSide;
 		}
 
 		/// <summary>
@@ -605,7 +652,7 @@ namespace Keiwando.BigInteger
 		/// </summary>
 		/// <param name="leftSide">The BigInteger operand.</param>
 		/// <returns>The value of <paramref name="leftSide" /> incremented by 1.</returns>
-		public static BigInteger operator ++ (BigInteger leftSide)
+		public static BigInteger operator ++(BigInteger leftSide)
 		{
 			return (leftSide + 1);
 		}
@@ -626,7 +673,7 @@ namespace Keiwando.BigInteger
 		/// <param name="leftSide">A BigInteger</param>
 		/// <param name="rightSide">A BigInteger</param>
 		/// <returns>The BigInteger result of substracting <paramref name="leftSide" /> and <paramref name="rightSide" />.</returns>
-		public static BigInteger operator - (BigInteger leftSide, BigInteger rightSide)
+		public static BigInteger operator -(BigInteger leftSide, BigInteger rightSide)
 		{
 			int size = System.Math.Max(leftSide.m_digits.DataUsed, rightSide.m_digits.DataUsed) + 1;
 			DigitsArray da = new DigitsArray(size);
@@ -658,7 +705,7 @@ namespace Keiwando.BigInteger
 		/// </summary>
 		/// <param name="leftSide">The BigInteger operand.</param>
 		/// <returns>The value of the <paramref name="leftSide" /> decremented by 1.</returns>
-		public static BigInteger operator -- (BigInteger leftSide)
+		public static BigInteger operator --(BigInteger leftSide)
 		{
 			return (leftSide - 1);
 		}
@@ -681,7 +728,7 @@ namespace Keiwando.BigInteger
 		/// </summary>
 		/// <param name="leftSide">A BigInteger operand.</param>
 		/// <returns>The value of the <paramref name="this" /> negated.</returns>
-		public static BigInteger operator - (BigInteger leftSide)
+		public static BigInteger operator -(BigInteger leftSide)
 		{
 			if (object.ReferenceEquals(leftSide, null))
 			{
@@ -753,7 +800,7 @@ namespace Keiwando.BigInteger
 		/// <param name="leftSide">A BigInteger.</param>
 		/// <param name="rightSide">A BigInteger</param>
 		/// <returns></returns>
-		public static BigInteger operator * (BigInteger leftSide, BigInteger rightSide)
+		public static BigInteger operator *(BigInteger leftSide, BigInteger rightSide)
 		{
 			if (object.ReferenceEquals(leftSide, null))
 			{
@@ -795,6 +842,39 @@ namespace Keiwando.BigInteger
 			return (leftSideNeg != rightSideNeg ? -result : result);
 		}
 
+		public static BigInteger Multiply(BigInteger leftSide, float rightSideFloat)
+		{
+			// float 값을 문자열로 변환
+			string rightSideStr = rightSideFloat.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+			// 문자열에서 소수점 위치 찾기
+			int decimalPointIndex = rightSideStr.IndexOf('.');
+			BigInteger rightSideBigInt;
+
+			if (decimalPointIndex != -1)
+			{
+				// 소수점이 있는 경우, 소수점을 제거하고 BigInteger로 변환
+				string integralPart = rightSideStr.Replace(".", "");
+				rightSideBigInt = new BigInteger(integralPart);
+
+				// 소수점 아래 자릿수만큼 결과값을 조정
+				int decimalPlaces = rightSideStr.Length - decimalPointIndex - 1;
+				BigInteger divisor = BigInteger.Pow(10, decimalPlaces);
+				rightSideBigInt = rightSideBigInt / divisor;
+			}
+			else
+			{
+				// 소수점이 없는 경우, 직접 변환
+				rightSideBigInt = new BigInteger(rightSideStr);
+			}
+
+			// BigInteger 간의 곱셈
+			BigInteger result = leftSide * rightSideBigInt;
+
+			return result;
+		}
+
+
 		/// <summary>
 		/// Multiply two BigIntegers returning the result.
 		/// </summary>
@@ -812,7 +892,7 @@ namespace Keiwando.BigInteger
 		/// <param name="leftSide">A BigInteger divisor.</param>
 		/// <param name="rightSide">A BigInteger dividend.</param>
 		/// <returns>The BigInteger result.</returns>
-		public static BigInteger operator / (BigInteger leftSide, BigInteger rightSide)
+		public static BigInteger operator /(BigInteger leftSide, BigInteger rightSide)
 		{
 			if (leftSide == null)
 			{
@@ -990,7 +1070,7 @@ namespace Keiwando.BigInteger
 				remainderDigits[pos--] = (DType)(dividend % divisor);
 			}
 			remainder = new BigInteger(remainderDigits);
-			 
+
 			DigitsArray quotientDigits = new DigitsArray(resultPos + 1, resultPos);
 			int j = 0;
 			for (int i = quotientDigits.DataUsed - 1; i >= 0; i--, j++)
@@ -1006,7 +1086,7 @@ namespace Keiwando.BigInteger
 		/// <param name="leftSide">A BigInteger divisor.</param>
 		/// <param name="rightSide">A BigInteger dividend.</param>
 		/// <returns>The BigInteger result.</returns>
-		public static BigInteger operator % (BigInteger leftSide, BigInteger rightSide)
+		public static BigInteger operator %(BigInteger leftSide, BigInteger rightSide)
 		{
 			if (leftSide == null)
 			{
@@ -1055,8 +1135,9 @@ namespace Keiwando.BigInteger
 
 		#region Exponentiation
 
-		public BigInteger Pow(BigInteger power) {
-			return Pow (this, power);
+		public BigInteger Pow(BigInteger power)
+		{
+			return Pow(this, power);
 		}
 
 		/// <summary>
@@ -1065,23 +1146,28 @@ namespace Keiwando.BigInteger
 		/// </summary>
 		/// <param name="b">A BigInteger to be raised to a power.</param>
 		/// <param name="power">A BigInteger that specifies the power.</param>
-		public static BigInteger Pow(BigInteger b, BigInteger power) {
+		public static BigInteger Pow(BigInteger b, BigInteger power)
+		{
 
-			if (b == null) {
-				throw new ArgumentNullException ("b");
+			if (b == null)
+			{
+				throw new ArgumentNullException("b");
 			}
 
-			if (power == null) {
+			if (power == null)
+			{
 				throw new ArgumentNullException("power");
 			}
 
-			if (power < 0) {
-				throw new ArgumentOutOfRangeException ("power", "Currently negative exponents are not supported");
+			if (power < 0)
+			{
+				throw new ArgumentOutOfRangeException("power", "Currently negative exponents are not supported");
 			}
 
 
 			BigInteger result = 1;
-			while (power != 0) {
+			while (power != 0)
+			{
 
 				if ((power & 1) != 0)
 					result *= b;
@@ -1096,7 +1182,7 @@ namespace Keiwando.BigInteger
 
 		#region Bitwise Operator Overloads
 
-		public static BigInteger operator & (BigInteger leftSide, BigInteger rightSide)
+		public static BigInteger operator &(BigInteger leftSide, BigInteger rightSide)
 		{
 			int len = System.Math.Max(leftSide.m_digits.DataUsed, rightSide.m_digits.DataUsed);
 			DigitsArray da = new DigitsArray(len, len);
@@ -1112,7 +1198,7 @@ namespace Keiwando.BigInteger
 			return leftSide & rightSide;
 		}
 
-		public static BigInteger operator | (BigInteger leftSide, BigInteger rightSide)
+		public static BigInteger operator |(BigInteger leftSide, BigInteger rightSide)
 		{
 			int len = System.Math.Max(leftSide.m_digits.DataUsed, rightSide.m_digits.DataUsed);
 			DigitsArray da = new DigitsArray(len, len);
@@ -1128,7 +1214,7 @@ namespace Keiwando.BigInteger
 			return leftSide | rightSide;
 		}
 
-		public static BigInteger operator ^ (BigInteger leftSide, BigInteger rightSide)
+		public static BigInteger operator ^(BigInteger leftSide, BigInteger rightSide)
 		{
 			int len = System.Math.Max(leftSide.m_digits.DataUsed, rightSide.m_digits.DataUsed);
 			DigitsArray da = new DigitsArray(len, len);
@@ -1144,10 +1230,10 @@ namespace Keiwando.BigInteger
 			return leftSide ^ rightSide;
 		}
 
-		public static BigInteger operator ~ (BigInteger leftSide)
+		public static BigInteger operator ~(BigInteger leftSide)
 		{
 			DigitsArray da = new DigitsArray(leftSide.m_digits.Count);
-			for(int idx = 0; idx < da.Count; idx++)
+			for (int idx = 0; idx < da.Count; idx++)
 			{
 				da[idx] = (DType)(~(leftSide.m_digits[idx]));
 			}
@@ -1163,7 +1249,7 @@ namespace Keiwando.BigInteger
 		#endregion
 
 		#region Left and Right Shift Operator Overloads
-		public static BigInteger operator << (BigInteger leftSide, int shiftCount)
+		public static BigInteger operator <<(BigInteger leftSide, int shiftCount)
 		{
 			if (leftSide == null)
 			{
@@ -1181,7 +1267,7 @@ namespace Keiwando.BigInteger
 			return leftSide << shiftCount;
 		}
 
-		public static BigInteger operator >> (BigInteger leftSide, int shiftCount)
+		public static BigInteger operator >>(BigInteger leftSide, int shiftCount)
 		{
 			if (leftSide == null)
 			{
@@ -1311,14 +1397,14 @@ namespace Keiwando.BigInteger
 			return -1;
 		}
 
-		public static bool operator == (BigInteger leftSide, BigInteger rightSide)
+		public static bool operator ==(BigInteger leftSide, BigInteger rightSide)
 		{
 			if (object.ReferenceEquals(leftSide, rightSide))
 			{
 				return true;
 			}
 
-			if (object.ReferenceEquals(leftSide, null ) || object.ReferenceEquals(rightSide, null ))
+			if (object.ReferenceEquals(leftSide, null) || object.ReferenceEquals(rightSide, null))
 			{
 				return false;
 			}
@@ -1331,12 +1417,12 @@ namespace Keiwando.BigInteger
 			return leftSide.Equals(rightSide);
 		}
 
-		public static bool operator != (BigInteger leftSide, BigInteger rightSide)
+		public static bool operator !=(BigInteger leftSide, BigInteger rightSide)
 		{
 			return !(leftSide == rightSide);
 		}
 
-		public static bool operator > (BigInteger leftSide, BigInteger rightSide)
+		public static bool operator >(BigInteger leftSide, BigInteger rightSide)
 		{
 			if (object.ReferenceEquals(leftSide, null))
 			{
@@ -1368,7 +1454,7 @@ namespace Keiwando.BigInteger
 			return false;
 		}
 
-		public static bool operator < (BigInteger leftSide, BigInteger rightSide)
+		public static bool operator <(BigInteger leftSide, BigInteger rightSide)
 		{
 			if (object.ReferenceEquals(leftSide, null))
 			{
@@ -1400,12 +1486,12 @@ namespace Keiwando.BigInteger
 			return false;
 		}
 
-		public static bool operator >= (BigInteger leftSide, BigInteger rightSide)
+		public static bool operator >=(BigInteger leftSide, BigInteger rightSide)
 		{
 			return Compare(leftSide, rightSide) >= 0;
 		}
 
-		public static bool operator <= (BigInteger leftSide, BigInteger rightSide)
+		public static bool operator <=(BigInteger leftSide, BigInteger rightSide)
 		{
 			return Compare(leftSide, rightSide) <= 0;
 		}
@@ -1460,8 +1546,9 @@ namespace Keiwando.BigInteger
 		///  Returns the array entries as a string. Used for debugging.
 		/// </summary>
 		/// <returns>The data as string.</returns>
-		public string GetDataAsString() {
-			return this.m_digits.GetDataAsString ();
+		public string GetDataAsString()
+		{
+			return this.m_digits.GetDataAsString();
 		}
 
 		/// <summary>
@@ -1473,6 +1560,12 @@ namespace Keiwando.BigInteger
 		{
 			return ToString(10);
 		}
+
+		public float ToFloat()
+		{
+			return float.Parse(ToString());
+		}
+
 		#endregion
 
 		#region Type Conversion Methods
@@ -1515,6 +1608,30 @@ namespace Keiwando.BigInteger
 			{
 				return "-" + result;
 			}
+			if (m_isDecimalPoint)
+			{
+				// result의 길이가 m_decimalPointIndex보다 작은 경우, 필요한 만큼 0을 추가합니다.
+				int zerosToAdd = m_decimalPointIndex - result.Length;
+				for (int i = 0; i < zerosToAdd; i++)
+				{
+					result += "0"; // result의 끝에 0 추가
+				}
+
+				// 소수점을 삽입할 위치 계산 (리버스 인덱스)
+				int insertIndex = result.Length - m_decimalPointIndex;
+				if (insertIndex <= 0)
+				{
+					// insertIndex가 0 이하인 경우, 즉 소수점이 맨 앞에 와야하는 경우
+					// "0."을 맨 앞에 추가하고 나머지 숫자를 붙입니다.
+					result = "0." + result.PadLeft(zerosToAdd, '0');
+				}
+				else
+				{
+					// 그 외의 경우, 계산된 위치에 소수점을 삽입
+					result = result.Insert(insertIndex, ".");
+				}
+			}
+
 
 			return result;
 		}
@@ -1585,24 +1702,6 @@ namespace Keiwando.BigInteger
 			}
 			return System.Int32.Parse(value.ToString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture);
 		}
-		
-		public static long ToInt64Safely(BigInteger value)
-		{
-			if (object.ReferenceEquals(value, null))
-			{
-				throw new ArgumentNullException("value");
-			}
-			return long.Parse(value.ToString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture);
-		}
-
-		public static ulong ToUInt64Safely(BigInteger value)
-		{
-			if (object.ReferenceEquals(value, null))
-			{
-				throw new ArgumentNullException("value");
-			}
-			return ulong.Parse(value.ToString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture);
-		}
 
 		/// <summary>
 		/// Returns BigInteger as System.UInt32 if possible.
@@ -1648,126 +1747,152 @@ namespace Keiwando.BigInteger
 			}
 			return System.UInt64.Parse(value.ToString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture);
 		}
+
+		public static long ToInt64Safely(BigInteger value)
+		{
+			if (object.ReferenceEquals(value, null))
+			{
+				throw new ArgumentNullException("value");
+			}
+			return long.Parse(value.ToString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture);
+		}
+
+		public static ulong ToUInt64Safely(BigInteger value)
+		{
+			if (object.ReferenceEquals(value, null))
+			{
+				throw new ArgumentNullException("value");
+			}
+			return ulong.Parse(value.ToString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture);
+		}
+
 		#endregion
-
 		int index = 0;
-        public string ChangeMoney()
-        {
-			string targetString = this.ToString();
-            string[] unit = new string[] { "", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-            "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ",
-            "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BW", "BX", "BY", "BZ",
-            "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "CK", "CL", "CM", "CN", "CO", "CP", "CQ", "CR", "CS", "CT", "CU", "CV", "CW", "CX", "CY", "CZ",
-            "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH", "DI", "DJ", "DK", "DL", "DM", "DN", "DO", "DP", "DQ", "DR", "DS", "DT", "DU", "DV", "DW", "DX", "DY", "DZ",
-            "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH", "EI", "EJ", "EK", "EL", "EM", "EN", "EO", "EP", "EQ", "ER", "ES", "ET", "EU", "EV", "EW", "EX", "EY", "EZ",
-            "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH", "FI", "FJ", "FK", "FL", "FM", "FN", "FO", "FP", "FQ", "FR", "FS", "FT", "FU", "FV", "FW", "FX", "FY", "FZ",
-            "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH", "GI", "GJ", "GK", "GL", "GM", "GN", "GO", "GP", "GQ", "GR", "GS", "GT", "GU", "GV", "GW", "GX", "GY", "GZ",
-            "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH", "HI", "HJ", "HK", "HL", "HM", "HN", "HO", "HP", "HQ", "HR", "HS", "HT", "HU", "HV", "HW", "HX", "HY", "HZ",
-            "IA", "IB", "IC", "ID", "IE", "IF", "IG", "IH", "II", "IJ", "IK", "IL", "IM", "IN", "IO", "IP", "IQ", "IR", "IS", "IT", "IU", "IV", "IW", "IX", "IY", "IZ",
-            "JA", "JB", "JC", "JD", "JE", "JF", "JG", "JH", "JI", "JJ", "JK", "JL", "JM", "JN", "JO", "JP", "JQ", "JR", "JS", "JT", "JU", "JV", "JW", "JX", "JY", "JZ",
-            "KA", "KB", "KC", "KD", "KE", "KF", "KG", "KH", "KI", "KJ", "KK", "KL", "KM", "KN", "KO", "KP", "KQ", "KR", "KS", "KT", "KU", "KV", "KW", "KX", "KY", "KZ",
-            "LA", "LB", "LC", "LD", "LE", "LF", "LG", "LH", "LI", "LJ", "LK", "LL", "LM", "LN", "LO", "LP", "LQ", "LR", "LS", "LT", "LU", "LV", "LW", "LX", "LY", "LZ",
-            "MA", "MB", "MC", "MD", "ME", "MF", "MG", "MH", "MI", "MJ", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ",
-            "NA", "NB", "NC", "ND", "NE", "NF", "NG", "NH", "NI", "NJ", "NK", "NL", "NM", "NN", "NO", "NP", "NQ", "NR", "NS", "NT", "NU", "NV", "NW", "NX", "NY", "NZ",
-            "OA", "OB", "OC", "OD", "OE", "OF", "OG", "OH", "OI", "OJ", "OK", "OL", "OM", "ON", "OO", "OP", "OQ", "OR", "OS", "OT", "OU", "OV", "OW", "OX", "OY", "OZ",
-            "PA", "PB", "PC", "PD", "PE", "PF", "PG", "PH", "PI", "PJ", "PK", "PL", "PM", "PN", "PO", "PP", "PQ", "PR", "PS", "PT", "PU", "PV", "PW", "PX", "PY", "PZ"
-        };
+		public string ChangeMoney()
+		{
+			string targetString = ToString();
+			string[] unit = new string[] { "", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+			"AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ",
+			"BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BW", "BX", "BY", "BZ",
+			"CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "CK", "CL", "CM", "CN", "CO", "CP", "CQ", "CR", "CS", "CT", "CU", "CV", "CW", "CX", "CY", "CZ",
+			"DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH", "DI", "DJ", "DK", "DL", "DM", "DN", "DO", "DP", "DQ", "DR", "DS", "DT", "DU", "DV", "DW", "DX", "DY", "DZ",
+			"EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH", "EI", "EJ", "EK", "EL", "EM", "EN", "EO", "EP", "EQ", "ER", "ES", "ET", "EU", "EV", "EW", "EX", "EY", "EZ",
+			"FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH", "FI", "FJ", "FK", "FL", "FM", "FN", "FO", "FP", "FQ", "FR", "FS", "FT", "FU", "FV", "FW", "FX", "FY", "FZ",
+			"GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH", "GI", "GJ", "GK", "GL", "GM", "GN", "GO", "GP", "GQ", "GR", "GS", "GT", "GU", "GV", "GW", "GX", "GY", "GZ",
+			"HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH", "HI", "HJ", "HK", "HL", "HM", "HN", "HO", "HP", "HQ", "HR", "HS", "HT", "HU", "HV", "HW", "HX", "HY", "HZ",
+			"IA", "IB", "IC", "ID", "IE", "IF", "IG", "IH", "II", "IJ", "IK", "IL", "IM", "IN", "IO", "IP", "IQ", "IR", "IS", "IT", "IU", "IV", "IW", "IX", "IY", "IZ",
+			"JA", "JB", "JC", "JD", "JE", "JF", "JG", "JH", "JI", "JJ", "JK", "JL", "JM", "JN", "JO", "JP", "JQ", "JR", "JS", "JT", "JU", "JV", "JW", "JX", "JY", "JZ",
+			"KA", "KB", "KC", "KD", "KE", "KF", "KG", "KH", "KI", "KJ", "KK", "KL", "KM", "KN", "KO", "KP", "KQ", "KR", "KS", "KT", "KU", "KV", "KW", "KX", "KY", "KZ",
+			"LA", "LB", "LC", "LD", "LE", "LF", "LG", "LH", "LI", "LJ", "LK", "LL", "LM", "LN", "LO", "LP", "LQ", "LR", "LS", "LT", "LU", "LV", "LW", "LX", "LY", "LZ",
+			"MA", "MB", "MC", "MD", "ME", "MF", "MG", "MH", "MI", "MJ", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ",
+			"NA", "NB", "NC", "ND", "NE", "NF", "NG", "NH", "NI", "NJ", "NK", "NL", "NM", "NN", "NO", "NP", "NQ", "NR", "NS", "NT", "NU", "NV", "NW", "NX", "NY", "NZ",
+			"OA", "OB", "OC", "OD", "OE", "OF", "OG", "OH", "OI", "OJ", "OK", "OL", "OM", "ON", "OO", "OP", "OQ", "OR", "OS", "OT", "OU", "OV", "OW", "OX", "OY", "OZ",
+			"PA", "PB", "PC", "PD", "PE", "PF", "PG", "PH", "PI", "PJ", "PK", "PL", "PM", "PN", "PO", "PP", "PQ", "PR", "PS", "PT", "PU", "PV", "PW", "PX", "PY", "PZ"
+		};
 
-            int[] cVal;
+			int[] cVal;
 
-            if (index < unit.Length)
-            {
-                cVal = new int[unit.Length];
-                index = 0;
+			if (index < unit.Length)
+			{
+				cVal = new int[unit.Length];
+				index = 0;
 
-                while (true)
-                {
-                    string last4 = "";
-                    if (targetString.Length >= 4)
-                    {
-                        last4 = targetString.Substring(targetString.Length - 4);
-                        int intLast4 = int.Parse(last4);
+				while (true)
+				{
+					string last4 = "";
+					if (targetString.Length >= 4)
+					{
+						last4 = targetString.Substring(targetString.Length - 4);
+						int intLast4 = int.Parse(last4);
 
-                        cVal[index] = intLast4 % 1000;
+						cVal[index] = intLast4 % 1000;
 
-                        targetString = targetString.Remove(targetString.Length - 3);
-                    }
-                    else
-                    {
-                        cVal[index] = int.Parse(targetString);
-                        break;
-                    }
-                    index++;
-                }
-                if (index > 0)
-                {
-                    int r = cVal[index] * 1000 + cVal[index - 1];
-                    return string.Format("{0:#.###}{1}", (float)r / 1000f, unit[index]);
-                    //return string.Format("{0:N3}{1}", (float)r / 1000f, unit[index]);
-                }
-            }
+						targetString = targetString.Remove(targetString.Length - 3);
+					}
+					else
+					{
+						cVal[index] = int.Parse(targetString);
+						break;
+					}
+					index++;
+				}
+				if (index > 0)
+				{
+					int r = cVal[index] * 1000 + cVal[index - 1];
+					return string.Format("{0:#.###}{1}", (float)r / 1000f, unit[index]);
+					//return string.Format("{0:N3}{1}", (float)r / 1000f, unit[index]);
+				}
+			}
 
-            return targetString;
-        }
-        public static string ChangeMoney(string targetString)
-        {
+			return targetString;
+		}
+		public static string ChangeMoney(string targetString)
+		{
 			int index = 0;
-            string[] unit = new string[] { "", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-            "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ",
-            "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BW", "BX", "BY", "BZ",
-            "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "CK", "CL", "CM", "CN", "CO", "CP", "CQ", "CR", "CS", "CT", "CU", "CV", "CW", "CX", "CY", "CZ",
-            "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH", "DI", "DJ", "DK", "DL", "DM", "DN", "DO", "DP", "DQ", "DR", "DS", "DT", "DU", "DV", "DW", "DX", "DY", "DZ",
-            "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH", "EI", "EJ", "EK", "EL", "EM", "EN", "EO", "EP", "EQ", "ER", "ES", "ET", "EU", "EV", "EW", "EX", "EY", "EZ",
-            "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH", "FI", "FJ", "FK", "FL", "FM", "FN", "FO", "FP", "FQ", "FR", "FS", "FT", "FU", "FV", "FW", "FX", "FY", "FZ",
-            "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH", "GI", "GJ", "GK", "GL", "GM", "GN", "GO", "GP", "GQ", "GR", "GS", "GT", "GU", "GV", "GW", "GX", "GY", "GZ",
-            "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH", "HI", "HJ", "HK", "HL", "HM", "HN", "HO", "HP", "HQ", "HR", "HS", "HT", "HU", "HV", "HW", "HX", "HY", "HZ",
-            "IA", "IB", "IC", "ID", "IE", "IF", "IG", "IH", "II", "IJ", "IK", "IL", "IM", "IN", "IO", "IP", "IQ", "IR", "IS", "IT", "IU", "IV", "IW", "IX", "IY", "IZ",
-            "JA", "JB", "JC", "JD", "JE", "JF", "JG", "JH", "JI", "JJ", "JK", "JL", "JM", "JN", "JO", "JP", "JQ", "JR", "JS", "JT", "JU", "JV", "JW", "JX", "JY", "JZ",
-            "KA", "KB", "KC", "KD", "KE", "KF", "KG", "KH", "KI", "KJ", "KK", "KL", "KM", "KN", "KO", "KP", "KQ", "KR", "KS", "KT", "KU", "KV", "KW", "KX", "KY", "KZ",
-            "LA", "LB", "LC", "LD", "LE", "LF", "LG", "LH", "LI", "LJ", "LK", "LL", "LM", "LN", "LO", "LP", "LQ", "LR", "LS", "LT", "LU", "LV", "LW", "LX", "LY", "LZ",
-            "MA", "MB", "MC", "MD", "ME", "MF", "MG", "MH", "MI", "MJ", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ",
-            "NA", "NB", "NC", "ND", "NE", "NF", "NG", "NH", "NI", "NJ", "NK", "NL", "NM", "NN", "NO", "NP", "NQ", "NR", "NS", "NT", "NU", "NV", "NW", "NX", "NY", "NZ",
-            "OA", "OB", "OC", "OD", "OE", "OF", "OG", "OH", "OI", "OJ", "OK", "OL", "OM", "ON", "OO", "OP", "OQ", "OR", "OS", "OT", "OU", "OV", "OW", "OX", "OY", "OZ",
-            "PA", "PB", "PC", "PD", "PE", "PF", "PG", "PH", "PI", "PJ", "PK", "PL", "PM", "PN", "PO", "PP", "PQ", "PR", "PS", "PT", "PU", "PV", "PW", "PX", "PY", "PZ"
-        };
+			string[] unit = new string[] { "", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+			"AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ",
+			"BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BW", "BX", "BY", "BZ",
+			"CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "CK", "CL", "CM", "CN", "CO", "CP", "CQ", "CR", "CS", "CT", "CU", "CV", "CW", "CX", "CY", "CZ",
+			"DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH", "DI", "DJ", "DK", "DL", "DM", "DN", "DO", "DP", "DQ", "DR", "DS", "DT", "DU", "DV", "DW", "DX", "DY", "DZ",
+			"EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH", "EI", "EJ", "EK", "EL", "EM", "EN", "EO", "EP", "EQ", "ER", "ES", "ET", "EU", "EV", "EW", "EX", "EY", "EZ",
+			"FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH", "FI", "FJ", "FK", "FL", "FM", "FN", "FO", "FP", "FQ", "FR", "FS", "FT", "FU", "FV", "FW", "FX", "FY", "FZ",
+			"GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH", "GI", "GJ", "GK", "GL", "GM", "GN", "GO", "GP", "GQ", "GR", "GS", "GT", "GU", "GV", "GW", "GX", "GY", "GZ",
+			"HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH", "HI", "HJ", "HK", "HL", "HM", "HN", "HO", "HP", "HQ", "HR", "HS", "HT", "HU", "HV", "HW", "HX", "HY", "HZ",
+			"IA", "IB", "IC", "ID", "IE", "IF", "IG", "IH", "II", "IJ", "IK", "IL", "IM", "IN", "IO", "IP", "IQ", "IR", "IS", "IT", "IU", "IV", "IW", "IX", "IY", "IZ",
+			"JA", "JB", "JC", "JD", "JE", "JF", "JG", "JH", "JI", "JJ", "JK", "JL", "JM", "JN", "JO", "JP", "JQ", "JR", "JS", "JT", "JU", "JV", "JW", "JX", "JY", "JZ",
+			"KA", "KB", "KC", "KD", "KE", "KF", "KG", "KH", "KI", "KJ", "KK", "KL", "KM", "KN", "KO", "KP", "KQ", "KR", "KS", "KT", "KU", "KV", "KW", "KX", "KY", "KZ",
+			"LA", "LB", "LC", "LD", "LE", "LF", "LG", "LH", "LI", "LJ", "LK", "LL", "LM", "LN", "LO", "LP", "LQ", "LR", "LS", "LT", "LU", "LV", "LW", "LX", "LY", "LZ",
+			"MA", "MB", "MC", "MD", "ME", "MF", "MG", "MH", "MI", "MJ", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ",
+			"NA", "NB", "NC", "ND", "NE", "NF", "NG", "NH", "NI", "NJ", "NK", "NL", "NM", "NN", "NO", "NP", "NQ", "NR", "NS", "NT", "NU", "NV", "NW", "NX", "NY", "NZ",
+			"OA", "OB", "OC", "OD", "OE", "OF", "OG", "OH", "OI", "OJ", "OK", "OL", "OM", "ON", "OO", "OP", "OQ", "OR", "OS", "OT", "OU", "OV", "OW", "OX", "OY", "OZ",
+			"PA", "PB", "PC", "PD", "PE", "PF", "PG", "PH", "PI", "PJ", "PK", "PL", "PM", "PN", "PO", "PP", "PQ", "PR", "PS", "PT", "PU", "PV", "PW", "PX", "PY", "PZ"
+		};
 
-            int[] cVal;
+			int[] cVal;
 
-            if (index < unit.Length)
-            {
-                cVal = new int[unit.Length];
-                index = 0;
+			if (index < unit.Length)
+			{
+				cVal = new int[unit.Length];
+				index = 0;
 
-                while (true)
-                {
-                    string last4 = "";
-                    if (targetString.Length >= 4)
-                    {
-                        last4 = targetString.Substring(targetString.Length - 4);
-                        int intLast4 = int.Parse(last4);
+				while (true)
+				{
+					string last4 = "";
+					if (targetString.Length >= 4)
+					{
+						last4 = targetString.Substring(targetString.Length - 4);
+						int intLast4 = int.Parse(last4);
 
-                        cVal[index] = intLast4 % 1000;
+						cVal[index] = intLast4 % 1000;
 
-                        targetString = targetString.Remove(targetString.Length - 3);
-                    }
-                    else
-                    {
-                        cVal[index] = int.Parse(targetString);
-                        break;
-                    }
-                    index++;
-                }
-                if (index > 0)
-                {
-                    int r = cVal[index] * 1000 + cVal[index - 1];
-                    return string.Format("{0:#.###}{1}", (float)r / 1000f, unit[index]);
-                    //return string.Format("{0:N3}{1}", (float)r / 1000f, unit[index]);
-                }
-            }
+						targetString = targetString.Remove(targetString.Length - 3);
+					}
+					else
+					{
+						cVal[index] = int.Parse(targetString);
+						break;
+					}
+					index++;
+				}
+				if (index > 0)
+				{
+					int r = cVal[index] * 1000 + cVal[index - 1];
+					return string.Format("{0:#.###}{1}", (float)r / 1000f, unit[index]);
+					//return string.Format("{0:N3}{1}", (float)r / 1000f, unit[index]);
+				}
+			}
 
-            return targetString;
-        }
+			return targetString;
+		}
 
-    }
+		public static int CountDecimalPlaces(float value)
+		{
+			string strValue = value.ToString();
+			int decimalPointIndex = strValue.IndexOf('.');
+			if (decimalPointIndex == -1)
+				return 0;
+			return strValue.Length - decimalPointIndex - 1;
+		}
 
+	}
 }

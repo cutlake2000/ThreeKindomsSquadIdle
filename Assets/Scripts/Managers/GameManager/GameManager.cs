@@ -13,6 +13,8 @@ namespace Managers.GameManager
 {
     public class GameManager : MonoBehaviour
     {
+        public static bool ReadyToLaunch;
+        
         [SerializeField] private OfflineRewardController offlineRewardController;
         
         private string[] testDeviceIds = { "f70fe41fb0676ca6a5f502abde7de006",
@@ -25,6 +27,10 @@ namespace Managers.GameManager
         
         private void Start()
         {
+            ReadyToLaunch = false;
+
+            #region 게임매니저 초기화
+            
             SquadConfigureManager.Instance.InitSquadConfigureManager();
             SquadBattleManager.Instance.InitSquadBattleManager();
             SquadStatManager.Instance.InitSquadStatManager();
@@ -38,6 +44,10 @@ namespace Managers.GameManager
             DungeonManager.Instance.InitDungeonManager();
             AccountManager.Instance.InitAccountManager();
             MonsterManager.Instance.InitMonsterManager();
+            
+            #endregion
+            
+            ReadyToLaunch = true;
             
             UIManager.Instance.InitUIManager();
             

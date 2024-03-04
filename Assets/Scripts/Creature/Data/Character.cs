@@ -17,6 +17,7 @@ namespace Creature.Data
         public Enums.SquadStatType statType;
         public Enums.IncreaseStatValueType increaseStatType;
         public int increaseValue;
+        public int increaseBaseValue;
     }
 
     [Serializable]
@@ -92,6 +93,7 @@ namespace Creature.Data
                 characterEquippedEffects[i].statType = equippedEffect.squadEffects[i].statType;
                 characterEquippedEffects[i].increaseStatType = equippedEffect.squadEffects[i].increaseStatType;
                 characterEquippedEffects[i].increaseValue = equippedEffect.squadEffects[i].increaseValue;
+                characterEquippedEffects[i].increaseBaseValue = equippedEffect.squadEffects[i].increaseValue;
             }
 
             for (var i = 0; i < ownedEffect.squadEffects.Count; i++)
@@ -100,14 +102,15 @@ namespace Creature.Data
                 characterOwnedEffects[i].statType = ownedEffect.squadEffects[i].statType;
                 characterOwnedEffects[i].increaseStatType = ownedEffect.squadEffects[i].increaseStatType;
                 characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue;
+                characterOwnedEffects[i].increaseBaseValue = ownedEffect.squadEffects[i].increaseValue;
             }
 
             characterRequiredCurrency = rarity switch
             {
-                Enums.CharacterRarity.Rare => 10,
-                Enums.CharacterRarity.Magic => 15,
+                Enums.CharacterRarity.Magic => 10,
+                Enums.CharacterRarity.Rare => 25,
                 Enums.CharacterRarity.Unique => 50,
-                Enums.CharacterRarity.Legend => 65,
+                Enums.CharacterRarity.Legend => 100,
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
             };
 
@@ -160,13 +163,14 @@ namespace Creature.Data
                 characterOwnedEffects.Add(new CharacterEffect());
                 characterOwnedEffects[i].statType = ownedEffect.squadEffects[i].statType;
                 characterOwnedEffects[i].increaseStatType = ownedEffect.squadEffects[i].increaseStatType;
-                characterOwnedEffects[i].increaseValue = ownedEffect.squadEffects[i].increaseValue + ownedEffect.squadEffects[i].increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
+                characterOwnedEffects[i].increaseBaseValue = ownedEffect.squadEffects[i].increaseValue;
+                characterOwnedEffects[i].increaseValue = characterOwnedEffects[i].increaseBaseValue + characterOwnedEffects[i].increaseBaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
             }
 
             characterRequiredCurrency = rarity switch
             {
-                Enums.CharacterRarity.Rare => 10,
-                Enums.CharacterRarity.Magic => 15,
+                Enums.CharacterRarity.Magic => 10,
+                Enums.CharacterRarity.Rare => 15,
                 Enums.CharacterRarity.Unique => 50,
                 Enums.CharacterRarity.Legend => 65,
                 _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
@@ -203,7 +207,8 @@ namespace Creature.Data
 
             foreach (var ownedEffect in characterOwnedEffects)
             {
-                ownedEffect.increaseValue += ownedEffect.increaseValue * characterLevel / SquadConfigureManager.CharacterMaxLevel;
+                SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), -ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
+                ownedEffect.increaseValue = ownedEffect.increaseBaseValue * (int) (100 * Mathf.Pow(1.1f, characterLevel)) / 100;
                 SquadBattleManager.Instance.squadEntireStat.UpdateStat((Enums.SquadStatType) Enum.Parse(typeof(Enums.SquadStatType), ownedEffect.statType.ToString()), ownedEffect.increaseValue, ownedEffect.increaseStatType == Enums.IncreaseStatValueType.BaseStat);
             }
         }

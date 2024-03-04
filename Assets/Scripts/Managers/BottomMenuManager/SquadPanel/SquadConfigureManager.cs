@@ -261,7 +261,6 @@ namespace Managers.BottomMenuManager.SquadPanel
             return targetIndex;
         }
 
-
         /// <summary>
         /// 캐릭터 모델을 UI에 세팅하는 메서드
         /// </summary>
@@ -278,10 +277,8 @@ namespace Managers.BottomMenuManager.SquadPanel
         /// <param name="character"></param>
         public void UpdateSquadConfigureModelOnBattle(Character character)
         {
-            InstantiateModelOfBattleUnderParent(character.characterType, character.characterModel, SpriteManager.Instance.GetCharacterSprite(character.characterType, character.characterIconIndex),
-                modelSpawnPoints[(int)character.characterType].transform);
-            InstantiateSkillUnderParent(character.characterType, character.characterSkills,
-                skillSpawnPoints[(int)character.characterType].transform);
+            InstantiateModelOfBattleUnderParent(character.characterType, character.characterModel, SpriteManager.Instance.GetCharacterSprite(character.characterType, character.characterIconIndex), modelSpawnPoints[(int)character.characterType].transform);
+            InstantiateSkillUnderParent(character.characterType, character.characterSkills, skillSpawnPoints[(int)character.characterType].transform);
 
             foreach (var effect in character.characterEquippedEffects)
             {

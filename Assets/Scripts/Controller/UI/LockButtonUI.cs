@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Controller.UI.BottomMenuUI.BottomMenuPanel;
+using Controller.UI.BottomMenuUI.PopUpUI;
 using Data;
 using Managers.GameManager;
 using Module;
@@ -20,7 +21,7 @@ namespace Controller.UI
 
         private void UpdatePopUpMessageUI()
         {
-            UIManager.Instance.popUpMessagePanelUI.GetComponent<PopUpMessagePanelUI>().UpdatePopUpMessagePanelUI(lockButtonType);
+            UIManager.Instance.popUpMessagePanelUI.GetComponent<PopUpMessagePanelUI>().UpdateLockButtonPopUpMessagePanelUI(lockButtonType);
         }
     }
 }

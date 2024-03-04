@@ -57,7 +57,7 @@ namespace Managers.BottomMenuManager.TalentPanel
         {
             for (var i = 0; i < squadTalentSo.Length; i++)
             {
-                talentItem[i].currentLevelUpCost = new BigInteger[3];
+                talentItem[i].CurrentLevelUpCost = new BigInteger[3];
                 talentItem[i].squadTalentName = squadTalentSo[i].squadTalentName;
                 talentItem[i].statTypeFromSquadTalentPanel = squadTalentSo[i].statTypeFromSquadTalentPanel;
                 talentItem[i].increaseTalentValueType = squadTalentSo[i].increaseTalentValueType;
@@ -65,9 +65,9 @@ namespace Managers.BottomMenuManager.TalentPanel
                 talentItem[i].extraLevelUpCost = squadTalentSo[i].levelUpCost;
                 talentItem[i].increaseTalentValue = squadTalentSo[i].increaseTalentValue;
                 talentItem[i].currentLevel = ES3.Load($"{nameof(SquadTalentSo)}/{talentItem[i].statTypeFromSquadTalentPanel}/currentLevel : ", 0);
-                talentItem[i].currentLevelUpCost[0] = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost, 1);
-                talentItem[i].currentLevelUpCost[1] = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost, 10);
-                talentItem[i].currentLevelUpCost[2] = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost, 100);
+                talentItem[i].CurrentLevelUpCost[0] = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost, 1);
+                talentItem[i].CurrentLevelUpCost[1] = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost, 10);
+                talentItem[i].CurrentLevelUpCost[2] = CalculateLevelUpCostOfTalent(talentItem[i].initialLevelUpCost, talentItem[i].currentLevel, talentItem[i].extraLevelUpCost, 100);
                 talentItem[i].currentIncreasedStat = talentItem[i].currentLevel * talentItem[i].increaseTalentValue;
                 talentItem[i].squadTalentSprite = squadTalentSo[i].squadTalentImage;
                 talentItem[i].UpgradeTotalSquadStatBySquadTalentItem = OnUpgradeTotalSquadStatFromSquadTalentPanel;
@@ -88,7 +88,7 @@ namespace Managers.BottomMenuManager.TalentPanel
         {
             var talent = talentItem[index];
             
-            if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.Gold, talent.currentLevelUpCost[(int)Mathf.Log10(levelUpMagnification)])) return;
+            if (!AccountManager.Instance.SubtractCurrency(Enums.CurrencyType.Gold, talent.CurrentLevelUpCost[(int)Mathf.Log10(levelUpMagnification)])) return;
             if (talentItem[index].upgradeButton.GetComponent<HoldButton>().pauseUpgrade) return;
 
             var effect = objectPool.SpawnFromPool(Enums.PoolType.EffectEnhance);
@@ -123,9 +123,9 @@ namespace Managers.BottomMenuManager.TalentPanel
 
         private static void UpdateCurrentTalentItemLevelUpCost(TalentItemUI currentTalentItem)
         {
-            for (var i = 0; i < currentTalentItem.currentLevelUpCost.Length; i++)
+            for (var i = 0; i < currentTalentItem.CurrentLevelUpCost.Length; i++)
             {
-                currentTalentItem.currentLevelUpCost[i] = CalculateLevelUpCostOfTalent(currentTalentItem.initialLevelUpCost, currentTalentItem.currentLevel, currentTalentItem.extraLevelUpCost, (int) Mathf.Pow(10, i));   
+                currentTalentItem.CurrentLevelUpCost[i] = CalculateLevelUpCostOfTalent(currentTalentItem.initialLevelUpCost, currentTalentItem.currentLevel, currentTalentItem.extraLevelUpCost, (int) Mathf.Pow(10, i));   
             }
         }
 

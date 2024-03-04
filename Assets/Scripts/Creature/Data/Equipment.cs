@@ -271,7 +271,7 @@ namespace Creature.Data
 
         public int IncreaseOwnedEffectValue(int index)
         {
-            var targetValue = ownedEffects[index].baseIncreaseValue * (int) (100 * Mathf.Pow(1.2f, equipmentLevel)) / 100;
+            var targetValue = ownedEffects[index].baseIncreaseValue * (int) (100 * Mathf.Pow(1.1f, equipmentLevel)) / 100;
 
             return targetValue;
         }

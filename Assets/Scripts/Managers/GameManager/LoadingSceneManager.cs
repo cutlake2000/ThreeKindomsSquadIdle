@@ -18,7 +18,7 @@ namespace Managers.GameManager
         private bool loadComplete;
         private WaitForSeconds delayTime;
         
-        [FormerlySerializedAs("userName")] public string accountName;
+        public string accountName;
 
         private void Awake()
         {
@@ -70,8 +70,9 @@ namespace Managers.GameManager
             
             accountName = idGenerator.GenerateRandomId();
             touchToStartButton.gameObject.SetActive(false);
-            ES3.Save<string>($"{nameof(accountName)}", accountName);
+            ES3.Save($"{nameof(accountName)}", accountName);
             
+            Debug.Log($"{accountName}");
             asyncOperation.allowSceneActivation = true; // 씬 전환 허용
         }
     }

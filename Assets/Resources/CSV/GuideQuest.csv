@@ -1,64 +1,64 @@
-퀘스트 넘버,내용,달성 목표,보상 타입,보상,구분,타입,기능 오픈
-메인 퀘스트 1,가이드 퀘스트 클릭하기,1,Dia,100,InitialQuest,OneTime,None
-메인 퀘스트 2,재능 - 공격력 Lv.10 달성하기,10,Dia,100,AttackTalentLevel,OneTime,TalentPanel
-메인 퀘스트 3,재능 - 체력 Lv. 10 달성하기,10,Dia,100,HealthTalentLevel,OneTime,None
-메인 퀘스트 4,자동 스킬 활성화하기,1,Dia,100,TouchAutoSkillButton,OneTime,None
-메인 퀘스트 5,1-3 스테이지 돌파하기,3,Dia,100,StageClear,OneTime,None
-메인 퀘스트 6,반복 모드로 전환하기,1,Dia,100,TouchChallengeButton,OneTime,None
-메인 퀘스트 7,돌파 모드로 전환하기,1,Dia,100,TouchLoopButton,OneTime,None
-메인 퀘스트 8,1-5 스테이지 돌파하기,5,Dia,100,StageClear,OneTime,None
-메인 퀘스트 9,궁수로 카메라 전환하기,1,Dia,100,ArcherCamera,OneTime,None
-메인 퀘스트 10,전사로 카메라 전환하기,1,Dia,1000,WarriorCamera,OneTime,None
-메인 퀘스트 11,무기 100회 소환 진행하기,100,Dia,100,SummonWeapon100,OneTime,SummonWeaponPanel
-메인 퀘스트 12,근거리 무기 자동 장착하기,1,Dia,100,AutoEquipSword,OneTime,InventoryPanel
-메인 퀘스트 13,원거리 무기 자동 장착하기,1,Dia,100,AutoEquipBow,OneTime,None
-메인 퀘스트 14,마법 무기 자동 장착하기,1,Dia,1000,AutoEquipStaff,OneTime,None
-메인 퀘스트 15,방어구 100회 소환 진행하기,100,Dia,100,SummonGear100,OneTime,SummonGearPanel
-메인 퀘스트 16,투구 자동 장착하기,1,Dia,100,AutoEquipHelmet,OneTime,None
-메인 퀘스트 17,갑옷 자동 장착하기,1,Dia,100,AutoEquipArmor,OneTime,None
-메인 퀘스트 18,장갑 자동 장착하기,1,Dia,100,AutoEquipGauntlet,OneTime,None
-메인 퀘스트 19,캐릭터 10회 소환 진행하기,10,Dia,100,SummonSquad10,OneTime,SummonCharacterPanel
-메인 퀘스트 20,캐릭터 장착하기,1,Dia,100,EquipSquad,OneTime,SquadConfigurePanel
-메인 퀘스트 21,1-10 스테이지 돌파하기,10,Dia,100,StageClear,OneTime,None
-메인 퀘스트 22,재능 - 공격력 Lv.20 달성하기,20,Dia,100,AttackTalentLevel,OneTime,None
-메인 퀘스트 23,재능 - 체력 Lv.20 달성하기,20,Dia,100,HealthTalentLevel,OneTime,None
-메인 퀘스트 24,무기 100회 소환 진행하기,100,GoldDungeonTicket,1,SummonWeapon100,OneTime,None
-메인 퀘스트 25,동탁의 비밀 창고 1회 플레이,1,Dia,100,PlayGoldDungeon,OneTime,GoldDungeonPanel
-메인 퀘스트 26,재능 - 공격력 Lv.30 달성하기,30,Dia,100,AttackTalentLevel,OneTime,None
-메인 퀘스트 27,재능 - 체력 Lv.30 달성하기,30,Dia,1000,HealthTalentLevel,OneTime,None
-메인 퀘스트 28,무기 100회 소환 진행하기,100,Dia,100,SummonWeapon100,OneTime,None
-메인 퀘스트 29,근거리 무기 합성하기,1,Dia,100,CompositeSword,OneTime,None
-메인 퀘스트 30,원거리 무기 합성하기,1,Dia,100,CompositeBow,OneTime,None
-메인 퀘스트 31,마법 무기 합성하기,1,EquipmentEnhanceStoneDungeonTicket,1,CompositeStaff,OneTime,None
-메인 퀘스트 32,연주 구원전 1회 플레이,1,EquipmentEnhanceStone,10000,PlayEquipmentEnhanceStoneDungeon,OneTime,EquipmentEnhanceStoneDungeonPanel
-메인 퀘스트 33,장비 레벨 업 하기,1,Dia,100,LevelUpEquipment,OneTime,None
-메인 퀘스트 34,방어구 100회 소환 진행하기,100,Dia,100,SummonGear100,OneTime,None
-메인 퀘스트 35,투구 합성하기,1,Dia,100,CompositeHelmet,OneTime,None
-메인 퀘스트 36,갑옷 합성하기,1,Dia,100,CompositeArmor,OneTime,None
-메인 퀘스트 37,장갑 합성하기,1,Dia,100,CompositeGauntlet,OneTime,None
-메인 퀘스트 38,재능 - 공격력 Lv.40 달성하기,40,Dia,100,AttackTalentLevel,OneTime,None
-메인 퀘스트 39,재능 - 체력 Lv.40 달성하기,40,Dia,100,HealthTalentLevel,OneTime,None
-메인 퀘스트 40,1-15 스테이지 돌파하기,15,SquadEnhanceStoneDungeonTicket,1,StageClear,OneTime,None
-메인 퀘스트 41,호로관 전투 1회 플레이,1,SquadEnhanceStone,10000,PlaySquadEnhanceStoneDungeon,OneTime,SquadEnhanceStoneDungeonPanel
-메인 퀘스트 42,캐릭터 레벨 업 하기,1,Dia,100,LevelUpCharacter,OneTime,None
-메인 퀘스트 43,캐릭터 10회 소환 진행하기,10,Dia,100,SummonSquad10,OneTime,None
-메인 퀘스트 44,스쿼드 레벨 업 하기,1,GoldDungeonTicket,1,LevelUpSquad,OneTime,None
-메인 퀘스트 45,동탁의 비밀 창고 1회 플레이,1,Dia,100,PlayGoldDungeon,OneTime,None
-메인 퀘스트 46,재능 - 공격력 Lv.50 달성하기,50,Dia,100,AttackTalentLevel,OneTime,None
-메인 퀘스트 47,재능 - 체력 증가 Lv.50 달성하기,50,Dia,100,HealthTalentLevel,OneTime,None
-메인 퀘스트 48,무기 10회 소환 진행하기,10,Dia,100,SummonWeapon10,OneTime,None
-메인 퀘스트 49,방어구 10회 소환 진행하기,10,Dia,100,SummonGear10,OneTime,None
-메인 퀘스트 50,1-20 스테이지 돌파하기,20,SquadEnhanceStoneDungeonTicket,1,StageClear,OneTime,None
-메인 퀘스트 51,호로관 전투 1회 플레이,1,Dia,100,PlaySquadEnhanceStoneDungeon,OneTime,None
-메인 퀘스트 52,캐릭터 10회 소환 진행하기,10,Dia,100,SummonSquad10,OneTime,None
-메인 퀘스트 53,스쿼드 레벨 업 하기,1,GoldDungeonTicket,1,LevelUpSquad,OneTime,None
-반복 퀘스트 54,동탁의 비밀 창고 1회 플레이,1,Dia,100,PlayGoldDungeon,Loop,None
-반복 퀘스트 55,공격력 증가 Lv.60 달성하기,60,Dia,100,AttackTalentLevel,Loop,None
-반복 퀘스트 56,체력 증가 Lv.60 달성하기,60,EquipmentEnhanceStoneDungeonTicket,1,HealthTalentLevel,Loop,None
-반복 퀘스트 57,연주 구원전 1회 플레이,1,Dia,100,PlayEquipmentEnhanceStoneDungeon,Loop,None
-반복 퀘스트 58,무기 10회 소환 진행하기,10,Dia,100,SummonWeapon10,Loop,None
-반복 퀘스트 59,방어구 10회 소환 진행하기,10,Dia,100,SummonGear10,Loop,None
-반복 퀘스트 60,1-25 스테이지 돌파하기,25,SquadEnhanceStoneDungeonTicket,1,StageClear,Loop,None
-반복 퀘스트 61,호로관 전투 1회 플레이,1,Dia,100,PlaySquadEnhanceStoneDungeon,Loop,None
-반복 퀘스트 62,캐릭터 10회 소환 진행하기,10,Dia,100,SummonSquad10,Loop,None
-반복 퀘스트 63,스쿼드 레벨 업 하기,1,GoldDungeonTicket,1,LevelUpSquad,Loop,None
+퀘스트 넘버,내용,달성 목표,보상 타입,보상,구분,타입,기능 오픈,,시간
+메인 퀘스트 1,가이드 퀘스트 클릭하기,1,Dia,100,InitialQuest,OneTime,None,,
+메인 퀘스트 2,재능 - 공격력 Lv.10 달성하기,10,Dia,100,AttackTalentLevel,OneTime,TalentPanel,,
+메인 퀘스트 3,재능 - 체력 Lv. 10 달성하기,10,Dia,100,HealthTalentLevel,OneTime,None,,
+메인 퀘스트 4,자동 스킬 활성화하기,1,Dia,100,TouchAutoSkillButton,OneTime,None,,
+메인 퀘스트 5,1-3 스테이지 돌파하기,3,Dia,100,StageClear,OneTime,None,,
+메인 퀘스트 6,반복 모드로 전환하기,1,Dia,100,TouchChallengeButton,OneTime,None,,
+메인 퀘스트 7,돌파 모드로 전환하기,1,Dia,100,TouchLoopButton,OneTime,None,,
+메인 퀘스트 8,1-5 스테이지 돌파하기,5,Dia,100,StageClear,OneTime,None,,
+메인 퀘스트 9,궁수로 카메라 전환하기,1,Dia,100,ArcherCamera,OneTime,None,,
+메인 퀘스트 10,전사로 카메라 전환하기,1,Dia,1000,WarriorCamera,OneTime,None,,
+메인 퀘스트 11,무기 100회 소환 진행하기,100,Dia,100,SummonWeapon100,OneTime,SummonWeaponPanel,,
+메인 퀘스트 12,근거리 무기 자동 장착하기,1,Dia,100,AutoEquipSword,OneTime,InventoryPanel,,
+메인 퀘스트 13,원거리 무기 자동 장착하기,1,Dia,100,AutoEquipBow,OneTime,None,,
+메인 퀘스트 14,마법 무기 자동 장착하기,1,Dia,1000,AutoEquipStaff,OneTime,None,,
+메인 퀘스트 15,방어구 100회 소환 진행하기,100,Dia,100,SummonGear100,OneTime,SummonGearPanel,,
+메인 퀘스트 16,투구 자동 장착하기,1,Dia,100,AutoEquipHelmet,OneTime,None,,5분
+메인 퀘스트 17,갑옷 자동 장착하기,1,Dia,100,AutoEquipArmor,OneTime,None,,
+메인 퀘스트 18,장갑 자동 장착하기,1,Dia,100,AutoEquipGauntlet,OneTime,None,,
+메인 퀘스트 19,캐릭터 10회 소환 진행하기,10,Dia,100,SummonSquad10,OneTime,SummonCharacterPanel,,
+메인 퀘스트 20,캐릭터 장착하기,1,Dia,100,EquipSquad,OneTime,SquadConfigurePanel,,
+메인 퀘스트 21,1-10 스테이지 돌파하기,10,Dia,100,StageClear,OneTime,None,,
+메인 퀘스트 22,재능 - 공격력 Lv.20 달성하기,20,Dia,100,AttackTalentLevel,OneTime,None,,
+메인 퀘스트 23,재능 - 체력 Lv.20 달성하기,20,Dia,100,HealthTalentLevel,OneTime,None,,
+메인 퀘스트 24,무기 100회 소환 진행하기,100,GoldDungeonTicket,2,SummonWeapon100,OneTime,None,,
+메인 퀘스트 25,동탁의 비밀 창고 1회 플레이,1,Dia,100,PlayGoldDungeon,OneTime,GoldDungeonPanel,,
+메인 퀘스트 26,재능 - 공격력 Lv.30 달성하기,30,Dia,100,AttackTalentLevel,OneTime,None,,10분
+메인 퀘스트 27,재능 - 체력 Lv.30 달성하기,30,Dia,1000,HealthTalentLevel,OneTime,None,,
+메인 퀘스트 28,무기 100회 소환 진행하기,100,Dia,100,SummonWeapon100,OneTime,None,,
+메인 퀘스트 29,근거리 무기 합성하기,1,Dia,100,CompositeSword,OneTime,None,,
+메인 퀘스트 30,원거리 무기 합성하기,1,Dia,100,CompositeBow,OneTime,None,,
+메인 퀘스트 31,마법 무기 합성하기,1,EquipmentEnhanceStoneDungeonTicket,2,CompositeStaff,OneTime,None,,
+메인 퀘스트 32,연주 구원전 1회 플레이,1,EquipmentEnhanceStone,10000,PlayEquipmentEnhanceStoneDungeon,OneTime,EquipmentEnhanceStoneDungeonPanel,,
+메인 퀘스트 33,장비 레벨 업 하기,1,Dia,100,LevelUpEquipment,OneTime,None,,
+메인 퀘스트 34,방어구 100회 소환 진행하기,100,Dia,100,SummonGear100,OneTime,None,,
+메인 퀘스트 35,투구 합성하기,1,Dia,100,CompositeHelmet,OneTime,None,,
+메인 퀘스트 36,갑옷 합성하기,1,Dia,100,CompositeArmor,OneTime,None,,
+메인 퀘스트 37,장갑 합성하기,1,Dia,100,CompositeGauntlet,OneTime,None,,
+메인 퀘스트 38,재능 - 공격력 Lv.40 달성하기,40,Dia,100,AttackTalentLevel,OneTime,None,,
+메인 퀘스트 39,재능 - 체력 Lv.40 달성하기,40,Dia,100,HealthTalentLevel,OneTime,None,,
+메인 퀘스트 40,1-15 스테이지 돌파하기,15,SquadEnhanceStoneDungeonTicket,2,StageClear,OneTime,None,,15분
+메인 퀘스트 41,호로관 전투 1회 플레이,1,SquadEnhanceStone,10000,PlaySquadEnhanceStoneDungeon,OneTime,SquadEnhanceStoneDungeonPanel,,
+메인 퀘스트 42,캐릭터 레벨 업 하기,1,Dia,100,LevelUpCharacter,OneTime,None,,
+메인 퀘스트 43,캐릭터 10회 소환 진행하기,10,Dia,100,SummonSquad10,OneTime,None,,
+메인 퀘스트 44,스쿼드 레벨 업 하기,1,GoldDungeonTicket,2,LevelUpSquad,OneTime,None,,
+메인 퀘스트 45,동탁의 비밀 창고 1회 플레이,1,Dia,100,PlayGoldDungeon,OneTime,None,,
+메인 퀘스트 46,재능 - 공격력 Lv.50 달성하기,50,Dia,100,AttackTalentLevel,OneTime,None,,
+메인 퀘스트 47,재능 - 체력 증가 Lv.50 달성하기,50,Dia,100,HealthTalentLevel,OneTime,None,,
+메인 퀘스트 48,무기 10회 소환 진행하기,10,Dia,100,SummonWeapon10,OneTime,None,,
+메인 퀘스트 49,방어구 10회 소환 진행하기,10,Dia,100,SummonGear10,OneTime,None,,
+메인 퀘스트 50,1-20 스테이지 돌파하기,20,SquadEnhanceStoneDungeonTicket,2,StageClear,OneTime,None,,
+메인 퀘스트 51,호로관 전투 1회 플레이,1,Dia,100,PlaySquadEnhanceStoneDungeon,OneTime,None,,
+메인 퀘스트 52,캐릭터 10회 소환 진행하기,10,Dia,100,SummonSquad10,OneTime,None,,
+메인 퀘스트 53,스쿼드 레벨 업 하기,1,GoldDungeonTicket,2,LevelUpSquad,OneTime,None,,20분
+반복 퀘스트 54,동탁의 비밀 창고 1회 플레이,1,Dia,100,PlayGoldDungeon,Loop,None,,
+반복 퀘스트 55,공격력 증가 Lv.60 달성하기,60,Dia,100,AttackTalentLevel,Loop,None,,
+반복 퀘스트 56,체력 증가 Lv.60 달성하기,60,EquipmentEnhanceStoneDungeonTicket,2,HealthTalentLevel,Loop,None,,
+반복 퀘스트 57,연주 구원전 1회 플레이,1,Dia,100,PlayEquipmentEnhanceStoneDungeon,Loop,None,,
+반복 퀘스트 58,무기 10회 소환 진행하기,10,Dia,100,SummonWeapon10,Loop,None,,
+반복 퀘스트 59,방어구 10회 소환 진행하기,10,Dia,100,SummonGear10,Loop,None,,
+반복 퀘스트 60,1-25 스테이지 돌파하기,25,SquadEnhanceStoneDungeonTicket,2,StageClear,Loop,None,,
+반복 퀘스트 61,호로관 전투 1회 플레이,1,Dia,100,PlaySquadEnhanceStoneDungeon,Loop,None,,25분
+반복 퀘스트 62,캐릭터 10회 소환 진행하기,10,Dia,100,SummonSquad10,Loop,None,,
+반복 퀘스트 63,스쿼드 레벨 업 하기,1,GoldDungeonTicket,2,LevelUpSquad,Loop,None,,30분

@@ -3,6 +3,7 @@ using System.Collections;
 using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.DungeonPanel;
+using Controller.UI.BottomMenuUI.PopUpUI;
 using Creature.CreatureClass.MonsterClass;
 using Data;
 using Function;

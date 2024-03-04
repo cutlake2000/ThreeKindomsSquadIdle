@@ -18,7 +18,6 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
 {
     public class InventoryPanelUI : MonoBehaviour
     {
-        public static Action<bool> UpdateEquipmentUIAction;
         public static event Action<Equipment> OnClickSelectEquipment;
 
         [Header("장착 중인 장비들을 보여주는 패널")] public GameObject squadEquipmentStatusPanel;
@@ -79,7 +78,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel
         }
 
         // 버튼 클릭 리스너 설정하는 메서드
-        public void InitializeEventListener() 
+        public void InitializeEventListener()
         {
             for (var i = 0; i < equipmentButton.Length; i++)
             {

@@ -23,12 +23,14 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel
         public Button summonX10LockButton;
         public Button summonX30LockButton;
         public Button summonX100LockButton;
+        public Button summonProbabilityButton;
 
         public void InitializeEventListener()
         {
             summonX10Button.onClick.AddListener(() => SummonManager.Instance.SummonRandomTarget(summonType, 10));
             summonX30Button.onClick.AddListener(() => SummonManager.Instance.SummonRandomTarget(summonType, 30));
             summonX100Button.onClick.AddListener(() => SummonManager.Instance.SummonRandomTarget(summonType, 100));
+            summonProbabilityButton.onClick.AddListener(() => UIManager.Instance.summonPanelUI.ActivateSummonProbabilityUI(summonType));
         }
         
         public void UpdateSummonPanelItemUI(int level, float currentExp, float targetExp)

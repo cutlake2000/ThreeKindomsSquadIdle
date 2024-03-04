@@ -26,7 +26,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         [Header("최대 스탯 레벨")] public int maxLevel = 10000;
         [Header("초기 강화 비용 레벨")] public int initialLevelUpCost;
         [Header("추가 강화 비용 레벨")] public int extraLevelUpCost;
-        [Header("x1 / x10 / x100 스탯 강화 비용")] public BigInteger[] currentLevelUpCost;
+        [Header("x1 / x10 / x100 스탯 강화 비용")] public BigInteger[] CurrentLevelUpCost;
         [Header("현재 스탯 증가량")] public int currentIncreasedStat;
         [Header("UI")] public Image squadTalentImage;
 
@@ -51,17 +51,16 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         {
             squadTalentLevelText.text = $"Lv. {currentLevel}";
 
-            switch (increaseTalentValueType)
+            if (statTypeFromSquadTalentPanel is Enums.SquadStatType.CriticalRate or Enums.SquadStatType.CriticalDamage or Enums.SquadStatType.AcquisitionGold or Enums.SquadStatType.AcquisitionExp)
             {
-                case Enums.IncreaseStatValueType.BaseStat:
-                    squadCurrentIncreasedStatText.text = currentIncreasedStat == 0 ? "0" : $"{currentIncreasedStat}";
-                    break;
-                case Enums.IncreaseStatValueType.PercentStat:
-                    squadCurrentIncreasedStatText.text = currentIncreasedStat == 0 ? "0%" : $"{(double)currentIncreasedStat / 100}%";
-                    break;
+                squadCurrentIncreasedStatText.text = currentIncreasedStat == 0 ? "0.00%" : $"{UIManager.FormatCurrency(currentIncreasedStat)}%";
             }
-
-            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.CurrencyType_Gold}> {currentLevelUpCost[(int)Mathf.Log10(levelMagnification)].ChangeMoney()}";
+            else
+            {
+                squadCurrentIncreasedStatText.text = currentIncreasedStat == 0 ? "0" : $"{currentIncreasedStat}";
+            }
+            
+            squadTalentRequiredCurrencyText.text = $"<sprite={(int)Enums.IconType.CurrencyType_Gold}> {CurrentLevelUpCost[(int)Mathf.Log10(levelMagnification)].ChangeMoney()}";
         }
     }
 }

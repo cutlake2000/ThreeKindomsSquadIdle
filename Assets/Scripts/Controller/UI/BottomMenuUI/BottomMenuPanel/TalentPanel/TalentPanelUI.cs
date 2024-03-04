@@ -66,7 +66,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
             foreach (var talentItem in TalentManager.Instance.talentItem)
             {
                 var currentAmount = new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Gold));
-                var requiredAmount = talentItem.currentLevelUpCost[(int)Mathf.Log10(index)];
+                var requiredAmount = talentItem.CurrentLevelUpCost[(int)Mathf.Log10(index)];
                 
                 if (currentAmount < requiredAmount)
                 {
@@ -85,7 +85,7 @@ namespace Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel
         {
             var talent = TalentManager.Instance.talentItem[index];
 
-            if (new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Gold)) < talent.currentLevelUpCost[(int) Mathf.Log10(levelMagnification)])
+            if (new BigInteger(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.Gold)) < talent.CurrentLevelUpCost[(int) Mathf.Log10(levelMagnification)])
             {
                 talent.upgradeButton.gameObject.SetActive(false);
                 talent.upgradeBlockButton.gameObject.SetActive(true);

@@ -13,10 +13,10 @@ namespace Controller.UI
     {
         [SerializeField] private TMP_Text alertText;
         [SerializeField] private CanvasGroup group;
-        
-        private const float waitTime = 0.5f;
-        private const float fadeTime = 0.5f;
-        private const float height = 30.0f;
+
+        private float waitTime;
+        private float fadeTime;
+        private float height;
         
         private Enums.LockButtonType type;
         private readonly WaitForSeconds waitForSeconds = new(0.2f);
@@ -26,10 +26,34 @@ namespace Controller.UI
             alertText.text = message;
         }
         
-        public void StartCoroutine(Enums.LockButtonType currentType)
+        public void StartLockButtonCoroutine(Enums.LockButtonType currentType)
         {
             type = currentType;
+            waitTime = 0.5f;
+            fadeTime = 0.5f;
+            height = 30.0f;
+            
+            gameObject.SetActive(false);
+            StopCoroutine(WaitForFade());
+            StopCoroutine(FadeAnim());
+            
             ResetSlot();
+            gameObject.SetActive(true);
+            StartCoroutine(WaitForFade());
+        }
+
+        public void StartTotalCombatPowerCoroutine()
+        {
+            waitTime = 0.3f;
+            fadeTime = 0.2f;
+            height = 30.0f;
+            
+            gameObject.SetActive(false);
+            StopCoroutine(WaitForFade());
+            StopCoroutine(FadeAnim());
+            
+            ResetSlot();
+            gameObject.SetActive(true);
             StartCoroutine(WaitForFade());
         }
         
@@ -48,14 +72,14 @@ namespace Controller.UI
                 currentTime += Time.deltaTime;
                 yield return null;
             }
-        
+            
             StartCoroutine(FadeAnim());
         }
 
         private IEnumerator FadeAnim()
         {
             float currentTime = 0;
-        
+            
             while (currentTime < fadeTime)
             {
                 var progress = currentTime / fadeTime;
@@ -69,7 +93,7 @@ namespace Controller.UI
             yield return waitForSeconds;
         
             gameObject.SetActive(false);
-            UIManager.Instance.popUpMessagePanelUI.activePopUpMessagePanelItems[(int)type - 1] = false;
+            UIManager.Instance.popUpMessagePanelUI.activePopUpMessagePanelItems[(int)type] = false;
         }
     }
 }

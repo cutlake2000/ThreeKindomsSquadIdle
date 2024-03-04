@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Controller.UI;
 using Controller.UI.BattleMenuUI;
 using Controller.UI.BottomMenuUI;
+using Controller.UI.BottomMenuUI.PopUpUI;
 using Data;
 using Function;
 using Keiwando.BigInteger;
@@ -307,15 +308,16 @@ namespace Managers.GameManager
                                 AccountManager.Instance.AddExp(reward.GetStageReward(currentAccumulatedStage));
                             }
                         }
+                        
+                        stageResultUI.SetActive(false);
                     }
                     // else if (QuestManager.Instance.questLevel < 18)
                     // {
                     //     UpdateAllStageUI();
                     //     stageResultUI.SetActive(false);
                     // }
-                    
+
                     UpdateAllStageUI();
-                    stageResultUI.SetActive(false);
                         
                     yield return new WaitForSeconds(1.0f);
                 }

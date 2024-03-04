@@ -6,6 +6,7 @@ using Controller.UI.BottomMenuUI.BottomMenuPanel.InventoryPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SquadPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.SummonPanel;
 using Controller.UI.BottomMenuUI.BottomMenuPanel.TalentPanel;
+using Controller.UI.BottomMenuUI.PopUpUI;
 using Controller.UI.TopMenuUI.PlayerInfoPanelUI;
 using Controller.UI.TopMenuUI.QuestPanel;
 using Controller.UI.TopMenuUI.SkillPanel;
@@ -58,7 +59,7 @@ namespace Managers.GameManager
             pushRewardUI.InitializeEventListener();
         }
         
-        public static string FormatCurrency(int value)
+        public static string FormatCurrency(double value)
         {
             // 정수 값을 100으로 나누어 소수점 이하로 변환합니다.
             var doubleValue = value / 100.0;

@@ -102,25 +102,30 @@ namespace Data
 
         public enum IconType
         {
-            SquadType_Archer,
-            EquipmentType_Helmet,
-            SquadType_Wizard,
-            DungeonKeyType_EnhanceStoneGear,
-            Temp1,
             SquadType_Warrior,
-            EquipmentType_Staff,
-            EquipmentType_Bow,
-            DungeonKeyType_Gold,
-            CurrencyType_EnhanceStoneSquad,
-            DungeonKeyType_EnhanceStoneSquad,
-            EquipmentType_Armor,
+            SquadType_Archer,
+            SquadType_Wizard,
+            
             EquipmentType_Sword,
+            EquipmentType_Bow,
+            EquipmentType_Staff,
+            EquipmentType_Helmet,
+            EquipmentType_Armor,
             EquipmentType_Gauntlet,
-            Temp2,
-            CurrencyType_Gold,
+            
+            DungeonKeyType_Gold,
+            DungeonKeyType_EnhanceStoneGear,
+            DungeonKeyType_EnhanceStoneSquad,
+            
             CurrencyType_Dia,
+            CurrencyType_Gold,
+            CurrencyType_EnhanceStoneEquipment,
+            CurrencyType_EnhanceStoneSquad,
             CurrencyType_Exp,
-            CurrencyType_EnhanceStoneEquipment
+            Temp1,
+            Temp2,
+            Icon_Arrow_Up,
+            Icon_Arrow_Down
         }
 
         public enum CharacterRarity
@@ -277,7 +282,8 @@ namespace Data
             EffectEnhance,
             EffectDamageNormal,
             EffectDamageCritical,
-            PopUpMessage
+            LockButtonPopUpMessage,
+            TotalCombatPowerPopUpMessage,
         }
 
         public enum SkillType
@@ -316,7 +322,8 @@ namespace Data
             WarriorAttackRange,
             ArcherAttackRange,
             WizardAttackRange,
-            FollowRange
+            FollowRange,
+            TotalCombatPower
         }
 
         public enum SummonType

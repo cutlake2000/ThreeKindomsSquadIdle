@@ -66,29 +66,28 @@ namespace Managers.GameManager
 
         [Header("Base SquadStats")] [SerializeField]
         public SquadEntireStat squadEntireStat;
-
-        [Header("Total SquadStats")]
-        public BigInteger TotalAttack;
-        public BigInteger TotalWarriorAttack;
-        public BigInteger TotalArcherAttack;
-        public BigInteger TotalWizardAttack;
+        
+        public BigInteger TotalAttack = new();
+        public BigInteger TotalWarriorAttack = new();
+        public BigInteger TotalArcherAttack = new();
+        public BigInteger TotalWizardAttack = new();
      
-        public BigInteger TotalMaxHealth;
-        public BigInteger TotalWarriorHealth;
-        public BigInteger TotalArcherHealth;
-        public BigInteger TotalWizardHealth;
+        public BigInteger TotalMaxHealth = new();
+        public BigInteger TotalWarriorHealth = new();
+        public BigInteger TotalArcherHealth = new();
+        public BigInteger TotalWizardHealth = new();
         
-        public BigInteger TotalDefence;
-        public BigInteger TotalWarriorDefence;
-        public BigInteger TotalArcherDefence;
-        public BigInteger TotalWizardDefence;
+        public BigInteger TotalDefence = new();
+        public BigInteger TotalWarriorDefence = new();
+        public BigInteger TotalArcherDefence = new();
+        public BigInteger TotalWizardDefence = new();
         
-        public BigInteger TotalPenetration;
-        public BigInteger TotalAccuracy;
-        public BigInteger TotalCriticalRate;
-        public BigInteger TotalCriticalDamage;
-        public BigInteger TotalAcquisitionGold;
-        public BigInteger TotalAcquisitionExp;
+        public BigInteger TotalPenetration = new();
+        public BigInteger TotalAccuracy = new();
+        public BigInteger TotalCriticalRate = new();
+        public BigInteger TotalCriticalDamage = new();
+        public BigInteger TotalAcquisitionGold = new();
+        public BigInteger TotalAcquisitionExp = new();
 
         [Header("피해량 보정 (%) ")] public int totalAttackAdjustValue;
         [Header("클래스 별 데미지 피해량 보정 (%) ")] public int totalDamageReduction;
@@ -133,19 +132,19 @@ namespace Managers.GameManager
             squadEntireStat.UpdatePercentStat(Enums.SquadStatType.AcquisitionExp, 0);
             
             TotalAttack = squadEntireStat.baseAttack;
-            TotalWarriorAttack = TotalAttack * warriorTotalStatAdjustValue[0] / 100;
-            TotalArcherAttack = TotalAttack * archerTotalStatAdjustValue[0] / 100;
-            TotalWizardAttack = TotalAttack * wizardTotalStatAdjustValue[0] / 100;
+            TotalWarriorAttack = TotalAttack;
+            TotalArcherAttack = TotalAttack;
+            TotalWizardAttack = TotalAttack;
 
             TotalMaxHealth = squadEntireStat.baseHealth;
-            TotalWarriorHealth = TotalMaxHealth * warriorTotalStatAdjustValue[1] / 100;
-            TotalArcherHealth = TotalMaxHealth * archerTotalStatAdjustValue[1] / 100;
-            TotalWizardHealth = TotalMaxHealth * wizardTotalStatAdjustValue[1] / 100;
+            TotalWarriorHealth = TotalMaxHealth;
+            TotalArcherHealth = TotalMaxHealth;
+            TotalWizardHealth = TotalMaxHealth;
             
             TotalDefence = squadEntireStat.baseDefense;
-            TotalWarriorDefence = TotalDefence * warriorTotalStatAdjustValue[2] / 100;
-            TotalArcherDefence = TotalDefence * archerTotalStatAdjustValue[2] / 100;
-            TotalWizardDefence = TotalDefence * wizardTotalStatAdjustValue[2] / 100;
+            TotalWarriorDefence = TotalDefence;
+            TotalArcherDefence = TotalDefence;
+            TotalWizardDefence = TotalDefence;
             
             TotalPenetration = squadEntireStat.basePenetration;
             TotalAccuracy = squadEntireStat.baseAccuracy;
@@ -228,6 +227,13 @@ namespace Managers.GameManager
 
             return 0;
         }
+        
+        public BigInteger GetTotalCombatPower()
+        {
+            var returnValue = TotalAttack + TotalDefence + TotalMaxHealth + TotalAccuracy + TotalPenetration + TotalCriticalRate + TotalCriticalDamage;
+            
+            return returnValue;
+        }
 
         public void SetTotalSquadStat(Enums.SquadStatType squadStatType, BigInteger statValue)
         {
@@ -301,14 +307,14 @@ namespace Managers.GameManager
             InventoryManager.Instance.SaveAllEquipmentInfo();
         }
 
-        private void UnEquip(Equipment equipment)
-        {
-            equipment.isEquipped = false;
-            InventoryPanelUI.UpdateEquipmentUIAction?.Invoke(equipment.isEquipped);
-            // squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, -1 * equipment.equippedEffect);
-            // equipment.SaveEquipmentAllInfo();
-            // Debug.Log("장비 장착 해제" + equipment.id);
-        }
+        // private void UnEquip(Equipment equipment)
+        // {
+        //     equipment.isEquipped = false;
+        //     InventoryPanelUI.UpdateEquipmentUIAction?.Invoke(equipment.isEquipped);
+        //     squadEntireStat.UpdateTotalStat(Enum.SquadStatType.Attack, -1 * equipment.equippedEffect);
+        //     equipment.SaveEquipmentAllInfo();
+        //     Debug.Log("장비 장착 해제" + equipment.id);
+        // }
 
         #region Battle
 

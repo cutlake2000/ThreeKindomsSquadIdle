@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 885bac2020504ef69c04b47d4657bac1, type: 3}
   m_Name: Summon
   m_EditorClassIdentifier: 
-  <SummonRequiredCount>k__BackingField: 64000000fa000000f4010000e8030000d0070000b80b0000a00f000088130000
+  <SummonRequiredCount>k__BackingField: f40100001a0400009d08000016120000fc250000c44f000058a70000905f0100
   <SummonWeapons>k__BackingField:
   - <SummonProbabilities>k__BackingField:
     - 89.5
@@ -43,7 +43,7 @@ MonoBehaviour:
     - 46
     - 16
     - 3.2
-    - 0
+    - 0.1
   <SummonGears>k__BackingField:
   - <SummonProbabilities>k__BackingField:
     - 89.5
