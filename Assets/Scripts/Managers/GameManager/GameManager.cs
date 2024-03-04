@@ -46,7 +46,8 @@ namespace Managers.GameManager
             MonsterManager.Instance.InitMonsterManager();
             
             #endregion
-            
+
+            SquadBattleManager.Instance.SavePreviousTotalCombatPower();
             ReadyToLaunch = true;
             
             UIManager.Instance.InitUIManager();

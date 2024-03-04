@@ -10,6 +10,7 @@ namespace Controller.UI.BattleMenuUI
         [SerializeField] private Slider currentSlider;
         [SerializeField] private TMP_Text currentSliderText;
         [SerializeField] private TMP_Text currentTimerText;
+        public Button exitButton;
         
         public void UpdateDungeonAllUI(string name, string progress, float value)
         {

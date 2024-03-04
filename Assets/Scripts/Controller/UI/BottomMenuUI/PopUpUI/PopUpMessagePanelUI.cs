@@ -15,7 +15,7 @@ namespace Controller.UI.BottomMenuUI.PopUpUI
         {
             _objectPool = GetComponent<ObjectPool>();
 
-            activePopUpMessagePanelItems = new bool[Enums.lockButtonTypes.Length];
+            activePopUpMessagePanelItems = new bool[Enums.LockButtonTypes.Length];
 
             for (var index = 0; index < activePopUpMessagePanelItems.Length; index++)
             {
@@ -38,8 +38,8 @@ namespace Controller.UI.BottomMenuUI.PopUpUI
             var message = _objectPool.SpawnFromPool(Enums.PoolType.TotalCombatPowerPopUpMessage);
 
             var variationMark = plusMark
-                ? $"<color=#0000FF><sprite={(int)Enums.IconType.Icon_Arrow_Up} color=#0000FF>{variationValue.ChangeMoney()}</color>"
-                : $"<color=#FF0000><sprite={(int)Enums.IconType.Icon_Arrow_Down} color=#FF0000>{variationValue.ChangeMoney()}</color>";
+                ? $"<color=#FF0000><sprite={(int)Enums.IconType.Icon_Arrow_Up} color=#FF0000>{variationValue.ChangeMoney()}</color>"
+                : $"<color=#0000FF><sprite={(int)Enums.IconType.Icon_Arrow_Down} color=#0000FF>{BigInteger.Abs(variationValue).ChangeMoney()}</color>";
             var totalCombatPowerText = $"전투력 {currentTotalCombatPower.ChangeMoney()} ( {variationMark} )"; // plusMark
             
             message.GetComponent<PopUpMessagePanelItemUI>().SetMessage(totalCombatPowerText);

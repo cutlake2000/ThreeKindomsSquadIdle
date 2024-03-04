@@ -14,9 +14,9 @@ namespace Controller.UI
         [SerializeField] private TMP_Text alertText;
         [SerializeField] private CanvasGroup group;
 
-        private float waitTime;
-        private float fadeTime;
-        private float height;
+        private float _waitTime = 0.5f;
+        private float _fadeTime = 0.5f;
+        private float _height = 30.0f;
         
         private Enums.LockButtonType type;
         private readonly WaitForSeconds waitForSeconds = new(0.2f);
@@ -29,14 +29,11 @@ namespace Controller.UI
         public void StartLockButtonCoroutine(Enums.LockButtonType currentType)
         {
             type = currentType;
-            waitTime = 0.5f;
-            fadeTime = 0.5f;
-            height = 30.0f;
+            _waitTime = 0.5f;
+            _fadeTime = 0.5f;
+            _height = 30.0f;
             
             gameObject.SetActive(false);
-            StopCoroutine(WaitForFade());
-            StopCoroutine(FadeAnim());
-            
             ResetSlot();
             gameObject.SetActive(true);
             StartCoroutine(WaitForFade());
@@ -44,14 +41,7 @@ namespace Controller.UI
 
         public void StartTotalCombatPowerCoroutine()
         {
-            waitTime = 0.3f;
-            fadeTime = 0.2f;
-            height = 30.0f;
-            
             gameObject.SetActive(false);
-            StopCoroutine(WaitForFade());
-            StopCoroutine(FadeAnim());
-            
             ResetSlot();
             gameObject.SetActive(true);
             StartCoroutine(WaitForFade());
@@ -67,7 +57,7 @@ namespace Controller.UI
         {
             float currentTime = 0;
         
-            while (currentTime < waitTime)
+            while (currentTime < _waitTime)
             {
                 currentTime += Time.deltaTime;
                 yield return null;
@@ -80,11 +70,11 @@ namespace Controller.UI
         {
             float currentTime = 0;
             
-            while (currentTime < fadeTime)
+            while (currentTime < _fadeTime)
             {
-                var progress = currentTime / fadeTime;
+                var progress = currentTime / _fadeTime;
                 group.alpha = 1 - progress;
-                var yPos = progress * height;
+                var yPos = progress * _height;
                 transform.localPosition = new Vector3(0, yPos, 0);
                 currentTime += Time.deltaTime;
                 yield return null;

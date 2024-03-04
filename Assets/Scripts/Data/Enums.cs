@@ -35,7 +35,7 @@ namespace Data
             EquipmentEnhanceStoneDungeonPanel
         }
         
-        public static readonly LockButtonType[] lockButtonTypes =
+        public static readonly LockButtonType[] LockButtonTypes =
         {
             LockButtonType.TalentPanel,
             LockButtonType.InventoryPanel,

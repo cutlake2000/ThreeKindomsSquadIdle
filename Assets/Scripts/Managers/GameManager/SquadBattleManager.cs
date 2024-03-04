@@ -230,7 +230,7 @@ namespace Managers.GameManager
         
         public BigInteger GetTotalCombatPower()
         {
-            var returnValue = TotalAttack + TotalDefence + TotalMaxHealth + TotalAccuracy + TotalPenetration + TotalCriticalRate + TotalCriticalDamage;
+            var returnValue = (TotalAttack + TotalWarriorAttack + TotalArcherAttack + TotalWizardAttack + TotalDefence + TotalWarriorAttack + TotalWarriorDefence + TotalWarriorHealth + TotalMaxHealth + TotalWarriorHealth + TotalArcherHealth + TotalWizardHealth) * 10 + (TotalAccuracy + TotalPenetration + TotalCriticalRate + TotalCriticalDamage) * 100;
             
             return returnValue;
         }
@@ -276,6 +276,11 @@ namespace Managers.GameManager
                     TotalAcquisitionExp = statValue;
                     break;
             }
+        }
+
+        public void SavePreviousTotalCombatPower()
+        {
+            squadEntireStat.PreviousTotalCombatPower = GetTotalCombatPower();
         }
 
         public void Equip(Equipment equipment)

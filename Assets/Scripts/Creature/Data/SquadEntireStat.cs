@@ -14,8 +14,8 @@ namespace Creature.Data
     public class SquadEntireStat : BaseStat
     {
         [Header("Total SquadStats")]
-        [Header("직전 전투력")] public BigInteger PreviousTotalCombatPower;
-        [Header("현재 전투력")] public BigInteger CurrentTotalCombatPower;
+        [Header("직전 전투력")] public BigInteger PreviousTotalCombatPower = new();
+        [Header("현재 전투력")] public BigInteger CurrentTotalCombatPower = new();
         
         [Header("깡옵")]
         [Tooltip("기본 공격력")] public int baseAttack;
@@ -48,8 +48,6 @@ namespace Creature.Data
 
         public void UpdateStat(Enums.SquadStatType statType, int adjustValue, bool baseStat)
         {
-            PreviousTotalCombatPower = SquadBattleManager.Instance.GetTotalCombatPower();
-            
             switch (baseStat)
             {
                 case true:
@@ -59,13 +57,17 @@ namespace Creature.Data
                     UpdatePercentStat(statType, adjustValue);
                     break;
             }
+
+            if (!GameManager.ReadyToLaunch) return;
             
             CurrentTotalCombatPower = SquadBattleManager.Instance.GetTotalCombatPower();
 
             var variationValue = CurrentTotalCombatPower - PreviousTotalCombatPower;
-            var plusMark = variationValue >= 0 ? true : false;
-            
-            if (GameManager.ReadyToLaunch) UIManager.Instance.popUpMessagePanelUI.GetComponent<PopUpMessagePanelUI>().UpdateTotalCombatPowerPopUpMessagePanelUI(CurrentTotalCombatPower, variationValue, plusMark);
+            var plusMark = variationValue >= 0;
+                
+            UIManager.Instance.popUpMessagePanelUI.GetComponent<PopUpMessagePanelUI>().UpdateTotalCombatPowerPopUpMessagePanelUI(CurrentTotalCombatPower, variationValue, plusMark);
+                
+            PreviousTotalCombatPower = CurrentTotalCombatPower;
         }
 
         public void UpdateBaseStat(Enums.SquadStatType statType, int adjustValue)

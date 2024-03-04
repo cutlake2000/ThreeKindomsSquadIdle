@@ -83,9 +83,17 @@ namespace Managers.GameManager
 
         private void InitializeEventListeners()
         {
+            foreach (var dungeonUI in dungeonUIs)
+            {
+                if (dungeonUI.GetComponent<DungeonUI>().exitButton.onClick.GetPersistentEventCount() != 0) continue;
+                
+                dungeonUI.GetComponent<DungeonUI>().exitButton.onClick.AddListener(PrepareToStartStageRunner);
+            }
+            
             for (var i = 0; i < UIManager.Instance.dungeonPanelUI.dungeonItems.Length; i++)
             {
                 var index = i;
+                
                 UIManager.Instance.dungeonPanelUI.dungeonItems[index].enterDungeonButton.onClick.AddListener(() =>
                 {
                     if (UIManager.Instance.dungeonPanelUI.dungeonItems[index].dungeonType == Enums.DungeonType.GoldDungeon && int.Parse(AccountManager.Instance.GetCurrencyAmount(Enums.CurrencyType.GoldDungeonTicket)) < 1) return;
@@ -153,6 +161,12 @@ namespace Managers.GameManager
                     StartDungeonRunner();
                 });
             }
+        }
+
+        private void PrepareToStartStageRunner()
+        {
+            isClear = false;
+            StartCoroutine(RunStageRunner());   
         }
 
         private void StartDungeonRunner()
@@ -239,8 +253,7 @@ namespace Managers.GameManager
 
             if (currentSquadCount <= 0)
             {
-                isClear = false;
-                StartCoroutine(RunStageRunner());   
+                PrepareToStartStageRunner();
             }
         }
 
@@ -248,12 +261,14 @@ namespace Managers.GameManager
         {
             if (waveTime > 0) return;
             
-            isClear = false;
-            StartCoroutine(RunStageRunner());
+            PrepareToStartStageRunner();
         }
 
         private IEnumerator RunStageRunner()
         {
+            StageManager.CheckRemainedMonsterAction -= CalculateRemainedMonster;
+            StageManager.CheckRemainedSquadAction -= CalculateRemainedSquad;
+            
             currentSquadCount = 3;
             isDungeonRunnerRunning = false;
 
@@ -276,12 +291,6 @@ namespace Managers.GameManager
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-            StageManager.CheckRemainedMonsterAction -= CalculateRemainedMonster;
-            StageManager.CheckRemainedSquadAction -= CalculateRemainedSquad;
-            
-            StageManager.CheckRemainedMonsterAction += StageManager.Instance.CalculateRemainedMonster;
-            StageManager.CheckRemainedSquadAction += StageManager.Instance.CalculateRemainedSquad;
 
             stopWaveTimer = true;
             currentSquadCount = maxSquadCount;
@@ -343,6 +352,10 @@ namespace Managers.GameManager
             UIManager.Instance.stageRewardPanelUI.gameObject.SetActive(false);
             
             StopAllCoroutines();
+            
+            StageManager.CheckRemainedMonsterAction += StageManager.Instance.CalculateRemainedMonster;
+            StageManager.CheckRemainedSquadAction += StageManager.Instance.CalculateRemainedSquad;
+            
             StageManager.Instance.StartStageRunner();
         }
 
