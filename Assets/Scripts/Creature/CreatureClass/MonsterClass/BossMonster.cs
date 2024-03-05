@@ -1,15 +1,12 @@
 using System.Collections;
 using Data;
-using Function;
 using Keiwando.BigInteger;
 using Managers.BattleManager;
 using Managers.GameManager;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Creature.CreatureClass.MonsterClass
 {
-    
     public class BossMonster : Monster
     {
         [SerializeField] private bool isEventHitRunning;

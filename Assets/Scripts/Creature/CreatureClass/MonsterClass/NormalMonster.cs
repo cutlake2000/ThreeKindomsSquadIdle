@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using Creature.CreatureClass.MonsterFSM;
 using Creature.CreatureClass.SquadClass;
 using Data;
-using Function;
 using Keiwando.BigInteger;
-using Managers;
 using Managers.BattleManager;
 using Managers.GameManager;
 using Module;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Creature.CreatureClass.MonsterClass
