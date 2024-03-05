@@ -286,6 +286,10 @@ namespace Managers.GameManager
             ES3.Save($"{nameof(currentQuest)}", isCurrentQuestClear);
         }
 
+        /// <summary>
+        /// 잠금 컨텐츠 잠금 해제 여부 메서드
+        /// </summary>
+        /// <param name="index"></param>
         private void UpdateLockContents(int index)
         {
             int targetIndex;
@@ -336,6 +340,12 @@ namespace Managers.GameManager
             }
         }
 
+        /// <summary>
+        /// 재능 퀘스트의 목표 달성 레벨 텍스트를 업데이트하는 메서드
+        /// </summary>
+        /// <param name="oldName"></param>
+        /// <param name="targetLevel"></param>
+        /// <returns></returns>
         private static string ParsingIncreaseTalentStatType(string oldName, int targetLevel)
         {
             // 정규식을 사용하여 문자열에서 "Lv." 다음에 오는 숫자를 추출
@@ -356,6 +366,11 @@ namespace Managers.GameManager
             return newString;
         }
 
+        /// <summary>
+        /// 스테이지 클리어 퀘스트의 목표 달성 스테이지 텍스트를 업데이트 하는 메서드
+        /// </summary>
+        /// <param name="currentLevel"></param>
+        /// <returns></returns>
         private static string ParsingIncreaseStageLevel(int currentLevel)
         {
             int stageNumber;
@@ -379,6 +394,9 @@ namespace Managers.GameManager
             return result;
         }
 
+        /// <summary>
+        /// GuideQuest.csv 파일을 파싱하여 Quests 리스트를 생성하는 메서드
+        /// </summary>
         private void CreateQuestsFromCsv()
         {
             questCsv = UnityEngine.Resources.Load<TextAsset>("CSV/GuideQuest");
@@ -391,7 +409,7 @@ namespace Managers.GameManager
 
             var lines = questCsv.text.Split('\n');
 
-            for (var i = 1; i < lines.Length; i++) // 첫 번째 줄(헤더) 건너뛰기
+            for (var i = 1; i < lines.Length; i++) // i = 1 => 첫 번째 줄(헤더) 건너뛰기
             {
                 var line = lines[i];
                 if (!string.IsNullOrWhiteSpace(line))
@@ -400,9 +418,10 @@ namespace Managers.GameManager
 
                     if (fields.Length >= 6)
                     {
+                        const int questProgress = 0;
+                        
                         var questName = fields[1].Trim();
                         var questTargetProgress = int.Parse(fields[2].Trim());
-                        var questProgress = 0;
                         var questRewardType = (Enums.QuestRewardType)Enum.Parse(typeof(Enums.QuestRewardType), fields[3].Trim());
                         var questReward = int.Parse(fields[4].Trim());
                         var questType = (Enums.QuestType)Enum.Parse(typeof(Enums.QuestType), fields[5].Trim());
@@ -422,7 +441,8 @@ namespace Managers.GameManager
                         };
 
                         if (quest.openContent != Enums.OpenContent.None) contentsOpenIndex.Add(i - 1);
-                        if (quest.isLoopQuest == false)
+                        
+                        if (quest.isLoopQuest == false) // 일회성 퀘스트와 반복 퀘스트를 나눠 카운트
                         {
                             oneTimeQuest++;
                         }
@@ -467,6 +487,9 @@ namespace Managers.GameManager
             UIManager.Instance.questPanelUI.questResultPanelUI.UpdateQuestResultPanelUI(targetQuestRewardSprite, targetQuestRewardText, isCurrentQuestClear);
         }
         
+        /// <summary>
+        /// 현재 진행 중인 퀘스트가 클리어 되었다면 퀘스트 재화를 지급하고 다음 퀘스트를 세팅하는 메서드
+        /// </summary>
         public void TargetQuestClear()
         {
             AccountManager.Instance.AddCurrency((Enums.CurrencyType)Enum.Parse(typeof(Enums.CurrencyType), $"{quests[targetQuestLevel].questRewardType}"), quests[targetQuestLevel].reward);
@@ -476,6 +499,7 @@ namespace Managers.GameManager
             ES3.Save($"{nameof(currentQuest)}", false);
             
             UIManager.Instance.questPanelUI.completedMark.SetActive(false);
+            
             isCurrentQuestClear = false;
             
             UpdateAllQuestProgress();
