@@ -97,48 +97,38 @@ namespace Creature.CreatureClass.SquadClass
 
         protected override void SetCreatureStats()
         {
-            Attack = characterType switch
+            switch (characterType)
             {
-                Enums.CharacterType.Warrior => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorAtk),
-                Enums.CharacterType.Archer => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherAtk),
-                Enums.CharacterType.Wizard => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardAtk),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            
-            MaxHealth = characterType switch
-            {
-                Enums.CharacterType.Warrior => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorHealth),
-                Enums.CharacterType.Archer => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherHealth),
-                Enums.CharacterType.Wizard => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardHealth),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            
-            Defence = characterType switch
-            {
-                Enums.CharacterType.Warrior => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorDefence),
-                Enums.CharacterType.Archer => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherDefence),
-                Enums.CharacterType.Wizard => SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardDefence),
-                _ => throw new ArgumentOutOfRangeException()
-            };
+                case Enums.CharacterType.Warrior:
+                    Attack = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorAtk);
+                    MaxHealth = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorHealth);
+                    Defence = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WarriorDefence);
+                    attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.WarriorAttackRange);
+                    break;
+                case Enums.CharacterType.Archer:
+                    Attack = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherAtk);
+                    MaxHealth = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherHealth);
+                    Defence = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.ArcherDefence);
+                    attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.ArcherAttackRange);
+                    break;
+                case Enums.CharacterType.Wizard:
+                    Attack = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardAtk);
+                    MaxHealth = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardHealth);
+                    Defence = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.WizardDefence);
+                    attackRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.WizardAttackRange);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             
             CriticalRate = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.CriticalRate);
             CriticalDamage = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.CriticalDamage);
             Accuracy = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Accuracy);
             Penetration = SquadBattleManager.Instance.GetTotalSquadStat(Enums.SquadStatType.Penetration);
-            
             moveSpeed = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.MoveSpeed) * SquadBattleManager.Instance.squadMoveSpeedMultiplier[(int) characterType];
             followRange = SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.FollowRange);
             
-            attackRange = characterType switch
-            {
-                Enums.CharacterType.Warrior => SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.WarriorAttackRange),
-                Enums.CharacterType.Archer => SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.ArcherAttackRange),
-                Enums.CharacterType.Wizard => SquadBattleManager.Instance.GetTotalSubSquadStat(Enums.SquadStatType.WizardAttackRange),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
             animator.SetFloat(animationData.ClassTypeParameterHash, (int) characterType);
-
             CurrentHealth = MaxHealth;
             isDead = false;
             currentTarget = null;
